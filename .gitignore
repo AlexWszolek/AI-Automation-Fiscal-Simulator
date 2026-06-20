@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+*.pyo
+
+# Local Claude Code state (keep launch.json, ignore local settings)
+.claude/settings.local.json
+.venv/
+venv/
+env/
+.DS_Store
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Intermediate build artifacts (regenerable)
+data/interim/*.parquet
+data/interim/*.csv
+
+# Large external source extracts kept outside the repo (ACS PUMS, etc.)
+data/external/

@@ -1,0 +1,11 @@
+# Core data / loaders
+pandas>=2.0
+openpyxl>=3.1
+numpy>=1.24
+
+# Validation / testing
+pytest>=7.0
+
+# Transfer-side bake — installed at the PolicyEngine step (heavy dependency tree),
+# run OFFLINE to bake a static benefit lookup table; never called live.
+# policyengine-us>=1.0
