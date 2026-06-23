@@ -13,6 +13,7 @@ on disk — they are normalized in `loaders.py`. See `docs/PROJECT_BRIEFING_v2.m
 | `taxable_consumption_base_by_state.xlsx` | `Taxable_Consumption_Base_by_State(Claude).xlsx` | $m; rates = fraction | Effective consumption tax; PCE taxability classification |
 | `household_archetypes_by_state.xlsx` | `household_archetypes_by_state.xlsx` | income = $ (dollars) | Household archetypes by SOC-state |
 | `tax_side_schedule.xlsx` | `tax_side_schedule.xlsx` | tax = $; rates = fraction | Federal/State/Payroll params; baked income & FICA schedules |
+| `robot_exposure_by_soc.xlsx` | `robot_exposure_by_soc.xlsx` | pct_robot = 0–100 | Robot exposure by SOC (Webb 2020) — physical-automation channel for `levers.py` |
 
 **Not copied into the repo** (too large; external inputs handled later):
 - ACS PUMS 1-year 2024 extracts (`~/Downloads/ACSPUMS1Y2024_*.xlsx`) — source for the NOC

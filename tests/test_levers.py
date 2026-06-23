@@ -21,14 +21,34 @@ def test_cognitive_monotone_in_pca(data):
     assert hi > lo
 
 
-def test_physical_channel_raises_low_exposure(data):
+def test_robot_exposure_loads(data):
+    r = levers.load_robot_exposure()
+    assert len(r) == 832 and r.between(0.0, 1.0).all()
+
+
+def test_physical_channel_raises_high_robot_not_low_robot(data):
+    # v2: the robotics channel acts on Webb robot exposure, NOT the complement of cognitive.
+    robot = levers.load_robot_exposure()
     base = LeverParams(cognitive_feasibility=0.6, physical_feasibility=0.0)
-    robo = LeverParams(cognitive_feasibility=0.6, physical_feasibility=0.6)
+    robo = LeverParams(cognitive_feasibility=0.6, physical_feasibility=0.8)
     fb = levers.displacement_fraction(data.exposure_occ, base)
     fr = levers.displacement_fraction(data.exposure_occ, robo)
-    # the least cognitively-exposed occupations gain the most from the robotics channel
-    low = data.exposure_occ.nsmallest(20, "ai_pca_score")["soc_code"]
-    assert (fr[low] > fb[low] + 0.1).all()
+    gain = (fr - fb)
+    high_robot = [s for s in robot.nlargest(20).index if s in gain.index]
+    low_robot = [s for s in robot.nsmallest(20).index if s in gain.index]
+    # high-robot jobs gain materially from robotics; low-robot manual jobs barely move
+    assert gain[high_robot].mean() > 0.15
+    assert gain[low_robot].mean() < 0.05
+    assert gain[high_robot].mean() > 3 * gain[low_robot].mean()
+
+
+def test_low_robot_jobs_stay_low_under_full_robotics(data):
+    # barbers/surgeons etc. (low robot exposure) are not automated even at physical_feasibility=1
+    robot = levers.load_robot_exposure()
+    p = LeverParams(cognitive_feasibility=0.0, physical_feasibility=1.0)  # isolate the robot channel
+    f = levers.displacement_fraction(data.exposure_occ, p)
+    low_robot = [s for s in robot.nsmallest(15).index if s in f.index]
+    assert (f[low_robot] < 0.30).all()
 
 
 def test_adoption_scales_linearly(data):

@@ -59,7 +59,7 @@ fiscal_delta(worker) =
 | `fiscal_model/loaders.py` | Load the 8 files → tidy DataFrames keyed by SOC/sector/state, units normalized. Assert control totals on load (fail loud). |
 | `fiscal_model/rates.py` | §5 schedules from `tax_side_schedule.xlsx` — federal income by filing, payroll w/ caps, state brackets; corporate by sector; consumption by state. |
 | `fiscal_model/kernel.py` | `fiscal_delta(...)` — pure, deterministic, unit-tested vs control totals & quintile incidence. **Built to exactness first.** |
-| `fiscal_model/levers.py` | exposure → feasibility → adoption transform → per-occupation displacement flows. |
+| `fiscal_model/levers.py` | exposure → feasibility → adoption transform → per-occupation displacement flows. Two **independent** exposure channels — cognitive (Yale PCA) and robot (Webb 2020), combined multiplicatively. |
 | `fiscal_model/dynamics.py` | stock-flow loop: cohorts, UI exhaustion, deficit accumulation, state balanced-budget. |
 | `fiscal_model/validate.py` | reconciliation: control totals, quintile incidence (T43), PolicyEngine aggregates. |
 
@@ -84,7 +84,7 @@ fiscal_delta(worker) =
 - [x] **Part B** — `scripts/bake_benefits.py` (PolicyEngine, offline in `.venv`) → `data/interim/benefit_lookup.parquet` (138k rows); `transfers.py` interpolates + differences it, splits fed/state, wired into the kernel seam
 - [x] **Part C** — `integrate.py`: within-cell expectation over income × NOC × residual phase; **kink acceptance test passes** (integrated transfer Δ is 2.7–7.8× the at-mean Δ for cliff-straddling cells)
 - [x] **Part B.6** — tax cross-check ✓ (PE vs `tax_side_schedule` within 2.5% = the 2024/2025 bracket vintage gap; payroll exact ex-state-SDI). Aggregate reconciliation run (`scripts/validate_transfers.py`) — interpretive, see simplifications
-- [x] `levers.py` — exposure→feasibility→adoption transform (2 channels: cognitive + robotics) → per-occupation displacement flows
+- [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
 - [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
 - [x] **59 regression tests green**
 - [x] **Website** — `app/streamlit_app.py`: interactive levers → live deficit/debt/employment/state-gap charts + cost→offset→net + UBI required-rate; verified rendering
@@ -109,3 +109,4 @@ fiscal_delta(worker) =
 - **Transfer fed/state split**: flat shares (Medicaid 65/35, TANF 50/50, SNAP/EITC/CTC/ACA federal, SSI 95/5); Medicaid FMAP actually varies 50–77% by state.
 - **Benefit values are entitlement/eligibility amounts** (PE = eligibility × per-enrollee value, per plan Part B) — the right object for the marginal "what becomes available on displacement," but they overstate *actual* program spending where take-up < 100% (esp. ACA PTC). A take-up lever would reconcile aggregate levels.
 - **B.6 aggregate reconciliation undershoots actual program totals** because (a) the bake models working-age, non-disabled representative households, so Medicaid/SSI/SNAP — dominated by aged/disabled/LTC — are under-represented, and (b) benefits are looked up by total household income (HINCP) rather than earned income, understating aggregate EITC. The marginal *mechanics* are validated (kink test + tax cross-check); reconciling *levels* needs an earned-income axis + take-up adjustment.
+- **Robotics is anchored to the *current* robot-patent stock** (Webb 2020 `pct_robot`), so even `physical_feasibility=1` leaves dexterity/care/performance jobs (barbers, surgeons, actors) near zero — a current-technology floor that *understates* a true post-AGI scenario. The `robotics_maturity` lever (inert in v1) is the hook to interpolate toward a physical-task-content ceiling (O*NET) when that data is wired.

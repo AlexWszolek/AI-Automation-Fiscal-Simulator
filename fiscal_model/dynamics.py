@@ -23,7 +23,7 @@ simple closed-forms; reemployed workers carry a haircut residual loss only.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Optional
 
@@ -122,14 +122,9 @@ class DynamicModel:
         self.lp = lever_params
         d = deltas.reset_index(drop=True).copy()
         self.d = d
-        # per-occupation displacement at adoption=1 (the "g" blend); scaled by adoption each period
-        g = levers.displacement_fraction(
-            data.exposure_occ, levers.LeverParams(
-                exposure_mapping=lever_params.exposure_mapping,
-                logistic_midpoint=lever_params.logistic_midpoint,
-                logistic_steepness=lever_params.logistic_steepness,
-                cognitive_feasibility=lever_params.cognitive_feasibility,
-                physical_feasibility=lever_params.physical_feasibility, adoption=1.0))
+        # per-occupation displacement at adoption=1 (cognitive + robot channels); scaled by
+        # adoption each period. replace() copies all lever fields (incl. the robot channel).
+        g = levers.displacement_fraction(data.exposure_occ, replace(lever_params, adoption=1.0))
         self.g_cell = d["soc_code"].map(g).fillna(0.0).to_numpy()
         self.ui_share = min(1.0, params.ui_weeks / 52.0)
         self.states = d["state"].to_numpy()
