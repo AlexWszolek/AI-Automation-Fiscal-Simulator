@@ -6,15 +6,15 @@ user-settable layers:
 
   1. Exposure (fixed ground truth): the PCA score, mapped monotonically to a [0,1] task-
      exposure share (percentile rank by default, or a user-shaped logistic). The PCA score is
-     NOT a fraction (≈ −3.4..+7.1), so it MUST be passed through such a mapping (briefing §3.2).
+     NOT a fraction (≈ -3.4..+7.1), so it MUST be passed through such a mapping (briefing §3.2).
   2. Feasibility (time-varying, ≥2 channels): given exposure, what fraction AI can actually do.
      - cognitive channel: ramps with `cognitive_feasibility` for cognitively-exposed work;
      - physical channel: a separate robotics ramp (`physical_feasibility`) for physical jobs,
        which score LOW on Yale's cognitive exposure — this is where post-AGI mechatronics enters.
   3. Adoption (time-varying): given feasibility, how much actually gets deployed.
 
-  displacement_fraction(o) = adoption × clip( cog(o)·cognitive_feasibility
-                                            + (1 − cog(o))·physical_feasibility , 0, 1 )
+  displacement_fraction(o) = adoption x clip( cog(o)·cognitive_feasibility
+                                            + (1 - cog(o))·physical_feasibility , 0, 1 )
 
 so at physical_feasibility = 0 only cognitive work is displaced; as robotics ramps, physical
 work follows. Every parameter is a lever — nothing is baked in.
