@@ -127,6 +127,9 @@ def load_matrices(data_dir: Path = DATA_DIR, validate: bool = True) -> dict:
         assert "55-0000" in set(demp_w["soc_code"]), "Military pseudo-row 55-0000 missing"
         assert demp_w.shape[1] - 2 == 71, "expected 71 detail industries"
         assert semp_w.shape[1] - 2 == 20, "expected 20 BEA sectors"
+        # emp tolerance is looser than comp's (1e-4) by design: EMP_TOTAL_THOUSANDS is the
+        # briefing figure (163,223) while the file interior sums to ~163,217 — a ~3.4e-5
+        # rounding gap baked in by construction, so 1e-4 would have little headroom.
         _assert_close(detail["emp_thousands"].sum(), EMP_TOTAL_THOUSANDS, rel=1e-3,
                       name="matrices detail employment total")
         _assert_close(detail["comp_musd"].sum(), COMP_TOTAL_MUSD, rel=1e-4,

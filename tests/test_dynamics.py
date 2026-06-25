@@ -71,3 +71,11 @@ def test_demand_multiplier_increases_deficit(data, deltas):
 def test_ubi_required_rate_rises_as_base_erodes(data, deltas):
     res = _model(data, deltas, ubi_annual=12_000).run()
     assert res["ubi_required_rate"].iloc[-1] > res["ubi_required_rate"].iloc[0] > 0
+
+
+def test_worker_conservation(data, deltas):
+    # employed + unemployed + reemployed must equal the baseline workforce every period
+    res = _model(data, deltas, reabsorption_rate=0.5).run()
+    baseline_M = deltas["employed"].sum() / 1e6
+    accounted = res["employed_M"] + res["unemployed_M"] + res["reemployed_M"]
+    assert (accounted - baseline_M).abs().max() < 1e-6

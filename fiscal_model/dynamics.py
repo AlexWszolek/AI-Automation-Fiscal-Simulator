@@ -200,12 +200,16 @@ class DynamicModel:
             tot_unemp = (U + new).sum()
             rev_lost = ch["inc_fed"].sum() + ch["inc_state"].sum() + ch["payroll_fed"].sum()
             if baseline_rev is None:
+                # max-scenario labor revenue (all workers displaced) — the denominator for
+                # revenue_lost_pct. income tax & payroll are phase-invariant, so using 'after'
+                # here is consistent with rev_lost (which uses the during/after blend).
                 baseline_rev = (self.emp0 * (self.arr["after"]["inc_fed"] + self.arr["after"]["inc_state"]
                                              + self.arr["after"]["payroll_fed"])).sum()
 
             out.append({
                 "period": t, "adoption": adopt,
                 "employed_M": tot_emp / 1e6, "unemployed_M": tot_unemp / 1e6,
+                "reemployed_M": R.sum() / 1e6,   # start-of-period reemployed stock
                 "employment_drop_pct": 100 * (1 - tot_emp / baseline_emp),
                 "revenue_lost_B": rev_lost / 1e9,
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,

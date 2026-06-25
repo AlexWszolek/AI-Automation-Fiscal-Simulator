@@ -29,13 +29,26 @@ st.set_page_config(page_title="AI Automation Fiscal Model", layout="wide")
 
 @st.cache_resource
 def load_backend():
-    data = loaders.load_all(validate=False)
-    lookup = TransferLookup()
-    deltas = precompute_worker_deltas(data, lookup, KernelParams())   # loads the cached table
-    return data, deltas
+    """Returns ((data, deltas), None) or (None, error_message) if build artifacts are missing."""
+    try:
+        data = loaders.load_all(validate=False)
+        lookup = TransferLookup()                                     # needs benefit_lookup.parquet
+        deltas = precompute_worker_deltas(data, lookup, KernelParams())  # cached table (or rebuilds)
+        return (data, deltas), None
+    except FileNotFoundError as e:
+        return None, str(e)
 
 
-data, deltas = load_backend()
+_backend, _err = load_backend()
+if _err is not None:
+    st.error(
+        "**Build artifacts are missing — the model can't load.**\n\n"
+        f"```\n{_err}\n```\n\n"
+        "Build them first (see README → *Setup*):\n\n"
+        "```bash\nbash scripts/bootstrap.sh\n```"
+    )
+    st.stop()
+data, deltas = _backend
 
 st.title("AI Automation — Fiscal Consequences")
 st.caption("Set the levers. The accounting is the point: every assumption is yours to dial, and the "
@@ -58,8 +71,11 @@ haircut = sb.slider("Re-employment wage haircut", 0.0, 1.0, 0.30, 0.05)
 
 sb.header("Offsets — steelman the optimistic case")
 corp_scale = sb.slider("Corporate-tax recapture ×", 0.0, 2.0, 1.0, 0.1,
-                       help="Scales the capital-income tax recovered when labour cost becomes profit.")
-cons_scale = sb.slider("Consumption response × (stickiness)", 0.0, 2.0, 1.0, 0.1)
+                       help="Post-hoc linear scale on the capital-income tax recovered when labour "
+                            "cost becomes profit (the offset). Applied to the cached per-worker deltas.")
+cons_scale = sb.slider("Consumption channel ×", 0.0, 2.0, 1.0, 0.1,
+                       help="Post-hoc linear scale on the consumption-tax channel — a quick stand-in "
+                            "for stickiness, distinct from the baked KernelParams.consumption_stickiness.")
 demand = sb.slider("Second-round demand multiplier", 0.0, 1.0, 0.0, 0.05)
 
 sb.header("Fiscal & policy")
@@ -89,9 +105,14 @@ c[3].metric("Federal debt (cumulative)", f"${final['fed_debt_B']:,.0f}B")
 c[4].metric("State gap (must close/yr)", f"${final['state_gap_B']:,.0f}B")
 
 if ubi > 0:
-    st.info(f"To fund a \\${ubi:,}/yr UBI on the **eroded** labor-income base, the required average "
-            f"tax rate rises to **{final['ubi_required_rate']:.0%}** by year {n_periods} "
-            f"(from {res['ubi_required_rate'].iloc[0]:.0%}).")
+    rate = final["ubi_required_rate"]
+    msg = (f"To fund a \\${ubi:,}/yr UBI on the **eroded** labor-income base, the required average "
+           f"tax rate rises to **{rate:.0%}** by year {n_periods} "
+           f"(from {res['ubi_required_rate'].iloc[0]:.0%}).")
+    if rate > 1.0:
+        st.warning(msg + "  A rate **>100% is unfundable** — the eroded base can't finance this UBI.")
+    else:
+        st.info(msg)
 
 # ----------------------------------------------------------------- charts
 left, right = st.columns(2)

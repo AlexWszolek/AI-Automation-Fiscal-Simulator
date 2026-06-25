@@ -1,0 +1,8 @@
+# Offline PolicyEngine benefit bake (scripts/bake_benefits.py) — heavy dependency tree.
+# Run ONCE to produce data/interim/benefit_lookup.parquet; the app and fiscal_model never
+# import PolicyEngine. Install on top of the core deps:
+#   uv pip install --python .venv/bin/python -r requirements-bake.txt
+-r requirements.txt
+
+# Benefit parameters are version-specific — pin EXACTLY so the bake is reproducible.
+policyengine-us==1.737.0

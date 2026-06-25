@@ -77,6 +77,13 @@ class CellIntegrator:
             ("Head of household", "p_hoh", "inc_hoh_usd"),
             ("Single", "p_single", "inc_single_usd"),
         ]
+        # NOC must cover every (filing, state, band) the integrator looks up — a missing cell
+        # would silently default to "0 children" and bias transfers downward. Fail loud instead.
+        _states = {s for (_, s, _) in self._noc}
+        _missing = [(f, s, b) for f, _, _ in self._filings for s in _states for b in (0, 1, 2)
+                    if (f, s, b) not in self._noc]
+        assert not _missing, (f"noc_distribution missing {len(_missing)} (filing,state,band) cells; "
+                              "rebuild via `python -m fiscal_model.noc`")
 
     @staticmethod
     def _load_noc(path: Path) -> dict:
@@ -177,7 +184,7 @@ class CellIntegrator:
                     fs = self.lookup.fed_share.get(prog, 1.0)
                     d_fed += delta * fs
                     d_state += delta * (1.0 - fs)
-                pk = np.array([self._noc.get((filing, state, b), np.eye(4)[0])[k] for b in bands])
+                pk = np.array([self._noc.get((filing, state, b), np.full(4, 0.25))[k] for b in bands])
                 tr_fed += pk * d_fed
                 tr_state += pk * d_state
 

@@ -66,3 +66,22 @@ def test_low_wage_bigger_relative_pickup(ci):
     lo_ratio = (lo.after.gained_outlays_fed + lo.after.gained_outlays_state) / lo.worker_wage
     hi_ratio = (hi.after.gained_outlays_fed + hi.after.gained_outlays_state) / hi.worker_wage
     assert lo_ratio > hi_ratio
+
+
+def test_kink_driver_is_medicaid(ci):
+    # the integrated-vs-mean gap for high-wage cells is driven by children's Medicaid/CHIP:
+    # above-mean household income sits past the cliff, the left tail crosses below it.
+    lk = ci.lookup
+    nb_hi = lk.net_benefits_by_program("California", "Married filing jointly", 2, 250_000)
+    nb_lo = lk.net_benefits_by_program("California", "Married filing jointly", 2, 40_000)
+    deltas = {p: nb_lo[p] - nb_hi[p] for p in nb_lo}
+    assert max(deltas, key=deltas.get) == "medicaid_value"
+    assert deltas["medicaid_value"] > 5_000
+
+
+def test_lognormal_quadrature_mean_and_mass(ci):
+    # the within-cell lognormal must integrate to its target household mean, masses sum to 1
+    for target in (40_000, 150_000):
+        nodes, masses = ci._nodes_and_masses(40_000, 60_000, 100_000, target)
+        assert np.isclose(masses.sum(), 1.0)
+        assert abs((nodes * masses).sum() - target) / target < 0.01

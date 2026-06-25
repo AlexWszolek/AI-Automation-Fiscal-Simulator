@@ -86,15 +86,32 @@ fiscal_delta(worker) =
 - [x] **Part B.6** — tax cross-check ✓ (PE vs `tax_side_schedule` within 2.5% = the 2024/2025 bracket vintage gap; payroll exact ex-state-SDI). Aggregate reconciliation run (`scripts/validate_transfers.py`) — interpretive, see simplifications
 - [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
 - [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
-- [x] **59 regression tests green**
+- [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
 - [x] **Website** — `app/streamlit_app.py`: interactive levers → live deficit/debt/employment/state-gap charts + cost→offset→net + UBI required-rate; verified rendering
 
 ### Complete: model backend + website
-`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (59 tests).
+`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (66 tests).
 
 **Run the app:**  `.venv/bin/streamlit run app/streamlit_app.py`
 **Headline scenario (CLI):**  `.venv/bin/python -m fiscal_model.dynamics`
-- [ ] Website
+
+## Setup (fresh clone)
+The model and app need a Python 3.12 venv plus three regenerable, gitignored artifacts
+(NOC distribution, PolicyEngine benefit lookup, per-worker delta cache). One idempotent
+command builds everything (downloads ~251 MB of ACS PUMS on first run):
+
+```bash
+bash scripts/bootstrap.sh
+```
+
+Step by step: `uv venv --python 3.12 .venv` → `uv pip install --python .venv/bin/python -r requirements.txt`
+→ download PUMS into `data/external/` → `python -m fiscal_model.noc` →
+`uv pip install --python .venv/bin/python -r requirements-bake.txt && python scripts/bake_benefits.py`
+→ `python -m fiscal_model.dynamics` (precompute). Core deps live in `requirements.txt`; the heavy,
+offline PolicyEngine bake is pinned separately in `requirements-bake.txt`.
+
+> The full test suite needs these artifacts; without them ~5 modules skip and `pytest` prints a
+> **MISSING-ARTIFACT SKIPS** summary, so a green run with hidden skips is obvious.
 
 ## Environment
 - Main code runs in **`.venv` (Python 3.12, via `uv`)** — system Python 3.14 lacks wheels for

@@ -75,3 +75,32 @@ def test_fiscaldelta_add(data):
     k = Kernel(data)
     s = _hi(k) + _lo(k)
     assert np.isclose(s.net_total, _hi(k).net_total + _lo(k).net_total)
+
+
+def test_consumption_channel_matches_formula(data):
+    # the consumption channel must equal rate * mpc * stickiness * marginal * disposable-income-loss
+    k = Kernel(data)
+    w = Worker(50_000, 70_000, "Single", "California", "Retail trade")
+    fd = k.fiscal_delta(w)
+    inc = k.income.marginal_income_tax_lost(w.household_income, w.worker_wage, w.state, w.filing)
+    disposable = w.worker_wage - float(inc["total"]) - k.fica.employee_fica(w.worker_wage, w.filing)
+    rate = data.consumption.set_index("state").loc["California", "eff_tax_rate_frac"]
+    expected = (rate * k.params.mpc * k.params.consumption_stickiness
+                * k.params.marginal_taxable_multiplier * disposable)
+    assert np.isclose(fd.lost_consumption_tax_state, expected)
+    assert 0 < fd.lost_consumption_tax_state < 0.05 * w.worker_wage   # small, sane fraction of wage
+
+
+def test_corporate_channel_breakdown(data):
+    # corp / dividend / pass-through must match the per-sector capital-file rates exactly
+    k = Kernel(data)
+    comp = 100_000.0
+    corp, div, pt = k._corporate("Manufacturing", comp)
+    r = data.capital.set_index("industry").loc["Manufacturing"]
+    cs, eff, payout = (r["corp_share_taxable_capital_income"], r["eff_corp_tax_rate"],
+                       r["dividend_payout_ratio"])
+    exp_corp = cs * comp * eff
+    exp_div = payout * (cs * comp - exp_corp) * k.params.dividend_tax_rate
+    exp_pt = (1 - cs) * comp * k.params.passthrough_individual_rate
+    assert np.allclose([corp, div, pt], [exp_corp, exp_div, exp_pt])
+    assert corp + div + pt > 0
