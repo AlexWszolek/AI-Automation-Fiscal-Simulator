@@ -1,10 +1,12 @@
-"""V2 orchestrator — Phase 0: the anchor harness.
+"""V2 orchestrator — Phases 0-1.
 
-`DynamicModelV2` runs v1's logic through the new structure: explicit 5-state worker stocks
-(employed / on-UI / exhausted / reabsorbed / exited) and a baseline ledger seeded from the
-base-linkage accounts. At a v1-reduction config (`levers_v2.DEFAULTS_V1REDUCTION`) every new
-behavioral lever is off, so the fiscal math is bit-for-bit v1 and `exited == 0` — the C8 anchor
-every later phase is gated against.
+`DynamicModelV2` runs the multi-actor model through the new structure: the explicit 5-state worker
+machine (`workers.py`: employed / on-UI / exhausted / reabsorbed / exited) and a baseline ledger
+seeded from the base-linkage accounts. At a v1-reduction config (`levers_v2.DEFAULTS_V1REDUCTION`)
+every new behavioral lever is off, so the fiscal math is bit-for-bit v1 and `exited == 0` — the C8
+anchor every later phase is gated against. Phase 1 wired the real worker transitions + `lfp_exit`;
+the disposition / compute-pool / macro / survivor / government seams remain pass-throughs until their
+phases.
 
 It reuses the v1 `DynamicModel`'s prepared arrays (g_cell, channel deltas, corp offset, ui, …) so
 the inputs are *identical* to v1; the loop then reproduces v1's per-period arithmetic while also
@@ -19,7 +21,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import loaders
+from . import loaders, workers
 from .dynamics import DynamicModel
 from .levers_v2 import V2Params
 
@@ -52,38 +54,36 @@ class DynamicModelV2:
 
     # ---- the period loop (Phase 0: faithful v1 reproduction with 5-state tracking) ----
     def run(self) -> pd.DataFrame:
-        v1 = self._v1
-        p, n = v1.p, v1.d.shape[0]
-        emp = v1.emp0.copy()
-        on_ui = np.zeros(n)        # this period's freshly-displaced cohort (first UI period)
-        exhausted = np.zeros(n)    # carried unemployed (v1 'U')
-        reabsorbed = np.zeros(n)   # v1 'R'
-        exited = np.zeros(n)       # absorbing LFP exit; 0 at v1-reduction (lfp_exit wired in Phase 1)
+        v1, v2p = self._v1, self.v2p
+        p = v1.p
+        st = workers.WorkerStocks.initial(v1.emp0)        # 5-state machine (Phase 1)
+        reab_factor = workers.reabsorbed_loss_factor(v2p)  # Rung-0 haircut residual
         debt = 0.0
-        baseline_emp = emp.sum()
+        baseline_emp = v1.emp0.sum()
         baseline_rev = None
         out = []
 
         for t in range(p.n_periods):
-            # --- step 1: diffusion (pass-through to v1 displacement) ---
+            # --- steps 1-2: diffusion + displacement ---
             adopt = v1._adoption(t)
             frac = np.clip(v1.g_cell * adopt, 0.0, 1.0)
-            new = frac * emp
-            emp = emp - new
-            on_ui = new                                    # the in-motion cohort this period
+            st.displace(frac)
 
-            # --- steps 3-7: fiscal flows (identical to v1) ---
+            # --- step 7: fiscal flows. on_ui -> UI blend; exhausted+exited -> 'after';
+            #     reabsorbed -> Rung-0 haircut residual (tax channels only). ---
+            out_after = st.exhausted + st.exited
             ch = {}
             for c in v1.arr["during"]:
                 blend = v1.ui_share * v1.arr["during"][c] + (1 - v1.ui_share) * v1.arr["after"][c]
-                cc = new * blend + exhausted * v1.arr["after"][c]
+                cc = st.on_ui * blend + out_after * v1.arr["after"][c]
                 if c in ("inc_fed", "inc_state", "payroll_fed", "cons_state"):
-                    cc = cc + reabsorbed * p.reemployment_haircut * v1.arr["after"][c]
+                    cc = cc + st.reabsorbed * reab_factor * v1.arr["after"][c]
                 ch[c] = cc
 
-            ui_outlay_fed = new * v1.ui * v1.ui_share
+            ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
             ui_tax_fed = 0.10 * ui_outlay_fed
-            corp_offset_fed = (new + exhausted) * v1.corp
+            # corp offset on the not-reabsorbed displaced (exited continue it; == v1's new+U at reduction)
+            corp_offset_fed = (st.on_ui + st.exhausted + st.exited) * v1.corp
 
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
                    + ui_outlay_fed - ui_tax_fed - corp_offset_fed)
@@ -97,7 +97,7 @@ class DynamicModelV2:
             net_fed += induced
             debt = debt * (1 + p.interest_rate) + net_fed
 
-            base = (emp * v1.wage).sum()
+            base = (st.employed * v1.wage).sum()
             ubi_rate = (p.ubi_annual * baseline_emp / base) if (p.ubi_annual > 0 and base > 0) else 0.0
 
             rev_lost = ch["inc_fed"].sum() + ch["inc_state"].sum() + ch["payroll_fed"].sum()
@@ -107,12 +107,11 @@ class DynamicModelV2:
 
             out.append({
                 "period": t, "adoption": adopt,
-                "employed_M": emp.sum() / 1e6,
-                "on_ui_M": on_ui.sum() / 1e6, "exhausted_M": exhausted.sum() / 1e6,
-                "reabsorbed_M": reabsorbed.sum() / 1e6, "exited_M": exited.sum() / 1e6,
-                "population_M": (emp.sum() + on_ui.sum() + exhausted.sum()
-                                 + reabsorbed.sum() + exited.sum()) / 1e6,
-                "employment_drop_pct": 100 * (1 - emp.sum() / baseline_emp),
+                "employed_M": st.employed.sum() / 1e6,
+                "on_ui_M": st.on_ui.sum() / 1e6, "exhausted_M": st.exhausted.sum() / 1e6,
+                "reabsorbed_M": st.reabsorbed.sum() / 1e6, "exited_M": st.exited.sum() / 1e6,
+                "population_M": st.total().sum() / 1e6,
+                "employment_drop_pct": 100 * (1 - st.employed.sum() / baseline_emp),
                 "revenue_lost_B": rev_lost / 1e9,
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,
                 "transfers_added_B": (ch["transfer_fed"].sum() + ch["transfer_state"].sum()
@@ -122,11 +121,8 @@ class DynamicModelV2:
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
             })
 
-            # --- end of period: reabsorption (v1) ---
-            pool = exhausted + new
-            reab = pool * p.reabsorption_rate
-            exhausted = pool - reab
-            reabsorbed = reabsorbed + reab
+            # --- period end: age on-UI into exhausted, then split {exited, reabsorbed, stay} ---
+            st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate)
 
         return pd.DataFrame(out)
 
