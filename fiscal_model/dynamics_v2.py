@@ -1,15 +1,16 @@
-"""V2 orchestrator — Phases 0-2.
+"""V2 orchestrator — Phases 0-3.
 
 `DynamicModelV2` runs the multi-actor model through the new structure: the explicit 5-state worker
 machine (`workers.py`), the sector disposition router + compute pool (`firms/disposition.py`,
-`compute_pool.py`), and a baseline ledger seeded from the base-linkage accounts. At a v1-reduction
-config (`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral lever is off, so the fiscal math is
-bit-for-bit v1 — the C8 anchor every later phase is gated against. Phase 1 wired the worker
-transitions + `lfp_exit`; Phase 2 the disposition router (corporate-via-router superseding
-`surplus_capture`) + compute pool. The `price_reduction` / `survivor_gains` shares are recorded now
-but only acquire fiscal effects in Phase 3 (price → real transfers) and Phase 4 (survivor → labor
-tax), so partial-share scenarios overstate the deficit until then. Macro / survivor / government
-seams remain pass-throughs.
+`compute_pool.py`), the macro environment (`macro.py`: P, Y), and a baseline ledger seeded from the
+base-linkage accounts. At a v1-reduction config (`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral
+lever is off, so the fiscal math is bit-for-bit v1 — the C8 anchor every later phase is gated against.
+Phase 1 wired the worker transitions + `lfp_exit`; Phase 2 the disposition router (corporate-via-router
+superseding `surplus_capture`) + compute pool; Phase 3 the macro state — P (price level) and Y
+(productivity/GDP) drive the real / %-GDP reporting, and per the A2 rule P *only* deflates nominal
+aggregates (it never enters the transfer interpolation). The `survivor_gains` share is recorded but
+acquires its fiscal effect in Phase 4 (survivor → labor tax). Survivor / government seams remain
+pass-throughs.
 
 It reuses the v1 `DynamicModel`'s prepared arrays (g_cell, channel deltas, corp offset, ui, …) so
 the inputs are *identical* to v1; the loop then reproduces v1's per-period arithmetic while also
@@ -24,7 +25,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import loaders, workers, compute_pool
+from . import loaders, workers, compute_pool, macro
 from .dynamics import DynamicModel
 from .firms import disposition
 from .levers_v2 import V2Params
@@ -100,6 +101,13 @@ class DynamicModelV2:
             disp = disposition.route(automated, self._comp_pw, v1.corp, v2p)
             cp = compute_pool.route_to_compute_pool(disp.automation_spend, v2p)
 
+            # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
+            #     Y is the real-GDP/productivity index for the denominator. ---
+            automated_fraction = automated.sum() / baseline_emp
+            Y = macro.productivity_index(automated_fraction, v2p)
+            P = macro.price_level(disp.price_reduction, Y, v2p)
+            ngdp = macro.nominal_gdp(Y, P)
+
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
                    + ui_outlay_fed - ui_tax_fed - disp.corporate_offset_cell)
             net_fed = fed.sum() - cp.tax_fed
@@ -138,6 +146,11 @@ class DynamicModelV2:
                 "survivor_gains_B": disp.survivor_gains / 1e9,
                 "offshore_leak_B": cp.offshore_leak / 1e9,
                 "fed_deficit_B": net_fed / 1e9, "fed_debt_B": debt / 1e9,
+                # macro (Phase 3): nominal is P-invariant; real = nominal/P; %-GDP = nominal/nominal-GDP
+                "price_level": P, "productivity_index": Y,
+                "fed_deficit_real_B": net_fed / P / 1e9, "fed_debt_real_B": debt / P / 1e9,
+                "fed_deficit_pct_gdp": 100 * net_fed / ngdp, "fed_debt_pct_gdp": 100 * debt / ngdp,
+                "state_gap_pct_gdp": 100 * state_gap_total / ngdp,
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
             })
 
