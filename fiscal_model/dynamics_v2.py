@@ -1,12 +1,15 @@
-"""V2 orchestrator — Phases 0-1.
+"""V2 orchestrator — Phases 0-2.
 
 `DynamicModelV2` runs the multi-actor model through the new structure: the explicit 5-state worker
-machine (`workers.py`: employed / on-UI / exhausted / reabsorbed / exited) and a baseline ledger
-seeded from the base-linkage accounts. At a v1-reduction config (`levers_v2.DEFAULTS_V1REDUCTION`)
-every new behavioral lever is off, so the fiscal math is bit-for-bit v1 and `exited == 0` — the C8
-anchor every later phase is gated against. Phase 1 wired the real worker transitions + `lfp_exit`;
-the disposition / compute-pool / macro / survivor / government seams remain pass-throughs until their
-phases.
+machine (`workers.py`), the sector disposition router + compute pool (`firms/disposition.py`,
+`compute_pool.py`), and a baseline ledger seeded from the base-linkage accounts. At a v1-reduction
+config (`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral lever is off, so the fiscal math is
+bit-for-bit v1 — the C8 anchor every later phase is gated against. Phase 1 wired the worker
+transitions + `lfp_exit`; Phase 2 the disposition router (corporate-via-router superseding
+`surplus_capture`) + compute pool. The `price_reduction` / `survivor_gains` shares are recorded now
+but only acquire fiscal effects in Phase 3 (price → real transfers) and Phase 4 (survivor → labor
+tax), so partial-share scenarios overstate the deficit until then. Macro / survivor / government
+seams remain pass-throughs.
 
 It reuses the v1 `DynamicModel`'s prepared arrays (g_cell, channel deltas, corp offset, ui, …) so
 the inputs are *identical* to v1; the loop then reproduces v1's per-period arithmetic while also
@@ -21,8 +24,9 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import loaders, workers
+from . import loaders, workers, compute_pool
 from .dynamics import DynamicModel
+from .firms import disposition
 from .levers_v2 import V2Params
 
 
@@ -34,6 +38,11 @@ class DynamicModelV2:
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
         self._baseline = self._baseline_rates(data)
+        # per-cell fully-loaded compensation per worker (the disposition saved-bill basis)
+        ms = data.matrices_sector.groupby("soc_code").agg(
+            comp=("comp_musd", "sum"), emp=("emp_thousands", "sum"))
+        ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
+        self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
 
     # ---- baseline ledger (t=0 gate, J.2): the absolute anchor for %-GDP & the tax-regime solver ----
     @staticmethod
@@ -82,12 +91,18 @@ class DynamicModelV2:
 
             ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
             ui_tax_fed = 0.10 * ui_outlay_fed
-            # corp offset on the not-reabsorbed displaced (exited continue it; == v1's new+U at reduction)
-            corp_offset_fed = (st.on_ui + st.exhausted + st.exited) * v1.corp
+
+            # --- steps 3-4: disposition router. The automated stock's saved comp routes to
+            #     {retained profit -> corporate tax (per cell), automation spend -> compute pool,
+            #     price reduction -> Phase 3, survivor gains -> Phase 4}. corp offset on the
+            #     not-reabsorbed displaced; == v1's (new+U)×corp at the reduction config. ---
+            automated = st.on_ui + st.exhausted + st.exited
+            disp = disposition.route(automated, self._comp_pw, v1.corp, v2p)
+            cp = compute_pool.route_to_compute_pool(disp.automation_spend, v2p)
 
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
-                   + ui_outlay_fed - ui_tax_fed - corp_offset_fed)
-            net_fed = fed.sum()
+                   + ui_outlay_fed - ui_tax_fed - disp.corporate_offset_cell)
+            net_fed = fed.sum() - cp.tax_fed
             state_cell = ch["inc_state"] + ch["cons_state"] + ch["transfer_state"]
             state_net = np.bincount(v1.state_of_cell, weights=state_cell,
                                     minlength=len(v1.uniq_states))
@@ -116,7 +131,12 @@ class DynamicModelV2:
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,
                 "transfers_added_B": (ch["transfer_fed"].sum() + ch["transfer_state"].sum()
                                       + ui_outlay_fed.sum()) / 1e9,
-                "corp_offset_B": corp_offset_fed.sum() / 1e9,
+                "corp_offset_B": disp.corporate_offset_cell.sum() / 1e9,
+                "compute_pool_tax_B": cp.tax_fed / 1e9,
+                "automation_spend_B": disp.automation_spend / 1e9,
+                "price_reduction_B": disp.price_reduction / 1e9,
+                "survivor_gains_B": disp.survivor_gains / 1e9,
+                "offshore_leak_B": cp.offshore_leak / 1e9,
                 "fed_deficit_B": net_fed / 1e9, "fed_debt_B": debt / 1e9,
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
             })
