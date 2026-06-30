@@ -59,9 +59,13 @@ def test_c6_state_composition_and_c7_close(data, deltas, response, cut):
                   survivor_raise_ceiling=1.3, state_response=response, state_cut_share=cut)
     m = DynamicModelV2(data, deltas, v2p)
     res = m.run()
-    assert (res["state_close_residual_B"] <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all()  # C7
-    assert (res["state_rate_hike_B"] + res["state_spending_cut_B"]
-            >= res["state_gap_B"] - 1e-6).all()                # the whole gap is closed by the two means
+    # (1) composition: the signed per-state total reconstructs from its labeled components (no residual)
+    state_recon = (res["inc_state_loss_B"] + res["cons_state_loss_B"] + res["transfer_state_B"]
+                   - res["survivor_gain_state_B"])
+    assert np.allclose(state_recon.to_numpy(), res["state_net_total_B"].to_numpy(), rtol=1e-9, atol=1e-6)
+    # (2)+(3) the close zeroes each state's residual and the whole gap is covered by the two means (C7)
+    assert (res["state_close_residual_B"] <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all()
+    assert (res["state_rate_hike_B"] + res["state_spending_cut_B"] >= res["state_gap_B"] - 1e-6).all()
 
 
 def test_c7_close_is_exact_at_unit_level(data, deltas):

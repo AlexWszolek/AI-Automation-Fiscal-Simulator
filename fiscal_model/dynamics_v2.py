@@ -50,6 +50,17 @@ class DynamicModelV2:
             "corp_offset_scale is superseded by the disposition router (corporate XOR) — keep it 1.0"
         assert params.surplus_capture == 1.0, \
             "surplus_capture is inert in V2 (frozen in the delta cache); the router controls corporate"
+        # Input-domain guards (fail loud — an off-sum or out-of-range lever silently breaks conservation:
+        # off-sum disposition shares break C2/C5b; auto_cost>1 drives net_saving<0 past the C-gate;
+        # offshore>1 makes compute tax negative; price_passthrough>1 can push the price level negative).
+        assert abs(disposition.shares_sum(params) - 1.0) < 1e-9, \
+            "disposition shares (retained/price/survivor) must sum to 1"
+        for _n, _v in (("retained_profit_share", params.retained_profit_share),
+                       ("price_reduction_share", params.price_reduction_share),
+                       ("survivor_gains_share", params.survivor_gains_share),
+                       ("auto_cost", params.auto_cost), ("offshore_share", params.offshore_share),
+                       ("price_passthrough", params.price_passthrough)):
+            assert 0.0 <= _v <= 1.0, f"{_n}={_v} is out of its documented [0, 1] domain"
         lp, dp = params.to_v1()
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
@@ -280,6 +291,9 @@ class DynamicModelV2:
                 "reabsorbed_M": st.reabsorbed.sum() / 1e6, "exited_M": st.exited.sum() / 1e6,
                 "induced_M": st.induced.sum() / 1e6,                    # 6th state: demand-driven layoffs (I)
                 "population_M": st.total().sum() / 1e6,
+                # C1 PER-CELL: the worst per-cell mass residual (the aggregate population_M can hide a
+                # per-cell leak that nets to zero across the 33k cells).
+                "max_cell_resid_M": float(np.abs(st.total() - v1.emp0).max()) / 1e6,
                 "employment_drop_pct": 100 * (1 - st.employed.sum() / baseline_emp),
                 "revenue_lost_B": rev_lost / 1e9,
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,
@@ -319,6 +333,12 @@ class DynamicModelV2:
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
                 "survivor_netting_B": survivor_profit_netting / 1e9,    # C6 component (raises the deficit)
                 # --- Phase 5: state balanced-budget close (H, C7) ---
+                # C6-state composition: the signed state total reconstructs from its labeled components
+                # (inc + cons + transfer − survivor gain), pinning sd_state's sign and the bincount.
+                "state_net_total_B": state_net.sum() / 1e9,
+                "inc_state_loss_B": ch["inc_state"].sum() / 1e9,
+                "cons_state_loss_B": ch["cons_state"].sum() / 1e9,
+                "transfer_state_B": ch["transfer_state"].sum() / 1e9,
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
                 "state_rate_hike_B": close.recovered.sum() / 1e9,
                 "state_spending_cut_B": close.spending_cut.sum() / 1e9,
