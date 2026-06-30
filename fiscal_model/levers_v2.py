@@ -55,8 +55,15 @@ class V2Params:
     reabsorption_rate: float = 0.0
     reabsorption_rung: int = 0                  # 0 flat-haircut (v1 anchor) | 1 service-floor | 2 routed
     reemployment_haircut: float = 0.30          # Rung 0
+    reabsorption_floor_pctile: float = 0.30     # Rung 1 service-floor wage = P(this) of low-exposure work
     lfp_exit_rate: float = 0.0                  # share of exhausted who exit the labor force (SSDI)
-    survivor_elasticity: float = 0.0            # substitution(−) vs complementarity(+); 0 = off
+    survivor_elasticity: float = 0.0            # ΔW_market slider: substitution(−) vs complementarity(+);
+    #                                             0 = off. The market component is truncated at the ceiling.
+    survivor_raise_ceiling: float = 1.0         # cap on the survivor wage multiplier W (× baseline wage).
+    #   1.0 = no raise (v1-reduction off); ~1.5 = shipped; float('inf') = unbounded (optimistic lever).
+    #   A per-period FLOW check: room = survivor_wage_bill·(ceiling − W); survivor_gains beyond room spills.
+    survivor_spillover_to_profit: float = 0.5   # of the spilled (un-absorbable) survivor_gains, the share
+    #   routed to retained profit (→ corp tax); the rest deflates prices. Drives the fed/state split.
 
     # ---------------- macro (v1 + NEW) ----------------
     mpc: float = 0.95
@@ -120,7 +127,10 @@ DEFAULTS_V1REDUCTION = V2Params()
 DEFAULTS_SHIPPED = replace(
     DEFAULTS_V1REDUCTION,
     reabsorption_rung=1,            # service floor, not flat haircut
-    survivor_elasticity=0.0,        # stays 0 until Phase 4 wires the channel; bumped then
+    survivor_elasticity=-0.15,      # mild substitution: a 1pp rise in slack shaves ~0.15pp off survivor
+    #                                 wages (literature anchor; refine via the load_* seam). The mechanical
+    #                                 raise (survivor_gains_share) pushes the other way — net sign is data.
+    survivor_raise_ceiling=1.5,     # survivors' wage can rise at most 50% over baseline; the rest spills
     retained_profit_share=0.6, price_reduction_share=0.2, survivor_gains_share=0.2,
     auto_cost=0.10, offshore_share=0.25,
     price_passthrough=0.3, productivity_passthrough=0.01,
@@ -135,4 +145,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         "robotics_cognitive_coupling", "task_job_passthrough", "sector_adoption_mult",
         "sector_adoption_ceiling", "retained_profit_share", "price_reduction_share",
         "survivor_gains_share", "auto_cost", "offshore_share", "reabsorption_rung",
-        "lfp_exit_rate", "survivor_elasticity", "price_passthrough", "productivity_passthrough"))
+        "reabsorption_floor_pctile", "lfp_exit_rate", "survivor_elasticity",
+        "survivor_raise_ceiling", "survivor_spillover_to_profit",
+        "price_passthrough", "productivity_passthrough"))

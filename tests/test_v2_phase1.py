@@ -59,7 +59,12 @@ def test_reduction_holds_at_no_exit(data, deltas, c8_compare):
     assert (r2["exited_M"] == 0).all()
 
 
-def test_rung1_is_a_phase4_boundary(data, deltas):
-    # reabsorption Rung 1/2 are not wired until Phase 4 — must fail loud, not silently approximate
+def test_rung1_now_implemented_rung2_still_boundary(data, deltas):
+    # Phase 4 wired Rung 1 (service floor) — it must construct without NotImplementedError (skip if its
+    # disk cache is absent, since construction loads it). Rung 2 (cross-cell routing) stays a boundary.
+    from fiscal_model import reabsorption
+    if not reabsorption.cache_path(DEFAULTS_SHIPPED.reabsorption_floor_pctile).exists():
+        pytest.skip("Rung-1 reabsorption cache not built — run `python -m fiscal_model.reabsorption`")
+    DynamicModelV2(data, deltas, replace(DEFAULTS_SHIPPED, **SCEN))            # no raise
     with pytest.raises(NotImplementedError):
-        DynamicModelV2(data, deltas, replace(DEFAULTS_SHIPPED, **SCEN)).run()
+        DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, reabsorption_rung=2, **SCEN))

@@ -250,6 +250,98 @@ class CellIntegrator:
                           math.sqrt(max(var["during"], 0.0)), math.sqrt(max(var["after"], 0.0)),
                           coverage)
 
+    # -- Phase 4: reabsorption Rung 1 — re-employment at a destination wage w_d ---------------
+    def _reemployment_filing(self, soc, state, filing, hh_mean, worker_wage, dest_wage, p,
+                             collapse_to_mean=False):
+        """Permanent reabsorbed delta for one filing: the worker now earns `dest_wage` instead of
+        `worker_wage`. wage_removed = worker_wage − dest_wage is **SIGNED** (a service floor may
+        sit ABOVE the origin wage → a uniform net fiscal GAIN, all channels sign together). Income
+        tax & transfers key off h − wage_removed; payroll takes the LEVEL difference fica(w_o)−fica(w_d)
+        and the take-home (consumption) loss the EMPLOYEE-side level difference (FICA is capped/
+        nonlinear, so neither can be 'FICA on the increment'). Single permanent phase (no UI window)."""
+        if collapse_to_mean:
+            nodes, masses = (np.array([hh_mean if hh_mean and hh_mean > 0 else worker_wage]),
+                             np.array([1.0]))
+        else:
+            nodes, masses = self._nodes_and_masses(p[10], p[50], p[90],
+                                                   hh_mean if hh_mean and hh_mean > 0 else worker_wage)
+        h = nodes
+        wage_removed = worker_wage - dest_wage                          # SIGNED (no clamp)
+        inc = self.income.marginal_income_tax_lost(h, wage_removed, state, filing)
+        inc_fed, inc_state, inc_tot = (np.asarray(inc["federal"], float),
+                                       np.asarray(inc["state"], float),
+                                       np.asarray(inc["total"], float))
+        payroll = float(self.fica.fica(worker_wage, filing) - self.fica.fica(dest_wage, filing))
+        emp_fica_diff = float(self.fica.employee_fica(worker_wage, filing)
+                              - self.fica.employee_fica(dest_wage, filing))
+        rate = float(self._cons.get(state, 0.0))
+
+        disp_loss = wage_removed - inc_tot - emp_fica_diff             # SIGNED (consumption may gain)
+        cons = (rate * self.params.marginal_taxable_multiplier
+                * self.params.mpc * self.params.consumption_stickiness * disp_loss)
+        h_after = np.maximum(h - wage_removed, 0.0)                     # h − w_o + w_d
+
+        tr_fed = np.zeros_like(h); tr_state = np.zeros_like(h)
+        bands = self._band_index(h)
+        ks = [0] if filing == "Single" else [0, 1, 2, 3]
+        for k in ks:
+            xs, progs = self.lookup.program_arrays(state, filing, k)
+            d_fed = np.zeros_like(h); d_state = np.zeros_like(h)
+            for prog, ys in progs.items():
+                delta = np.interp(h_after, xs, ys) - np.interp(h, xs, ys)
+                fs = self.lookup.fed_share.get(prog, 1.0)
+                d_fed += delta * fs
+                d_state += delta * (1.0 - fs)
+            pk = np.array([self._noc.get((filing, state, b), np.full(4, 0.25))[k] for b in bands])
+            tr_fed += pk * d_fed
+            tr_state += pk * d_state
+
+        return FiscalDelta(
+            lost_income_tax_fed=float((masses * inc_fed).sum()),
+            lost_income_tax_state=float((masses * inc_state).sum()),
+            lost_payroll_fed=payroll,
+            lost_consumption_tax_state=float((masses * cons).sum()),
+            gained_outlays_fed=float((masses * tr_fed).sum()),
+            gained_outlays_state=float((masses * tr_state).sum()),
+        )
+
+    def integrate_reemployment(self, soc_code: str, state: str, dest_wage: float,
+                               collapse_to_mean: bool = False) -> Optional[FiscalDelta]:
+        """Per-cell permanent reabsorbed-at-`dest_wage` fiscal delta (Rung 1). Mirrors `integrate`'s
+        filing setup but evaluates the single permanent re-employment state with the means-tested
+        transfer channel live — the cross-threshold fire that Rung 0's flat haircut silently misses."""
+        wp = self._wage_percentiles(soc_code, state)
+        if wp is None:
+            return None
+        worker_wage, p = wp
+        if worker_wage is None or pd.isna(worker_wage):
+            return None
+        try:
+            hh = self._hh.loc[(soc_code, state)]
+            if isinstance(hh, pd.DataFrame):
+                hh = hh.iloc[0]
+        except KeyError:
+            hh = None
+        filings = []
+        for label, pcol, icol in self._filings:
+            pf = float(hh[pcol]) if hh is not None and not pd.isna(hh[pcol]) else None
+            mean = float(hh[icol]) if hh is not None and not pd.isna(hh[icol]) else None
+            filings.append((label, pf, mean))
+        if all(pf is None for _, pf, _ in filings):
+            filings = [(lbl, 1 / 3, None) for lbl, _, _ in filings]
+        else:
+            tot = sum(pf for _, pf, _ in filings if pf) or 1.0
+            filings = [(lbl, (pf or 0.0) / tot, mean) for lbl, pf, mean in filings]
+
+        agg = FiscalDelta()
+        for label, pf, mean in filings:
+            if pf <= 0:
+                continue
+            fd = self._reemployment_filing(soc_code, state, label, mean, worker_wage, dest_wage, p,
+                                           collapse_to_mean)
+            agg = agg + FiscalDelta(**{f: getattr(fd, f) * pf for f in fd.__dataclass_fields__})
+        return agg
+
 
 if __name__ == "__main__":
     data = loaders.load_all()
