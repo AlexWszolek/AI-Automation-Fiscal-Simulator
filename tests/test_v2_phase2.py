@@ -63,13 +63,29 @@ def test_c3_compute_pool_flow():
     assert np.isclose(cp.tax_fed, cp.domestic * v2p.compute_effective_rate)
 
 
-def test_corporate_reduction_equals_v1(data, deltas):
+def test_corporate_reduction_equals_v1(data, deltas, c8_compare):
     v2p = replace(DEFAULTS_V1REDUCTION, **SCEN)         # disposition off
-    lp, dp = v2p.to_v1()
-    r1 = DynamicModel(data, deltas, lp, dp).run()
-    r2 = DynamicModelV2(data, deltas, v2p).run()
-    assert np.allclose(r1["corp_offset_B"].to_numpy(), r2["corp_offset_B"].to_numpy(), atol=1e-9)
+    _, r2 = c8_compare(data, deltas, v2p, ["corp_offset_B"])
     assert (r2["compute_pool_tax_B"] == 0).all()
+
+
+def test_conservation_in_live_run(data, deltas):
+    # C2 / C-gate / C5b asserted on the disp produced INSIDE a real run (not just a synthetic _route)
+    res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, **DISP)).run()
+    assert np.allclose(res["automation_spend_B"] + res["net_saving_B"], res["saved_bill_B"])   # C2 meter
+    assert np.allclose(res["retained_profit_B"] + res["price_reduction_B"]                     # C2 partition
+                       + res["survivor_gains_B"], res["net_saving_B"])
+    assert (res["net_saving_B"] >= -1e-9).all()                                                # C-gate
+    assert np.allclose(res["automation_spend_B"] + res["retained_profit_B"]                    # C5b
+                       + res["price_reduction_B"] + res["survivor_gains_B"], res["saved_bill_B"])
+
+
+def test_corporate_xor_guard(data, deltas):
+    # corp_offset_scale / surplus_capture are superseded by the router — V2 must reject ≠ 1.0
+    with pytest.raises(AssertionError):
+        DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, corp_offset_scale=0.5))
+    with pytest.raises(AssertionError):
+        DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, surplus_capture=0.5))
 
 
 def test_base_migration_shrinks_recovery_and_grows_deficit(data, deltas):

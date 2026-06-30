@@ -25,14 +25,10 @@ def deltas():
 
 
 @pytest.mark.parametrize("ui_weeks", [0, 13, 26, 39, 52])
-def test_ui_blend_reduction(data, deltas, ui_weeks):
+def test_ui_blend_reduction(data, deltas, c8_compare, ui_weeks):
     # the 5-state on-UI cohort must reproduce v1's ui_share during/after blend across UI durations
     v2p = replace(DEFAULTS_V1REDUCTION, ui_weeks=ui_weeks, reabsorption_rate=0.3, **SCEN)
-    lp, dp = v2p.to_v1()
-    r1 = DynamicModel(data, deltas, lp, dp).run()
-    r2 = DynamicModelV2(data, deltas, v2p).run()
-    for c in C8:
-        assert np.allclose(r1[c].to_numpy(), r2[c].to_numpy(), atol=1e-9), f"{c} @ ui_weeks={ui_weeks}"
+    c8_compare(data, deltas, v2p, C8)
 
 
 def test_c1_with_exit_and_reabsorption(data, deltas):
@@ -57,13 +53,9 @@ def test_lfp_exit_increases_long_run_loss(data, deltas):
     assert d1 > d0   # exit siphons reabsorbable workers into permanent loss
 
 
-def test_reduction_holds_at_no_exit(data, deltas):
+def test_reduction_holds_at_no_exit(data, deltas, c8_compare):
     v2p = replace(DEFAULTS_V1REDUCTION, reabsorption_rate=0.5, lfp_exit_rate=0.0, **SCEN)
-    lp, dp = v2p.to_v1()
-    r1 = DynamicModel(data, deltas, lp, dp).run()
-    r2 = DynamicModelV2(data, deltas, v2p).run()
-    for c in C8:
-        assert np.allclose(r1[c].to_numpy(), r2[c].to_numpy(), atol=1e-9)
+    _, r2 = c8_compare(data, deltas, v2p, C8)
     assert (r2["exited_M"] == 0).all()
 
 

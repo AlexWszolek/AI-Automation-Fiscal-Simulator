@@ -9,6 +9,28 @@ def data():
     return loaders.load_all(validate=True)
 
 
+@pytest.fixture(scope="session")
+def c8_compare():
+    """Guarded C8 helper (note E): asserts the config is a v1-reduction, then asserts DynamicModelV2
+    reproduces v1 on `cols`. The C8 harness may ONLY be invoked with a reduction config."""
+    import numpy as np
+
+    from fiscal_model import levers_v2
+    from fiscal_model.dynamics import DynamicModel
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+
+    def _cmp(data, deltas, v2p, cols, atol=1e-9):
+        assert levers_v2.is_v1_reduction(v2p), "C8 must be run against a v1-reduction config (note E)"
+        lp, dp = v2p.to_v1()
+        r1 = DynamicModel(data, deltas, lp, dp).run()
+        r2 = DynamicModelV2(data, deltas, v2p).run()
+        for c in cols:
+            assert np.allclose(r1[c].to_numpy(), r2[c].to_numpy(), atol=atol, rtol=0), c
+        return r1, r2
+
+    return _cmp
+
+
 # Several test modules pytest.skip when the (gitignored) build artifacts are absent —
 # benefit_lookup.parquet, noc_distribution.csv, the worker-delta cache. On a fresh clone
 # that makes the suite report green with hidden skips. Surface that loudly at the end so a

@@ -68,7 +68,9 @@ class V2Params:
     denominator: str = "absolute"               # 'absolute' | 'pct_gdp'
 
     # ---------------- corporate kernel rates (v1) ----------------
-    surplus_capture: float = 1.0                # deprecated alias; live only when router off (Phase 0)
+    surplus_capture: float = 1.0                # INERT in V2: it only enters the frozen worker-delta
+    # cache (built once at KernelParams()), so changing it does nothing. The disposition router
+    # controls corporate (the alias is (1-auto_cost)*retained_profit_share). Asserted ==1.0 in V2.
     dividend_tax_rate: float = 0.188
     passthrough_individual_rate: float = 0.25
 
@@ -76,8 +78,9 @@ class V2Params:
     state_response: str = "mix"
     interest_rate: float = 0.03
     ubi_annual: float = 0.0
-    corp_offset_scale: float = 1.0
-    consumption_scale: float = 1.0
+    corp_offset_scale: float = 1.0   # v1-DEPRECATED: superseded by the disposition router (corporate
+    #                                  XOR) — would double-apply with disp_factor; asserted ==1.0 in V2.
+    consumption_scale: float = 1.0   # v1 post-hoc consumption scale (applied once; not superseded yet)
 
     # ---------------- simulation ----------------
     n_periods: int = 10

@@ -2,23 +2,25 @@
 
 `DynamicModelV2` runs the multi-actor model through the new structure: the explicit 5-state worker
 machine (`workers.py`), the sector disposition router + compute pool (`firms/disposition.py`,
-`compute_pool.py`), the macro environment (`macro.py`: P, Y), and a baseline ledger seeded from the
-base-linkage accounts. At a v1-reduction config (`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral
-lever is off, so the fiscal math is bit-for-bit v1 — the C8 anchor every later phase is gated against.
-Phase 1 wired the worker transitions + `lfp_exit`; Phase 2 the disposition router (corporate-via-router
-superseding `surplus_capture`) + compute pool; Phase 3 the macro state — P (price level) and Y
-(productivity/GDP) drive the real / %-GDP reporting, and per the A2 rule P *only* deflates nominal
+`compute_pool.py`), and the macro environment (`macro.py`: P, Y). At a v1-reduction config
+(`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral lever is off, so the fiscal math is bit-for-bit
+v1 — the C8 anchor every later phase is gated against.
+
+Phase 1 wired the worker transitions + `lfp_exit`; Phase 2 the disposition router — the **sole** V2
+corporate path (the corporate XOR: v1's `surplus_capture` / `corp_offset_scale` are superseded and
+asserted inert in `__init__`) — plus the compute pool; Phase 3 the macro state, where P (price level)
+and Y (productivity/GDP) drive the real / %-GDP reporting and, per the A2 rule, P *only* deflates nominal
 aggregates (it never enters the transfer interpolation). The `survivor_gains` share is recorded but
-acquires its fiscal effect in Phase 4 (survivor → labor tax). Survivor / government seams remain
-pass-throughs.
+acquires its fiscal effect in Phase 4 (survivor → labor tax).
 
-It reuses the v1 `DynamicModel`'s prepared arrays (g_cell, channel deltas, corp offset, ui, …) so
-the inputs are *identical* to v1; the loop then reproduces v1's per-period arithmetic while also
-carrying the 5-state population (for C1) and the baseline rates (for the Phase-0 t=0 gate).
+It reuses the v1 `DynamicModel`'s prepared arrays (g_cell, channel deltas, corp offset, ui, …) so the
+inputs are *identical* to v1; the loop **inlines** calls to the actor modules (`workers`,
+`firms.disposition.route`, `compute_pool`, `macro`) — there are no `_diffusion`/`_transitions`/… seam
+methods. It carries the 5-state population (C1) and the t=0 base-rate gate via `baseline_rates()`.
 
-Later phases replace the pass-through seams here (`_diffusion`, `_transitions`, `_disposition`,
-`_survivor`, `_macro`, `_recompute`, `_government`, `_demand`) with real physics; this file is the
-stable skeleton + the reduction guarantee.
+NOTE: there is not yet an absolute revenue *ledger* the deltas net against — every reported fiscal column
+is a delta, and %-GDP rides a consistent synthetic baseline (`macro.VA_BASELINE · Y · P`). The absolute
+base-linkage ledger is Phase-5 work (the tax-regime solver needs it).
 """
 from __future__ import annotations
 
@@ -35,6 +37,13 @@ class DynamicModelV2:
     def __init__(self, data: loaders.FiscalData, deltas: pd.DataFrame, params: V2Params):
         self.data = data
         self.v2p = params
+        # Corporate XOR (note C): the disposition router is the SOLE V2 corporate path. v1's
+        # corp_offset_scale would double-apply with the router's disp_factor, and surplus_capture is
+        # inert (frozen in the delta cache). Both must stay at their defaults — fail loud otherwise.
+        assert params.corp_offset_scale == 1.0, \
+            "corp_offset_scale is superseded by the disposition router (corporate XOR) — keep it 1.0"
+        assert params.surplus_capture == 1.0, \
+            "surplus_capture is inert in V2 (frozen in the delta cache); the router controls corporate"
         lp, dp = params.to_v1()
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
@@ -45,7 +54,8 @@ class DynamicModelV2:
         ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
         self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
 
-    # ---- baseline ledger (t=0 gate, J.2): the absolute anchor for %-GDP & the tax-regime solver ----
+    # ---- t=0 base-rate gate (J.2): the published base-linkage effective rates. (The absolute
+    #      revenue ledger the deltas net against is Phase-5 work for the tax-regime solver.) ----
     @staticmethod
     def _baseline_rates(data: loaders.FiscalData) -> dict:
         bl = data.base_linkage
@@ -141,7 +151,10 @@ class DynamicModelV2:
                                       + ui_outlay_fed.sum()) / 1e9,
                 "corp_offset_B": disp.corporate_offset_cell.sum() / 1e9,
                 "compute_pool_tax_B": cp.tax_fed / 1e9,
+                "saved_bill_B": disp.saved_bill / 1e9,
                 "automation_spend_B": disp.automation_spend / 1e9,
+                "net_saving_B": disp.net_saving / 1e9,
+                "retained_profit_B": disp.retained_profit / 1e9,
                 "price_reduction_B": disp.price_reduction / 1e9,
                 "survivor_gains_B": disp.survivor_gains / 1e9,
                 "offshore_leak_B": cp.offshore_leak / 1e9,
@@ -151,6 +164,9 @@ class DynamicModelV2:
                 "fed_deficit_real_B": net_fed / P / 1e9, "fed_debt_real_B": debt / P / 1e9,
                 "fed_deficit_pct_gdp": 100 * net_fed / ngdp, "fed_debt_pct_gdp": 100 * debt / ngdp,
                 "state_gap_pct_gdp": 100 * state_gap_total / ngdp,
+                # denominator toggle — value is $B when 'absolute', else % of GDP
+                "headline_deficit": (net_fed / 1e9 if v2p.denominator == "absolute"
+                                     else 100 * net_fed / ngdp),
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
             })
 

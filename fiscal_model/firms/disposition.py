@@ -18,6 +18,11 @@ anchor. v1's `surplus_capture` path is superseded; it survives only as the alias
 Phase 2 uses GLOBAL disposition shares (per-sector shares are an advanced lever). At global shares the
 sector aggregation equals the economy total, so the router works on aggregates here; the corporate
 offset is kept as a per-cell array so the federal loop subtracts it exactly as v1 did.
+
+NOTE — cost-of-automation GATE deferred: only the METER (`automation_spend = auto_cost × saved_bill`) is
+implemented. The GATE (note C: `auto_cost` modulating the displacement *fraction* by wage, making
+high-wage-first endogenous) is a deferred diffusion refinement — `auto_cost` does not yet affect
+displacement counts, only the split of the saved bill.
 """
 from __future__ import annotations
 

@@ -56,3 +56,10 @@ def test_productivity_cushions_pct_gdp(data, deltas):
     assert (r1["productivity_index"] > 1.0).any()
     assert np.allclose(r0["fed_deficit_B"].to_numpy(), r1["fed_deficit_B"].to_numpy(), atol=1e-9)
     assert r1["fed_deficit_pct_gdp"].iloc[-1] < r0["fed_deficit_pct_gdp"].iloc[-1]
+
+
+def test_denominator_toggle(data, deltas):
+    a = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, denominator="absolute")).run()
+    p = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, denominator="pct_gdp")).run()
+    assert np.allclose(a["headline_deficit"].to_numpy(), a["fed_deficit_B"].to_numpy())
+    assert np.allclose(p["headline_deficit"].to_numpy(), p["fed_deficit_pct_gdp"].to_numpy())

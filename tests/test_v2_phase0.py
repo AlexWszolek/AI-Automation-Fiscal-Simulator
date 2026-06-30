@@ -35,14 +35,9 @@ def test_two_default_sets_differ(data):
 
 
 @pytest.mark.parametrize("reab", [0.0, 0.4, 0.8])
-def test_c8_v2_reproduces_v1(data, deltas, reab):
+def test_c8_v2_reproduces_v1(data, deltas, c8_compare, reab):
     v2p = replace(DEFAULTS_V1REDUCTION, reabsorption_rate=reab, ubi_annual=12_000, **SCENARIO)
-    lp, dp = v2p.to_v1()
-    r1 = DynamicModel(data, deltas, lp, dp).run()
-    r2 = DynamicModelV2(data, deltas, v2p).run()
-    for c in _C8_COLS:
-        assert np.allclose(r1[c].to_numpy(), r2[c].to_numpy(), rtol=0, atol=1e-9), \
-            f"C8 break in {c} at reabsorption={reab}"
+    c8_compare(data, deltas, v2p, _C8_COLS)   # asserts is_v1_reduction then v2 == v1
 
 
 def test_c1_population_conservation(data, deltas):
