@@ -81,8 +81,12 @@ class V2Params:
     dividend_tax_rate: float = 0.188
     passthrough_individual_rate: float = 0.25
 
-    # ---------------- government (v1) ----------------
-    state_response: str = "mix"
+    # ---------------- government (v1 + NEW Phase-5 close) ----------------
+    state_response: str = "mix"        # 'cut_spending' | 'raise_rates' | 'mix' — how states close the gap
+    state_cut_share: float = 0.0       # for 'mix': share of the gap closed by spending cuts (rest by rate
+    #   hikes). 0 = all rate hikes (subject to the cap); 'cut_spending'/'raise_rates' force the corners.
+    state_rate_hike_cap: float = 1.0   # max feasible rate-hike Δ (× the remaining labour-income base); a
+    #   gap needing more than this spills to a forced spending cut (states can't raise rates without bound).
     interest_rate: float = 0.03
     ubi_annual: float = 0.0
     corp_offset_scale: float = 1.0   # v1-DEPRECATED: superseded by the disposition router (corporate
@@ -135,6 +139,7 @@ DEFAULTS_SHIPPED = replace(
     auto_cost=0.10, offshore_share=0.25,
     price_passthrough=0.3, productivity_passthrough=0.01,
     lfp_exit_rate=0.03,
+    demand_multiplier=0.5,          # Phase 5: second-round demand → lagged employment flow (decision I)
 )
 
 
@@ -147,4 +152,7 @@ def is_v1_reduction(p: V2Params) -> bool:
         "survivor_gains_share", "auto_cost", "offshore_share", "reabsorption_rung",
         "reabsorption_floor_pctile", "lfp_exit_rate", "survivor_elasticity",
         "survivor_raise_ceiling", "survivor_spillover_to_profit",
-        "price_passthrough", "productivity_passthrough"))
+        "price_passthrough", "productivity_passthrough",
+        # Phase 5: demand_multiplier is CRITICAL — past Phase 5 the v2 lagged-demand flow diverges from
+        # v1's legacy closed-form `induced`, so C8 (v2==v1) holds ONLY at demand_multiplier=0.
+        "demand_multiplier", "state_cut_share", "state_rate_hike_cap"))

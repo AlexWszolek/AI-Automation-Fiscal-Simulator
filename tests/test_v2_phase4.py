@@ -121,7 +121,7 @@ def test_c6_federal_reconciles_no_residual(data, deltas):
     recon = (res["inc_fed_loss_B"] + res["payroll_fed_loss_B"] + res["transfer_fed_B"]
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
-             - res["survivor_overflow_corp_tax_B"] + res["induced_B"])
+             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"])  # Phase-5 netting term
     assert np.allclose(recon.to_numpy(), res["fed_deficit_B"].to_numpy(), rtol=0, atol=1e-9)
 
 

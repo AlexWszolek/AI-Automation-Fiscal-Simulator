@@ -14,6 +14,13 @@ v1's {employed, U(=exhausted), R(=reabsorbed)} stock flow.
 fiscal loss, but it can never be reabsorbed — so `lfp_exit` permanently erodes the labor-tax base
 (SSDI outlays are a later-phase refinement; for now exited == exhausted fiscally, minus the recovery
 option).
+
+`induced` (Phase 5, decision I) is the SIXTH state: workers laid off by the second-round DEMAND
+contraction, not by automation. They carry the full "after" fiscal loss like `exhausted`, but are kept
+in their own bucket because — unlike automation displacement — a demand-driven layoff produces no saved
+compensation to dispose (the firm's revenue fell with demand), so `induced` is EXCLUDED from the
+`automated` stock the disposition router prices. It is absorbing for now (no in-model demand recovery).
+At `demand_multiplier = 0` it stays empty and the machine is bit-for-bit the 5-state v1 anchor.
 """
 from __future__ import annotations
 
@@ -29,14 +36,16 @@ class WorkerStocks:
     exhausted: np.ndarray
     reabsorbed: np.ndarray
     exited: np.ndarray
+    induced: np.ndarray
 
     @classmethod
     def initial(cls, employed0: np.ndarray) -> "WorkerStocks":
         z = np.zeros_like(employed0, dtype=float)
-        return cls(employed0.astype(float).copy(), z.copy(), z.copy(), z.copy(), z.copy())
+        return cls(employed0.astype(float).copy(), z.copy(), z.copy(), z.copy(), z.copy(), z.copy())
 
     def total(self) -> np.ndarray:
-        return self.employed + self.on_ui + self.exhausted + self.reabsorbed + self.exited
+        return (self.employed + self.on_ui + self.exhausted + self.reabsorbed
+                + self.exited + self.induced)
 
     # -- step 1-2 (mid-period): displace `frac` of employed into the fresh on-UI cohort --
     def displace(self, frac: np.ndarray) -> np.ndarray:
@@ -44,6 +53,14 @@ class WorkerStocks:
         self.employed = self.employed - new
         self.on_ui = new                       # on_ui was emptied by the prior period-end aging
         return new
+
+    # -- decision I: the lagged demand contraction lands here as a per-cell employment movement.
+    #    employed -> induced (C1-conserved); a separate bucket so these are NOT priced as automation. --
+    def displace_extra(self, jobs: np.ndarray) -> np.ndarray:
+        jobs = np.minimum(jobs, self.employed)   # cannot lay off more than remain employed
+        self.employed = self.employed - jobs
+        self.induced = self.induced + jobs
+        return jobs
 
     # -- period end: age on-UI into exhausted, then split the exhausted pool --
     def age_and_transition(self, reabsorption_rate: float, lfp_exit_rate: float) -> None:

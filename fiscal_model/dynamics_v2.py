@@ -1,9 +1,11 @@
-"""V2 orchestrator — Phases 0-4.
+"""V2 orchestrator — Phases 0-5.
 
-`DynamicModelV2` runs the multi-actor model through the new structure: the explicit 5-state worker
+`DynamicModelV2` runs the multi-actor model through the new structure: the explicit 6-state worker
 machine (`workers.py`), the sector disposition router + compute pool (`firms/disposition.py`,
 `compute_pool.py`), the macro environment (`macro.py`: P, Y), the survivor wage channel
-(`survivor.py`, decision A), and reabsorption Rung 1 (`reabsorption.py`, decision D). At a v1-reduction config
+(`survivor.py`, decision A), reabsorption Rung 1 (`reabsorption.py`, decision D), and the government
+closure + absolute ledger (`government.py`: the per-state balanced-budget close H/C7, and the lagged
+demand contraction I that lands as a 6th-state `induced` employment flow). At a v1-reduction config
 (`levers_v2.DEFAULTS_V1REDUCTION`) every new behavioral lever is off, so the fiscal math is bit-for-bit
 v1 — the C8 anchor every later phase is gated against.
 
@@ -31,7 +33,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import loaders, workers, compute_pool, macro, survivor, reabsorption
+from . import loaders, workers, compute_pool, macro, survivor, reabsorption, government
 from .dynamics import DynamicModel
 from .firms import disposition
 from .levers_v2 import V2Params
@@ -73,6 +75,22 @@ class DynamicModelV2:
         elif params.reabsorption_rung not in (0,):
             raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
 
+        # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
+        self._ledger = government.RevenueLedger(data)
+        # Disposable income lost per displaced worker — the lagged-demand impulse base (decision I). Same
+        # take-home basis the kernel's consumption channel uses (wage − income tax − employee FICA − UI),
+        # NOT gross wage (which would overstate the withdrawn demand by the tax+FICA the worker stops paying).
+        v1 = self._v1
+        inc_tax_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
+        emp_fica_pw = sum(self._survivor.weight[f]
+                          * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
+                          for f in ("Married filing jointly", "Head of household", "Single"))
+        self._disposable_pw = np.maximum(v1.wage - inc_tax_pw - emp_fica_pw - v1.ui, 0.0)
+        # Value-added per worker — the divisor turning a $ demand shortfall into a job count (decision I).
+        # A direct-requirements (Type-I) divisor: it OMITS the Type-II output/employment multiplier (~1.5–2×),
+        # so it under-counts induced jobs; `demand_multiplier` absorbs that calibration.
+        self._va_per_worker = macro.VA_BASELINE_USD / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
+
     # ---- t=0 base-rate gate (J.2): the published base-linkage effective rates. (The absolute
     #      revenue ledger the deltas net against is Phase-5 work for the tax-regime solver.) ----
     @staticmethod
@@ -102,13 +120,17 @@ class DynamicModelV2:
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
+        induced_pending = np.zeros(len(v1.wage))          # decision I: induced layoffs for NEXT period; 0 at t=0
         out = []
 
         for t in range(p.n_periods):
             # --- steps 1-2: diffusion + displacement ---
             adopt = v1._adoption(t)
             frac = np.clip(v1.g_cell * adopt, 0.0, 1.0)
-            st.displace(frac)
+            new = st.displace(frac)
+            # decision I: last period's demand contraction lands NOW as a C1-guarded employment movement
+            # (employed→induced), priced as a job loss but NOT as automation (separate bucket). 0 at t=0.
+            induced_applied = st.displace_extra(induced_pending)
 
             # post-transition survivor stock (decision A/G): excludes on_ui/exhausted/reabsorbed/exited,
             # so this period's newly-displaced are priced ONLY as displaced, never also as survivors.
@@ -118,7 +140,7 @@ class DynamicModelV2:
             # --- step 7: fiscal flows. on_ui -> UI blend; exhausted+exited -> 'after'. Reabsorbed:
             #     Rung 0 -> flat-haircut residual on tax channels only (v1 anchor); Rung 1 -> the full
             #     per-cell service-floor delta over ALL channels incl. transfers (the cross-threshold fire). ---
-            out_after = st.exhausted + st.exited
+            out_after = st.exhausted + st.exited + st.induced   # induced carry the full 'after' loss (I)
             ch = {}
             for c in v1.arr["during"]:
                 blend = v1.ui_share * v1.arr["during"][c] + (1 - v1.ui_share) * v1.arr["after"][c]
@@ -152,13 +174,13 @@ class DynamicModelV2:
             #   exceeds the ceiling. The survivor TAX BASE is wage_bill·(W_mech−1) — the STANDING raise on
             #   the current survivors — deliberately NOT equal to the cumulative routed inflow once the cap
             #   binds (the raise persists even in periods where actual_inflow==0; see test_sticky_rate_*).
-            #   KNOWN LIMITATION (resolved by the Phase-5 absolute firm-revenue ledger): with only a delta
-            #   model, the standing raise is not netted against the profit that funds it, so in the
-            #   binding-cap tail the same savings are taxed both as survivor wages and as overflow profit.
+            #   The standing raise IS netted against the corporate profit base below (survivor_profit_netting,
+            #   Phase 5) — so it is no longer taxed as BOTH wages and profit (the Phase-4 double-count is gone).
             #   Market (unconserved, C5-market-exempt): elasticity × t−1 slack (J.1, 0 at t=0); the part
             #   that would push total W above the ceiling is simply TRUNCATED (no capital counterparty).
             ceiling = v2p.survivor_raise_ceiling
             desired = disp.survivor_gains
+            W_mech_old = W_mech                            # the standing raise carried IN (for the netting)
             if wage_bill <= 0:
                 actual_inflow = 0.0
             elif not np.isfinite(ceiling):
@@ -189,6 +211,14 @@ class DynamicModelV2:
             overflow_corp_tax = corp_rate_per_profit * overflow_to_profit
             price_reduction_total = disp.price_reduction + overflow_to_price
 
+            # Phase 5 survivor NETTING (resolves the Phase-4 double-count): the PRE-existing standing raise
+            # wage_bill·(W_mech_old−1) is a firm cost funded from PROFIT — this period's increment came from
+            # survivor_gains (disjoint from retained_profit; the market component is unfunded/exempt) — so it
+            # REDUCES the taxable corporate base. Netted at the SAME corp rate as overflow_corp_tax (one
+            # basis); ADDED to net_fed (less recovery → higher deficit). 0 at reduction (W_mech_old=1). The
+            # net survivor effect is now labor_tax(raise) − capital_tax(raise), not a double count.
+            survivor_profit_netting = corp_rate_per_profit * wage_bill * (W_mech_old - 1.0)
+
             # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
             #     Y is the real-GDP/productivity index for the denominator. ---
             automated_fraction = automated.sum() / baseline_emp
@@ -197,32 +227,58 @@ class DynamicModelV2:
             ngdp = macro.nominal_gdp(Y, P)
 
             # federal: losses positive; the survivor GAIN and the profit-overflow recovery are subtracted
-            # (W<1 → sd<0 → adds to deficit).
+            # (W<1 → sd<0 → adds to deficit); the survivor netting is ADDED (less corp recovery).
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
                    + ui_outlay_fed - ui_tax_fed - disp.corporate_offset_cell - sd_fed)
-            net_fed = fed.sum() - cp.tax_fed - overflow_corp_tax
-            state_cell = ch["inc_state"] + ch["cons_state"] + ch["transfer_state"] - sd_state
-            state_net = np.bincount(v1.state_of_cell, weights=state_cell,
-                                    minlength=len(v1.uniq_states))
-            state_gap_total = state_net[state_net > 0].sum()
+            net_fed = fed.sum() - cp.tax_fed - overflow_corp_tax + survivor_profit_netting
 
-            induced = p.demand_multiplier * (net_fed + state_gap_total)
-            net_fed += induced
+            # --- step 8: state balanced-budget close (H, C6-state, C7). Compose per-state net loss, then
+            #     close it within-year by rate hikes (capped) and/or spending cuts. The reported gap stays
+            #     the PRE-close austerity magnitude (= v1 → C8-safe); the close's only feedback is the
+            #     contraction, which feeds lagged demand (I) and is gated by demand_multiplier. ---
+            state_cell = ch["inc_state"] + ch["cons_state"] + ch["transfer_state"] - sd_state
+            state_net = np.bincount(v1.state_of_cell, weights=state_cell, minlength=len(v1.uniq_states))
+            taxable_base = np.bincount(v1.state_of_cell, weights=employed_post * v1.wage * W_surv,
+                                       minlength=len(v1.uniq_states))   # remaining labour income (W-scaled)
+            close = government.close_state_gaps(state_net, taxable_base, v2p)
+            state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
+
             debt = debt * (1 + p.interest_rate) + net_fed
 
             base = wage_bill
             ubi_rate = (p.ubi_annual * baseline_emp / base) if (p.ubi_annual > 0 and base > 0) else 0.0
+
+            # --- step 9: second-round demand (I). Income withdrawn this period = the state austerity (the
+            #     close removes income/services ≈ the gap) + the disposable income lost by everyone newly
+            #     out of work this period (tech + induced). Stored, it re-enters at t+1 as an employment
+            #     movement (NOT a fiscal subtraction). value-added/worker turns the $ shortfall into jobs. ---
+            fresh_disposable_loss = float(((new + induced_applied) * self._disposable_pw).sum())
+            income_withdrawn = close.contraction + fresh_disposable_loss
+            induced_dollars = p.demand_multiplier * p.kernel_params.mpc \
+                * p.kernel_params.consumption_stickiness * income_withdrawn
+            induced_jobs = induced_dollars / self._va_per_worker if self._va_per_worker > 0 else 0.0
+            emp_share = employed_post / employed_post.sum() if employed_post.sum() > 0 else 0.0
+            induced_pending = induced_jobs * emp_share                  # consumed at the START of t+1
 
             rev_lost = ch["inc_fed"].sum() + ch["inc_state"].sum() + ch["payroll_fed"].sum()
             if baseline_rev is None:
                 baseline_rev = (v1.emp0 * (v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
                                            + v1.arr["after"]["payroll_fed"])).sum()
 
+            # absolute ledger (Phase 5): federal revenue-side delta ($B, negative = revenue lost) +
+            # post-close state figures, netted against the real base-linkage absolutes.
+            fed_rev_delta_B = (-(ch["inc_fed"].sum() + ch["payroll_fed"].sum()) + ui_tax_fed.sum()
+                               + disp.corporate_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
+                               + overflow_corp_tax - survivor_profit_netting) / 1e9
+            led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
+            led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
+
             out.append({
                 "period": t, "adoption": adopt,
                 "employed_M": st.employed.sum() / 1e6,
                 "on_ui_M": st.on_ui.sum() / 1e6, "exhausted_M": st.exhausted.sum() / 1e6,
                 "reabsorbed_M": st.reabsorbed.sum() / 1e6, "exited_M": st.exited.sum() / 1e6,
+                "induced_M": st.induced.sum() / 1e6,                    # 6th state: demand-driven layoffs (I)
                 "population_M": st.total().sum() / 1e6,
                 "employment_drop_pct": 100 * (1 - st.employed.sum() / baseline_emp),
                 "revenue_lost_B": rev_lost / 1e9,
@@ -261,8 +317,22 @@ class DynamicModelV2:
                 "payroll_fed_loss_B": ch["payroll_fed"].sum() / 1e9,
                 "transfer_fed_B": ch["transfer_fed"].sum() / 1e9,
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
-                "induced_B": induced / 1e9,
+                "survivor_netting_B": survivor_profit_netting / 1e9,    # C6 component (raises the deficit)
+                # --- Phase 5: state balanced-budget close (H, C7) ---
                 "state_gap_B": state_gap_total / 1e9, "ubi_required_rate": ubi_rate,
+                "state_rate_hike_B": close.recovered.sum() / 1e9,
+                "state_spending_cut_B": close.spending_cut.sum() / 1e9,
+                "state_close_residual_B": close.residual.sum() / 1e9,
+                "n_states_capped": int(close.capped.sum()),
+                "state_balanced": bool(np.all(close.residual <= 1e-6 * np.maximum(close.gap, 1.0))),
+                # --- Phase 5: lagged demand (I) — induced jobs QUEUED for next period ---
+                "induced_pending_M": induced_pending.sum() / 1e6,
+                "income_withdrawn_B": income_withdrawn / 1e9,
+                # --- Phase 5: absolute revenue ledger ---
+                "fed_revenue_B": led_fed["fed_revenue_B"],
+                "fed_deficit_abs_B": led_fed["fed_deficit_abs_B"],
+                "fed_deficit_abs_pct_gdp": led_fed["fed_deficit_abs_pct_gdp"],
+                "state_fiscal_position_B": led_state["state_fiscal_position_B"],
             })
 
             # carry this period's cumulative slack to t+1 (decision J.1 keeps ΔW_market predetermined).
