@@ -17,9 +17,9 @@ Per-worker deltas are SCENARIO-INVARIANT (they depend on wages/households/states
 the levers), so they are precomputed once over all occupation×state cells and cached; the loop just
 scales them by the scenario's flows. Everything else is an explicit lever in DynamicsParams.
 
-v1 simplifications (documented): corporate offset tied to the displaced WORKER (not permanent job
-automation) — exact at reabsorption=0 (the default thesis); demand multiplier and UBI financing are
-simple closed-forms; reemployed workers carry a haircut residual loss only.
+v1 simplifications (documented): demand multiplier and UBI financing are simple closed-forms;
+reemployed workers carry a haircut residual loss only. (The corporate offset rides the CUMULATIVE
+automated stock — a job stays automated after its worker is reabsorbed — matching v2.)
 """
 from __future__ import annotations
 
@@ -176,7 +176,9 @@ class DynamicModel:
 
             ui_outlay_fed = (new * self.ui * self.ui_share)
             ui_tax_fed = 0.10 * ui_outlay_fed                                    # rough tax on UI (federal)
-            corp_offset_fed = (new + U) * self.corp                              # tied to displaced worker
+            # corporate recovery on the CUMULATIVE automated stock (coherence fix, matches v2): a job stays
+            # automated after its worker is reabsorbed — the saved labour cost keeps flowing to capital.
+            corp_offset_fed = auto_disp * self.corp
 
             # ---- aggregate federal ----
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]

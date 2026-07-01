@@ -170,12 +170,12 @@ class DynamicModelV2:
             ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
             ui_tax_fed = 0.10 * ui_outlay_fed
 
-            # --- steps 3-4: disposition router. The automated stock's saved comp routes to
-            #     {retained profit -> corporate tax (per cell), automation spend -> compute pool,
-            #     price reduction -> Phase 3, survivor gains -> Phase 4}. corp offset on the
-            #     not-reabsorbed displaced; == v1's (new+U)×corp at the reduction config. ---
-            automated = st.on_ui + st.exhausted + st.exited
-            disp = disposition.route(automated, self._comp_pw, v1.corp, v2p)
+            # --- steps 3-4: disposition router. The AUTOMATED-JOBS base is the cumulative automation-
+            #     displaced stock `auto_disp` (coherence fix): a job stays automated after the worker moves
+            #     on — reabsorption/attrition must not retroactively un-automate it (which used to collapse
+            #     saved_bill and flip the federal balance). Worker states keep driving the HOUSEHOLD fiscal
+            #     channels above; `auto_disp` excludes induced (demand layoffs produce no saved comp). ---
+            disp = disposition.route(auto_disp, self._comp_pw, v1.corp, v2p)
             cp = compute_pool.route_to_compute_pool(disp.automation_spend, v2p)
 
             # --- step 5: survivor wage index — capacity-checked mechanical raise + market level. ---
@@ -219,9 +219,9 @@ class DynamicModelV2:
             survivor_mech_inflow = actual_inflow
 
             # the profit overflow is recovered as corporate tax at the same per-profit-$ rate the router
-            # uses (Σ automated·corp_pw / saved_bill — linear in the surplus base, note C); the price
+            # uses (Σ auto_disp·corp_pw / saved_bill — linear in the surplus base, note C); the price
             # overflow joins the disposition's price reduction in deflating P. Both vanish at reduction.
-            corp_full = float((automated * v1.corp).sum())
+            corp_full = float((auto_disp * v1.corp).sum())
             corp_rate_per_profit = (corp_full / disp.saved_bill) if disp.saved_bill > 0 else 0.0
             overflow_corp_tax = corp_rate_per_profit * overflow_to_profit
             price_reduction_total = disp.price_reduction + overflow_to_price
