@@ -89,6 +89,31 @@ def load_robot_exposure(path: Path = ROBOT_XLSX) -> pd.Series:
     return s[~s.index.duplicated()]
 
 
+def channel_shares(exposure_occ: pd.DataFrame, params: LeverParams,
+                   robot_exposure: Optional[pd.Series] = None) -> tuple:
+    """The two per-occupation exposure channels as Series indexed by soc_code:
+    (cognitive share in [0,1], robot share in [0,1]). The seam the robotics-lag lever needs — a
+    time-varying ramp on the PHYSICAL channel requires recombining the channels per period."""
+    df = exposure_occ.dropna(subset=["ai_pca_score"])
+    cog = cognitive_exposure(df["ai_pca_score"].to_numpy(), params)
+    if robot_exposure is None:
+        robot_exposure = load_robot_exposure()
+    robot = df["soc_code"].map(robot_exposure).fillna(0.0).to_numpy()
+    idx = df["soc_code"].values
+    return (pd.Series(cog, index=idx, name="cognitive_share"),
+            pd.Series(robot, index=idx, name="robot_share"))
+
+
+def combine_channels(cog: np.ndarray, robot: np.ndarray, cognitive_feasibility: float,
+                     physical_feasibility: float) -> np.ndarray:
+    """Independent-channels combination (a job is automated if EITHER channel can do its tasks).
+    The single source of the float-op order — `displacement_fraction` and the per-period
+    robotics-lag path must produce BIT-IDENTICAL results at ramp=1."""
+    surv_cog = 1.0 - cog * cognitive_feasibility
+    surv_rob = 1.0 - robot * physical_feasibility
+    return 1.0 - surv_cog * surv_rob                       # P(automated) = 1 - P(neither channel)
+
+
 def displacement_fraction(exposure_occ: pd.DataFrame, params: LeverParams,
                           robot_exposure: Optional[pd.Series] = None) -> pd.Series:
     """Per-occupation displacement fraction in [0,1], indexed by soc_code.
@@ -97,18 +122,11 @@ def displacement_fraction(exposure_occ: pd.DataFrame, params: LeverParams,
     its tasks. `robot_exposure` (soc_code -> [0,1]); loaded from ROBOT_XLSX if None. Missing
     robot scores default to 0 (the physical channel simply doesn't act on those occupations).
     """
-    df = exposure_occ.dropna(subset=["ai_pca_score"]).copy()
-    cog = cognitive_exposure(df["ai_pca_score"].to_numpy(), params)
-
-    if robot_exposure is None:
-        robot_exposure = load_robot_exposure()
-    robot = df["soc_code"].map(robot_exposure).fillna(0.0).to_numpy()
-
-    surv_cog = 1.0 - cog * params.cognitive_feasibility
-    surv_rob = 1.0 - robot * params.physical_feasibility
-    auto = 1.0 - surv_cog * surv_rob                       # P(automated) = 1 - P(neither channel)
+    cog_s, robot_s = channel_shares(exposure_occ, params, robot_exposure)
+    auto = combine_channels(cog_s.to_numpy(), robot_s.to_numpy(),
+                            params.cognitive_feasibility, params.physical_feasibility)
     frac = params.adoption * np.clip(auto, 0.0, 1.0)
-    return pd.Series(frac, index=df["soc_code"].values, name="displacement_fraction")
+    return pd.Series(frac, index=cog_s.index, name="displacement_fraction")
 
 
 def displacement_flows(data: loaders.FiscalData, params: LeverParams,

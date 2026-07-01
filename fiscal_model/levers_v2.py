@@ -35,7 +35,9 @@ class V2Params:
     adoption_path: Optional[list] = None
     # ---------------- diffusion (NEW v2 levers; off = v1) ----------------
     robotics_cognitive_coupling: float = 0.0   # 0 = physical_feasibility used directly (v1)
-    robotics_lag: float = 0.0                  # periods robotics trails cognitive
+    robotics_lag: float = 0.0                  # LIVE (coherence C6): years for robotic capacity to build —
+    #   physical automation requires AI-driven industrial capacity, so the robot channel ramps linearly:
+    #   g_cell(t) = 1 − (1 − cog·cf)·(1 − robot·pf·min(1, t/lag)). 0 = full capacity from t=0 (v1).
     sector_adoption_mult: float = 1.0          # per-sector multiplier (scalar stand-in; table seam later)
     sector_adoption_ceiling: float = 1.0       # saturation ceiling (1 = none)
     task_job_passthrough: float = 1.0          # 1 = task automation -> full headcount cut (v1)
@@ -164,6 +166,7 @@ DEFAULTS_SHIPPED = replace(
     automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated comp bill)
     ubi_recapture_rate=0.25,        # coherence: ~avg effective clawback + means-test crowd-out on UBI
     baseline_growth_rate=0.04,      # coherence: nominal trend growth for the %-GDP denominators
+    robotics_lag=4.0,               # coherence C6: robotic capacity builds over ~4 years of AI deployment
 )
 
 
@@ -182,4 +185,5 @@ def is_v1_reduction(p: V2Params) -> bool:
         "demand_multiplier", "state_cut_share", "state_rate_hike_cap",
         # Overhaul: new gated policy levers (0 at reduction). (ssdi_annual is NOT listed: it is inert at
         # reduction via lfp_exit_rate=0, and the same default ships in both configs.)
-        "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate"))
+        "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate",
+        "robotics_lag"))

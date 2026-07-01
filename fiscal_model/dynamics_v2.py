@@ -33,7 +33,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import loaders, workers, compute_pool, macro, survivor, reabsorption, government
+from . import loaders, workers, compute_pool, macro, survivor, reabsorption, government, levers
 from .dynamics import DynamicModel
 from .firms import disposition
 from .levers_v2 import V2Params
@@ -70,6 +70,7 @@ class DynamicModelV2:
             "automation_tax_rate exceeds retained_profit_share·(1−auto_cost) — no profit left to pay it"
         assert 0.0 <= params.baseline_growth_rate <= 0.10, "baseline_growth_rate out of [0, 0.10]"
         assert params.ssdi_annual >= 0.0, "ssdi_annual must be ≥ 0"
+        assert params.robotics_lag >= 0.0, "robotics_lag must be ≥ 0 (years of capacity build-out)"
         lp, dp = params.to_v1()
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
@@ -79,6 +80,14 @@ class DynamicModelV2:
             comp=("comp_musd", "sum"), emp=("emp_thousands", "sum"))
         ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
         self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
+
+        # robotics_lag (coherence C6): physical automation needs AI-built industrial capacity, so the
+        # robot channel ramps linearly over `robotics_lag` years. Requires the two exposure channels
+        # separately, mapped to cells (only consumed at lag>0 — at lag==0 the loop uses v1.g_cell
+        # verbatim, the bit-identical C8 fast path).
+        _cog_s, _rob_s = levers.channel_shares(data.exposure_occ, params.lever_params())
+        self._cog_cell = self._v1.d["soc_code"].map(_cog_s).fillna(0.0).to_numpy()
+        self._rob_cell = self._v1.d["soc_code"].map(_rob_s).fillna(0.0).to_numpy()
 
         # Phase 4: the survivor channel (decision A) — exact income+payroll re-eval of the still-employed
         # at a scaled wage. Shares the delta cache's wage basis (the C5c leak detector relies on it).
@@ -172,9 +181,18 @@ class DynamicModelV2:
         out = []
 
         for t in range(p.n_periods):
-            # --- steps 1-2: diffusion + displacement (cumulative diffusion ceiling — fix 1) ---
+            # --- steps 1-2: diffusion + displacement (cumulative diffusion ceiling — fix 1). The robot
+            #     channel ramps over `robotics_lag` years (AI-built industrial capacity — coherence C6);
+            #     lag==0 uses v1.g_cell verbatim (the bit-identical C8 fast path). ---
             adopt = v1._adoption(t)
-            flow = workers.displacement_flow(v1.g_cell, adopt, v1.emp0, auto_disp, st.employed)
+            if v2p.robotics_lag > 0:
+                ramp_t = min(1.0, t / v2p.robotics_lag)
+                g_cell_t = levers.combine_channels(self._cog_cell, self._rob_cell,
+                                                   v2p.cognitive_feasibility,
+                                                   v2p.physical_feasibility * ramp_t)
+            else:
+                g_cell_t = v1.g_cell
+            flow = workers.displacement_flow(g_cell_t, adopt, v1.emp0, auto_disp, st.employed)
             auto_disp = auto_disp + flow
             new = st.displace(flow)
             # decision I (level-targeting): last period's SIGNED controller flow lands NOW as a

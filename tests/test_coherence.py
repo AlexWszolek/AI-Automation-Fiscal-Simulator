@@ -202,3 +202,31 @@ def test_ubi_recapture_lowers_net_cost(data, deltas):
                        net["ubi_recapture_B"].to_numpy())      # deficit falls by exactly the recapture
     # the financing metric reports the NET burden
     assert (net["ubi_required_rate"] < gross["ubi_required_rate"]).all()
+
+
+# ----------------------------------------------------- new lever: robotics_lag (capacity build-out)
+def test_robotics_lag_delays_physical_automation(data, deltas):
+    # pure-physical scenario: with a 5-year capacity ramp there is NO robotic displacement in year 0,
+    # then it builds; without the lag, displacement starts immediately.
+    phys = dict(cognitive_feasibility=0.0, physical_feasibility=1.0, adoption_path=[0.5] * 10)
+    lag = DynamicModelV2(data, deltas, replace(R, **phys, robotics_lag=5.0)).run()
+    now = DynamicModelV2(data, deltas, replace(R, **phys)).run()
+    assert lag["employment_drop_pct"].iloc[0] == 0.0            # ramp=0 at t=0: no robots yet
+    assert now["employment_drop_pct"].iloc[0] > 0.0             # lag=0: full capacity from t=0
+    assert (lag["employed_M"] >= now["employed_M"] - 1e-9).all()   # the lag only ever delays
+    # once the ramp completes (t ≥ lag), the displacement target matches the no-lag ceiling
+    assert abs(lag["employment_drop_pct"].iloc[-1] - now["employment_drop_pct"].iloc[-1]) < 1e-9
+
+
+def test_robotics_lag_ramp_is_monotone(data, deltas):
+    r = DynamicModelV2(data, deltas, replace(R, cognitive_feasibility=0.5, physical_feasibility=0.8,
+                                             adoption_path=list(np.linspace(0.1, 0.9, 10)),
+                                             robotics_lag=6.0)).run()
+    assert r["employed_M"].is_monotonic_decreasing              # flow ≥ 0 under the ramp
+    baseline_M = deltas["employed"].sum() / 1e6
+    assert np.allclose(r["population_M"].to_numpy(), baseline_M, atol=1e-6)
+
+
+def test_robotics_lag_in_reduction_guard():
+    from fiscal_model import levers_v2
+    assert not levers_v2.is_v1_reduction(replace(R, robotics_lag=4.0))

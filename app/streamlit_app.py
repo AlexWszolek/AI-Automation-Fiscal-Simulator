@@ -42,6 +42,7 @@ def build_v2_params(ui: dict) -> V2Params:
     ceiling = float("inf") if ui["survivor_unbounded"] else ui["survivor_raise_ceiling"]
     return V2Params(
         exposure_mapping=ui["mapping"], cognitive_feasibility=ui["cog"], physical_feasibility=ui["phys"],
+        robotics_lag=ui["robotics_lag"],
         adoption=1.0, adoption_path=ui["adoption_path"], n_periods=ui["n_periods"],
         retained_profit_share=ui["retained_profit_share"], price_reduction_share=ui["price_reduction_share"],
         survivor_gains_share=survivor_share, auto_cost=ui["auto_cost"], offshore_share=ui["offshore_share"],
@@ -90,6 +91,10 @@ st.caption("Set the levers; the accounting is the point. Watch the tax base migr
 sb.header("Automation scenario")
 cog = sb.slider("Cognitive feasibility (AI capability)", 0.0, 1.0, 0.70, 0.05)
 phys = sb.slider("Robotics feasibility (physical work)", 0.0, 1.0, 0.20, 0.05)
+robotics_lag = sb.slider("Robotics capacity build-out lag (years)", 0, 15, 4, 1,
+                         help="Physical automation needs AI-driven industrial capacity: the robot channel "
+                              "ramps linearly from 0 to full feasibility over this many years (0 = "
+                              "capacity exists from day one). v2 only.")
 adopt0 = sb.slider("Automated by year 1 — % of feasible work", 0.0, 1.0, 0.10, 0.05)
 adopt1 = sb.slider("Automated by the final year — % of feasible work", 0.0, 1.0, 0.60, 0.05,
                    help="A cumulative diffusion CEILING: the automated stock reaches feasibility × this "
@@ -192,7 +197,8 @@ rate_cap = sb.slider("Max feasible rate hike (× base)", 0.1, 3.0, 1.0, 0.1)
 denominator = sb.radio("Headline denominator", ["absolute", "pct_gdp"], horizontal=True,
                        help="Switch to % of GDP to see the productivity dividend and price channel move the headline.")
 
-ui = dict(mapping=mapping, cog=cog, phys=phys, adoption_path=adoption_path, n_periods=n_periods,
+ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
+          adoption_path=adoption_path, n_periods=n_periods,
           retained_profit_share=retained, price_reduction_share=price, auto_cost=auto_cost,
           offshore_share=0.0, compute_effective_rate=compute_rate, survivor_unbounded=survivor_unbounded,
           survivor_raise_ceiling=ceiling, survivor_elasticity=elasticity,
