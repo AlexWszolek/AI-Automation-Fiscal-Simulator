@@ -104,19 +104,39 @@ class DynamicModelV2:
 
         # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
         self._ledger = government.RevenueLedger(data)
-        # Disposable income lost per displaced worker — the lagged-demand impulse base (decision I). Same
-        # take-home basis the kernel's consumption channel uses (wage − income tax − employee FICA − UI),
-        # NOT gross wage (which would overstate the withdrawn demand by the tax+FICA the worker stops paying).
+        # STANDING per-worker net income withdrawal by worker state — the level-targeting demand basis
+        # (coherence fix). ONE budget constraint, shared with the fiscal side: the withdrawal nets the
+        # taxes the worker stops paying AND the transfers/UI the fiscal ledger pays that same household
+        # (the old basis netted a full year of UI never paid and ignored transfer income entirely).
+        # cons_state is deliberately EXCLUDED (it is keyed to this same take-home drop — double-count).
         v1 = self._v1
-        inc_tax_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
+        inc_after_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
+        tr_after_pw = v1.arr["after"]["transfer_fed"] + v1.arr["after"]["transfer_state"]
         emp_fica_pw = sum(self._survivor.weight[f]
                           * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
                           for f in ("Married filing jointly", "Head of household", "Single"))
-        self._disposable_pw = np.maximum(v1.wage - inc_tax_pw - emp_fica_pw - v1.ui, 0.0)
+        self._net_after_pw = v1.wage - inc_after_pw - emp_fica_pw - tr_after_pw   # exhausted/exited/induced
+        blend = lambda c: (v1.ui_share * v1.arr["during"][c]
+                           + (1 - v1.ui_share) * v1.arr["after"][c])
+        self._net_ui_pw = (v1.wage - blend("inc_fed") - blend("inc_state") - emp_fica_pw
+                           - blend("transfer_fed") - blend("transfer_state") - v1.ui * v1.ui_share)
+        # reabsorbed: the standing take-home scar net of the transfers replacing it
+        if self._reab1 is not None:
+            self._reab_scar_pw = self._reab1["net_takehome_loss"]
+        else:                                    # rung 0: haircut share of the after take-home loss
+            self._reab_scar_pw = params.reemployment_haircut * (v1.wage - inc_after_pw - emp_fica_pw)
         # Value-added per worker — the divisor turning a $ demand shortfall into a job count (decision I).
         # A direct-requirements (Type-I) divisor: it OMITS the Type-II output/employment multiplier (~1.5–2×),
         # so it under-counts induced jobs; `demand_multiplier` absorbs that calibration.
         self._va_per_worker = macro.VA_BASELINE_USD / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
+        # Level-controller stability guard: the induced stock appears in its own target (the multiplier
+        # fixed point); with the one-period lag it converges geometrically iff the loop gain
+        # ρ = dm·mpc·stickiness·d̄/va_pw < 1 (ρ ≈ 0.1 at the shipped dm=0.5). Fail loud, don't diverge.
+        if params.demand_multiplier > 0 and self._va_per_worker > 0:
+            d_bar = float((v1.emp0 * self._net_after_pw).sum()) / baseline_emp
+            rho = (params.demand_multiplier * params.mpc * params.consumption_stickiness
+                   * d_bar / self._va_per_worker)
+            assert rho < 1.0, f"demand loop gain ρ={rho:.2f} ≥ 1 — the induced fixed point diverges"
 
     # ---- t=0 base-rate gate (J.2): the published base-linkage effective rates. (The absolute
     #      revenue ledger the deltas net against is Phase-5 work for the tax-regime solver.) ----
@@ -147,7 +167,7 @@ class DynamicModelV2:
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
-        induced_pending = np.zeros(len(v1.wage))          # decision I: induced layoffs for NEXT period; 0 at t=0
+        induced_flow_pending = np.zeros(len(v1.wage))     # SIGNED level-controller flow for t+1; 0 at t=0
         auto_disp = np.zeros(len(v1.wage))                # cumulative automation-displaced stock (fix 1)
         out = []
 
@@ -157,9 +177,11 @@ class DynamicModelV2:
             flow = workers.displacement_flow(v1.g_cell, adopt, v1.emp0, auto_disp, st.employed)
             auto_disp = auto_disp + flow
             new = st.displace(flow)
-            # decision I: last period's demand contraction lands NOW as a C1-guarded employment movement
-            # (employed→induced), priced as a job loss but NOT as automation (separate bucket). 0 at t=0.
-            induced_applied = st.displace_extra(induced_pending)
+            # decision I (level-targeting): last period's SIGNED controller flow lands NOW as a
+            # C1-guarded employment movement — layoffs when the induced stock is below target,
+            # RELEASES (re-hiring) when the standing withdrawal fell. 0 at t=0.
+            st.displace_extra(np.maximum(induced_flow_pending, 0.0))
+            st.release_induced(np.maximum(-induced_flow_pending, 0.0))
 
             # post-transition survivor stock (decision A/G): excludes on_ui/exhausted/reabsorbed/exited,
             # so this period's newly-displaced are priced ONLY as displaced, never also as survivors.
@@ -282,17 +304,34 @@ class DynamicModelV2:
             ubi_rate = ((p.ubi_annual * baseline_emp * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
                         if (p.ubi_annual > 0 and ubi_base > 0) else 0.0)
 
-            # --- step 9: second-round demand (I). Income withdrawn this period = the state austerity (the
-            #     close removes income/services ≈ the gap) + the disposable income lost by everyone newly
-            #     out of work this period (tech + induced). Stored, it re-enters at t+1 as an employment
-            #     movement (NOT a fiscal subtraction). value-added/worker turns the $ shortfall into jobs. ---
-            fresh_disposable_loss = float(((new + induced_applied) * self._disposable_pw).sum())
-            income_withdrawn = close.contraction + fresh_disposable_loss
-            induced_dollars = p.demand_multiplier * p.kernel_params.mpc \
-                * p.kernel_params.consumption_stickiness * income_withdrawn
-            induced_jobs = induced_dollars / self._va_per_worker if self._va_per_worker > 0 else 0.0
+            # --- step 9: LEVEL-TARGETING demand (coherence fix, replaces the flow ratchet). The induced
+            #     stock TRACKS a target = k·(standing net withdrawal): a stationary shock ⇒ a stationary
+            #     induced stock (no unbounded minting), and the channel is SIGNED — transfers/UI/SSDI the
+            #     ledger pays these households, survivor raises, and net UBI all reduce the withdrawal;
+            #     a falling target RELEASES induced workers back to employed. One-period lag (J.1).
+            #     retired: zero (their baseline twin retired too). cons_state excluded (double-count).
+            #     max(0,·) on the household aggregate: stimulus can zero induced, never push employment
+            #     above baseline. State austerity stays IN-STATE (CA's cuts no longer lay off Texans);
+            #     the household component is allocated nationally. ---
+            hh_withdrawal = float(
+                (st.on_ui * self._net_ui_pw
+                 + (st.exhausted + st.induced) * self._net_after_pw
+                 + st.exited * (self._net_after_pw - v2p.ssdi_annual)
+                 + st.reabsorbed * self._reab_scar_pw).sum())
+            hh_withdrawal -= wage_bill * (W_surv - 1.0)                 # survivor raises inject; cuts withdraw
+            hh_withdrawal -= ubi_outlay - ubi_recapture                 # net UBI injects
+            k = (p.demand_multiplier * p.kernel_params.mpc
+                 * p.kernel_params.consumption_stickiness / self._va_per_worker
+                 if self._va_per_worker > 0 else 0.0)
+            contraction_s = close.spending_cut * government.MPC_GOV + close.recovered * v2p.mpc
+            state_emp = np.bincount(v1.state_of_cell, weights=employed_post,
+                                    minlength=len(v1.uniq_states))
+            in_state_share = employed_post / np.where(state_emp > 0, state_emp, 1.0)[v1.state_of_cell]
             emp_share = employed_post / employed_post.sum() if employed_post.sum() > 0 else 0.0
-            induced_pending = induced_jobs * emp_share                  # consumed at the START of t+1
+            induced_target = k * (max(0.0, hh_withdrawal) * emp_share
+                                  + contraction_s[v1.state_of_cell] * in_state_share)
+            induced_flow_pending = induced_target - st.induced          # SIGNED; consumed at START of t+1
+            standing_withdrawal = max(0.0, hh_withdrawal) + contraction_s.sum()
 
             rev_lost = ch["inc_fed"].sum() + ch["inc_state"].sum() + ch["payroll_fed"].sum()
             if baseline_rev is None:
@@ -374,8 +413,9 @@ class DynamicModelV2:
                 "n_states_capped": int(close.capped.sum()),
                 "state_balanced": bool(np.all(close.residual <= 1e-6 * np.maximum(close.gap, 1.0))),
                 # --- Phase 5: lagged demand (I) — induced jobs QUEUED for next period ---
-                "induced_pending_M": induced_pending.sum() / 1e6,
-                "income_withdrawn_B": income_withdrawn / 1e9,
+                "induced_target_M": float(induced_target.sum()) / 1e6,
+                "induced_pending_M": float(induced_flow_pending.sum()) / 1e6,   # SIGNED flow queued for t+1
+                "standing_withdrawal_B": standing_withdrawal / 1e9,             # a LEVEL, not a flow
                 # --- Phase 5: absolute revenue ledger ---
                 "fed_revenue_B": led_fed["fed_revenue_B"],
                 "fed_deficit_abs_B": led_fed["fed_deficit_abs_B"],

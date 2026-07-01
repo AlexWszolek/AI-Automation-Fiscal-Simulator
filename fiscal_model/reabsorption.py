@@ -159,7 +159,11 @@ class ReabsorptionEngine:
         disp_loss = wage_removed - (inc_fed + inc_state) - emp_fica
         cons = self.cons_rate * self.mult * mpc * stickiness * disp_loss
         return {"inc_fed": inc_fed, "inc_state": inc_state, "payroll_fed": payroll,
-                "cons_state": cons, "transfer_fed": tr_fed, "transfer_state": tr_state}
+                "cons_state": cons, "transfer_fed": tr_fed, "transfer_state": tr_state,
+                # the SIGNED per-worker take-home scar net of the transfers that replace it — the
+                # reabsorbed's standing DEMAND withdrawal (consumed by the level-targeting controller;
+                # extra key is safe: the fiscal loop iterates the v1 channel names, not this dict)
+                "net_takehome_loss": disp_loss - (tr_fed + tr_state)}
 
 
 def engine_artifacts_exist() -> bool:

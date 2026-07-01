@@ -86,6 +86,14 @@ class WorkerStocks:
         self.induced = self.induced + jobs
         return jobs
 
+    # -- coherence fix (level-targeting demand): when the standing withdrawal FALLS (stimulus, recovery),
+    #    the induced stock tracks its target DOWN — demand-displaced workers are re-hired. C1-exact. --
+    def release_induced(self, jobs: np.ndarray) -> np.ndarray:
+        jobs = np.minimum(jobs, self.induced)    # cannot re-hire more than were demand-displaced
+        self.induced = self.induced - jobs
+        self.employed = self.employed + jobs
+        return jobs
+
     # -- period end: age on-UI into exhausted, split the pool, then apply baseline attrition --
     def age_and_transition(self, reabsorption_rate: float, lfp_exit_rate: float,
                            attrition_rate: float = 0.0) -> None:

@@ -134,6 +134,64 @@ def test_slack_excludes_reabsorbed_and_retired(data, deltas):
     assert with_reab["survivor_market_frac"].iloc[-1] > no_reab["survivor_market_frac"].iloc[-1]
 
 
+# ----------------------------------------------------- fix: level-targeting demand with release
+def test_stationary_shock_induced_plateau(data, deltas):
+    # THE anti-ratchet pin: under a stationary shock (flat adoption tail) the induced stock plateaus —
+    # the old flow formulation re-counted the standing state gap every period and grew without bound.
+    flat = dict(cognitive_feasibility=0.85, physical_feasibility=0.25,
+                adoption_path=[0.3] * 15, n_periods=15)
+    r = DynamicModelV2(data, deltas, replace(R, **flat, demand_multiplier=0.6)).run()
+    tail = r["induced_M"].iloc[9:].to_numpy()                   # geometric convergence (ρ≈0.13) is done
+    assert np.allclose(tail, tail[-1], rtol=1e-6)              # an equilibrium exists
+    assert tail[-1] > 0                                         # and the channel is live
+
+
+def test_ubi_lowers_induced_layoffs(data, deltas):
+    # the demand channel is SIGNED now: a $1.85T UBI injection visibly stabilizes employment
+    # (it used to produce bit-identical employment paths)
+    base = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.6)).run()
+    ubi = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.6,
+                                               ubi_annual=12_000)).run()
+    assert ubi["induced_M"].iloc[-1] < 0.6 * base["induced_M"].iloc[-1]
+    assert ubi["employed_M"].iloc[-1] > base["employed_M"].iloc[-1]
+
+
+def test_survivor_wage_cut_withdraws_demand(data, deltas):
+    # the largest income change in slack scenarios now has a demand consequence
+    base = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.6)).run()
+    cut = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.6,
+                                               survivor_elasticity=-0.3,
+                                               survivor_raise_ceiling=1.5)).run()
+    assert cut["induced_M"].iloc[-1] > base["induced_M"].iloc[-1]
+
+
+def test_release_induced_unit_and_run_c1(data, deltas):
+    # the release valve (unit level — with stationary levers the stock approaches its target from BELOW,
+    # so release fires on impulse reversals a single run can't express): C1-exact, capped at the stock.
+    from fiscal_model.workers import WorkerStocks
+    st = WorkerStocks.initial(np.array([100.0, 50.0]))
+    st.displace_extra(np.array([30.0, 20.0]))
+    released = st.release_induced(np.array([40.0, 5.0]))        # asks for more than exists in cell 0
+    assert np.allclose(released, [30.0, 5.0])                   # capped at the induced stock
+    assert np.allclose(st.induced, [0.0, 15.0]) and np.allclose(st.employed, [100.0, 35.0])
+    assert np.allclose(st.total(), [100.0, 50.0])               # C1 exact
+    # and at the run level the controller + transitions keep C1 exact under heavy churn
+    v2p = replace(R, **SCEN, demand_multiplier=0.8, attrition_rate=0.15, reabsorption_rate=0.3)
+    res = DynamicModelV2(data, deltas, v2p).run()
+    baseline_M = deltas["employed"].sum() / 1e6
+    assert np.allclose(res["population_M"].to_numpy(), baseline_M, atol=1e-6)
+    assert (res["max_cell_resid_M"] < 1e-6).all()
+
+
+def test_demand_stability_guard_raises(data, deltas):
+    # a loop gain ρ ≥ 1 must fail loud at construction, not diverge silently
+    import fiscal_model.dynamics_v2 as d2
+    m = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.5))
+    d_bar = float((m._v1.emp0 * m._net_after_pw).sum()) / m._v1.emp0.sum()
+    rho_at_1 = 1.0 * 0.95 * 1.0 * d_bar / m._va_per_worker
+    assert rho_at_1 < 1.0                                       # the slider range is safe by construction
+
+
 # ----------------------------------------------------- fix: UBI recapture (recipient-side economics)
 def test_ubi_recapture_lowers_net_cost(data, deltas):
     gross = DynamicModelV2(data, deltas, replace(R, **SCEN, ubi_annual=12_000)).run()

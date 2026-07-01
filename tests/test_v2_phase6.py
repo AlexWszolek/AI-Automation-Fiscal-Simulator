@@ -239,10 +239,10 @@ def test_offsum_and_out_of_domain_levers_raise(data, deltas):
 # --------------------------------------------------------------- the demand one-period-lag carrier
 def test_demand_lag_carrier(data, deltas):
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **STRONG, demand_multiplier=0.6)).run()
-    assert res["income_withdrawn_B"].iloc[0] > 0                # withdrawal is computed at t=0
+    assert res["standing_withdrawal_B"].iloc[0] > 0             # the withdrawal level exists at t=0
     assert res["induced_M"].iloc[0] == 0.0                      # but lands a period later (0 at t=0)
-    # the induced inflow at t equals the pending queued at t−1 — the strict one-period lag — over the
-    # unclipped interior periods (capacity clipping only bites in the final, near-total-displacement step).
+    # the induced stock change at t equals the SIGNED controller flow queued at t−1 — the strict
+    # one-period lag — over the interior periods (no transitions drain induced in this config).
     d_induced = np.diff(res["induced_M"].to_numpy(), prepend=0.0)
     k = 8
     assert np.allclose(d_induced[1:k], res["induced_pending_M"].to_numpy()[:k - 1], atol=1e-9)
