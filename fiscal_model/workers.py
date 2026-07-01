@@ -29,6 +29,18 @@ from dataclasses import dataclass
 import numpy as np
 
 
+def displacement_flow(g_cell: np.ndarray, adoption_t: float, emp0: np.ndarray,
+                      auto_disp: np.ndarray, employed: np.ndarray) -> np.ndarray:
+    """Cumulative diffusion ceiling (the accuracy fix): `adoption(t)` is the CUMULATIVE share of each
+    cell's feasibly-automatable jobs automated BY year t, so the automated STOCK target =
+    g_cell·adoption(t)·emp0 (on the BASELINE emp0 → a ceiling, not a per-period rate on the shrinking
+    pool). The period's displacement is the increment above what's already automated (`auto_disp`),
+    capped at the remaining `employed` (the induced/demand flow draws from the same pool). Monotone
+    adoption ⇒ flow ≥ 0. Pure — the caller accumulates `auto_disp += flow`."""
+    target = np.clip(g_cell * adoption_t, 0.0, 1.0) * emp0
+    return np.clip(target - auto_disp, 0.0, employed)
+
+
 @dataclass
 class WorkerStocks:
     employed: np.ndarray
@@ -47,9 +59,9 @@ class WorkerStocks:
         return (self.employed + self.on_ui + self.exhausted + self.reabsorbed
                 + self.exited + self.induced)
 
-    # -- step 1-2 (mid-period): displace `frac` of employed into the fresh on-UI cohort --
-    def displace(self, frac: np.ndarray) -> np.ndarray:
-        new = frac * self.employed
+    # -- step 1-2 (mid-period): move the period's automation displacement `new` (absolute jobs, from
+    #    `displacement_flow`) into the fresh on-UI cohort --
+    def displace(self, new: np.ndarray) -> np.ndarray:
         self.employed = self.employed - new
         self.on_ui = new                       # on_ui was emptied by the prior period-end aging
         return new
@@ -62,9 +74,11 @@ class WorkerStocks:
         self.induced = self.induced + jobs
         return jobs
 
-    # -- period end: age on-UI into exhausted, then split the exhausted pool --
-    def age_and_transition(self, reabsorption_rate: float, lfp_exit_rate: float) -> None:
+    # -- period end: age on-UI into exhausted, split the pool, then apply baseline attrition --
+    def age_and_transition(self, reabsorption_rate: float, lfp_exit_rate: float,
+                           attrition_rate: float = 0.0) -> None:
         assert reabsorption_rate + lfp_exit_rate <= 1.0 + 1e-9, "reabsorption + exit must be ≤ 1"
+        assert 0.0 <= attrition_rate <= 1.0, "attrition_rate must be in [0, 1]"
         pool = self.exhausted + self.on_ui     # == v1's `U + new`
         self.on_ui = np.zeros_like(self.on_ui)
         exit_flow = pool * lfp_exit_rate
@@ -72,6 +86,12 @@ class WorkerStocks:
         self.exited = self.exited + exit_flow
         self.reabsorbed = self.reabsorbed + reab_flow
         self.exhausted = pool - exit_flow - reab_flow
+        # baseline natural attrition (retirement / mortality / discouragement) of the standing exhausted
+        # stock into the absorbing `exited` bucket — so the long-term unemployed don't sit forever (fix 6b).
+        # C1-preserving (exhausted → exited, both in total()); 0 at reduction (v1 has no attrition).
+        attrition_flow = self.exhausted * attrition_rate
+        self.exited = self.exited + attrition_flow
+        self.exhausted = self.exhausted - attrition_flow
 
 
 def reabsorbed_loss_factor(v2p) -> float:

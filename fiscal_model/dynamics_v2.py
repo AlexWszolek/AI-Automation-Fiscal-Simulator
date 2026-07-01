@@ -76,13 +76,15 @@ class DynamicModelV2:
         self._survivor = survivor.SurvivorEngine(data, deltas)
         # Phase 4: reabsorption Rung 1 (decision D). Built/loaded only when live (rung 1) — the per-cell
         # service-floor delta is scenario-invariant and disk-cached; rung 0 pays nothing (keeps C8 fast).
+        # Reabsorption (fix 5): rung 0 = legacy flat haircut (the C8 anchor); rung 1 = the unified LIVE
+        # engine where the haircut sets the wage cut (w_d = max(origin·(1−haircut), service floor)). The
+        # 6-channel delta depends only on the haircut, so it is computed ONCE here and scaled per period.
         self._reab1 = None
         if params.reabsorption_rung == 1:
             from .transfers import TransferLookup
-            r1 = reabsorption.load_or_build_rung1_deltas(
-                data, TransferLookup(), params.kernel_params(), params.reabsorption_floor_pctile)
-            r1 = self._v1.d[["soc_code", "state"]].merge(r1, on=["soc_code", "state"], how="left")
-            self._reab1 = {c: r1[c].fillna(0.0).to_numpy() for c in reabsorption.REAB_CHANNELS}
+            eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(),
+                                                  params.kernel_params(), params.reabsorption_floor_pctile)
+            self._reab1 = eng.delta(params.reemployment_haircut, params.mpc, params.consumption_stickiness)
         elif params.reabsorption_rung not in (0,):
             raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
 
@@ -132,13 +134,15 @@ class DynamicModelV2:
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
         induced_pending = np.zeros(len(v1.wage))          # decision I: induced layoffs for NEXT period; 0 at t=0
+        auto_disp = np.zeros(len(v1.wage))                # cumulative automation-displaced stock (fix 1)
         out = []
 
         for t in range(p.n_periods):
-            # --- steps 1-2: diffusion + displacement ---
+            # --- steps 1-2: diffusion + displacement (cumulative diffusion ceiling — fix 1) ---
             adopt = v1._adoption(t)
-            frac = np.clip(v1.g_cell * adopt, 0.0, 1.0)
-            new = st.displace(frac)
+            flow = workers.displacement_flow(v1.g_cell, adopt, v1.emp0, auto_disp, st.employed)
+            auto_disp = auto_disp + flow
+            new = st.displace(flow)
             # decision I: last period's demand contraction lands NOW as a C1-guarded employment movement
             # (employed→induced), priced as a job loss but NOT as automation (separate bucket). 0 at t=0.
             induced_applied = st.displace_extra(induced_pending)
@@ -231,9 +235,10 @@ class DynamicModelV2:
             survivor_profit_netting = corp_rate_per_profit * wage_bill * (W_mech_old - 1.0)
 
             # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
-            #     Y is the real-GDP/productivity index for the denominator. ---
-            automated_fraction = automated.sum() / baseline_emp
-            Y = macro.productivity_index(automated_fraction, v2p)
+            #     Y is the real-GDP/productivity index for the denominator. The dividend is OUTPUT-weighted
+            #     (fix 3): the automated share of the COMP bill (saved_bill / total comp), not headcount. ---
+            automated_comp_fraction = disp.saved_bill / macro.COMP_TOTAL_USD
+            Y = macro.productivity_index(automated_comp_fraction, v2p)
             P = macro.price_level(price_reduction_total, Y, v2p)
             ngdp = macro.nominal_gdp(Y, P)
 
@@ -253,6 +258,12 @@ class DynamicModelV2:
                                        minlength=len(v1.uniq_states))   # remaining labour income (W-scaled)
             close = government.close_state_gaps(state_net, taxable_base, v2p)
             state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
+
+            # --- step 8.5: federal policy flows. UBI is a real outlay (fix 2, raises the deficit); the
+            #     automation "robot tax" recovers revenue on the automated wage bill (fix 4, lowers it). ---
+            ubi_outlay = p.ubi_annual * baseline_emp                    # per-worker UBI × workforce
+            automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated wage bill
+            net_fed = net_fed + ubi_outlay - automation_tax
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
@@ -280,7 +291,8 @@ class DynamicModelV2:
             # post-close state figures, netted against the real base-linkage absolutes.
             fed_rev_delta_B = (-(ch["inc_fed"].sum() + ch["payroll_fed"].sum()) + ui_tax_fed.sum()
                                + disp.corporate_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
-                               + overflow_corp_tax - survivor_profit_netting) / 1e9
+                               + overflow_corp_tax - survivor_profit_netting
+                               + automation_tax) / 1e9   # automation tax is federal revenue (not UBI — an outlay)
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
 
@@ -332,6 +344,8 @@ class DynamicModelV2:
                 "transfer_fed_B": ch["transfer_fed"].sum() / 1e9,
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
                 "survivor_netting_B": survivor_profit_netting / 1e9,    # C6 component (raises the deficit)
+                "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: UBI outlay (raises the deficit)
+                "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
                 # --- Phase 5: state balanced-budget close (H, C7) ---
                 # C6-state composition: the signed state total reconstructs from its labeled components
                 # (inc + cons + transfer − survivor gain), pinning sd_state's sign and the bincount.
@@ -357,8 +371,8 @@ class DynamicModelV2:
 
             # carry this period's cumulative slack to t+1 (decision J.1 keeps ΔW_market predetermined).
             slack_prev = 1.0 - employed_post.sum() / baseline_emp
-            # --- period end: age on-UI into exhausted, then split {exited, reabsorbed, stay} ---
-            st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate)
+            # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition ---
+            st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate, v2p.attrition_rate)
 
         return pd.DataFrame(out)
 

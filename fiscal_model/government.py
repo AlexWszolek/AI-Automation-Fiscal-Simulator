@@ -31,6 +31,11 @@ from . import loaders
 # not total outlays, so the absolute federal deficit level rides this constant + the modeled net_fed delta.
 BASELINE_FED_DEFICIT_BUSD = 1833.0
 
+# Marginal propensity to consume out of a government spending cut (≈1: purchases are demand 1:1), vs the
+# household MPC (v2p.mpc, ≈0.95) out of a rate-hike-driven disposable-income cut. Drives the close-mode
+# demand asymmetry (fix 6a).
+MPC_GOV = 1.0
+
 
 class RevenueLedger:
     """Absolute baseline revenue from `receipts`, and the per-period absolute fed/state figures."""
@@ -89,5 +94,9 @@ def close_state_gaps(state_net: np.ndarray, taxable_base: np.ndarray, v2p) -> St
     spending_cut = planned_cut + spilled
     capped = spilled > 0
     residual = np.abs(gap - (recovered + spending_cut))
+    # Mode-dependent contraction (the fix that makes the rate cap bite): a spending cut removes government
+    # demand ~1:1 (MPC_gov≈1), a rate hike removes household disposable income × the household MPC. So a
+    # lower rate cap → more forced spending cuts → a LARGER contraction → deeper lagged-demand feedback.
+    contraction = float((spending_cut * MPC_GOV + recovered * v2p.mpc).sum())
     return StateCloseResult(recovered=recovered, spending_cut=spending_cut, capped=capped,
-                            residual=residual, gap=gap, contraction=float(gap.sum()))
+                            residual=residual, gap=gap, contraction=contraction)

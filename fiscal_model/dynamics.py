@@ -30,7 +30,7 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from . import loaders, levers
+from . import loaders, levers, workers
 from .integrate import CellIntegrator
 from .kernel import Kernel, KernelParams
 from .transfers import TransferLookup
@@ -155,12 +155,14 @@ class DynamicModel:
         baseline_emp = employed.sum()
         baseline_pop = baseline_emp                    # UBI per-capita base = workforce (v1)
         baseline_rev = None
+        auto_disp = np.zeros(n)                        # cumulative automation-displaced stock (fix 1)
         out = []
 
         for t in range(p.n_periods):
             adopt = self._adoption(t)
-            frac = np.clip(self.g_cell * adopt, 0.0, 1.0)
-            new = frac * employed
+            # cumulative diffusion ceiling (fix 1) — identical to v2 so the C8 anchor holds
+            new = workers.displacement_flow(self.g_cell, adopt, self.emp0, auto_disp, employed)
+            auto_disp = auto_disp + new
             employed = employed - new
 
             # ---- per-cell fiscal flows ($) ----
@@ -188,6 +190,9 @@ class DynamicModel:
             # ---- second-round demand multiplier (toggle) ----
             induced = p.demand_multiplier * (net_fed + state_gap_total)
             net_fed += induced
+
+            # ---- UBI is a real federal outlay (fix 2; identical to v2 so C8 holds) ----
+            net_fed += p.ubi_annual * baseline_pop
 
             # ---- federal debt with interest ----
             debt = debt * (1 + p.interest_rate) + net_fed

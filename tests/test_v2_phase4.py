@@ -34,8 +34,8 @@ def deltas():
 
 @pytest.fixture(scope="module")
 def rung1_ready():
-    if not reabsorption.cache_path(0.30).exists():
-        pytest.skip("Rung-1 reabsorption cache not built — run `python -m fiscal_model.reabsorption`")
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("benefit-lookup / NOC artifacts absent — build them (README Setup)")
     return True
 
 
@@ -121,7 +121,8 @@ def test_c6_federal_reconciles_no_residual(data, deltas):
     recon = (res["inc_fed_loss_B"] + res["payroll_fed_loss_B"] + res["transfer_fed_B"]
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
-             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"])  # Phase-5 netting term
+             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]  # Phase-5 netting term
+             + res["ubi_outlay_B"] - res["automation_tax_B"])                   # overhaul: UBI + robot tax
     assert np.allclose(recon.to_numpy(), res["fed_deficit_B"].to_numpy(), rtol=0, atol=1e-9)
 
 

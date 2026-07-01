@@ -60,11 +60,11 @@ def test_reduction_holds_at_no_exit(data, deltas, c8_compare):
 
 
 def test_rung1_now_implemented_rung2_still_boundary(data, deltas):
-    # Phase 4 wired Rung 1 (service floor) — it must construct without NotImplementedError (skip if its
-    # disk cache is absent, since construction loads it). Rung 2 (cross-cell routing) stays a boundary.
+    # Rung 1 (unified live engine) must construct without NotImplementedError (skip if its artifacts are
+    # absent). Rung 2 (cross-cell routing) stays a boundary.
     from fiscal_model import reabsorption
-    if not reabsorption.cache_path(DEFAULTS_SHIPPED.reabsorption_floor_pctile).exists():
-        pytest.skip("Rung-1 reabsorption cache not built — run `python -m fiscal_model.reabsorption`")
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("benefit-lookup / NOC artifacts absent — build them (README Setup)")
     DynamicModelV2(data, deltas, replace(DEFAULTS_SHIPPED, **SCEN))            # no raise
     with pytest.raises(NotImplementedError):
         DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, reabsorption_rung=2, **SCEN))

@@ -16,9 +16,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .loaders import VA_TOTAL_MUSD
+from .loaders import COMP_TOTAL_MUSD, VA_TOTAL_MUSD
 
-VA_BASELINE_USD = VA_TOTAL_MUSD * 1e6     # $29.3T nominal GDP base at Y=1, P=1
+VA_BASELINE_USD = VA_TOTAL_MUSD * 1e6         # $29.3T nominal GDP base at Y=1, P=1
+COMP_TOTAL_USD = COMP_TOTAL_MUSD * 1e6        # $15.0T total labour compensation (the automation base)
 
 
 @dataclass
@@ -28,9 +29,12 @@ class MacroState:
     survivor_wage: float = 1.0   # W — Phase 4
 
 
-def productivity_index(automated_fraction: float, v2p) -> float:
-    """Y_t: automation raises real output. (Lagged-demand drag on Y is Phase 5.)"""
-    return 1.0 + v2p.productivity_passthrough * automated_fraction
+def productivity_index(automated_comp_fraction: float, v2p) -> float:
+    """Y_t: the automation productivity dividend. OUTPUT-weighted (the caller passes the automated share
+    of the COMPENSATION bill, not headcount — high-value cognitive work automates first, so output runs
+    ahead of headcount). At full automation of the labour bill (fraction→1), Y = 1 + productivity_passthrough,
+    i.e. GDP grows by that share. Reporting/denominator only; the taxable side is the automation-tax lever."""
+    return 1.0 + v2p.productivity_passthrough * automated_comp_fraction
 
 
 def price_level(price_reduction_usd: float, productivity: float, v2p) -> float:

@@ -71,8 +71,14 @@ class V2Params:
     marginal_taxable_multiplier: float = 1.0
     demand_multiplier: float = 0.0
     price_passthrough: float = 0.0              # share of price_reduction that deflates P
-    productivity_passthrough: float = 0.0       # automation -> GDP/Y growth
+    productivity_passthrough: float = 0.0       # automation -> GDP/Y growth (OUTPUT-weighted; a strong
+    #   dividend: full automation of the labour bill → +productivity_passthrough of GDP. 0 = off.
     denominator: str = "absolute"               # 'absolute' | 'pct_gdp'
+    # ---------------- government policy response (NEW) ----------------
+    automation_tax_rate: float = 0.0            # "robot tax": federal levy as a share of the automated
+    #   stock's saved WAGE bill (the labour tax the displaced humans would have paid). 0 = off.
+    attrition_rate: float = 0.0                 # baseline exit (retirement/mortality/discouragement) of the
+    #   standing exhausted stock into the absorbing `exited` bucket. 0 = off (v1-reduction).
 
     # ---------------- corporate kernel rates (v1) ----------------
     surplus_capture: float = 1.0                # INERT in V2: it only enters the frozen worker-delta
@@ -136,10 +142,13 @@ DEFAULTS_SHIPPED = replace(
     #                                 raise (survivor_gains_share) pushes the other way — net sign is data.
     survivor_raise_ceiling=1.5,     # survivors' wage can rise at most 50% over baseline; the rest spills
     retained_profit_share=0.6, price_reduction_share=0.2, survivor_gains_share=0.2,
-    auto_cost=0.10, offshore_share=0.25,
-    price_passthrough=0.3, productivity_passthrough=0.01,
+    auto_cost=0.10, offshore_share=0.0,   # overhaul: offshore leak removed by default (fully taxable)
+    price_passthrough=0.3,
+    productivity_passthrough=0.30,  # overhaul: strong output-weighted dividend (full automation → +30% GDP)
     lfp_exit_rate=0.03,
+    attrition_rate=0.025,           # overhaul: baseline natural exit of the long-term unemployed
     demand_multiplier=0.5,          # Phase 5: second-round demand → lagged employment flow (decision I)
+    automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated wage bill)
 )
 
 
@@ -155,4 +164,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         "price_passthrough", "productivity_passthrough",
         # Phase 5: demand_multiplier is CRITICAL — past Phase 5 the v2 lagged-demand flow diverges from
         # v1's legacy closed-form `induced`, so C8 (v2==v1) holds ONLY at demand_multiplier=0.
-        "demand_multiplier", "state_cut_share", "state_rate_hike_cap"))
+        "demand_multiplier", "state_cut_share", "state_rate_hike_cap",
+        # Overhaul: new gated policy levers (0 at reduction).
+        "automation_tax_rate", "attrition_rate"))

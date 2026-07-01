@@ -74,7 +74,8 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     recon = (res["inc_fed_loss_B"] + res["payroll_fed_loss_B"] + res["transfer_fed_B"]
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
-             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"])
+             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]
+             + res["ubi_outlay_B"] - res["automation_tax_B"])   # overhaul: UBI outlay + robot tax
     assert _rel(recon, res["fed_deficit_B"]), "C6 federal reconciliation"
 
     # C6-state: the signed per-state total reconstructs from its labeled components (pins sd_state's sign
@@ -163,8 +164,8 @@ def test_full_battery_over_sweep(data, deltas, cfg_id, overrides):
 
 def test_full_battery_rung1(data, deltas):
     # Rung 1 needs its disk cache; skip cleanly if absent (a fresh clone).
-    if not reabsorption.cache_path(0.30).exists():
-        pytest.skip("Rung-1 reabsorption cache not built — run `python -m fiscal_model.reabsorption`")
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("benefit-lookup / NOC artifacts absent — build them (README Setup)")
     for scen in (MILD, STRONG):
         v2p = replace(DEFAULTS_V1REDUCTION, **scen, **DISP, reabsorption_rung=1,
                       reabsorption_rate=0.3, demand_multiplier=0.5, survivor_raise_ceiling=1.5)
@@ -173,8 +174,8 @@ def test_full_battery_rung1(data, deltas):
 
 
 def test_shipped_default_full_battery(data, deltas):
-    if not reabsorption.cache_path(DEFAULTS_SHIPPED.reabsorption_floor_pctile).exists():
-        pytest.skip("Rung-1 reabsorption cache not built — run `python -m fiscal_model.reabsorption`")
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("benefit-lookup / NOC artifacts absent — build them (README Setup)")
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_SHIPPED, **STRONG)).run()
     assert_all_invariants(res, DEFAULTS_SHIPPED, deltas["employed"].sum() / 1e6)
 
