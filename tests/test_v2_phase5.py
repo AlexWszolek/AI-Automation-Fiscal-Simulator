@@ -35,11 +35,11 @@ def deltas():
 
 # ----------------------------------------------------------------- v1-reduction (C8)
 def test_c8_holds_with_close_and_demand_off(data, deltas, c8_compare):
-    # state close runs but reports the pre-close gap; demand off; netting 0 → bit-for-bit v1
+    # state close runs but reports the pre-close gap; demand off; survivor channel 0 → bit-for-bit v1
     v2p = replace(DEFAULTS_V1REDUCTION, reabsorption_rate=0.4, **SCEN)
     _, r2 = c8_compare(data, deltas, v2p, C8)
     assert r2["induced_M"].abs().max() == 0.0                   # no induced flow at demand off
-    assert (r2["survivor_netting_B"] == 0.0).all()             # netting 0 at reduction
+    assert (r2["survivor_wage_cost_B"] == 0.0).all()           # funded raise 0 at reduction
 
 
 def test_demand_multiplier_in_reduction_guard():
@@ -124,22 +124,22 @@ def test_demand_toggle_off_is_one_period_lag(data, deltas):
     assert not np.isclose(on["employed_M"].iloc[1], off["employed_M"].iloc[1])
 
 
-# ----------------------------------------------------------------- survivor netting
-def test_survivor_netting_resolves_double_count(data, deltas):
-    # the netting reduces the corporate recovery by corp_rate·wage_bill·(W_mech_old−1); it is 0 until the
-    # sticky raise accumulates, then positive (raises the deficit), undoing the Phase-4 over-recovery.
-    res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, **DISP,
-                                               survivor_raise_ceiling=1.5)).run()
-    assert (res["survivor_netting_B"] >= -1e-9).all()
-    assert (res["survivor_netting_B"] > 0).any()               # the standing raise is netted once it exists
-    # netting only fires when there is a STANDING raise carried in (W_mech_old > 1): zero in period 0
-    assert res["survivor_netting_B"].iloc[0] == 0.0
-
-
-def test_netting_off_at_reduction(data, deltas, c8_compare):
-    # netting must vanish with the survivor channel off → C8 stays exact (already covered, pinned here)
-    _, r2 = c8_compare(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN), C8)
-    assert (r2["survivor_netting_B"] == 0.0).all()
+# ----------------------------------------------------------------- survivor corporate-channel sanity
+def test_corporate_channel_sane_under_survivor_stress(data, deltas):
+    # the review's worst ledger error: the old unfunded netting deducted corporate tax up to 81× larger
+    # than any ever booked, driving the corporate channel net-NEGATIVE. Under the funded W* there is no
+    # phantom deduction: the booked corporate recovery is non-negative even at survivor-heavy settings.
+    res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN,
+                                               retained_profit_share=0.1, price_reduction_share=0.0,
+                                               survivor_gains_share=0.9,
+                                               survivor_raise_ceiling=5.0)).run()
+    corp_channel = res["corp_offset_B"] + res["survivor_overflow_corp_tax_B"]
+    assert (corp_channel >= -1e-9).all()                       # never net-negative
+    assert np.isfinite(res["fed_deficit_B"]).all()
+    # and the funded identity holds even at the extreme config
+    lhs = (res["survivor_wage_cost_B"] + res["survivor_overflow_profit_B"]
+           + res["survivor_overflow_price_B"])
+    assert np.allclose(lhs.to_numpy(), res["survivor_gains_B"].to_numpy(), rtol=1e-12, atol=1e-9)
 
 
 # ----------------------------------------------------------------- absolute ledger

@@ -56,7 +56,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     assert _rel(res["automation_spend_B"] + res["retained_profit_B"] + res["price_reduction_B"]
                 + res["survivor_gains_B"], res["saved_bill_B"]), "C5b"
     # C5c: the capacity-checked survivor routing conserves survivor_gains.
-    assert _rel(res["survivor_mech_inflow_B"] + res["survivor_overflow_profit_B"]
+    assert _rel(res["survivor_wage_cost_B"] + res["survivor_overflow_profit_B"]
                 + res["survivor_overflow_price_B"], res["survivor_gains_B"]), "C5c"
 
     # C3: compute pool — tax = (inflow − offshore leak) × effective rate.
@@ -74,7 +74,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     recon = (res["inc_fed_loss_B"] + res["payroll_fed_loss_B"] + res["transfer_fed_B"]
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
-             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]
+             - res["survivor_overflow_corp_tax_B"]
              + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"])
     assert _rel(recon, res["fed_deficit_B"]), "C6 federal reconciliation"
 

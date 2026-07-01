@@ -50,42 +50,39 @@ def test_c8_holds_with_survivor_off(data, deltas, c8_compare):
 
 # ----------------------------------------------------------------- C5c (the conserved partition)
 def test_c5c_conserved_partition(data, deltas):
-    # the capacity-checked mechanical raise conserves survivor_gains every period:
-    # absorbed wage inflow + profit overflow + price overflow == survivor_gains (exact).
+    # the FUNDED raise conserves survivor_gains every period (both branches, exact):
+    # wage cost (maintenance + increment, = ℓ·wb·(W−1)) + profit overflow + price overflow == gains.
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, **DISP,
                                                survivor_raise_ceiling=1.5)).run()
-    lhs = (res["survivor_mech_inflow_B"] + res["survivor_overflow_profit_B"]
+    lhs = (res["survivor_wage_cost_B"] + res["survivor_overflow_profit_B"]
            + res["survivor_overflow_price_B"])
     assert np.allclose(lhs.to_numpy(), res["survivor_gains_B"].to_numpy(), rtol=1e-12, atol=0)
     assert (res["survivor_gains_B"] > 0).any()                  # the channel is exercised
-    assert (res["survivor_mech_inflow_B"] > 0).any()            # some is absorbed as wage
-    assert (res["survivor_overflow_profit_B"] + res["survivor_overflow_price_B"] > 0).any()  # cap binds
+    assert (res["survivor_wage_cost_B"] > 0).any()              # some is absorbed as wage
     assert res["W_survivor"].max() <= 1.5 + 1e-9               # the ceiling bounds total W
 
 
 def test_unbounded_ceiling_absorbs_all_gains(data, deltas):
-    # the unbounded lever (ceiling=inf) recovers the faithful-C5c behavior: every gains dollar lands on
-    # survivor wages, no overflow — and W is free to inflate (the regime the cap was introduced to tame).
+    # the unbounded lever (ceiling=inf): every gains dollar funds survivor wages, no overflow — and W is
+    # free to converge to the full funded level W* = 1 + gains/(ℓ·wage_bill).
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, **DISP,
                                                survivor_raise_ceiling=float("inf"))).run()
-    assert np.allclose(res["survivor_mech_inflow_B"].to_numpy(), res["survivor_gains_B"].to_numpy(),
+    assert np.allclose(res["survivor_wage_cost_B"].to_numpy(), res["survivor_gains_B"].to_numpy(),
                        rtol=1e-12, atol=0)
     assert np.allclose((res["survivor_overflow_profit_B"] + res["survivor_overflow_price_B"]).to_numpy(),
                        0.0, atol=1e-12)
-    assert res["W_survivor"].max() > 1.5                       # unbounded → inflates past any cap
+    assert res["W_survivor"].max() > 1.0                       # the funded raise is live
 
 
-def test_sticky_rate_semantics_in_binding_cap(data, deltas):
-    # DOCUMENTS the chosen semantics (see the known-limitation note in dynamics_v2 step 5): once the cap
-    # binds, this period's routed wage inflow goes to 0 (all survivor_gains overflow to profit/price) yet
-    # the survivor tax stays positive — it is levied on the STANDING accumulated wage level W_mech, pinned
-    # at the ceiling. A maintainer who "fixes" this into a per-period-funded tax base trips this test.
+def test_funded_w_star_semantics(data, deltas):
+    # the raise is SELF-FINANCING (the coherence fix): the recurring gains flow pays the standing raise's
+    # maintenance first, so the wage cost never exceeds gains and W is bounded by the funded level
+    # W* = 1 + gains/(ℓ·wage_bill) as well as the ceiling. No phantom profit deduction exists anymore.
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN, **DISP,
                                                survivor_raise_ceiling=1.5)).run()
-    tail = res[np.isclose(res["survivor_mech_inflow_B"], 0.0) & (res["period"] > 0)]
-    assert len(tail) > 0                                        # the cap binds (no new inflow) in the tail
-    assert np.allclose(tail["W_survivor_mech"].to_numpy(), 1.5)   # W stays pinned at the ceiling
-    assert (tail["survivor_gain_fed_B"] > 0).all()             # yet the standing raise is still taxed
+    assert (res["survivor_wage_cost_B"] <= res["survivor_gains_B"] + 1e-9).all()   # funded, never beyond
+    assert (res["W_survivor_mech"] <= 1.5 + 1e-9).all()
+    assert "survivor_netting_B" not in res.columns             # the phantom deduction is gone
 
 
 def test_spillover_split_routes_overflow(data, deltas):
@@ -106,7 +103,7 @@ def test_c5_market_is_exempt_from_conservation(data, deltas):
     # zero, yet the market wage effect still moves the survivor tax (ceiling raised so it isn't truncated).
     res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **SCEN,
                                                survivor_elasticity=-0.2, survivor_raise_ceiling=1.5)).run()
-    assert np.allclose(res["survivor_mech_inflow_B"].to_numpy(), 0.0)
+    assert np.allclose(res["survivor_wage_cost_B"].to_numpy(), 0.0)
     assert np.allclose(res["survivor_gains_B"].to_numpy(), 0.0)
     assert (res["survivor_market_frac"] != 0).any()             # market effect is live
     assert (res["survivor_gain_fed_B"] != 0).any()              # and it moves the survivor tax
@@ -121,7 +118,7 @@ def test_c6_federal_reconciles_no_residual(data, deltas):
     recon = (res["inc_fed_loss_B"] + res["payroll_fed_loss_B"] + res["transfer_fed_B"]
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
-             - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]  # Phase-5 netting term
+             - res["survivor_overflow_corp_tax_B"]
              + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"])
     assert np.allclose(recon.to_numpy(), res["fed_deficit_B"].to_numpy(), rtol=0, atol=1e-9)
 

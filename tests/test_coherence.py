@@ -74,6 +74,28 @@ def test_robot_tax_capacity_bound_raises(data, deltas):
                                              survivor_gains_share=0.5, automation_tax_rate=0.2))
 
 
+# ----------------------------------------------------- fix: funded W* (the snap branch, unit-level)
+def test_funded_w_update_identity_all_branches():
+    # C5c must hold exactly in EVERY branch of the pure update: ℓ·wb·(W_new−1) + overflow == gains
+    from fiscal_model.survivor import funded_w_update
+    cases = [
+        dict(gains=100.0, W=1.0, wb=1000.0, l=1.4, ceil=1.5),     # funded, under the ceiling
+        dict(gains=900.0, W=1.2, wb=1000.0, l=1.4, ceil=1.3),     # funded, cap binds → overflow
+        dict(gains=50.0, W=1.4, wb=1000.0, l=1.4, ceil=1.5),      # UNFUNDABLE → snap down
+        dict(gains=100.0, W=1.1, wb=1000.0, l=1.4, ceil=float("inf")),  # unbounded
+        dict(gains=100.0, W=1.2, wb=0.0, l=1.4, ceil=1.5),        # no survivors → all overflow
+    ]
+    for c in cases:
+        W_new, cost, inc, ov = funded_w_update(c["gains"], c["W"], c["wb"], c["l"], c["ceil"])
+        assert abs(cost + ov - c["gains"]) < 1e-9, c              # the conserved identity
+        assert cost >= -1e-12 and ov >= -1e-12 and W_new >= 1.0 - 1e-12
+        if np.isfinite(c["ceil"]):
+            assert W_new <= c["ceil"] + 1e-12
+    # the snap case specifically: W falls to the fundable level
+    W_new, cost, inc, ov = funded_w_update(50.0, 1.4, 1000.0, 1.4, 1.5)
+    assert W_new < 1.4 and abs(W_new - (1 + 50.0 / 1400.0)) < 1e-12 and inc == 0.0 and ov == 0.0
+
+
 # ----------------------------------------------------- fix: UBI recapture (recipient-side economics)
 def test_ubi_recapture_lowers_net_cost(data, deltas):
     gross = DynamicModelV2(data, deltas, replace(R, **SCEN, ubi_annual=12_000)).run()

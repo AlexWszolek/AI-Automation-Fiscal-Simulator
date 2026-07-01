@@ -92,3 +92,37 @@ class SurvivorEngine:
                     - np.asarray(self.income.state_tax(mean[mask], s, f), float)
                 inc_state[mask] += wt[mask] * si
         return {"inc_fed": inc_fed, "inc_state": inc_state, "payroll": payroll}
+
+
+def funded_w_update(survivor_gains: float, W_mech_old: float, wage_bill: float,
+                    comp_loading: float, ceiling: float) -> tuple:
+    """The FUNDED W* update (coherence fix): the recurring `survivor_gains` flow must pay the standing
+    raise's recurring cost (`maintenance`, in comp-$ — raises cost the firm fully-loaded compensation,
+    `comp_loading` ≈ 1.4× wages) BEFORE any increment; only the surplus raises W further (converging
+    W* = 1 + gains/(ℓ·wage_bill), still capped by the ceiling). If gains cannot fund the standing raise,
+    W snaps DOWN to the fundable level instantly — the snap keeps the C5c identity exact in every branch:
+
+        ℓ·wage_bill·(W_mech_new − 1)  +  overflow  ==  survivor_gains        (wage_cost + overflow)
+
+    This replaces the old unfunded ratchet + `survivor_profit_netting` (which deducted corporate tax that
+    was never booked — up to 81× the booked amount). The raise is now self-financing from the routed flow;
+    it is taxed exactly once, as labour income (sd), never as phantom profit.
+
+    Returns (W_mech_new, wage_cost, increment, overflow). Pure — unit-testable (the snap branch is a rare
+    corner end-to-end: gains are monotone under the cumulative-automation base, so it fires mainly when a
+    demand release rebounds the wage bill)."""
+    if wage_bill <= 0:                                   # no survivors: nothing absorbable, all spills
+        return W_mech_old, 0.0, 0.0, max(0.0, survivor_gains)
+    lw = comp_loading * wage_bill
+    maintenance = lw * (W_mech_old - 1.0)
+    available = survivor_gains - maintenance
+    if available >= 0.0:
+        room = float("inf") if not np.isfinite(ceiling) else max(0.0, lw * (ceiling - W_mech_old))
+        increment = min(available, room)
+        overflow = available - increment
+        W_new = W_mech_old + increment / lw
+    else:                                                # unfundable → instant snap to the funded level
+        W_new = 1.0 + max(0.0, survivor_gains) / lw
+        increment, overflow = 0.0, 0.0
+    wage_cost = lw * (W_new - 1.0)                       # = maintenance+increment (funded) | = gains (snap)
+    return W_new, wage_cost, increment, overflow

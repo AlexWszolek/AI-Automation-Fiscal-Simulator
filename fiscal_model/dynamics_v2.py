@@ -188,36 +188,24 @@ class DynamicModelV2:
             disp = disposition.route(auto_disp, self._comp_pw, v1.corp, v2p)
             cp = compute_pool.route_to_compute_pool(disp.automation_spend, v2p)
 
-            # --- step 5: survivor wage index — capacity-checked mechanical raise + market level. ---
-            #   Mechanical: the router's survivor_gains is what firms WANT to pay survivors this period.
-            #   A per-period FLOW check caps how much the surviving wage bill can absorb under the ceiling
-            #   (room = wage_bill·(ceiling − W_mech)); the un-absorbable overflow spills by the spillover
-            #   lever into retained profit (taxed at the corp recovery rate) and price reduction (ΔP).
-            #   C5c conserves THIS PERIOD'S ROUTING only:
-            #       actual_inflow + overflow_to_profit + overflow_to_price == survivor_gains   (exact).
-            #   W_mech is a PERSISTENT (sticky) wage level: it accumulates the absorbed inflows and never
-            #   exceeds the ceiling. The survivor TAX BASE is wage_bill·(W_mech−1) — the STANDING raise on
-            #   the current survivors — deliberately NOT equal to the cumulative routed inflow once the cap
-            #   binds (the raise persists even in periods where actual_inflow==0; see test_sticky_rate_*).
-            #   The standing raise IS netted against the corporate profit base below (survivor_profit_netting,
-            #   Phase 5) — so it is no longer taxed as BOTH wages and profit (the Phase-4 double-count is gone).
+            # --- step 5: survivor wage index — FUNDED W* (coherence fix) + market level. ---
+            #   The routed survivor_gains flow pays the standing raise's recurring cost FIRST (maintenance,
+            #   in comp-$ — the ℓ loading folds the comp-vs-wage units wedge); only the surplus raises W
+            #   further (converging W* = 1 + gains/(ℓ·wage_bill), capped by the ceiling); unfundable → W
+            #   snaps down to the funded level. The raise is SELF-FINANCING — the old survivor_profit_netting
+            #   (which deducted corporate tax never booked, up to 81×) is deleted; the raise is taxed once,
+            #   as labour income via sd. C5c (every branch, exact):
+            #       wage_cost + overflow_to_profit + overflow_to_price == survivor_gains,
+            #   with wage_cost = ℓ·wage_bill·(W_mech_new − 1) = maintenance + increment.
             #   Market (unconserved, C5-market-exempt): elasticity × t−1 slack (J.1, 0 at t=0); the part
             #   that would push total W above the ceiling is simply TRUNCATED (no capital counterparty).
             ceiling = v2p.survivor_raise_ceiling
-            desired = disp.survivor_gains
-            W_mech_old = W_mech                            # the standing raise carried IN (for the netting)
-            if wage_bill <= 0:
-                actual_inflow = 0.0
-            elif not np.isfinite(ceiling):
-                actual_inflow = desired                                  # unbounded lever
-            else:
-                room = max(0.0, wage_bill * (ceiling - W_mech))
-                actual_inflow = min(desired, room)
-            overflow = desired - actual_inflow
+            comp_bill = (employed_post * self._comp_pw).sum()
+            comp_loading = (comp_bill / wage_bill) if wage_bill > 0 else 1.0   # ℓ ≈ 1.4 (comp per wage $)
+            W_mech, survivor_wage_cost, increment, overflow = survivor.funded_w_update(
+                disp.survivor_gains, W_mech, wage_bill, comp_loading, ceiling)
             overflow_to_profit = overflow * v2p.survivor_spillover_to_profit
             overflow_to_price = overflow - overflow_to_profit
-            if wage_bill > 0:
-                W_mech = W_mech + actual_inflow / wage_bill              # ≤ ceiling by construction
             market_frac = v2p.survivor_elasticity * slack_prev
             W_surv = W_mech + market_frac
             if np.isfinite(ceiling):
@@ -226,7 +214,6 @@ class DynamicModelV2:
             sd = self._survivor.delta(W_surv)
             sd_fed = (sd["inc_fed"] + sd["payroll"]) * employed_post      # per-cell GAIN (revenue +)
             sd_state = sd["inc_state"] * employed_post
-            survivor_mech_inflow = actual_inflow
 
             # the profit overflow is recovered as corporate tax at the same per-profit-$ rate the router
             # uses (Σ auto_disp·corp_pw / saved_bill — linear in the surplus base, note C); the price
@@ -235,14 +222,6 @@ class DynamicModelV2:
             corp_rate_per_profit = (corp_full / disp.saved_bill) if disp.saved_bill > 0 else 0.0
             overflow_corp_tax = corp_rate_per_profit * overflow_to_profit
             price_reduction_total = disp.price_reduction + overflow_to_price
-
-            # Phase 5 survivor NETTING (resolves the Phase-4 double-count): the PRE-existing standing raise
-            # wage_bill·(W_mech_old−1) is a firm cost funded from PROFIT — this period's increment came from
-            # survivor_gains (disjoint from retained_profit; the market component is unfunded/exempt) — so it
-            # REDUCES the taxable corporate base. Netted at the SAME corp rate as overflow_corp_tax (one
-            # basis); ADDED to net_fed (less recovery → higher deficit). 0 at reduction (W_mech_old=1). The
-            # net survivor effect is now labor_tax(raise) − capital_tax(raise), not a double count.
-            survivor_profit_netting = corp_rate_per_profit * wage_bill * (W_mech_old - 1.0)
 
             # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
             #     Y is the real-GDP/productivity index for the denominator. The dividend is OUTPUT-weighted
@@ -256,7 +235,7 @@ class DynamicModelV2:
             # (W<1 → sd<0 → adds to deficit); the survivor netting is ADDED (less corp recovery).
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
                    + ui_outlay_fed - ui_tax_fed - disp.corporate_offset_cell - sd_fed)
-            net_fed = fed.sum() - cp.tax_fed - overflow_corp_tax + survivor_profit_netting
+            net_fed = fed.sum() - cp.tax_fed - overflow_corp_tax
 
             # --- step 8: state balanced-budget close (H, C6-state, C7). Compose per-state net loss, then
             #     close it within-year by rate hikes (capped) and/or spending cuts. The reported gap stays
@@ -308,7 +287,7 @@ class DynamicModelV2:
             # post-close state figures, netted against the real base-linkage absolutes.
             fed_rev_delta_B = (-(ch["inc_fed"].sum() + ch["payroll_fed"].sum()) + ui_tax_fed.sum()
                                + disp.corporate_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
-                               + overflow_corp_tax - survivor_profit_netting
+                               + overflow_corp_tax
                                + automation_tax) / 1e9   # automation tax is federal revenue (not UBI — an outlay)
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
@@ -349,7 +328,7 @@ class DynamicModelV2:
                 # survivor channel (Phase 4): gains positive = revenue up; W + overflow for the gates.
                 "survivor_gain_fed_B": sd_fed.sum() / 1e9,
                 "survivor_gain_state_B": sd_state.sum() / 1e9,
-                "survivor_mech_inflow_B": survivor_mech_inflow / 1e9,   # wage actually absorbed (C5c leg)
+                "survivor_wage_cost_B": survivor_wage_cost / 1e9,       # ℓ·wb·(W−1): maintenance+increment
                 "survivor_overflow_profit_B": overflow_to_profit / 1e9,
                 "survivor_overflow_price_B": overflow_to_price / 1e9,   # C5c: inflow+profit+price==gains
                 "survivor_overflow_corp_tax_B": overflow_corp_tax / 1e9,
@@ -360,7 +339,6 @@ class DynamicModelV2:
                 "payroll_fed_loss_B": ch["payroll_fed"].sum() / 1e9,
                 "transfer_fed_B": ch["transfer_fed"].sum() / 1e9,
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
-                "survivor_netting_B": survivor_profit_netting / 1e9,    # C6 component (raises the deficit)
                 "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: gross UBI outlay
                 "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)

@@ -233,7 +233,7 @@ with right:
     st.line_chart(res.set_index("period")[["induced_M"]])
     st.subheader("Survivor wage channel — index & net tax effect")
     st.line_chart(res.set_index("period")[["W_survivor"]])
-    st.line_chart(res.set_index("period")[["survivor_gain_fed_B", "survivor_netting_B"]])
+    st.line_chart(res.set_index("period")[["survivor_gain_fed_B", "survivor_wage_cost_B"]])
 
 if ubi > 0 and final["ubi_required_rate"] > 1.0:
     st.warning(f"A \\${ubi:,}/yr UBI needs a **{final['ubi_required_rate']:.0%}** average rate on the eroded "
