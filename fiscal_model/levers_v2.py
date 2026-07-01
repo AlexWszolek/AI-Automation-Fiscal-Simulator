@@ -79,8 +79,15 @@ class V2Params:
     #   stock's saved COMPENSATION bill. PAID from retained profit (corp-deductible: it reduces the
     #   corporate offset via disp_factor), so the firm's books balance. Must be ≤
     #   retained_profit_share·(1−auto_cost) (asserted). 0 = off.
-    attrition_rate: float = 0.0                 # baseline exit (retirement/mortality/discouragement) of the
-    #   standing exhausted stock into the absorbing `exited` bucket. 0 = off (v1-reduction).
+    attrition_rate: float = 0.0                 # baseline exit (retirement/mortality) of the long-term
+    #   unemployed (exhausted + induced) into the DELTA-NEUTRAL `retired` bucket — the baseline twin
+    #   retired too, so this cancels the standing loss (fixes the perpetual-work counterfactual). 0 = off.
+    ssdi_annual: float = 18_000.0               # annual SSDI outlay per `exited` worker (SSA 2024 avg
+    #   disabled-worker benefit ≈ $1,537/mo). Inert at reduction via lfp_exit_rate=0 (exited ≡ 0), so the
+    #   SAME default ships in both configs. Not in the baked transfer grids → no double-count.
+    baseline_growth_rate: float = 0.0           # nominal trend growth g of the %-GDP DENOMINATORS only
+    #   ((1+g)^t; ≈2% real + 2% inflation shipped). Nominal dollar columns and the job divisor are
+    #   unchanged — fixes r>g=0 inverting the debt/GDP dynamics at long horizons. 0 = off (v1-reduction).
     ubi_recapture_rate: float = 0.0             # share of the UBI outlay recaptured (income-tax clawback +
     #   means-tested crowd-out combined; literature ~20-30%). The baked transfer grids never see UBI as
     #   income (UBI never enters the interp argument), so this is the ONLY clawback — no double-count.
@@ -156,6 +163,7 @@ DEFAULTS_SHIPPED = replace(
     demand_multiplier=0.5,          # Phase 5: second-round demand → lagged employment flow (decision I)
     automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated comp bill)
     ubi_recapture_rate=0.25,        # coherence: ~avg effective clawback + means-test crowd-out on UBI
+    baseline_growth_rate=0.04,      # coherence: nominal trend growth for the %-GDP denominators
 )
 
 
@@ -172,5 +180,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         # Phase 5: demand_multiplier is CRITICAL — past Phase 5 the v2 lagged-demand flow diverges from
         # v1's legacy closed-form `induced`, so C8 (v2==v1) holds ONLY at demand_multiplier=0.
         "demand_multiplier", "state_cut_share", "state_rate_hike_cap",
-        # Overhaul: new gated policy levers (0 at reduction).
-        "automation_tax_rate", "attrition_rate", "ubi_recapture_rate"))
+        # Overhaul: new gated policy levers (0 at reduction). (ssdi_annual is NOT listed: it is inert at
+        # reduction via lfp_exit_rate=0, and the same default ships in both configs.)
+        "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate"))

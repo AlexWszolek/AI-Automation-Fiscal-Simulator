@@ -118,12 +118,18 @@ def test_rate_cap_moves_deficit_only_when_demand_on(data, deltas):
 
 
 # ----------------------------------------------------------------- Fix 6b: attrition + offshore
-def test_attrition_conserves_population_and_grows_exited(data, deltas):
+def test_attrition_conserves_population_and_is_delta_neutral(data, deltas):
+    # coherence semantics: attrition retires the long-term unemployed into the DELTA-NEUTRAL `retired`
+    # bucket (the baseline twin retired too) — population conserved, the standing loss cancels, and the
+    # deficit strictly FALLS (the perpetual-work counterfactual is gone).
     base = DynamicModelV2(data, deltas, replace(R, **SCEN)).run()
     att = DynamicModelV2(data, deltas, replace(R, **SCEN, attrition_rate=0.1)).run()
     baseline_M = deltas["employed"].sum() / 1e6
-    assert np.allclose(att["population_M"].to_numpy(), baseline_M, atol=1e-6)   # C1 holds
-    assert att["exited_M"].iloc[-1] > base["exited_M"].iloc[-1]                 # drains the long-term unemployed
+    assert np.allclose(att["population_M"].to_numpy(), baseline_M, atol=1e-6)   # C1 holds (retired counted)
+    assert att["retired_M"].iloc[-1] > 0                                        # drains the long-term unemployed
+    assert att["fed_deficit_B"].iloc[-1] < base["fed_deficit_B"].iloc[-1]       # and the loss decays with them
+    # the firm side is untouched by retirement (the job stays automated)
+    assert np.allclose(att["saved_bill_B"].to_numpy(), base["saved_bill_B"].to_numpy(), rtol=1e-12)
 
 
 def test_offshore_off_by_default(data, deltas):

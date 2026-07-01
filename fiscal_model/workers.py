@@ -16,11 +16,21 @@ fiscal loss, but it can never be reabsorbed — so `lfp_exit` permanently erodes
 option).
 
 `induced` (Phase 5, decision I) is the SIXTH state: workers laid off by the second-round DEMAND
-contraction, not by automation. They carry the full "after" fiscal loss like `exhausted`, but are kept
-in their own bucket because — unlike automation displacement — a demand-driven layoff produces no saved
-compensation to dispose (the firm's revenue fell with demand), so `induced` is EXCLUDED from the
-`automated` stock the disposition router prices. It is absorbing for now (no in-model demand recovery).
-At `demand_multiplier = 0` it stays empty and the machine is bit-for-bit the 5-state v1 anchor.
+contraction, not by automation. They carry the full "after" fiscal loss like `exhausted` (no first-period
+UI blend — a documented simplification; the demand-side withdrawal basis nets taxes/transfers properly),
+and are kept in their own bucket because a demand layoff produces no saved compensation to dispose —
+`induced` is EXCLUDED from the automated base the disposition router prices. Coherence fix: induced now
+JOIN the transition pool (reabsorption / lfp-exit / attrition apply as a parallel split), so
+demand-displaced workers can find service jobs like automation-displaced ones.
+
+`retired` (coherence fix) is the SEVENTH state and it is fiscally DELTA-NEUTRAL: baseline attrition
+(retirement / mortality / discouragement) moves the long-term unemployed here, and their baseline twin
+retired too — so they carry NO after-loss and NO demand withdrawal. This fixes the perpetual-work
+counterfactual (losses used to accrue forever against a baseline that never retires). `exited` (SSDI via
+lfp_exit) keeps the after-loss and gains an SSDI outlay in the dynamics; it does not itself retire
+(a documented residual perpetuity).
+
+At `demand_multiplier = attrition = lfp_exit = 0` the extra states stay empty → the v1 anchor.
 """
 from __future__ import annotations
 
@@ -49,15 +59,17 @@ class WorkerStocks:
     reabsorbed: np.ndarray
     exited: np.ndarray
     induced: np.ndarray
+    retired: np.ndarray
 
     @classmethod
     def initial(cls, employed0: np.ndarray) -> "WorkerStocks":
         z = np.zeros_like(employed0, dtype=float)
-        return cls(employed0.astype(float).copy(), z.copy(), z.copy(), z.copy(), z.copy(), z.copy())
+        return cls(employed0.astype(float).copy(), z.copy(), z.copy(), z.copy(), z.copy(),
+                   z.copy(), z.copy())
 
     def total(self) -> np.ndarray:
         return (self.employed + self.on_ui + self.exhausted + self.reabsorbed
-                + self.exited + self.induced)
+                + self.exited + self.induced + self.retired)
 
     # -- step 1-2 (mid-period): move the period's automation displacement `new` (absolute jobs, from
     #    `displacement_flow`) into the fresh on-UI cohort --
@@ -79,19 +91,28 @@ class WorkerStocks:
                            attrition_rate: float = 0.0) -> None:
         assert reabsorption_rate + lfp_exit_rate <= 1.0 + 1e-9, "reabsorption + exit must be ≤ 1"
         assert 0.0 <= attrition_rate <= 1.0, "attrition_rate must be in [0, 1]"
-        pool = self.exhausted + self.on_ui     # == v1's `U + new`
+        pool = self.exhausted + self.on_ui     # == v1's `U + new` (bit-identical anchor arithmetic)
         self.on_ui = np.zeros_like(self.on_ui)
         exit_flow = pool * lfp_exit_rate
         reab_flow = pool * reabsorption_rate
         self.exited = self.exited + exit_flow
         self.reabsorbed = self.reabsorbed + reab_flow
         self.exhausted = pool - exit_flow - reab_flow
-        # baseline natural attrition (retirement / mortality / discouragement) of the standing exhausted
-        # stock into the absorbing `exited` bucket — so the long-term unemployed don't sit forever (fix 6b).
-        # C1-preserving (exhausted → exited, both in total()); 0 at reduction (v1 has no attrition).
-        attrition_flow = self.exhausted * attrition_rate
-        self.exited = self.exited + attrition_flow
-        self.exhausted = self.exhausted - attrition_flow
+        # induced (demand-displaced) join the SAME transitions as a parallel split (coherence fix —
+        # a demand-displaced waiter can find a service job too). induced ≡ 0 at reduction → C8-safe.
+        ind_exit = self.induced * lfp_exit_rate
+        ind_reab = self.induced * reabsorption_rate
+        self.exited = self.exited + ind_exit
+        self.reabsorbed = self.reabsorbed + ind_reab
+        self.induced = self.induced - ind_exit - ind_reab
+        # baseline natural attrition (retirement / mortality) of the LONG-TERM unemployed into the
+        # DELTA-NEUTRAL `retired` bucket (coherence fix): the baseline twin retired too, so retiring a
+        # displaced worker cancels their standing fiscal loss — the perpetual-work counterfactual is gone.
+        # C1-preserving (both buckets in total()); 0 at reduction.
+        for bucket in ("exhausted", "induced"):
+            flow = getattr(self, bucket) * attrition_rate
+            self.retired = self.retired + flow
+            setattr(self, bucket, getattr(self, bucket) - flow)
 
 
 def reabsorbed_loss_factor(v2p) -> float:

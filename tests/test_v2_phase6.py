@@ -42,7 +42,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     # C1 / C-headcount: the six worker states partition the baseline population, every period —
     # at the AGGREGATE and PER-CELL (a per-cell leak that nets to zero in aggregate would slip past).
     buckets = (res["employed_M"] + res["on_ui_M"] + res["exhausted_M"] + res["reabsorbed_M"]
-               + res["exited_M"] + res["induced_M"])
+               + res["exited_M"] + res["induced_M"] + res["retired_M"])
     assert _rel(buckets, res["population_M"]) and _rel(res["population_M"], baseline_M), "C1/C-headcount"
     assert (res["max_cell_resid_M"] < 1e-6).all(), "C1 per-cell"
 
@@ -75,7 +75,8 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"]
-             + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"])
+             + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"]
+             + res["ssdi_outlay_B"])
     assert _rel(recon, res["fed_deficit_B"]), "C6 federal reconciliation"
 
     # C6-state: the signed per-state total reconstructs from its labeled components (pins sd_state's sign

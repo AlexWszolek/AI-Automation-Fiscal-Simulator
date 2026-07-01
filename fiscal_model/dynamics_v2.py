@@ -68,6 +68,8 @@ class DynamicModelV2:
         # retained-profit capacity would drive the corporate base negative. Fail loud.
         assert params.automation_tax_rate <= params.retained_profit_share * (1.0 - params.auto_cost) + 1e-9, \
             "automation_tax_rate exceeds retained_profit_share·(1−auto_cost) — no profit left to pay it"
+        assert 0.0 <= params.baseline_growth_rate <= 0.10, "baseline_growth_rate out of [0, 0.10]"
+        assert params.ssdi_annual >= 0.0, "ssdi_annual must be ≥ 0"
         lp, dp = params.to_v1()
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
@@ -87,15 +89,17 @@ class DynamicModelV2:
         # engine where the haircut sets the wage cut (w_d = max(origin·(1−haircut), service floor)). The
         # 6-channel delta depends only on the haircut, so it is computed ONCE here and scaled per period.
         self._reab1 = None
-        self._reab_wage = None                   # per-cell w_d of the reabsorbed (rung 1 only)
         if params.reabsorption_rung == 1:
             from .transfers import TransferLookup
             eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(),
                                                   params.kernel_params(), params.reabsorption_floor_pctile)
             self._reab1 = eng.delta(params.reemployment_haircut, params.mpc, params.consumption_stickiness)
+            # per-cell destination wage of the reabsorbed (state tax base + the ubi financing metric)
             self._reab_wage = np.maximum(eng.worker_wage * (1.0 - params.reemployment_haircut),
                                          eng.service_floor)
-        elif params.reabsorption_rung not in (0,):
+        elif params.reabsorption_rung == 0:
+            self._reab_wage = self._v1.wage * (1.0 - params.reemployment_haircut)
+        else:
             raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
 
         # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
@@ -229,7 +233,9 @@ class DynamicModelV2:
             automated_comp_fraction = disp.saved_bill / macro.COMP_TOTAL_USD
             Y = macro.productivity_index(automated_comp_fraction, v2p)
             P = macro.price_level(price_reduction_total, Y, v2p)
-            ngdp = macro.nominal_gdp(Y, P)
+            ngdp = macro.nominal_gdp(Y, P) * (1.0 + v2p.baseline_growth_rate) ** t
+            # ^ baseline trend growth g scales the %-GDP DENOMINATORS only (coherence fix: r>g=0 used to
+            #   invert the long-horizon debt/GDP dynamics). Nominal dollar columns are unchanged.
 
             # federal: losses positive; the survivor GAIN and the profit-overflow recovery are subtracted
             # (W<1 → sd<0 → adds to deficit); the survivor netting is ADDED (less corp recovery).
@@ -243,8 +249,12 @@ class DynamicModelV2:
             #     contraction, which feeds lagged demand (I) and is gated by demand_multiplier. ---
             state_cell = ch["inc_state"] + ch["cons_state"] + ch["transfer_state"] - sd_state
             state_net = np.bincount(v1.state_of_cell, weights=state_cell, minlength=len(v1.uniq_states))
-            taxable_base = np.bincount(v1.state_of_cell, weights=employed_post * v1.wage * W_surv,
-                                       minlength=len(v1.uniq_states))   # remaining labour income (W-scaled)
+            # remaining labour income (W-scaled) + the reabsorbed's actual earnings at w_d (coherence fix:
+            # they pay taxes, so the close can tax them — ~12% of the base was invisible before)
+            taxable_base = np.bincount(v1.state_of_cell,
+                                       weights=employed_post * v1.wage * W_surv
+                                       + st.reabsorbed * self._reab_wage,
+                                       minlength=len(v1.uniq_states))
             close = government.close_state_gaps(state_net, taxable_base, v2p)
             state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
 
@@ -255,14 +265,20 @@ class DynamicModelV2:
             ubi_outlay = p.ubi_annual * baseline_emp                    # gross: per-worker UBI × workforce
             ubi_recapture = v2p.ubi_recapture_rate * ubi_outlay
             automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated comp bill
-            net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax
+            # SSDI outlay on the exited stock (coherence fix: they carried the after-loss but drew no
+            # benefit — ~$162B/yr missing by y10). Federal; not in the baked transfer grids (no overlap
+            # beyond the small documented SSI-concurrency approximation). Inert at reduction (exited ≡ 0).
+            ssdi_outlay = st.exited.sum() * v2p.ssdi_annual
+            net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax + ssdi_outlay
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
             # UBI financing metric: NET cost over the LIVE labour-income base (survivor raises scale it;
             # rung-1 reabsorbed earn w_d). At reduction (W=1, rung 0, recapture 0) == v1's ubi_rate exactly.
+            # rung-gated reabsorbed term: ubi_required_rate is a C8 column, and at reduction (rung 0) the
+            # base must collapse to v1's wage_bill exactly (W_surv=1, no reabsorbed earnings term).
             ubi_base = wage_bill * W_surv + ((st.reabsorbed * self._reab_wage).sum()
-                                             if self._reab_wage is not None else 0.0)
+                                             if v2p.reabsorption_rung == 1 else 0.0)
             ubi_rate = ((p.ubi_annual * baseline_emp * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
                         if (p.ubi_annual > 0 and ubi_base > 0) else 0.0)
 
@@ -298,6 +314,7 @@ class DynamicModelV2:
                 "on_ui_M": st.on_ui.sum() / 1e6, "exhausted_M": st.exhausted.sum() / 1e6,
                 "reabsorbed_M": st.reabsorbed.sum() / 1e6, "exited_M": st.exited.sum() / 1e6,
                 "induced_M": st.induced.sum() / 1e6,                    # 6th state: demand-driven layoffs (I)
+                "retired_M": st.retired.sum() / 1e6,                    # 7th state: delta-neutral attrition
                 "population_M": st.total().sum() / 1e6,
                 # C1 PER-CELL: the worst per-cell mass residual (the aggregate population_M can hide a
                 # per-cell leak that nets to zero across the 33k cells).
@@ -342,6 +359,7 @@ class DynamicModelV2:
                 "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: gross UBI outlay
                 "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
+                "ssdi_outlay_B": ssdi_outlay / 1e9,                    # coherence: SSDI on the exited
                 # --- Phase 5: state balanced-budget close (H, C7) ---
                 # C6-state composition: the signed state total reconstructs from its labeled components
                 # (inc + cons + transfer − survivor gain), pinning sd_state's sign and the bincount.
@@ -366,7 +384,11 @@ class DynamicModelV2:
             })
 
             # carry this period's cumulative slack to t+1 (decision J.1 keeps ΔW_market predetermined).
-            slack_prev = 1.0 - employed_post.sum() / baseline_emp
+            # slack (coherence fix): the reabsorbed are EMPLOYED (service jobs) and the retired left the
+            # labour force with their baseline twin — neither should suppress survivor wages. At reduction
+            # the only consumer (market_frac) is elasticity-gated → C8-safe.
+            lf = baseline_emp - st.retired.sum()
+            slack_prev = 1.0 - (employed_post.sum() + st.reabsorbed.sum()) / lf if lf > 0 else 0.0
             # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition ---
             st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate, v2p.attrition_rate)
 

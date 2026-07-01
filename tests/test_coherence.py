@@ -96,6 +96,44 @@ def test_funded_w_update_identity_all_branches():
     assert W_new < 1.4 and abs(W_new - (1 + 50.0 / 1400.0)) < 1e-12 and inc == 0.0 and ov == 0.0
 
 
+# ----------------------------------------------------- fix: worker machine & baseline frame
+def test_ssdi_outlay_on_exited(data, deltas):
+    res = DynamicModelV2(data, deltas, replace(R, **SCEN, lfp_exit_rate=0.1)).run()
+    assert (res["ssdi_outlay_B"].iloc[1:] > 0).all()            # exited draw SSDI once they exist
+    expected = res["exited_M"] * 1e6 * 18_000 / 1e9
+    assert np.allclose(res["ssdi_outlay_B"].to_numpy(), expected.to_numpy())
+
+
+def test_induced_can_be_reabsorbed(data, deltas):
+    # demand-displaced workers join the same reabsorption channel as automation-displaced (they used to
+    # be locked in an absorbing trap while an automation-displaced coder could wait tables)
+    v2p = replace(R, **SCEN, demand_multiplier=0.8, reabsorption_rate=0.5)
+    res = DynamicModelV2(data, deltas, v2p).run()
+    no_reab = DynamicModelV2(data, deltas, replace(R, **SCEN, demand_multiplier=0.8)).run()
+    assert res["induced_M"].iloc[-1] < no_reab["induced_M"].iloc[-1]   # the pool drains into service jobs
+    baseline_M = deltas["employed"].sum() / 1e6
+    assert np.allclose(res["population_M"].to_numpy(), baseline_M, atol=1e-6)
+
+
+def test_growth_moves_only_pct_gdp_columns(data, deltas):
+    g0 = DynamicModelV2(data, deltas, replace(R, **SCEN, **DISP)).run()
+    g4 = DynamicModelV2(data, deltas, replace(R, **SCEN, **DISP, baseline_growth_rate=0.04)).run()
+    for c in ("fed_deficit_B", "fed_debt_B", "state_gap_B", "saved_bill_B"):   # nominal $ unchanged
+        assert np.allclose(g0[c].to_numpy(), g4[c].to_numpy(), rtol=0, atol=1e-9), c
+    # the %-GDP columns shrink as the denominator grows (r>g inversion fixed)
+    assert g4["fed_debt_pct_gdp"].iloc[-1] < g0["fed_debt_pct_gdp"].iloc[-1]
+    assert g4["fed_deficit_pct_gdp"].iloc[-1] < g0["fed_deficit_pct_gdp"].iloc[-1]
+
+
+def test_slack_excludes_reabsorbed_and_retired(data, deltas):
+    # reabsorbed are EMPLOYED — they must not suppress survivor wages as phantom slack
+    v2p = replace(R, **SCEN, reabsorption_rate=0.5, survivor_elasticity=-0.2, survivor_raise_ceiling=1.5)
+    with_reab = DynamicModelV2(data, deltas, v2p).run()
+    no_reab = DynamicModelV2(data, deltas, replace(v2p, reabsorption_rate=0.0)).run()
+    # more reabsorption → less slack → a smaller market wage cut (less negative market_frac)
+    assert with_reab["survivor_market_frac"].iloc[-1] > no_reab["survivor_market_frac"].iloc[-1]
+
+
 # ----------------------------------------------------- fix: UBI recapture (recipient-side economics)
 def test_ubi_recapture_lowers_net_cost(data, deltas):
     gross = DynamicModelV2(data, deltas, replace(R, **SCEN, ubi_annual=12_000)).run()
