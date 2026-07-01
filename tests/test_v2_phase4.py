@@ -122,7 +122,7 @@ def test_c6_federal_reconciles_no_residual(data, deltas):
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]  # Phase-5 netting term
-             + res["ubi_outlay_B"] - res["automation_tax_B"])                   # overhaul: UBI + robot tax
+             + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"])
     assert np.allclose(recon.to_numpy(), res["fed_deficit_B"].to_numpy(), rtol=0, atol=1e-9)
 
 

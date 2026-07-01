@@ -59,8 +59,15 @@ class DynamicModelV2:
                        ("price_reduction_share", params.price_reduction_share),
                        ("survivor_gains_share", params.survivor_gains_share),
                        ("auto_cost", params.auto_cost), ("offshore_share", params.offshore_share),
-                       ("price_passthrough", params.price_passthrough)):
+                       ("price_passthrough", params.price_passthrough),
+                       ("automation_tax_rate", params.automation_tax_rate),
+                       ("survivor_spillover_to_profit", params.survivor_spillover_to_profit),
+                       ("ubi_recapture_rate", params.ubi_recapture_rate)):
             assert 0.0 <= _v <= 1.0, f"{_n}={_v} is out of its documented [0, 1] domain"
+        # The robot tax is paid from retained profit (corp-deductible via disp_factor) — a rate above the
+        # retained-profit capacity would drive the corporate base negative. Fail loud.
+        assert params.automation_tax_rate <= params.retained_profit_share * (1.0 - params.auto_cost) + 1e-9, \
+            "automation_tax_rate exceeds retained_profit_share·(1−auto_cost) — no profit left to pay it"
         lp, dp = params.to_v1()
         # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
         self._v1 = DynamicModel(data, deltas, lp, dp)
@@ -80,11 +87,14 @@ class DynamicModelV2:
         # engine where the haircut sets the wage cut (w_d = max(origin·(1−haircut), service floor)). The
         # 6-channel delta depends only on the haircut, so it is computed ONCE here and scaled per period.
         self._reab1 = None
+        self._reab_wage = None                   # per-cell w_d of the reabsorbed (rung 1 only)
         if params.reabsorption_rung == 1:
             from .transfers import TransferLookup
             eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(),
                                                   params.kernel_params(), params.reabsorption_floor_pctile)
             self._reab1 = eng.delta(params.reemployment_haircut, params.mpc, params.consumption_stickiness)
+            self._reab_wage = np.maximum(eng.worker_wage * (1.0 - params.reemployment_haircut),
+                                         eng.service_floor)
         elif params.reabsorption_rung not in (0,):
             raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
 
@@ -259,16 +269,23 @@ class DynamicModelV2:
             close = government.close_state_gaps(state_net, taxable_base, v2p)
             state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
 
-            # --- step 8.5: federal policy flows. UBI is a real outlay (fix 2, raises the deficit); the
-            #     automation "robot tax" recovers revenue on the automated wage bill (fix 4, lowers it). ---
-            ubi_outlay = p.ubi_annual * baseline_emp                    # per-worker UBI × workforce
-            automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated wage bill
-            net_fed = net_fed + ubi_outlay - automation_tax
+            # --- step 8.5: federal policy flows. UBI is a real outlay NET of recapture (income-tax
+            #     clawback + means-tested crowd-out — the coherence fix: UBI now has a recipient side);
+            #     the robot tax recovers revenue on the automated comp bill, PAID from retained profit
+            #     (its corp-deductibility already shrank the corporate offset via disp_factor). ---
+            ubi_outlay = p.ubi_annual * baseline_emp                    # gross: per-worker UBI × workforce
+            ubi_recapture = v2p.ubi_recapture_rate * ubi_outlay
+            automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated comp bill
+            net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
-            base = wage_bill
-            ubi_rate = (p.ubi_annual * baseline_emp / base) if (p.ubi_annual > 0 and base > 0) else 0.0
+            # UBI financing metric: NET cost over the LIVE labour-income base (survivor raises scale it;
+            # rung-1 reabsorbed earn w_d). At reduction (W=1, rung 0, recapture 0) == v1's ubi_rate exactly.
+            ubi_base = wage_bill * W_surv + ((st.reabsorbed * self._reab_wage).sum()
+                                             if self._reab_wage is not None else 0.0)
+            ubi_rate = ((p.ubi_annual * baseline_emp * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
+                        if (p.ubi_annual > 0 and ubi_base > 0) else 0.0)
 
             # --- step 9: second-round demand (I). Income withdrawn this period = the state austerity (the
             #     close removes income/services ≈ the gap) + the disposable income lost by everyone newly
@@ -344,7 +361,8 @@ class DynamicModelV2:
                 "transfer_fed_B": ch["transfer_fed"].sum() / 1e9,
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
                 "survivor_netting_B": survivor_profit_netting / 1e9,    # C6 component (raises the deficit)
-                "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: UBI outlay (raises the deficit)
+                "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: gross UBI outlay
+                "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
                 # --- Phase 5: state balanced-budget close (H, C7) ---
                 # C6-state composition: the signed state total reconstructs from its labeled components

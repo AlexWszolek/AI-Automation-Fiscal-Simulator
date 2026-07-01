@@ -52,3 +52,35 @@ def test_reabsorption_no_longer_flips_federal_balance(data, deltas):
     r3 = DynamicModelV2(data, deltas, replace(R, **common, reabsorption_rate=0.3)).run()
     assert r3["fed_deficit_B"].iloc[-1] < r0["fed_deficit_B"].iloc[-1]
     assert r3["fed_debt_B"].iloc[-1] < r0["fed_debt_B"].iloc[-1]
+
+
+# ----------------------------------------------------- fix: the robot tax has a PAYER
+def test_robot_tax_is_paid_from_retained_profit(data, deltas):
+    # the tax is corp-deductible: the corporate offset shrinks by corp_rate·tax, so net federal recovery
+    # is tax·(1−corp_rate) — revenue no longer appears ex nihilo (firms used to disburse 107% of the bill).
+    base = DynamicModelV2(data, deltas, replace(R, **SCEN, **DISP)).run()
+    taxed = DynamicModelV2(data, deltas, replace(R, **SCEN, **DISP, automation_tax_rate=0.1)).run()
+    assert (taxed["corp_offset_B"] < base["corp_offset_B"] - 1e-9).all()      # the payer's books shrink
+    assert (taxed["fed_deficit_B"] < base["fed_deficit_B"]).all()             # net recovery still positive
+    # deficit falls by LESS than the tax (the deduction claws part back)
+    recovery = base["fed_deficit_B"].iloc[-1] - taxed["fed_deficit_B"].iloc[-1]
+    assert recovery < taxed["automation_tax_B"].iloc[-1]
+
+
+def test_robot_tax_capacity_bound_raises(data, deltas):
+    # a rate above retained_profit_share·(1−auto_cost) has no profit to pay it — fail loud
+    with pytest.raises(AssertionError):
+        DynamicModelV2(data, deltas, replace(R, retained_profit_share=0.1, price_reduction_share=0.4,
+                                             survivor_gains_share=0.5, automation_tax_rate=0.2))
+
+
+# ----------------------------------------------------- fix: UBI recapture (recipient-side economics)
+def test_ubi_recapture_lowers_net_cost(data, deltas):
+    gross = DynamicModelV2(data, deltas, replace(R, **SCEN, ubi_annual=12_000)).run()
+    net = DynamicModelV2(data, deltas, replace(R, **SCEN, ubi_annual=12_000,
+                                               ubi_recapture_rate=0.25)).run()
+    assert np.allclose(net["ubi_recapture_B"].to_numpy(), 0.25 * net["ubi_outlay_B"].to_numpy())
+    assert np.allclose((gross["fed_deficit_B"] - net["fed_deficit_B"]).to_numpy(),
+                       net["ubi_recapture_B"].to_numpy())      # deficit falls by exactly the recapture
+    # the financing metric reports the NET burden
+    assert (net["ubi_required_rate"] < gross["ubi_required_rate"]).all()

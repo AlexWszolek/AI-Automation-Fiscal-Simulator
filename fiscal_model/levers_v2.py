@@ -76,9 +76,15 @@ class V2Params:
     denominator: str = "absolute"               # 'absolute' | 'pct_gdp'
     # ---------------- government policy response (NEW) ----------------
     automation_tax_rate: float = 0.0            # "robot tax": federal levy as a share of the automated
-    #   stock's saved WAGE bill (the labour tax the displaced humans would have paid). 0 = off.
+    #   stock's saved COMPENSATION bill. PAID from retained profit (corp-deductible: it reduces the
+    #   corporate offset via disp_factor), so the firm's books balance. Must be ≤
+    #   retained_profit_share·(1−auto_cost) (asserted). 0 = off.
     attrition_rate: float = 0.0                 # baseline exit (retirement/mortality/discouragement) of the
     #   standing exhausted stock into the absorbing `exited` bucket. 0 = off (v1-reduction).
+    ubi_recapture_rate: float = 0.0             # share of the UBI outlay recaptured (income-tax clawback +
+    #   means-tested crowd-out combined; literature ~20-30%). The baked transfer grids never see UBI as
+    #   income (UBI never enters the interp argument), so this is the ONLY clawback — no double-count.
+    #   MUST default 0 (ubi_annual is a v1 knob; C8 runs UBI at reduction). Shipped 0.25.
 
     # ---------------- corporate kernel rates (v1) ----------------
     surplus_capture: float = 1.0                # INERT in V2: it only enters the frozen worker-delta
@@ -148,7 +154,8 @@ DEFAULTS_SHIPPED = replace(
     lfp_exit_rate=0.03,
     attrition_rate=0.025,           # overhaul: baseline natural exit of the long-term unemployed
     demand_multiplier=0.5,          # Phase 5: second-round demand → lagged employment flow (decision I)
-    automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated wage bill)
+    automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated comp bill)
+    ubi_recapture_rate=0.25,        # coherence: ~avg effective clawback + means-test crowd-out on UBI
 )
 
 
@@ -166,4 +173,4 @@ def is_v1_reduction(p: V2Params) -> bool:
         # v1's legacy closed-form `induced`, so C8 (v2==v1) holds ONLY at demand_multiplier=0.
         "demand_multiplier", "state_cut_share", "state_rate_hike_cap",
         # Overhaul: new gated policy levers (0 at reduction).
-        "automation_tax_rate", "attrition_rate"))
+        "automation_tax_rate", "attrition_rate", "ubi_recapture_rate"))

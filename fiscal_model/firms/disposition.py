@@ -56,7 +56,13 @@ def route(automated_stock: np.ndarray, comp_per_worker: np.ndarray,
     price_reduction = v2p.price_reduction_share * net_saving
     survivor_gains = v2p.survivor_gains_share * net_saving
 
-    disp_factor = v2p.retained_profit_share * (1.0 - v2p.auto_cost)   # = 1 at reduction
+    # The robot tax has a PAYER (coherence fix): it is levied on the saved comp bill and paid out of
+    # retained profit, corp-deductibly — so the taxable corporate base shrinks by the tax and the firm's
+    # books balance (it no longer disburses >100% of the saved bill). retained_profit_B stays the PRE-tax
+    # partition leg (C2/C5b unchanged); only the corporate recovery reflects the deduction. The bound
+    # automation_tax_rate ≤ retained_profit_share·(1−auto_cost) is asserted in DynamicModelV2.__init__.
+    disp_factor = (v2p.retained_profit_share * (1.0 - v2p.auto_cost)
+                   - v2p.automation_tax_rate)                          # = 1 at reduction (tax = 0)
     corporate_offset_cell = automated_stock * base_corp_offset_pw * disp_factor
     return DispositionResult(saved_bill, automation_spend, net_saving, retained_profit,
                              price_reduction, survivor_gains, corporate_offset_cell)

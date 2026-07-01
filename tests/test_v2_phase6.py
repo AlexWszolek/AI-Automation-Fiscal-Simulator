@@ -75,7 +75,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
              + res["ui_outlay_fed_B"] - res["ui_tax_fed_B"] - res["corp_offset_B"]
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"] + res["survivor_netting_B"]
-             + res["ubi_outlay_B"] - res["automation_tax_B"])   # overhaul: UBI outlay + robot tax
+             + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"])
     assert _rel(recon, res["fed_deficit_B"]), "C6 federal reconciliation"
 
     # C6-state: the signed per-state total reconstructs from its labeled components (pins sd_state's sign

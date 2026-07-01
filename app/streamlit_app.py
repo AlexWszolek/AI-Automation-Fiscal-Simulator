@@ -179,9 +179,12 @@ if not rung1_ok:
 lfp_exit = sb.slider("LFP exit / SSDI rate (of exhausted)", 0.0, 0.2, 0.03, 0.01)
 attrition = sb.slider("Natural attrition of long-term unemployed / yr", 0.0, 0.1, 0.025, 0.005,
                       help="Retirement / mortality / discouragement — so the exhausted don't sit forever.")
-automation_tax = sb.slider("Automation (robot) tax — share of the automated wage bill", 0.0, 0.3, 0.07, 0.01,
-                           help="The government response: a federal levy on the automated jobs' wage bill "
-                                "to recover the eroded labour tax. Watch it pull the deficit back.")
+atx_max = max(0.01, round(min(0.30, retained * (1.0 - auto_cost)), 2))   # paid from retained profit
+automation_tax = sb.slider("Automation (robot) tax — share of the automated comp bill", 0.0, atx_max,
+                           min(0.07, atx_max), 0.01,
+                           help="The government response: a federal levy on the automated jobs' saved "
+                                "compensation, PAID from retained profit (corp-deductible) — so the max is "
+                                "bounded by the profit share. Watch it pull the deficit back.")
 demand = sb.slider("Second-round demand multiplier", 0.0, 1.0, 0.5, 0.05)
 state_resp = sb.selectbox("State budget response", ["mix", "raise_rates", "cut_spending"])
 state_cut_share = sb.slider("Of the gap, share closed by spending cuts (mix)", 0.0, 1.0, 0.0, 0.05)
