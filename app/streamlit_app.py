@@ -188,12 +188,20 @@ if not rung1_ok:
 lfp_exit = sb.slider("LFP exit / SSDI rate (of exhausted)", 0.0, 0.2, 0.03, 0.01)
 attrition = sb.slider("Natural attrition of long-term unemployed / yr", 0.0, 0.1, 0.025, 0.005,
                       help="Retirement / mortality / discouragement — so the exhausted don't sit forever.")
-atx_max = max(0.01, round(min(0.30, retained * (1.0 - auto_cost)), 2))   # paid from retained profit
-automation_tax = sb.slider("Automation (robot) tax — share of the automated comp bill", 0.0, atx_max,
-                           min(0.07, atx_max), 0.01,
-                           help="The government response: a federal levy on the automated jobs' saved "
-                                "compensation, PAID from retained profit (corp-deductible) — so the max is "
-                                "bounded by the profit share. Watch it pull the deficit back.")
+# The robot tax is paid from retained profit, so its feasible max is retained·(1−auto_cost). When that
+# bound collapses (e.g. auto_cost → 1: automation costs eat the whole saved bill), there is no profit to
+# tax — force 0 instead of crashing the fail-loud model assert (user-reported at auto_cost=1).
+atx_bound = round(min(0.30, retained * (1.0 - auto_cost)), 2)
+if atx_bound < 0.01:
+    automation_tax = 0.0
+    sb.caption("Automation tax: **0%** — no retained profit left to pay it "
+               "(retained × (1−auto cost) ≈ 0).")
+else:
+    automation_tax = sb.slider("Automation (robot) tax — share of the automated comp bill", 0.0, atx_bound,
+                               min(0.07, atx_bound), 0.01,
+                               help="The government response: a federal levy on the automated jobs' saved "
+                                    "compensation, PAID from retained profit (corp-deductible) — so the max "
+                                    "is bounded by the profit share. Watch it pull the deficit back.")
 ubi_recapture = sb.slider("UBI recapture (tax clawback + benefit crowd-out)", 0.0, 0.6, 0.25, 0.05,
                           help="Share of the UBI outlay the government gets back — income-tax clawback "
                                "plus means-tested benefits the UBI displaces (~20–30% in practice).")
@@ -254,6 +262,75 @@ with right:
 if ubi > 0 and final["ubi_required_rate"] > 1.0:
     st.warning(f"A \\${ubi:,}/yr UBI needs a **{final['ubi_required_rate']:.0%}** average rate on the eroded "
                "base by the final year — **>100% is unfundable**.")
+
+# -------------------------------------------------- Uncertainty (Monte Carlo) -----------------------
+with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
+    import altair as alt
+    from fiscal_model import mc as mc_mod
+
+    st.caption("Samples N slightly-perturbed lever settings around YOUR configuration (seeded, "
+               "constraint-aware; levers that are off stay off) and re-runs the model. Fan = P10–P90 and "
+               "P25–P75 bands with the median and your base run; tornado = Spearman rank correlation of "
+               "each varied lever with the final-year outcome. Note: mpc/stickiness sensitivity reflects "
+               "only their live paths (demand, state close, reabsorption) — the cached displaced-worker "
+               "consumption channel stays at bake-time values.")
+    mc1, mc2, mc3 = st.columns(3)
+    mc_n = mc1.slider("Draws (N)", 100, 1000, 300, 50)
+    mc_spread = mc2.slider("Spread (relative 1σ, ±2σ truncated)", 0.05, 0.30, 0.15, 0.01)
+    mc_seed = mc3.number_input("Seed", 0, 9999, 0)
+
+    base_v2p = build_v2_params(ui)
+
+    @st.cache_resource
+    def get_mc_context(frozen_key, _data, _deltas, _base):
+        return mc_mod.ScenarioContext(_data, _deltas, _base)
+
+    mc_key = (repr(base_v2p), mc_n, mc_spread, int(mc_seed))
+    if st.button("Run Monte Carlo", type="primary"):
+        frozen_key = tuple(getattr(base_v2p, f) for f in mc_mod.FROZEN)
+        ctx = get_mc_context(frozen_key, data, deltas, base_v2p)
+        bar = st.progress(0.0, text="running draws…")
+        result = mc_mod.run_mc(ctx, n=mc_n, spread=mc_spread, seed=int(mc_seed),
+                               progress=lambda i, n: bar.progress(i / n, text=f"draw {i}/{n}"))
+        bar.empty()
+        st.session_state["mc"] = {"key": mc_key, "result": result}
+
+    if "mc" in st.session_state:
+        if st.session_state["mc"]["key"] != mc_key:
+            st.caption("⚠️ results below are for a previous setting — press *Run Monte Carlo* to refresh.")
+        r: mc_mod.MCResult = st.session_state["mc"]["result"]
+
+        METRICS = {"Federal deficit ($B)": "fed_deficit_B", "Federal debt ($B)": "fed_debt_B",
+                   "Deficit (% GDP, absolute)": "fed_deficit_abs_pct_gdp",
+                   "Employment drop (%)": "employment_drop_pct", "State gap ($B)": "state_gap_B",
+                   "Induced layoffs (M)": "induced_M"}
+        m_label = st.radio("Metric", list(METRICS), horizontal=True)
+        mcol = METRICS[m_label]
+        wide = (r.percentiles.query("metric == @mcol")
+                .pivot(index="period", columns="pct", values="value").reset_index()
+                .rename(columns={p: f"p{p}" for p in mc_mod.PCTS}))
+        wide["base"] = r.base_run[mcol].to_numpy()
+        outer = alt.Chart(wide).mark_area(opacity=0.22).encode(
+            x=alt.X("period:Q", title="year"), y=alt.Y("p10:Q", title=m_label), y2="p90:Q")
+        inner = alt.Chart(wide).mark_area(opacity=0.35).encode(x="period:Q", y="p25:Q", y2="p75:Q")
+        med = alt.Chart(wide).mark_line(strokeWidth=2).encode(x="period:Q", y="p50:Q")
+        base_ln = alt.Chart(wide).mark_line(strokeDash=[6, 3], color="white").encode(
+            x="period:Q", y="base:Q")
+        st.altair_chart((outer + inner + med + base_ln).properties(height=320),
+                        use_container_width=True)
+
+        t_label = st.radio("Tornado target", ["Final deficit", "Final employment drop"], horizontal=True)
+        target = ("final_fed_deficit_B" if t_label == "Final deficit"
+                  else "final_employment_drop_pct")
+        t = r.tornado.query("target == @target").head(15)
+        order = t["lever"].tolist()
+        st.altair_chart(
+            alt.Chart(t).mark_bar().encode(
+                x=alt.X("spearman:Q", title=f"Spearman ρ vs {t_label.lower()}"),
+                y=alt.Y("lever:N", sort=order, title=None),
+                color=alt.condition("datum.spearman > 0", alt.value("#e4572e"), alt.value("#4c9be8")),
+            ).properties(height=24 * len(t) + 20),
+            use_container_width=True)
 
 with st.expander("Per-year detail (v2 columns)"):
     st.dataframe(res.style.format("{:,.2f}"), use_container_width=True)

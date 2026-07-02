@@ -41,7 +41,70 @@ from .levers_v2 import V2Params
 
 class DynamicModelV2:
     def __init__(self, data: loaders.FiscalData, deltas: pd.DataFrame, params: V2Params):
+        # Two-stage construction (the Monte Carlo fast path): `_build_shared` holds everything
+        # lever-free or STRUCTURAL (heavy — engines, cell maps, ledger); `_bind_params` recomputes the
+        # cheap lever-dependent members. `mc.ScenarioContext` shallow-copies a built template and calls
+        # `_bind_params(draw)` per draw — bit-identical to fresh construction because the per-draw
+        # formulas live only here.
+        self._build_shared(data, deltas, params)
+        self._bind_params(params)
+
+    # ---- stage 1: lever-free / structural construction (built once per session for MC) --------------
+    def _build_shared(self, data: loaders.FiscalData, deltas: pd.DataFrame, params: V2Params) -> None:
         self.data = data
+        lp, dp = params.to_v1()
+        # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor. (v1's
+        # lever-dependent members — p, lp, ui_share, g_cell — are overwritten by _bind_params.)
+        self._v1 = DynamicModel(data, deltas, lp, dp)
+        self._baseline = self._baseline_rates(data)
+        # per-cell fully-loaded compensation per worker (the disposition saved-bill basis)
+        ms = data.matrices_sector.groupby("soc_code").agg(
+            comp=("comp_musd", "sum"), emp=("emp_thousands", "sum"))
+        ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
+        self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
+
+        # The two exposure channels mapped to cells — FEASIBILITY-FREE (they depend only on the fixed
+        # mapping fields), so a draw's g_cell is one combine_channels call in _bind_params.
+        _cog_s, _rob_s = levers.channel_shares(data.exposure_occ, params.lever_params())
+        self._cog_cell = self._v1.d["soc_code"].map(_cog_s).fillna(0.0).to_numpy()
+        self._rob_cell = self._v1.d["soc_code"].map(_rob_s).fillna(0.0).to_numpy()
+
+        # Phase 4: the survivor channel (decision A) — exact income+payroll re-eval of the still-employed
+        # at a scaled wage. Construction is lever-free (data + deltas only).
+        self._survivor = survivor.SurvivorEngine(data, deltas)
+        # Reabsorption: rung 0 = legacy flat haircut (the C8 anchor); rung 1 = the unified LIVE engine.
+        # The ENGINE is retained (structural: kernel params + floor pctile); the haircut-dependent
+        # 6-channel delta is computed per bind via engine.delta(...).
+        self._reab_eng = None
+        if params.reabsorption_rung == 1:
+            from .transfers import TransferLookup
+            self._reab_eng = reabsorption.ReabsorptionEngine(
+                data, deltas, TransferLookup(), params.kernel_params(), params.reabsorption_floor_pctile)
+        elif params.reabsorption_rung != 0:
+            raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
+
+        # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
+        self._ledger = government.RevenueLedger(data)
+        # Hoisted lever-free pieces of the demand-withdrawal basis (per-cell arrays; see _bind_params).
+        v1 = self._v1
+        self._inc_after_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
+        self._tr_after_pw = v1.arr["after"]["transfer_fed"] + v1.arr["after"]["transfer_state"]
+        self._emp_fica_pw = sum(self._survivor.weight[f]
+                                * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
+                                for f in ("Married filing jointly", "Head of household", "Single"))
+        # Value-added per worker — the divisor turning a $ demand shortfall into a job count (decision I).
+        # A direct-requirements (Type-I) divisor: it OMITS the Type-II output/employment multiplier
+        # (~1.5–2×), so it under-counts induced jobs; `demand_multiplier` absorbs that calibration.
+        self._va_per_worker = macro.VA_BASELINE_USD / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
+        # Structural fields frozen into the shared arrays/engines — _bind_params refuses a mismatch.
+        self._built_structural = (params.reabsorption_rung, params.reabsorption_floor_pctile,
+                                  params.consumption_scale, params.exposure_mapping,
+                                  params.logistic_midpoint, params.logistic_steepness)
+
+    # ---- stage 2: cheap lever-dependent bind (called per Monte Carlo draw) ---------------------------
+    def _bind_params(self, params: V2Params) -> None:
+        """Recompute every lever-dependent member for `params`. REBIND ATTRIBUTE REFERENCES ONLY — never
+        mutate an array in place: the underlying arrays are SHARED across Monte Carlo draws."""
         self.v2p = params
         # Corporate XOR (note C): the disposition router is the SOLE V2 corporate path. v1's
         # corp_offset_scale would double-apply with the router's disp_factor, and surplus_capture is
@@ -71,78 +134,47 @@ class DynamicModelV2:
         assert 0.0 <= params.baseline_growth_rate <= 0.10, "baseline_growth_rate out of [0, 0.10]"
         assert params.ssdi_annual >= 0.0, "ssdi_annual must be ≥ 0"
         assert params.robotics_lag >= 0.0, "robotics_lag must be ≥ 0 (years of capacity build-out)"
-        lp, dp = params.to_v1()
-        # Reuse v1's array preparation verbatim -> identical inputs guarantee the C8 anchor.
-        self._v1 = DynamicModel(data, deltas, lp, dp)
-        self._baseline = self._baseline_rates(data)
-        # per-cell fully-loaded compensation per worker (the disposition saved-bill basis)
-        ms = data.matrices_sector.groupby("soc_code").agg(
-            comp=("comp_musd", "sum"), emp=("emp_thousands", "sum"))
-        ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
-        self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
+        assert (params.reabsorption_rung, params.reabsorption_floor_pctile, params.consumption_scale,
+                params.exposure_mapping, params.logistic_midpoint,
+                params.logistic_steepness) == self._built_structural, \
+            "structural field differs from the built template — rebuild, don't bind"
 
-        # robotics_lag (coherence C6): physical automation needs AI-built industrial capacity, so the
-        # robot channel ramps linearly over `robotics_lag` years. Requires the two exposure channels
-        # separately, mapped to cells (only consumed at lag>0 — at lag==0 the loop uses v1.g_cell
-        # verbatim, the bit-identical C8 fast path).
-        _cog_s, _rob_s = levers.channel_shares(data.exposure_occ, params.lever_params())
-        self._cog_cell = self._v1.d["soc_code"].map(_cog_s).fillna(0.0).to_numpy()
-        self._rob_cell = self._v1.d["soc_code"].map(_rob_s).fillna(0.0).to_numpy()
-
-        # Phase 4: the survivor channel (decision A) — exact income+payroll re-eval of the still-employed
-        # at a scaled wage. Shares the delta cache's wage basis (the C5c leak detector relies on it).
-        self._survivor = survivor.SurvivorEngine(data, deltas)
-        # Phase 4: reabsorption Rung 1 (decision D). Built/loaded only when live (rung 1) — the per-cell
-        # service-floor delta is scenario-invariant and disk-cached; rung 0 pays nothing (keeps C8 fast).
-        # Reabsorption (fix 5): rung 0 = legacy flat haircut (the C8 anchor); rung 1 = the unified LIVE
-        # engine where the haircut sets the wage cut (w_d = max(origin·(1−haircut), service floor)). The
-        # 6-channel delta depends only on the haircut, so it is computed ONCE here and scaled per period.
-        self._reab1 = None
-        if params.reabsorption_rung == 1:
-            from .transfers import TransferLookup
-            eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(),
-                                                  params.kernel_params(), params.reabsorption_floor_pctile)
-            self._reab1 = eng.delta(params.reemployment_haircut, params.mpc, params.consumption_stickiness)
-            # per-cell destination wage of the reabsorbed (state tax base + the ubi financing metric)
-            self._reab_wage = np.maximum(eng.worker_wage * (1.0 - params.reemployment_haircut),
-                                         eng.service_floor)
-        elif params.reabsorption_rung == 0:
-            self._reab_wage = self._v1.wage * (1.0 - params.reemployment_haircut)
-        else:
-            raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
-
-        # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
-        self._ledger = government.RevenueLedger(data)
-        # STANDING per-worker net income withdrawal by worker state — the level-targeting demand basis
-        # (coherence fix). ONE budget constraint, shared with the fiscal side: the withdrawal nets the
-        # taxes the worker stops paying AND the transfers/UI the fiscal ledger pays that same household
-        # (the old basis netted a full year of UI never paid and ignored transfer income entirely).
-        # cons_state is deliberately EXCLUDED (it is keyed to this same take-home drop — double-count).
+        # v1's lever-dependent members: p/lp carry interest, ubi, demand_multiplier, reabsorption_rate,
+        # adoption_path, n_periods, kernel mpc/stickiness; ui_share and g_cell are derived here.
+        # g_cell via combine_channels is BIT-IDENTICAL to v1's displacement_fraction (levers.py: the
+        # single source of the float-op order) — the C8 sweep is the gate.
         v1 = self._v1
-        inc_after_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
-        tr_after_pw = v1.arr["after"]["transfer_fed"] + v1.arr["after"]["transfer_state"]
-        emp_fica_pw = sum(self._survivor.weight[f]
-                          * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
-                          for f in ("Married filing jointly", "Head of household", "Single"))
-        self._net_after_pw = v1.wage - inc_after_pw - emp_fica_pw - tr_after_pw   # exhausted/exited/induced
+        v1.lp, v1.p = params.lever_params(), params.to_v1()[1]
+        v1.ui_share = min(1.0, params.ui_weeks / 52.0)
+        v1.g_cell = levers.combine_channels(self._cog_cell, self._rob_cell,
+                                            params.cognitive_feasibility, params.physical_feasibility)
+
+        # reabsorption: the haircut-dependent delta from the retained engine (rung 1) / legacy factors.
+        if self._reab_eng is not None:
+            self._reab1 = self._reab_eng.delta(params.reemployment_haircut, params.mpc,
+                                               params.consumption_stickiness)
+            self._reab_wage = np.maximum(self._reab_eng.worker_wage * (1.0 - params.reemployment_haircut),
+                                         self._reab_eng.service_floor)
+            self._reab_scar_pw = self._reab1["net_takehome_loss"]
+        else:
+            self._reab1 = None
+            self._reab_wage = v1.wage * (1.0 - params.reemployment_haircut)
+            self._reab_scar_pw = params.reemployment_haircut * (v1.wage - self._inc_after_pw
+                                                                - self._emp_fica_pw)
+
+        # STANDING per-worker net income withdrawal by worker state — the level-targeting demand basis.
+        # ONE budget constraint, shared with the fiscal side (nets the taxes stopped AND the transfers/UI
+        # actually paid); cons_state deliberately EXCLUDED (keyed to the same take-home drop).
+        self._net_after_pw = v1.wage - self._inc_after_pw - self._emp_fica_pw - self._tr_after_pw
         blend = lambda c: (v1.ui_share * v1.arr["during"][c]
                            + (1 - v1.ui_share) * v1.arr["after"][c])
-        self._net_ui_pw = (v1.wage - blend("inc_fed") - blend("inc_state") - emp_fica_pw
+        self._net_ui_pw = (v1.wage - blend("inc_fed") - blend("inc_state") - self._emp_fica_pw
                            - blend("transfer_fed") - blend("transfer_state") - v1.ui * v1.ui_share)
-        # reabsorbed: the standing take-home scar net of the transfers replacing it
-        if self._reab1 is not None:
-            self._reab_scar_pw = self._reab1["net_takehome_loss"]
-        else:                                    # rung 0: haircut share of the after take-home loss
-            self._reab_scar_pw = params.reemployment_haircut * (v1.wage - inc_after_pw - emp_fica_pw)
-        # Value-added per worker — the divisor turning a $ demand shortfall into a job count (decision I).
-        # A direct-requirements (Type-I) divisor: it OMITS the Type-II output/employment multiplier (~1.5–2×),
-        # so it under-counts induced jobs; `demand_multiplier` absorbs that calibration.
-        self._va_per_worker = macro.VA_BASELINE_USD / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
         # Level-controller stability guard: the induced stock appears in its own target (the multiplier
         # fixed point); with the one-period lag it converges geometrically iff the loop gain
         # ρ = dm·mpc·stickiness·d̄/va_pw < 1 (ρ ≈ 0.1 at the shipped dm=0.5). Fail loud, don't diverge.
         if params.demand_multiplier > 0 and self._va_per_worker > 0:
-            d_bar = float((v1.emp0 * self._net_after_pw).sum()) / baseline_emp
+            d_bar = float((v1.emp0 * self._net_after_pw).sum()) / v1.emp0.sum()
             rho = (params.demand_multiplier * params.mpc * params.consumption_stickiness
                    * d_bar / self._va_per_worker)
             assert rho < 1.0, f"demand loop gain ρ={rho:.2f} ≥ 1 — the induced fixed point diverges"

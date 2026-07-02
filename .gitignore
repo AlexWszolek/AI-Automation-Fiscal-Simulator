@@ -18,3 +18,4 @@ data/interim/*.csv
 
 # Large external source extracts kept outside the repo (ACS PUMS, etc.)
 data/external/
+data/mc_runs/

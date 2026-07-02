@@ -222,6 +222,14 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `ubi_annual` | `ubi_outlay = ubi·baseline_emp` | federal outlay ↑ + reported required rate |
 | `denominator` | headline = $B or %-GDP | reporting only |
 | `mpc`, `consumption_stickiness` | **live** in Step 9 (+ frozen in cons cache) | second-round demand magnitude |
+
+**Monte Carlo whitelist** (`fiscal_model/mc.py`): the local-uncertainty sampler perturbs all CONTINUOUS
+levers above (constraint-aware: disposition shares renormalized on the simplex; the robot tax clipped to
+retained′·(1−auto_cost′); off values never perturbed). FROZEN per draw: categorical/structural switches
+(`state_response`, `reabsorption_rung`, `exposure_mapping`, `denominator`, `n_periods`,
+`reabsorption_floor_pctile`, the logistic shape), fields baked into caches/templates (`consumption_scale`,
+`dividend_tax_rate`, `passthrough_individual_rate`, `marginal_taxable_multiplier`), the corporate-XOR pins,
+and the declared-but-inert placeholders. mpc/stickiness sensitivity reflects only their live paths.
 | `surplus_capture`, `dividend_tax_rate`, `passthrough_individual_rate`, `marginal_taxable_multiplier` | frozen in the delta cache | build-time only — inert on a fixed cache |
 
 ---

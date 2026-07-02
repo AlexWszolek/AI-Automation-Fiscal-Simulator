@@ -74,6 +74,16 @@ def test_robot_tax_capacity_bound_raises(data, deltas):
                                              survivor_gains_share=0.5, automation_tax_rate=0.2))
 
 
+def test_auto_cost_one_runs_with_zero_tax(data, deltas):
+    # the user-reported crash corner: at auto_cost=1 the bound retained·(1−auto_cost) is 0 — the model
+    # must run when the tax is 0 (the UI forces 0 there), and every saved dollar goes to the compute pool.
+    v2p = replace(R, **SCEN, **DISP, auto_cost=1.0, automation_tax_rate=0.0)
+    res = DynamicModelV2(data, deltas, v2p).run()
+    assert np.isfinite(res["fed_deficit_B"]).all()
+    assert np.allclose(res["net_saving_B"].to_numpy(), 0.0)      # nothing left after automation costs
+    assert np.allclose(res["automation_spend_B"].to_numpy(), res["saved_bill_B"].to_numpy())
+
+
 # ----------------------------------------------------- fix: funded W* (the snap branch, unit-level)
 def test_funded_w_update_identity_all_branches():
     # C5c must hold exactly in EVERY branch of the pure update: ℓ·wb·(W_new−1) + overflow == gains
