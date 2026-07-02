@@ -55,7 +55,8 @@ def build_v2_params(ui: dict) -> V2Params:
         price_passthrough=ui["price_passthrough"], productivity_passthrough=ui["productivity_passthrough"],
         demand_multiplier=ui["demand"], state_response=ui["state_resp"], state_cut_share=ui["state_cut_share"],
         state_rate_hike_cap=ui["state_rate_hike_cap"], automation_tax_rate=ui["automation_tax_rate"],
-        interest_rate=ui["interest"], ubi_annual=ui["ubi"], denominator=ui["denominator"])
+        interest_rate=ui["interest"], ubi_annual=ui["ubi"], ubi_recapture_rate=ui["ubi_recapture_rate"],
+        baseline_growth_rate=ui["baseline_growth_rate"], denominator=ui["denominator"])
 
 
 @st.cache_resource
@@ -112,7 +113,7 @@ haircut = sb.slider("Re-employment wage cut (haircut)", 0.0, 1.0, 0.30, 0.05,
                          "toward EITC/SNAP/Medicaid eligibility.")
 ui_weeks = sb.slider("UI duration (weeks)", 0, 52, 26)
 interest = sb.slider("Interest rate on federal debt", 0.0, 0.10, 0.03, 0.005)
-ubi = sb.slider("UBI per capita / yr ($)", 0, 30_000, 0, 1_000)
+ubi = sb.slider("UBI per worker / yr ($)", 0, 30_000, 0, 1_000)
 
 if not is_v2:
     # -------------------------------------------------- v1 path (unchanged thesis demo) --------------
@@ -176,6 +177,9 @@ price_pt = sb.slider("Price pass-through (deflation → real/%-GDP only)", 0.0, 
 prod_pt = sb.slider("Productivity dividend (full automation → +this share of GDP)", 0.0, 1.0, 0.30, 0.05,
                     help="Output-weighted: automation of the high-value work first. Grows real GDP, so "
                          "it cushions the deficit as a share of GDP (switch the denominator below to see it).")
+growth = sb.slider("Baseline trend growth (nominal, %-GDP denominators)", 0.0, 0.08, 0.04, 0.005,
+                   help="≈2% real + 2% inflation. Grows the GDP denominator over time so debt/GDP is "
+                        "honest at long horizons; nominal dollar columns are unchanged.")
 
 sb.header("④ Government & demand  [H]")
 rung = 1 if rung1_ok else 0
@@ -190,7 +194,12 @@ automation_tax = sb.slider("Automation (robot) tax — share of the automated co
                            help="The government response: a federal levy on the automated jobs' saved "
                                 "compensation, PAID from retained profit (corp-deductible) — so the max is "
                                 "bounded by the profit share. Watch it pull the deficit back.")
-demand = sb.slider("Second-round demand multiplier", 0.0, 1.0, 0.5, 0.05)
+ubi_recapture = sb.slider("UBI recapture (tax clawback + benefit crowd-out)", 0.0, 0.6, 0.25, 0.05,
+                          help="Share of the UBI outlay the government gets back — income-tax clawback "
+                               "plus means-tested benefits the UBI displaces (~20–30% in practice).")
+demand = sb.slider("Second-round demand multiplier", 0.0, 1.0, 0.5, 0.05,
+                   help="Okun-style LEVEL multiplier: the induced-layoff stock tracks the standing net "
+                        "demand shortfall — UBI/raises visibly stabilize; austerity/wage cuts deepen it.")
 state_resp = sb.selectbox("State budget response", ["mix", "raise_rates", "cut_spending"])
 state_cut_share = sb.slider("Of the gap, share closed by spending cuts (mix)", 0.0, 1.0, 0.0, 0.05)
 rate_cap = sb.slider("Max feasible rate hike (× base)", 0.1, 3.0, 1.0, 0.1)
@@ -206,7 +215,8 @@ ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
           lfp_exit_rate=lfp_exit, attrition_rate=attrition, ui_weeks=ui_weeks, price_passthrough=price_pt,
           productivity_passthrough=prod_pt, demand=demand, state_resp=state_resp,
           state_cut_share=state_cut_share, state_rate_hike_cap=rate_cap, automation_tax_rate=automation_tax,
-          interest=interest, ubi=ubi, denominator=denominator)
+          interest=interest, ubi=ubi, ubi_recapture_rate=ubi_recapture, baseline_growth_rate=growth,
+          denominator=denominator)
 res = DynamicModelV2(data, deltas, build_v2_params(ui)).run()
 final = res.iloc[-1]
 
@@ -226,7 +236,7 @@ left, right = st.columns(2)
 with left:
     st.subheader("Where the workforce goes (millions)")
     st.area_chart(res.set_index("period")[["employed_M", "on_ui_M", "exhausted_M", "reabsorbed_M",
-                                            "exited_M", "induced_M"]])
+                                            "exited_M", "induced_M", "retired_M"]])
     st.subheader("Federal deficit — absolute, on the real 2024 base ($B)")
     st.line_chart(res.set_index("period")[["fed_deficit_abs_B", "fed_revenue_B"]])
     st.subheader("Firm disposition of the saved wage bill ($B)")
