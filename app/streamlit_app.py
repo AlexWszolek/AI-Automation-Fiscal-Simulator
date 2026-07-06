@@ -214,6 +214,11 @@ rate_cap = sb.slider("Max feasible rate hike (× base)", 0.1, 3.0, 1.0, 0.1)
 denominator = sb.radio("Headline denominator", ["absolute", "pct_gdp"], horizontal=True,
                        help="Switch to % of GDP to see the productivity dividend and price channel move the headline.")
 
+# assumptions export (mirrors the ai-shock pattern: a timestamped, reload-able lever snapshot)
+import dataclasses as _dc
+import datetime as _dt
+import json as _json
+
 ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
           adoption_path=adoption_path, n_periods=n_periods,
           retained_profit_share=retained, price_reduction_share=price, auto_cost=auto_cost,
@@ -226,6 +231,11 @@ ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
           interest=interest, ubi=ubi, ubi_recapture_rate=ubi_recapture, baseline_growth_rate=growth,
           denominator=denominator)
 res = DynamicModelV2(data, deltas, build_v2_params(ui)).run()
+sb.download_button("⬇ Export assumptions (JSON)",
+                   _json.dumps({"engine": "v2",
+                                "exportedAt": _dt.datetime.now().isoformat(timespec="seconds"),
+                                "levers": _dc.asdict(build_v2_params(ui))}, indent=1),
+                   "assumptions.json", "application/json")
 final = res.iloc[-1]
 
 # ----------------------------------------------------------------- v2 headline
@@ -262,6 +272,37 @@ with right:
 if ubi > 0 and final["ubi_required_rate"] > 1.0:
     st.warning(f"A \\${ubi:,}/yr UBI needs a **{final['ubi_required_rate']:.0%}** average rate on the eroded "
                "base by the final year — **>100% is unfundable**.")
+
+# -------------------------------------------------- Fiscal summary table ----------------------------
+st.subheader("Fiscal summary")
+from fiscal_model import summary as summary_mod
+from fiscal_model.government import RevenueLedger
+
+fs1, fs2 = st.columns(2)
+fs_group = fs1.radio("Group", ["By tax category", "By fiscal channel"], horizontal=True)
+fs_units = fs2.radio("Units", ["$B", "% of baseline revenue"], horizontal=True)
+_ledger = RevenueLedger(data)
+fs_df = summary_mod.build_fiscal_summary(
+    res, _ledger,
+    grouping="tax" if fs_group == "By tax category" else "channel",
+    units="busd" if fs_units == "$B" else "pct_baseline")
+st.caption("Revenue lines are signed revenue **changes** (negative = lost revenue); outlay lines are "
+           "spending changes (positive = more spending); **Net fiscal impact = −deficit change** "
+           "(negative = worse). Flows sum into *Total*; levels show the final year. Memo rows document "
+           "untaxed magnitudes (offshore leakage, consumer surplus) and are excluded from nets."
+           + (" Channels follow the labour→capital / resident→non-resident / consumer-surplus / "
+              "spending decomposition." if fs_group == "By fiscal channel" else ""))
+_year_cols = [c for c in fs_df.columns if c.startswith("Year ")] + ["Total"]
+_disp = fs_df.drop(columns="kind").set_index(["group", "label"])
+_emph = fs_df["kind"].isin(["subtotal", "net"]).to_numpy()
+styler = (_disp.style.format("{:,.1f}")
+          .apply(lambda s: np.where(_emph, "font-weight: bold; background-color: rgba(128,128,128,0.15)",
+                                    ""), axis=0)
+          .map(lambda v: "color: #e4572e" if isinstance(v, float) and v < -0.05 else
+                         ("color: #3fa34d" if isinstance(v, float) and v > 0.05 else ""),
+               subset=_year_cols))
+st.dataframe(styler, use_container_width=True)
+st.download_button("⬇ Summary CSV", summary_mod.to_csv_bytes(fs_df), "fiscal-summary.csv", "text/csv")
 
 # -------------------------------------------------- Uncertainty (Monte Carlo) -----------------------
 with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
@@ -334,6 +375,8 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
 
 with st.expander("Per-year detail (v2 columns)"):
     st.dataframe(res.style.format("{:,.2f}"), use_container_width=True)
+    st.download_button("⬇ Full detail CSV", res.to_csv(index=False).encode("utf-8"),
+                       "run-detail.csv", "text/csv")
 with st.expander("Method — what v2 adds over v1"):
     st.markdown(
         "- **Disposition router**: the saved wage bill is split (profit / price / survivor raises / "
