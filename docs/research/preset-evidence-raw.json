@@ -1,0 +1,1689 @@
+[
+ {
+  "cluster": "exposure",
+  "papers": [
+   {
+    "title": "Eloundou, Manning, Mishkin, Rock (2023) \u2014 GPTs are GPTs: An Early Look at the Labor Market Impact Potential of Large Language Models (arXiv 2303.10130)",
+    "verified": "Fetched https://arxiv.org/abs/2303.10130 (abstract, verbatim) and https://ar5iv.labs.arxiv.org/html/2303.10130 (body text). All quotes below returned verbatim from those fetches.",
+    "key_numbers": [
+     {
+      "quantity": "Share of US workforce with >=10% of work tasks exposed to LLMs",
+      "value": "~80%",
+      "quote": "around 80% of the U.S. workforce could have at least 10% of their work tasks affected by the introduction of LLMs",
+      "source_url": "https://arxiv.org/abs/2303.10130"
+     },
+     {
+      "quantity": "Share of workers with >=50% of tasks exposed",
+      "value": "~19%",
+      "quote": "approximately 19% of workers may see at least 50% of their tasks impacted",
+      "source_url": "https://arxiv.org/abs/2303.10130"
+     },
+     {
+      "quantity": "Share of ALL US worker tasks exposed to LLM alone (alpha = E1: time to complete cut >=50% at equal quality)",
+      "value": "~15%",
+      "quote": "about 15% of all worker tasks in the US could be completed significantly faster at the same level of quality",
+      "source_url": "https://arxiv.org/abs/2303.10130"
+     },
+     {
+      "quantity": "Share of all tasks exposed once LLM-powered software is built (zeta = E1+E2)",
+      "value": "47-56%",
+      "quote": "When incorporating software and tooling built on top of LLMs, this share increases to between 47 and 56% of all tasks.",
+      "source_url": "https://arxiv.org/abs/2303.10130"
+     },
+     {
+      "quantity": "Mean occupation-level direct exposure (alpha), human and GPT-4 raters",
+      "value": "0.14-0.15",
+      "quote": "Both human and GPT-4 annotations indicate that average occupation-level \u03b1 values fall between 0.14 and 0.15",
+      "source_url": "https://ar5iv.labs.arxiv.org/html/2303.10130"
+     },
+     {
+      "quantity": "Wage gradient of exposure",
+      "value": "positive (higher-income jobs more exposed)",
+      "quote": "The projected effects span all wage levels, with higher-income jobs potentially facing greater exposure to LLM capabilities and LLM-powered software.",
+      "source_url": "https://arxiv.org/abs/2303.10130"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "0.30 central; 0.15 (conservative) to 0.50-0.55 (aggressive ceiling)",
+      "rationale": "alpha (bare-LLM, time-halved) = 15% of all tasks and mean occupation alpha 0.14-0.15 -> lower bound 0.15. zeta (with LLM-built software) = 47-56% of all tasks -> ceiling ~0.50-0.55. beta = E1 + 0.5*E2 sits near 0.30 and is the natural central anchor. Note: exposure means >=50% time reduction, not full task elimination; if the model interprets cognitive_feasibility as fully-automatable share, apply a further discount (e.g. x0.5-0.7) to these figures."
+     },
+     {
+      "lever": "physical_feasibility",
+      "suggested": "no anchor from this paper; LLM channel contributes ~0",
+      "rationale": "The rubric scores only whether an LLM or LLM-powered software cuts task time; occupations with zero exposed tasks are overwhelmingly manual (agricultural equipment operators, dishwashers, athletes per Appendix D). Anchor physical_feasibility from robotics sources instead, not from LLM exposure."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "start ~0.27-0.32 of the feasibility ceiling; end -> 1.0; timeline exogenous",
+      "rationale": "alpha/zeta = 15% / (47-56%) = 0.27-0.32: only ~30% of ultimately-exposed task value is deliverable through the bare LLM interface; the rest requires complementary software investment, which is exactly what a rising cumulative adoption ceiling represents. The paper explicitly refuses a timeline (\"We do not make predictions about the development or adoption timeline of such LLMs\"), so n_periods must come from diffusion literature, not here."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": ">=0.3 for cognitively displaced (direction only)",
+      "rationale": "Exposure rises with income, so displaced cognitive workers come disproportionately from above-median wages. If re-employment is at a service-floor wage around a state p30, haircut ~ 1 - w_p30/w_origin >= 0.3-0.45. This is a distributional implication of the exposure gradient, not a number the paper estimates."
+     }
+    ],
+    "caveats": "Exposure is a TIME-SAVINGS potential (>=50% faster at equal quality), agnostic between substitution and augmentation \u2014 it is not a displacement share and not adoption; mapping zeta directly to cognitive_feasibility is an upper bound. No timeline is offered, so it says nothing about adoption_path speed, reabsorption_rate, or any fiscal lever. GPT-4 partially labels its own exposure (circularity); human-vs-model agreement is only moderate at the beta level. Physical work is excluded by construction. Disagreement note: Eloundou exposure rises with wages but flattens/dips at the very top (Job Zone 4 beta ~34.5% > Job Zone 5 ~26.45% per fetched Table 6 values), unlike Webb whose AI exposure peaks sharply at ~p90; unlike Felten, it yields absolute task-share units usable as levels."
+   },
+   {
+    "title": "Felten, Raj, Seamans (2023) \u2014 How will Language Modelers like ChatGPT Affect Occupations and Industries? (arXiv 2303.01157 / SSRN 4375268; LM-weighted AIOE)",
+    "verified": "Fetched https://arxiv.org/abs/2303.01157 (abstract) and full PDF https://arxiv.org/pdf/2303.01157 (downloaded and text-extracted locally, including the 774-occupation appendix). All quotes verbatim from extracted text (ligatures/spacing normalized).",
+    "key_numbers": [
+     {
+      "quantity": "Correlation of language-modeling AIOE with original all-application AIOE",
+      "value": "0.979",
+      "quote": "The resulting scores are highly correlated with the original AIOE scores (correlation coefficient: 0.979).",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     },
+     {
+      "quantity": "Wage-exposure relationship (708 occupations matched to BLS 2021 wages)",
+      "value": "positive, statistically significant (no elasticity coefficient reported)",
+      "quote": "We also find a positive and statistically significant correlation between an occupation's mean or median wage and our measure of exposure to AI language modeling.",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     },
+     {
+      "quantity": "Top-ranked occupation, LM-AIOE (standardized index)",
+      "value": "Telemarketers, 1.926",
+      "quote": "1 41-9041 Telemarketers 1.926",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     },
+     {
+      "quantity": "Bottom-ranked occupation, LM-AIOE (rank 774 of 774)",
+      "value": "Pressers, Textile, Garment: -1.854",
+      "quote": "774 51-6021 Pressers, Textile, Garment, and Related Materials -1.854",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     },
+     {
+      "quantity": "Measure construction scale",
+      "value": "10 AI applications x 52 O*NET abilities over 800+ occupations",
+      "quote": "O*NET uses these 52 human abilities to describe the occupational makeup of each of 800+ occupations that it tracks.",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     },
+     {
+      "quantity": "Sample matched to wages",
+      "value": "708 occupations",
+      "quote": "We have 708 occupations present in both datasets.",
+      "source_url": "https://arxiv.org/pdf/2303.01157"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "no LEVEL anchor \u2014 use LM-AIOE only as cross-occupation weights in the exposure mapping",
+      "rationale": "LM-AIOE is a standardized relative index (range roughly -1.85 to +1.93 across 774 occupations) with no 0-1 'share of tasks automatable' units. Correct use: fix the aggregate cognitive_feasibility level from Eloundou-type task shares, then distribute it across occupations/wage bins proportional to LM-AIOE rank so the displaced wage bill has the right composition."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.3-0.5 for LM-exposed displaced workers",
+      "rationale": "Positive significant wage-exposure correlation over 708 occupations means the displaced pool skews white-collar and above-median wage (top-20 dominated by post-secondary teachers, legal, finance). Falling to a service-floor wage around a state p25-p35 from origin wages around p60-p80 implies proportional cuts of roughly 1 - w_p30/w_p70 ~ 0.3-0.5."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "allow both signs in Felten-anchored presets, e.g. -0.1 to +0.1",
+      "rationale": "The AIOE is explicitly agnostic: exposure 'could involve substitution or augmentation depending on various factors associated with the occupation itself.' A preset anchored on this measure should not force a negative (substitution-only) survivor wage response; the augmentation branch corresponds to positive survivor_elasticity."
+     }
+    ],
+    "caveats": "The paper provides NO displacement magnitudes, no task shares, no adoption rates, and no fiscal quantities \u2014 every 0-1 level lever is out of reach; it only orders occupations/industries/geographies by relative exposure. The wage relationship is shown in binned scatter form; no regression coefficient is reported in the text, so it anchors direction, not magnitude. 'Exposure' deliberately conflates substitution with augmentation, so mapping it to displacement (cognitive_feasibility x adoption) overstates job loss under the augmentation branch. Disagreement note: its LM-specific top list (telemarketers, English/foreign-language/history teachers; legal services, securities) differs from Webb's pre-LLM AI peak (lab technicians, chemical engineers, optometrists at ~p90) and its 0.979 correlation with the all-application AIOE means the LM re-weighting barely changes the ranking \u2014 so its 'ChatGPT-specific' claim rests mostly on the original 2021 crowd-sourced matrix."
+   },
+   {
+    "title": "Webb (2020) \u2014 The Impact of Artificial Intelligence on the Labor Market (SSRN 3482150; patent-task text overlap measure)",
+    "verified": "Full paper PDF fetched from https://www.michaelwebb.co/webb_ai.pdf (61 pages, downloaded and text-extracted locally). All quotes verbatim from extracted text (ligatures normalized).",
+    "key_numbers": [
+     {
+      "quantity": "Robot exposure, 25th->75th percentile: within-industry employment and wage effects, 1980-2010",
+      "value": "employment share -9 to -18%; wages -8 to -14%",
+      "quote": "moving from the 25th to the 75th percentile of exposure to robots is associated with a decline in within-industry employment shares of between 9 and 18%, and a decline in wages of between 8 and 14%, depending on the specification",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     },
+     {
+      "quantity": "Software exposure, 25th->75th percentile: employment and wage effects, 1980-2010",
+      "value": "employment -7 to -11%; wages -2 to -6%",
+      "quote": "For software, the magnitudes are smaller, with declines of 7-11% and 2-6%, respectively.",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     },
+     {
+      "quantity": "Location of peak AI exposure in the wage distribution",
+      "value": "~90th percentile",
+      "quote": "I find that high-skill occupations are most exposed to AI, with exposure peaking at about the ninetieth percentile.",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     },
+     {
+      "quantity": "Projected AI effect on 90:10 wage inequality",
+      "value": "-4% (software coefficient) to -9% (robot coefficient)",
+      "quote": "Applying the estimated software coefficient to AI, I project a 4% decrease in 90:10 inequality; using the robot coefficient, the decrease is 9%.",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     },
+     {
+      "quantity": "Skill direction of AI exposure",
+      "value": "high-skilled tasks; top 1% unaffected",
+      "quote": "I find that, in contrast to software and robots, AI is directed at high-skilled tasks. Under the assumption that historical patterns of long-run substitution will continue, I estimate that AI will reduce 90:10 wage inequality, but will not affect the top 1%.",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     },
+     {
+      "quantity": "Education gradient of AI exposure",
+      "value": "college and Master's degree holders most exposed",
+      "quote": "While individuals with low levels of education are somewhat exposed to AI, it is those with college degrees, including Master's degrees, who are most exposed.",
+      "source_url": "https://www.michaelwebb.co/webb_ai.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "negative, modest: annualized wage drag ~0.1-0.5%/yr per interquartile exposure gap",
+      "rationale": "Occupation-level wage declines for exposed-but-surviving occupations: robots -8 to -14% and software -2 to -6% over ~30 years (1980-2010) -> 0.07-0.5%/yr. Supports a negative (substitution) sign and small magnitude for survivors' market wage response in exposed occupations under a 'historical-pace' preset."
+     },
+     {
+      "lever": "robotics_lag",
+      "suggested": "10-30 years (central ~15-20)",
+      "rationale": "The robot case study's full employment/wage effect accrues over a 30-year window (1980-2010); the physical channel's ramp-in is measured in decades. A linear ramp reaching full effect in ~15-20 years is a reasonable compression of that history for a modern preset; 10 years is aggressive relative to it."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "historical-pace validation target: cumulative displacement in top-quartile-exposed occupations ~9-18% over 30 years (~0.3-0.6%/yr)",
+      "rationale": "The robot IQR employment decline of 9-18% over 30y is a realized joint outcome of feasibility x adoption; a Webb-anchored 'history repeats' preset should have adoption_path x feasibility deliver cumulative displacement of that order for the most exposed slice, far below the Eloundou feasibility ceiling."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "elevated for AI-displaced (origin wages near p90): ~0.4-0.6 if re-employment is at a service floor",
+      "rationale": "AI exposure peaks at ~p90 of the wage distribution and among college/Master's holders, so Webb-anchored displaced workers have the highest origin wages of the three papers; 1 - w_p30/w_p90 lands around 0.5+. Direction/composition only \u2014 Webb estimates equilibrium occupation wages, not individual displacement losses."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "no 0-1 level; distribution weight: up-weight p70-p95 wage occupations in the exposure mapping",
+      "rationale": "Webb's measure is a percentile-ranked patent-task overlap, unitless like AIOE; it cannot set the automatable share. Its contribution is the shape: exposure peaking at ~p90 implies the displaced cognitive wage bill per worker (and hence forgone income/payroll tax per displaced worker) is well above the economy average under a Webb-weighted mapping."
+     }
+    ],
+    "caveats": "Concept gaps: (1) exposure scores are employment-weighted PERCENTILES (relative, unitless) \u2014 no lever level can be read off; (2) the 9-18%/8-14% effects are within-industry occupation equilibrium changes over 30 years, not individual displacement events, so they map poorly to reemployment_haircut and reabsorption_rate (which are person-level) and cannot anchor demand_multiplier (they are relative declines, not net national job losses); (3) explicitly non-causal ('Although I cannot attribute causality to the exposure scores'); (4) AI is measured from pre-2020 patents (prediction/detection/optimization) and predates LLMs, so it misses generative-AI exposure of writing-heavy occupations. Disagreement note: Webb peaks at ~p90 (lab technicians, chemical engineers, optometrists, power plant operators) and finds older, college/Master's-educated workers most exposed; Eloundou finds broad exposure rising with wage but flattening at the very top job zone; Felten's LM index tops out with telemarketers and post-secondary teachers. Presets should treat the exposure MAPPING (which wage bins get hit) as the main axis of disagreement across the three papers, holding the aggregate feasibility level (from Eloundou) fixed."
+   }
+  ]
+ },
+ {
+  "cluster": "acemoglu",
+  "papers": [
+   {
+    "title": "Acemoglu (2024), \"The Simple Macroeconomics of AI\" (NBER WP 32487 / Economic Policy)",
+    "verified": "Fetched and verified: https://www.nber.org/papers/w32487 (abstract, NBER version) and https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf (full text, April 2024 MIT draft; text extracted from downloaded PDF). Body quotes come from the MIT draft, whose headline bounds (0.71%/0.55%) differ slightly from the NBER abstract (0.66%/0.53%).",
+    "key_numbers": [
+     {
+      "quantity": "10-year aggregate TFP gain from AI, upper bound (baseline and hard-task-adjusted)",
+      "value": "<=0.66% baseline, <0.53% adjusted (NBER version); 0.71% / 0.55% in April 2024 MIT draft",
+      "quote": "these macroeconomic effects appear nontrivial but modest\u2014no more than a 0.66% increase in total factor productivity (TFP) over 10 years. [...] Consequently, predicted TFP gains over the next 10 years are even more modest and are predicted to be less than 0.53%.",
+      "source_url": "https://www.nber.org/papers/w32487"
+     },
+     {
+      "quantity": "Share of US labor tasks exposed to AI (wage-bill weighted, from Eloundou et al.)",
+      "value": "19.9% of the US wage bill / GDP share of tasks",
+      "quote": "This procedure yields a wage bill-weighted share of exposed occupations equal to 19.9%. I interpret this number to be the same as the GDP share of tasks exposed to AI.",
+      "source_url": "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+     },
+     {
+      "quantity": "Fraction of exposed tasks profitably automatable within 10 years (Svanberg et al. extrapolation) and implied impacted GDP share",
+      "value": "23% of exposed tasks; 0.23 x 0.199 = 4.6% of all tasks impacted within 10 years (sensitivity: 23% -> ~30%)",
+      "quote": "Svanberg et al.'s base estimates imply that among computer vision-exposed tasks, 23% can be feasibly (and profitably) automated within 10 years. Applying this number to Eloundou et al.'s estimates, I arrive at the GDP share of tasks impacted by AI as 0.23 x 0.199 = 4.6% of all tasks (or occupations) will be impacted by AI and computer vision technologies within the next 10 years.",
+      "source_url": "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+     },
+     {
+      "quantity": "Task-level cost savings: labor cost savings and total cost savings after labor-share conversion",
+      "value": "27% labor cost savings; x 0.57 exposure-adjusted labor share = 15.4% total cost savings (20.5% if Peng et al. included)",
+      "quote": "Under these assumptions, the average labor cost savings are 27% (= 0.27). [...] This gives an average (AI exposure-adjusted) labor share of 0.57, and thus the average (overall) cost savings from AI are about 0.27 x 0.57 = 0.154.",
+      "source_url": "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+     },
+     {
+      "quantity": "10-year GDP gain including capital deepening (baseline, upper bound, and hard-task-adjusted)",
+      "value": "~1.1% (capital proportional to TFP); 1.6-1.8% upper bound (Acemoglu-Restrepo 2022 investment); 0.90-0.92% with hard-task adjustment",
+      "quote": "With these investment effects incorporated, GDP is also estimated to grow by around 1.1% over the next 10 years. [...] the upper bound on GDP effects rises to 1.6-1.8%. Nevertheless, my framework also clarifies that what is relevant for consumer welfare is TFP, rather than GDP, since the additional investment comes out of consumption.",
+      "source_url": "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+     },
+     {
+      "quantity": "Distributional result: capital vs labor split of the gains; wage effects",
+      "value": "capital share of national income +0.38 pp; no sizable wage rises; real-wage declines only for low-education (esp. white native-born) women",
+      "quote": "GDP therefore increases substantially more than average wages, and as a result, the capital share of national income increases by about 0.38 percentage points. This confirms that inequality between capital and labor is likely to rise as a result of the rollout of AI.",
+      "source_url": "https://economics.mit.edu/sites/default/files/2024-04/The%20Simple%20Macroeconomics%20of%20AI.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "0.20 (upper bound; conservative preset 0.15-0.20)",
+      "rationale": "Eloundou et al. exposure aggregated by Acemoglu to a 19.9% wage-bill-weighted share of US tasks exposed to AI. Direct read-across: the exposed share of cognitive task content = 0.199 ~ 0.20. Treat as a CEILING: Acemoglu stresses the exposure measure 'contains both automation and task complementarity elements', so pure automatable content is strictly below 0.20."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "start ~0.02 -> end 0.23 with n_periods = 10 (sensitivity: end 0.30)",
+      "rationale": "Svanberg et al. (extrapolated by Acemoglu from computer vision to all exposed tasks): only 23% of exposed tasks are profitably automated within 10 years. Since the model's adoption_path is the cumulative share of FEASIBLE work actually automated by year t, set the 10-year endpoint to 0.23 with cognitive_feasibility = 0.20, reproducing his impacted share 0.23 x 0.199 = 4.6%. His sensitivity (faster cost declines raise the feasible fraction 'from 23% to approximately 30%') gives end = 0.30."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "0.12-0.155 (0.155 baseline; 0.12 hard-task-adjusted)",
+      "rationale": "Hulten arithmetic: TFP gain = impacted GDP share x total cost savings = 0.046 x 0.154 = 0.71%. The automated wage bill in the model at year 10 is cognitive_feasibility x adoption_end = 0.199 x 0.23 = 4.6% of the labor bill, so the GDP dividend per unit of automated labor bill is 0.0071/0.046 = 0.154 -> productivity_passthrough ~ 0.155 (full automation of the labor bill -> +15.5% of GDP). The hard-task discount scales the average cost savings by 0.55/0.71 = 0.775 -> ~0.12. With these settings the model's 10-year GDP dividend reproduces Acemoglu's 0.53-0.71% TFP validation target."
+     },
+     {
+      "lever": "retained_profit_share / price_reduction_share / survivor_gains_share",
+      "suggested": "survivor_gains_share ~ 0.00-0.05; profit-weighted remainder, e.g. 0.60/0.35/0.05 (and survivor_elasticity ~ 0)",
+      "rationale": "Acemoglu: 'productivity gains from AI are unlikely to lead to sizable wage rises' and the capital share of national income rises ~0.38 pp because 'GDP therefore increases substantially more than average wages' \u2014 i.e., the saved bill accrues to capital, not to survivor raises, making the survivor channel second-order in the conservative preset. Some price_reduction_share (~0.3-0.4) is consistent with his mechanism operating through task-level cost/price declines under competition, but the distributional result caps the wage share of the disposition near zero."
+     },
+     {
+      "lever": "demand_multiplier",
+      "suggested": "~0 (0-0.3) in the conservative preset",
+      "rationale": "The entire quantitative apparatus is first-order Hulten: reallocation/demand-composition terms 'will be second-order and can be ignored in computing GDP changes' at his shock size (4.6% of tasks over 10 years), and his GE exercise finds AI 'is unlikely to lead to substantial wage declines for affected groups'. A conservative Acemoglu preset therefore turns off Okun-style induced job-loss amplification (demand_multiplier ~ 0)."
+     }
+    ],
+    "caveats": "(1) No displacement dynamics: the framework holds employment fixed (the underlying experiments 'do not see the displacement effects'), so the paper offers NO anchors for reabsorption_rate, reemployment_haircut, ui_weeks, lfp_exit_rate, attrition_rate, or ssdi_annual \u2014 the conservative preset must take those from displacement literature (e.g., Davis-von Wachter). (2) Exposure is not automation: the 19.9% bundles automation with task complementarities, so mapping it to cognitive_feasibility overstates displacement even while bounding GDP gains; a preset that uses 0.20 feasibility x 0.23 adoption for DISPLACED headcount is more aggressive on job loss than Acemoglu's own reading. (3) Cost-savings concept mismatch: his 27% is a partial labor-cost reduction on tasks where humans remain (speed gains), not a saved full wage bill; the model saves ~100% of automated compensation, so calibrate through productivity_passthrough only and do not also tune auto_cost to hit 27% \u2014 that would double-count. (4) The 23%-profitable figure is a computer-vision estimate extrapolated to all exposed tasks; it is a weak anchor for physical_feasibility/robotics_lag (his numbers are essentially a cognitive+vision pool; a conservative preset can set physical_feasibility low with robotics_lag >= 10y, but that is interpretation, not his estimate). (5) Version drift: NBER/Economic Policy abstract says 0.66%/0.53% TFP; the fetched April 2024 MIT draft says 0.71%/0.55% (GDP 1.1%, hard-task 0.90-0.92%) \u2014 use the ranges, not point values. (6) He argues welfare-relevant gains are TFP, not GDP: the 1.6-1.8% GDP upper bound is investment-driven and 'comes out of consumption', so it should not be fed into the model as a demand boost; likewise his 'bad new tasks' example (GDP +2%, welfare -0.72%) has no lever counterpart. (7) No compute-tax, offshore, UBI, or state-budget content: compute_effective_rate, offshore_share, automation_tax_rate, ubi_*, state_* levers get nothing from this paper."
+   }
+  ]
+ },
+ {
+  "cluster": "brynjolfsson-micro",
+  "papers": [
+   {
+    "title": "Brynjolfsson, Li, Raymond (2025), \"Generative AI at Work\", Quarterly Journal of Economics 140(2): 889-942 (NBER WP 31161, 2023)",
+    "verified": "Fetched: https://www.nber.org/papers/w31161 (working-paper abstract); https://ideas.repec.org/a/oup/qjecon/v140y2025i2p889-942..html (published QJE abstract); http://danielle.li/assets/docs/GenerativeAIatWork.pdf (full published text, downloaded and text-extracted). All quotes below verified against fetched text.",
+    "key_numbers": [
+     {
+      "quantity": "Average productivity gain from AI assistance (published QJE version)",
+      "value": "+15% issues resolved per hour",
+      "quote": "AI assistance increases worker productivity, resulting in a 15% increase in the number of chats that an agent successfully resolves per hour.",
+      "source_url": "http://danielle.li/assets/docs/GenerativeAIatWork.pdf"
+     },
+     {
+      "quantity": "Productivity gain for least-skilled/least-experienced workers",
+      "value": "+30% issues resolved per hour",
+      "quote": "Less skilled and less experienced workers improve significantly across all productivity measures, including a 30% increase in the number of issues resolved per hour.",
+      "source_url": "http://danielle.li/assets/docs/GenerativeAIatWork.pdf"
+     },
+     {
+      "quantity": "Experience-curve compression (tenure equivalence)",
+      "value": "2 months with AI = 6+ months without",
+      "quote": "The AI tool also helps newer agents to move more quickly down the experience curve: treated agents with two months of tenure perform just as well as untreated agents with more than six months of tenure.",
+      "source_url": "http://danielle.li/assets/docs/GenerativeAIatWork.pdf"
+     },
+     {
+      "quantity": "Effect on highest-skilled workers",
+      "value": "~0 productivity gain; small quality decline",
+      "quote": "In contrast, AI has little effect on the productivity of higher-skilled or more experienced workers. Indeed, we find evidence that AI assistance leads to a small decrease in the quality of conversations conducted by the most skilled agents.",
+      "source_url": "http://danielle.li/assets/docs/GenerativeAIatWork.pdf"
+     },
+     {
+      "quantity": "Attrition reduction for newer agents with AI access",
+      "value": "-10pp, i.e. -40% vs 25% baseline attrition",
+      "quote": "The magnitude of this coefficient, around 10 percentage points, translates into a 40% decrease relative to a baseline attrition rate in this group of 25%.",
+      "source_url": "http://danielle.li/assets/docs/GenerativeAIatWork.pdf"
+     },
+     {
+      "quantity": "Working-paper (NBER 2023) version of the headline numbers",
+      "value": "+14% average, +34% novice/low-skilled",
+      "quote": "Access to the tool increases productivity, as measured by issues resolved per hour, by 14% on average ... including a 34% improvement for novice and low-skilled workers but with minimal impact on experienced and highly skilled workers",
+      "source_url": "https://www.nber.org/papers/w31161"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "0.5-0.9 (central ~0.7) for the cognitive channel",
+      "rationale": "A 15% rise in resolutions/hour with unchanged labor input means unit labor requirements fall by 1 - 1/1.15 = 13%, and that saving shows up as real, measured output at the task level (micro passthrough ~1.0). Discount to 0.5-0.9 at GDP level for non-scalable tasks, demand constraints, and the J-curve measurement lag; use the 15% (avg) to 30% (novice) range as the bound on what current-generation genAI delivers per exposed job."
+     },
+     {
+      "lever": "survivor_gains_share",
+      "suggested": "0.05-0.15 (low)",
+      "rationale": "The productivity surplus is created disproportionately by novice survivors (+30%) but the study shows no contemporaneous pay increase for agents \u2014 the firm captures the surplus in the deployment window. So of the saved wage bill, only a small slice flows to survivor raises; the residual belongs in retained_profit_share / price_reduction_share."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "+0.05 to +0.2 (complementarity sign) at low automation depth",
+      "rationale": "AI raised low-skill survivor productivity 30% and cut their attrition ~40%, i.e., current genAI complements remaining cognitive-service workers rather than substituting for them; the elasticity sign should start positive (or ~0) in early-adoption presets, flipping negative only as depth increases."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "low end, ~0.10-0.20, for re-employment into AI-assisted service work",
+      "rationale": "Tenure premium compression: 2 months with AI = 6+ months without means the seniority/experience component of wages is compressed ~3x in AI-assisted jobs, so displaced workers re-entering service-floor jobs lose less occupation-specific human capital than historical displacement studies (which imply 0.15-0.30) would suggest."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "floor of ~0.15-0.30 of task content in fully cognitive occupations",
+      "rationale": "The assistant already substitutes for 13-23% of unit labor requirements (1-1/1.15 to 1-1/1.30) in customer support, a bellwether cognitive occupation, using 2020-2021-era models; treat this as a lower bound on currently automatable cognitive task share, not a point estimate."
+     }
+    ],
+    "caveats": "This is an AUGMENTATION study: no worker was displaced, so it does not directly identify displacement levers (adoption_path, reabsorption_rate, lfp_exit_rate). The 15%/30% gains are within one firm, one occupation (customer support), one tool \u2014 external validity to the whole cognitive wage bill is an assumption. The attrition result (workers staying longer) is the opposite concept from the model's attrition_rate (exit of long-term unemployed) \u2014 do not map it there. The reemployment_haircut mapping is an inference from experience-curve compression, not a measured wage change. Published QJE version says 15%/30%; the 2023 NBER working paper said 14%/34% \u2014 presets should cite the published numbers."
+   },
+   {
+    "title": "Brynjolfsson, Chandar, Chen (2025), \"Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence\", Stanford Digital Economy Lab / SIEPR working paper (Nov 2025 revision)",
+    "verified": "Fetched: https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf (full PDF downloaded and text-extracted; the file at this URL is the November 2025 revision, which updated the headline from 13% to 16%). All quotes verified against extracted text.",
+    "key_numbers": [
+     {
+      "quantity": "Headline relative employment decline, ages 22-25 in AI-exposed occupations (controlling for firm shocks)",
+      "value": "-16% relative",
+      "quote": "Early-career workers (ages 22-25) in AI-exposed occupations experienced 16% relative employment declines, controlling for firm-level shocks, while employment for experienced workers remained stable.",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     },
+     {
+      "quantity": "Absolute employment change, most-exposed occupations, late 2022 to Sept 2025",
+      "value": "-6% (ages 22-25) vs +6-9% (older workers)",
+      "quote": "workers aged 22 to 25 have experienced a 6% decline in employment from late 2022 to September 2025 in the most AI-exposed occupations, compared to a 6-9% increase for older workers",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     },
+     {
+      "quantity": "Young software developers, peak-to-Sept-2025",
+      "value": "~-20%",
+      "quote": "By September 2025, employment for software developers aged 22-25 declined nearly 20% compared to its peak in late 2022.",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     },
+     {
+      "quantity": "Event-study estimate, ages 22-25, top vs bottom exposure quintile",
+      "value": "-15 log points",
+      "quote": "For workers aged 22-25, we find a 15 log-point decline in relative employment for the most AI-exposed quintiles compared to the least exposed quintile, a large and statistically significant effect.",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     },
+     {
+      "quantity": "Adjustment margin: employment vs wages",
+      "value": "~0 differential salary trend by exposure",
+      "quote": "Fifth, the labor market adjustments are visible in employment more than in compensation. In contrast to our findings for employment, we find little difference in annual salary trends by age or exposure quintile, suggesting possible wage stickiness.",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     },
+     {
+      "quantity": "Automation vs augmentation split",
+      "value": "declines only where AI automates; growth where it augments",
+      "quote": "While we find employment declines for young workers in occupations where AI primarily automates work, we find employment growth in occupations in which AI use is most augmentative.",
+      "source_url": "https://digitaleconomy.stanford.edu/wp-content/uploads/2025/08/Canaries_BrynjolfssonChandarChen.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path",
+      "suggested": "cumulative value ~0.01-0.03 at year 3 of the cognitive channel (i.e., start of the path near 0.01, not 0.05+)",
+      "rationale": "Late 2022 to Sept 2025 is ~3 years. Ages 22-25 are roughly 8-10% of headcount in exposed occupations; they fell ~6% absolute while older workers grew 6-9%, so NET occupation-level displacement so far is ~0-1% of exposed-occupation employment. With cognitive_feasibility ~0.3-0.5 for those occupations, that is ~1-3% of the feasible pool actually automated after 3 years \u2014 a slow-start S-curve, operating via hiring freezes at the entry margin."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "~0 for the first 3-5 model years",
+      "rationale": "Fact 5: adjustment is on the employment margin, with 'little difference in annual salary trends by age or exposure quintile' \u2014 wage stickiness means incumbent survivor wages should not respond to slack in early years; phase in any negative substitution elasticity only after the sticky-wage window."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "0.25-0.45, concentrated in the top two exposure quintiles",
+      "rationale": "Effects appear only in the highest two of five Eloundou-exposure quintiles (~40% of occupations) and, within those, only where Anthropic-usage data classifies AI use as automative rather than augmentative \u2014 so the technically-automatable-now share of cognitive task content is well below 1 and the augmentative remainder should not be counted as feasible displacement."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "0.2-0.4/yr in early-period presets",
+      "rationale": "Aggregate employment 'continues to grow robustly' and less-exposed occupations grew 5-13% over the same 3 years, implying displaced/never-hired young workers are largely absorbed elsewhere while displacement volume is still small; supports a relatively high early reabsorption_rate that presets can degrade as displacement scales."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "do not anchor from this paper; keep whatever value other displacement literature gives",
+      "rationale": "The paper finds essentially no compensation response at all ('little difference in compensation trends by age or exposure quintile'), which is evidence of short-run wage stickiness, not of a zero haircut for displaced workers who actually churn to new jobs \u2014 ADP salary data covers the employed, not the re-employed after displacement."
+     }
+    ],
+    "caveats": "The 16% (and 15 log-point) figure is a RELATIVE decline (vs least-exposed quintile / older workers) for one age band (22-25), not an aggregate displacement rate \u2014 mapping it directly onto adoption_path would overstate displacement by roughly an order of magnitude; use the net headcount arithmetic instead and treat the 16% as a validation target for the model's exposed-young-worker cohort, if the model tracked cohorts (it does not \u2014 it is age-aggregated). Displacement operates through reduced hiring, not layoffs, so it does not generate UI claimants the way the model's displacement flow does (ui_weeks, lfp_exit_rate get no anchor here). Data is ADP client firms (may not be nationally representative). The August 2025 draft's headline was 13%; the November 2025 revision at the same URL says 16% \u2014 cite the version explicitly in presets."
+   },
+   {
+    "title": "Brynjolfsson, Rock, Syverson (2021), \"The Productivity J-Curve: How Intangibles Complement General Purpose Technologies\", AEJ: Macroeconomics 13(1): 333-372 (NBER WP 25148)",
+    "verified": "Fetched: https://www.nber.org/papers/w25148 (abstract); https://www.aeaweb.org/articles?id=10.1257/mac.20180386 (journal abstract); https://www.nber.org/system/files/working_papers/w25148/w25148.pdf (full working-paper text downloaded and text-extracted). All quotes verified against fetched text.",
+    "key_numbers": [
+     {
+      "quantity": "TFP understatement from omitted intangibles",
+      "value": "+11.3% (2004), +15.9% (2017) vs official TFP",
+      "quote": "Our adjusted measure TFP is 11.3% higher than official measures at the end of 2004, and 15.9% higher than official measures at the end of 2017.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25148/w25148.pdf"
+     },
+     {
+      "quantity": "Market value per $1 of observable IT investment (intangible multiplier basis)",
+      "value": "~$12 (s.e. $4); paper uses multiplier of 10",
+      "quote": "we are guided by the Brynjolfsson, Hitt, and Yang (2002), who estimate that each unit of observable software and computer hardware is associated with roughly $12 (standard error $4) of firm market value",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25148/w25148.pdf"
+     },
+     {
+      "quantity": "Correlated intangible co-investment per unit of tangible AI investment (bound to explain GDP slowdown)",
+      "value": "~2.7-4.1x observable investment",
+      "quote": "correlated intangible investments per unit of tangible investment must be between roughly 2.7 and 4.1 times the observable investment values",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25148/w25148.pdf"
+     },
+     {
+      "quantity": "Unmeasured intangible investment needed to explain the entire 2010-2017 GDP growth slowdown",
+      "value": "$107B/yr",
+      "quote": "unmeasured intangible capital investment over 2010 to 2017 would need to average $107 billion per year (= 19.5 trillion * [2.72% - 2.17%]) in 2017 dollars to explain the entire slowdown",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25148/w25148.pdf"
+     },
+     {
+      "quantity": "Baseline real GDP growth anchors",
+      "value": "2.17%/yr (2010-2017), 2.72%/yr (2000-2007)",
+      "quote": "Gross Domestic Product in the U.S. in 2017 was $19.5 trillion and in real terms grew at an average annual rate of 2.17% over 2010 to 2017, down from 2.72% per year from 2000 to 2007",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25148/w25148.pdf"
+     },
+     {
+      "quantity": "AI-specific J-curve position (as of writing)",
+      "value": "small but growing",
+      "quote": "We then assess how AI-related intangible capital may be currently affecting measured productivity and find the effects are small but growing.",
+      "source_url": "https://www.nber.org/papers/w25148"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "robotics_lag",
+      "suggested": "8-12 years (range 5-15) as the adoption-to-realized-output analog",
+      "rationale": "The software/hardware J-curve built from the 1990s and had 'not waned' by 2017, with adjusted-vs-official TFP gaps still widening 13-25 years in (11.3% in 2004 -> 15.9% in 2017); the complementary-capacity buildout that robotics_lag proxies (robot fleets + process redesign) is exactly the intangible co-investment phase, so a ramp of about a decade is the literature-anchored default rather than the 2-4 years optimists assume."
+     },
+     {
+      "lever": "auto_cost",
+      "suggested": "0.3-0.6 of saved compensation in early/buildout years, declining thereafter",
+      "rationale": "Intangible co-investment runs ~2.7-4.1x observable tangible AI investment (and up to ~$10-12 of total value per $1 of measured IT spend), so the true all-in automation cost is a multiple of the visible compute bill; in the model's terms a large fraction of the saved wage bill is consumed by automation inputs during the ramp, shrinking the disposable surplus available for profit/prices/raises early on."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "0.4-0.7 measured in the first ~decade, ramping toward 0.9-1.0 later",
+      "rationale": "The J-curve says MEASURED GDP understates true output during the intangible buildout (official TFP understated by 15.9% by 2017) and overstates it during harvest; since the model's fiscal denominators use measured GDP, presets should phase passthrough in over ~10 years rather than apply a flat value \u2014 pair a low early value with a high late value instead of a single mid number."
+     },
+     {
+      "lever": "baseline_growth_rate",
+      "suggested": "~4.2-4.7% nominal (2.2-2.7% real + ~2% inflation)",
+      "rationale": "Direct anchor: real GDP growth averaged 2.17%/yr (2010-2017) and 2.72%/yr (2000-2007); take the pre/post-slowdown band as the real trend and add the Fed's 2% target for the nominal rate used in %-GDP denominators."
+     },
+     {
+      "lever": "compute_effective_rate",
+      "suggested": "low end, ~0.05-0.15 effective, during the buildout phase",
+      "rationale": "The complementary investments are 'often intangible and poorly measured in the national accounts' and are largely expensed rather than capitalized, so automation spending immediately shields corporate profit from tax; the effective rate collected on the compute-capital pool during the ramp sits well below the statutory rate that would apply to an equivalent tangible capital stock."
+     }
+    ],
+    "caveats": "The J-curve is a MEASUREMENT phenomenon about intangibles in national accounts, not a physical-capacity constraint \u2014 mapping it to robotics_lag is an analog (timing of realized/measured output), not a direct estimate of robot-building time. The 11.3%/15.9% TFP figures are cumulative level adjustments for IT/software over ~25 years, not AI-specific and not an annual passthrough rate. The 2.7-4.1x intangible ratio is a back-of-envelope bound (what WOULD be needed to explain the whole GDP slowdown), and the $12 market-value multiplier reflects equilibrium firm value, not marginal cash outlay \u2014 so the auto_cost mapping is an upper-leaning bound. The compute_effective_rate mapping is inferential (the paper says nothing about tax); it only supports the direction (low effective rate during expensed buildout). AI-specific effects were 'small but growing' with pre-2018 data \u2014 pre-ChatGPT, so timing presets should treat 2023, not 2017, as the AI J-curve's origin."
+   }
+  ]
+ },
+ {
+  "cluster": "scarring",
+  "papers": [
+   {
+    "title": "Davis & von Wachter (2011), \"Recessions and the Costs of Job Loss\", Brookings Papers on Economic Activity (NBER WP 17638)",
+    "verified": "Fetched https://www.nber.org/papers/w17638 (abstract page) and the full working-paper PDF https://www.nber.org/system/files/working_papers/w17638/w17638.pdf (text extracted locally with pypdf); all quotes below are verbatim from those fetched texts.",
+    "key_numbers": [
+     {
+      "quantity": "PV earnings loss, displacement in tight labor market (U<6%), 20y horizon, 5% discount",
+      "value": "1.4 years of pre-displacement annual earnings",
+      "quote": "In present value terms, men lose an average of 1.4 years of pre-displacement earnings if displaced in mass-layoff events that occur when the national unemployment rate is below 6 percent.",
+      "source_url": "https://www.nber.org/papers/w17638"
+     },
+     {
+      "quantity": "PV earnings loss, displacement in slack labor market (U>8%), 20y horizon, 5% discount",
+      "value": "2.8 years of pre-displacement annual earnings",
+      "quote": "They lose a staggering 2.8 years of pre-displacement earnings if displaced when the unemployment rate exceeds 8 percent. These results reflect discounting at a 5% annual rate over 20 years after displacement.",
+      "source_url": "https://www.nber.org/papers/w17638"
+     },
+     {
+      "quantity": "Average-year PV reduction in future earnings (men, 3+ yrs tenure, mass layoff at larger firms)",
+      "value": "12 percent",
+      "quote": "For men with 3 or more years of prior tenure who lose jobs in mass-layoff events at larger firms, job displacement reduces the present value of future earnings by 12 percent in an average year.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w17638/w17638.pdf"
+     },
+     {
+      "quantity": "Year-1 earnings loss relative to control group",
+      "value": "40% (recession displacements) / 23% (expansion displacements)",
+      "quote": "Earnings losses at displacement relative to the control group are very large initially, 40% in the first year after displacement for displacements that occur in recessions and 23% for displacements that occur in expansions.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w17638/w17638.pdf"
+     },
+     {
+      "quantity": "Persistent earnings loss 10-20 years after displacement",
+      "value": "~20% (recession displacements) / ~10% (expansion displacements)",
+      "quote": "The average earnings losses are about 20% from 10 to 20 years out for displacements that occur in recessions and about 10% for those that occur in expansions.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w17638/w17638.pdf"
+     },
+     {
+      "quantity": "Cyclical amplification of PV losses",
+      "value": "~2x recession vs expansion",
+      "quote": "Present value losses for displacements that occur in recessions are nearly twice as large as for displacements in expansions.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w17638/w17638.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.11 (mild preset) to 0.22 (severe preset), central 0.15",
+      "rationale": "Convert PV losses to an annualized permanent earnings deficit with the paper's own frame (20y, 5%/yr): annuity factor = (1-1.05^-20)/0.05 = 12.46. Expansion displacement: 1.4/12.46 = 11.2%/yr; slack-market displacement: 2.8/12.46 = 22.5%/yr. A mass AI-displacement event resembles the slack case, so severe presets should sit in the 0.18-0.22 range. This matches the paper's independent 12% average-year PV statement."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "long-run floor 0.10-0.20 (never below 0.10 in any preset)",
+      "rationale": "The 10-20-years-out deficit (10% expansion / 20% recession) is nearly pure wage effect, since nonemployment spells have largely resolved by then. Because the model books unemployment separately via reabsorption_rate, the haircut lever should be anchored to this long-run component (0.10-0.20) rather than the year-1 40% figure, which bundles nonemployment time."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "0.15-0.35 /yr (slack-market presets)",
+      "rationale": "Recession-displaced deficit decays from 40% in year 1 to a ~20% permanent plateau by year ~10. If 20pp of the initial deficit is transitional (nonemployment plus temporary underemployment), eroding it over 8-10 years implies a full-recovery hazard of roughly 0.2-0.35/yr; expansion displacements (23%->10% faster) support the upper end in tight markets. Loose mapping - see caveats."
+     },
+     {
+      "lever": "demand_multiplier",
+      "suggested": "validation target, not a direct value: pick demand_multiplier so a mass-displacement scenario roughly doubles per-worker PV earnings losses vs a marginal one",
+      "rationale": "The paper's key stylized fact is the 1.4x -> 2.8x doubling when displacement happens into a slack market. In the model, slack is endogenous (induced losses via demand_multiplier ~1 Okun-style with mpc 0.95 feeding lfp/reabsorption). A preset suite should reproduce approximately 2x per-worker losses between low-adoption and high-adoption paths; if it produces far more or less, the demand/survivor-elasticity block is miscalibrated."
+     }
+    ],
+    "caveats": "The PV losses are total earnings losses including nonemployment time, hours cuts, and foregone wage growth - mapping the full 1.4-2.8-year PV onto reemployment_haircut while also modeling unemployment spells via reabsorption_rate double-counts; use the long-run (10-20y) 10-20% component for the haircut and let the model generate the transitional part. Sample is men age <=50 with 3+ years tenure at firms with 50+ employees displaced in mass layoffs - higher-attachment and higher-loss than the average AI-exposed worker, and AI displacement of cognitive workers at healthy (not distressed) firms may differ. The recession/expansion split conditions on aggregate slack, which is endogenous in the model - do not apply the 2.8-year number AND a strong demand_multiplier simultaneously as exogenous inputs; use one to validate the other."
+   },
+   {
+    "title": "Jacobson, LaLonde & Sullivan (1993), \"Earnings Losses of Displaced Workers\", American Economic Review 83(4), 685-709",
+    "verified": "Fetched https://ideas.repec.org/a/aea/aecrev/v83y1993i4p685-709.html and https://research.upjohn.org/up_workingpapers/11/ (both abstracts verified verbatim). The AER full text at princeton.edu is a scanned image PDF with no extractable text layer, so within-paper table figures could not be verified; one such number is flagged memory-only below.",
+    "key_numbers": [
+     {
+      "quantity": "Long-term annual earnings losses of high-tenure workers separating from distressed firms",
+      "value": "25 percent per year",
+      "quote": "We find that when high-tenure workers separate from distressed firms their long-term losses average 25 percent per year.",
+      "source_url": "https://research.upjohn.org/up_workingpapers/11/"
+     },
+     {
+      "quantity": "Same headline result, published AER wording",
+      "value": "25 percent per year",
+      "quote": "high-tenure workers separating from distressed firms suffer long-term losses averaging 25 percent per year",
+      "source_url": "https://ideas.repec.org/a/aea/aecrev/v83y1993i4p685-709.html"
+     },
+     {
+      "quantity": "Pattern of losses: pre-separation dip, breadth across sectors, persistence within similar firms",
+      "value": "losses begin before separation and persist even for those re-hired at similar firms",
+      "quote": "Further, their losses mount even prior to separation, are not limited to workers in a few industrial sectors, and are substantial even for those who find new jobs in similar firms.",
+      "source_url": "https://research.upjohn.org/up_workingpapers/11/"
+     },
+     {
+      "quantity": "Quarterly dollar loss six years after separation (Pennsylvania admin data, mid-1980s dollars)",
+      "value": "~$1,600 per quarter, ~25% of pre-displacement earnings",
+      "quote": "",
+      "source_url": "https://ideas.repec.org/a/aea/aecrev/v83y1993i4p685-709.html"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.25 as the pessimistic-preset ceiling (0.18-0.25 band for high-attachment cohorts)",
+      "rationale": "The 25%/yr long-term loss is measured 5-6 years after separation, when reemployment has largely stabilized, so it approximates a quasi-permanent earnings cut: haircut = 0.25 directly, no horizon conversion needed. Because the 25% is quarterly EARNINGS (includes reduced hours and residual nonemployment), the pure wage-rate haircut is somewhat lower - hence 0.18-0.25."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "keep haircut >= 0.15 even in presets with fast reabsorption_rate",
+      "rationale": "Losses are 'substantial even for those who find new jobs in similar firms' - i.e. the loss is not primarily an unemployment-duration effect. In the model this means the haircut lever, not reabsorption_rate, should carry most of the fiscal drag for displaced workers: raising reabsorption_rate should not be allowed to erase the earnings loss."
+     }
+    ],
+    "caveats": "This is the upper-bound estimate in the literature: Pennsylvania workers with 6+ years tenure separating from distressed firms during the severe early-1980s rust-belt recession - simultaneously high-tenure, mass-layoff, depressed-region, and manufacturing-heavy. AI displacement of shorter-tenure service/cognitive workers at profitable firms should be milder. The 25%/yr is an earnings concept (hours + wage + residual nonemployment), not a pure re-employment wage cut, so mapping it 1:1 onto reemployment_haircut while also modeling unemployment spells double-counts. The paper offers no reemployment hazard usable for reabsorption_rate, and the pre-separation earnings dip (losses 'mount even prior to separation') has no counterpart in the model, which shocks wages only at displacement."
+   },
+   {
+    "title": "Farber (2015), \"Job Loss in the Great Recession and its Aftermath: U.S. Evidence from the Displaced Workers Survey\" (NBER WP 21216)",
+    "verified": "Fetched https://www.nber.org/papers/w21216 (abstract page), https://www.nber.org/digest/aug15/great-recession-job-losses-severe-enduring, and the full working-paper PDF https://www.nber.org/system/files/working_papers/w21216/w21216.pdf (text extracted locally with pypdf); quotes below are verbatim from the extracted PDF text (ligatures normalized).",
+    "key_numbers": [
+     {
+      "quantity": "Gross job-loss rate in the Great Recession (3-year window)",
+      "value": "~16% of workers (one in six) over 2007-2009, i.e. ~5.5%/yr",
+      "quote": "These data show a record high rate of job loss in the Great Recession, with almost one in six workers reporting having lost a job in the 2007-2009 period, that has not yet returned to pre-recession levels.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     },
+     {
+      "quantity": "Reemployment of full-time job losers, Jan 2010 survey",
+      "value": "52% employed; 80% of those full-time (~42% FT overall)",
+      "quote": "Even among losers of full-time jobs between 2007 and 2009, only about 52 percent were employed in January 2010 and only 80 percent of those were reemployed in a full-time job.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     },
+     {
+      "quantity": "Cumulative job-finding by elapsed time since loss (deep-slack market)",
+      "value": "44% within ~1 yr (2009 losers by Jan 2010); 69% within ~1.5-3 yrs (2007-08 losers)",
+      "quote": "Again looking at job losses in the 2007-09 period, 69 percent of workers who lost jobs in 2007 or 2008 had held at least one job by January 2010. In contrast, only 44 percent of workers who lost jobs in 2009 had held at least one job by January 2010.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     },
+     {
+      "quantity": "Average decline in real weekly earnings for reemployed job losers (raw, lost job vs survey-date job)",
+      "value": "17.5% (2010 survey, sample-period max); 14.1% (1984); 15.9% (1992); 6.4% (2011-13 losses)",
+      "quote": "the Great Recession is the largest in my sample period at 17.5 percent. This compares with a decline of 14.1 percent in 1984 and 15.9 percent in 1992. In contrast to the incomplete recovery in the aftermath of the Great Recession of the employment measures I examined, the average earnings decline of job losers was much less severe, with a decline of only 6.4 percent for jobs lost 2011-13.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     },
+     {
+      "quantity": "Difference-in-difference FT-FT earnings loss including foregone counterfactual wage growth (1980s benchmark)",
+      "value": "~13% (= 9% own decline + 4.5% foregone control-group growth)",
+      "quote": "The results show that in the 1980s displaced workers earned about 9 percent less on average after displacement than before while earnings for the control group rose by about 4.5 percent over the same period. The difference-in-difference estimate of the earnings loss is the difference between these numbers, which is a loss of about 13 percent during the 1980s.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     },
+     {
+      "quantity": "Post-displacement labor-force exit share",
+      "value": "~10% of job losers NILF at survey date, stable across all cycles",
+      "quote": "The survey-date fraction of job losers not in the labor force is remarkably constant across all years, at about 10 percent. There is no evidence that job losers are disproportionately discouraged in recessions, including the most recent recession, leading to withdrawal from the labor force.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w21216/w21216.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.13 central (0.10-0.18 band) for moderate presets; use JLS/DvW 0.20-0.25 only for severe presets",
+      "rationale": "The counterfactual-adjusted FT-FT loss is ~13% (9% own + 4.5% foregone growth). The 17.5% Great Recession raw decline includes FT-to-PT hours cuts (PT share among reemployed FT losers hit 20% in 2010), which the model books partly through reabsorption to a service-floor wage; the pure wage-cut lever should sit near 0.13, rising toward 0.18 in slack presets."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "0.40-0.50 /yr in deep-slack (severe AI-shock) presets; 0.60-0.75 /yr in normal-market presets",
+      "rationale": "Cumulative job-finding: 44% of 2009 losers held a job within <=1 yr -> annual hazard >=0.44 (mean elapsed ~7 mo implies -ln(0.56)*(12/7) ~ 0.99 continuous, i.e. bounded above); 2007-08 losers with mean elapsed ~2 yrs give 1-(1-r)^2 = 0.69 -> r = 0.44/yr. So ~0.44/yr is a well-identified deep-recession hazard; pre-recession DWS employment rates (~70%+ at survey) support 0.6-0.75 in normal times."
+     },
+     {
+      "lever": "lfp_exit_rate",
+      "suggested": "0.03-0.05 /yr",
+      "rationale": "10% of job losers are NILF at survey dates that average ~2 yrs after loss: 1-(1-x)^2 = 0.10 -> x = 0.051/yr. Since the model applies lfp_exit_rate only to benefit-exhausted workers (a subset), and the DWS 10% includes early retirees (overlap with attrition_rate), 0.03-0.05 is the defensible band; the striking stability across cycles argues against scaling it up in severe presets."
+     },
+     {
+      "lever": "attrition_rate",
+      "suggested": "carve 1-2 pp of the 10% NILF share out of lfp_exit_rate into attrition_rate",
+      "rationale": "Farber notes job losers aged 55-64 are 10+ pp more likely to exit the labor force, 'perhaps moving to early retirement' - i.e. part of the observed 10% NILF is retirement, which the model books under attrition_rate, not SSDI-bound lfp_exit_rate. Splitting ~10% NILF over ~2 yrs as ~0.035/yr SSDI-type exit + ~0.015/yr retirement keeps the two levers from double-counting."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "pacing check: annual displacement flow (feasibility x adoption increment) above ~5.5%/yr of the workforce exceeds the worst 3-year episode on record",
+      "rationale": "One-in-six job loss over 2007-09 = ~5.5%/yr gross displacement, the historical maximum, and it produced 52% reemployment and a 17.5% earnings decline. Presets whose adoption_path slope pushes AI displacement flows well past 5.5%/yr are outside all historical absorption experience, so reabsorption_rate and reemployment_haircut calibrated from this paper become extrapolations - flag such presets rather than forbidding them."
+     }
+    ],
+    "caveats": "DWS measures weekly earnings only for the reemployed, so the 13-17.5% declines are survivor-selected and understate average losses (Farber says so explicitly: the measure 'considers only those who are reemployed (50 percent of job losers in the Great Recession)'); it also has no long-horizon follow-up, so it cannot speak to the permanence that reemployment_haircut assumes - pair with JLS/DvW for persistence. 'Held at least one job by January 2010' overstates durable reemployment (employment AT the survey date was only ~50%), so the 0.44/yr hazard is an upper bound for reabsorption into stable work. The NILF 10% is a stock ~0-3 yrs after loss, not a hazard among benefit-exhausted workers, so the lfp_exit_rate conversion assumes exits concentrate in that group. Job loss in the DWS is involuntary layoff for any reason, not technology-specific displacement."
+   }
+  ]
+ },
+ {
+  "cluster": "adjustment",
+  "papers": [
+   {
+    "title": "Autor, Dorn, Hanson (2016), \"The China Shock: Learning from Labor-Market Adjustment to Large Changes in Trade\", Annual Review of Economics 8:205-240",
+    "verified": "Fetched and text-extracted full paper PDF: https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf (all quotes verbatim from extracted text, ligatures normalized). Abstract cross-checked against https://www.annualreviews.org/content/journals/10.1146/annurev-economics-080315-015041. One memory-only item (ADHS 2014 cumulative earnings ~46% of initial annual earnings) flagged in caveats, not used as a key number.",
+    "key_numbers": [
+     {
+      "quantity": "Duration of local labor-market adjustment (wages, LFP, unemployment)",
+      "value": ">= 10 years (depressed wages/LFP, elevated unemployment for at least a full decade)",
+      "quote": "Adjustment in local labor markets is remarkably slow, with wages and labor-force participation rates remaining depressed and unemployment rates remaining elevated for at least a full decade after the China trade shock commences.",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     },
+     {
+      "quantity": "Decomposition of a $1,000-per-worker import exposure shock into employment states (CZ level, 1990-2007)",
+      "value": "mfg employment -0.60 pp, non-mfg -0.18 pp, unemployment +0.22 pp, NILF +0.55 pp of working-age population",
+      "quote": "Specifically, a $1,000 increase in a CZ's per-worker import exposure reduces the fraction of the working age population employed in manufacturing and nonmanufacturing, respectively, by -0.60 and -0.18 percentage points (the latter of which is not significant), and raises the fraction of unemployed and out of the labor force by 0.22 and 0.55 percentage points.",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     },
+     {
+      "quantity": "Net reabsorption of displaced manufacturing workers at decade horizon (CZ level)",
+      "value": "~zero: employment-to-population falls at least one-for-one with the manufacturing decline",
+      "quote": "Instead, overall CZ employment-to-population rates fall at least one-for-one with the decline in manufacturing employment, and generally by slightly more.",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     },
+     {
+      "quantity": "Transfer offset of trade-induced earnings losses (75th vs 25th percentile exposure CZ)",
+      "value": "-$549/adult/yr wage income vs +$58/capita/yr transfers (~10% offset)",
+      "quote": "Comparing again the residents of CZs at the 75th and 25th percentile of import exposure, those in the more exposed location experience a reduction in annual household wage and salary income per adult of $549, whereas per capita transfer income rises by approximately $58, thereby offsetting just a small portion of the earnings loss",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     },
+     {
+      "quantity": "Split of local earnings loss between job loss and wage decline per $1,000 exposure",
+      "value": "$312/adult/yr from employment decline (0.78 pp on $40,000 earnings) + $213/adult/yr from a 0.76 log-point weekly wage decline among the ~70% employed",
+      "quote": "Given average annual earnings of approximately $40,000 per worker, a reduction of employment by 0.78 percentage points (sum of columns 1 and 2) per $1,000 dollars of imports per worker lowers earnings per adult by approximately $312 per year (0.0078 x 40,000). The same shock reduces the average weekly wage by 0.76 log points among the approximately 70% of working-age adults who are employed, which implies an additional earnings loss per adult of $213 per year (0.0076 x 0.7 x 40,000).",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     },
+     {
+      "quantity": "Amplification of direct job losses via interindustry linkages and local demand (Acemoglu et al. 2016, as summarized in the review)",
+      "value": "~2x direct impact within manufacturing plus an equally large effect outside manufacturing (total ~3-4x first-round direct)",
+      "quote": "Interindustry linkages thus magnify the employment effects of trade shocks, almost doubling the size of the impact within manufacturing and producing an equally large employment effect outside of manufacturing.",
+      "source_url": "https://www.ddorn.net/papers/Autor-Dorn-Hanson-ChinaShock.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "0.05-0.10 /yr for a China-shock-calibrated preset (half-life ~7-14 years)",
+      "rationale": "Per $1,000 exposure, total employment falls 0.78 pp while unemployment+NILF rise 0.77 pp \u2014 i.e. ~99% of the net employment decline is still non-employment at horizons of 10-17 years (1990-2007 stacked differences), and e-pop falls at least one-for-one with the mfg decline. Under a constant reabsorption hazard r, the share still non-employed after T=10y is e^(-rT); even a generous reading (half the gap closed by year 10) gives r = ln(2)/10 ~ 0.07/yr, and ADH's near-total net persistence points lower. Since CZ net stocks conflate individual re-employment with induced losses among others, the worker-level hazard sits somewhat above the net figure: 0.05-0.10/yr."
+     },
+     {
+      "lever": "lfp_exit_rate",
+      "suggested": "0.08-0.15 /yr",
+      "rationale": "NILF absorbs 0.55 pp of the 0.77 pp rise in non-employment, i.e. ~71% of the persistent displaced stock ends up out of the labor force at the decade horizon. In a competing-hazards setup where the displaced either reabsorb (r ~ 0.07/yr) or exit the labor force (x), a terminal NILF share of x/(x+r) = 0.71 implies x ~ 0.17/yr. The review confirms the disability channel at the worker level (exposed workers spend 'more years receiving Social Security Disability Insurance (SSDI)') but NILF also includes early retirement and discouragement, so allocate only part of x to the SSDI-bound lever: 0.08-0.15/yr, with the residual in attrition_rate."
+     },
+     {
+      "lever": "attrition_rate",
+      "suggested": "0.03-0.05 /yr on top of demographic baseline",
+      "rationale": "The review reports 'Retirement benefits rise in more trade-exposed CZs, suggesting that adverse labor-market shocks induce more workers to retire earlier.' Assign the non-SSDI residual of the ~0.17/yr LFP-exit hazard (see lfp_exit_rate arithmetic) to early-retirement attrition: ~0.17 - (0.08 to 0.15) ~ 0.03-0.05/yr. Qualitative anchor only \u2014 the review gives no per-worker retirement hazard."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.15-0.30 permanent wage cut (or service-floor wage near the ~25th percentile state wage)",
+      "rationale": "The CZ-average wage falls 0.76 log points per $1,000 exposure across all ~70% employed ($213/adult/yr on a $40,000 base = 0.53% population-average), but this dilutes much larger cuts on the ~1.1% of working-age population actually displaced per $1,000; the review stresses losses are 'concentrated among workers in the bottom four wage deciles' and that bottom-tercile workers 'obtain lower earnings per year both while working at the initial firm and after relocating to new employers.' A 15-30% permanent haircut on the re-employed reconciles the small population-average with large per-mover losses, and the decade-plus wage depression supports treating it as permanent rather than transitory."
+     },
+     {
+      "lever": "demand_multiplier",
+      "suggested": ">= 1.0 (induced losses at least equal to direct); consistent with a 1.0-1.5 setting",
+      "rationale": "Interindustry linkages 'almost doubl[e] the size of the impact within manufacturing' and produce 'an equally large employment effect outside of manufacturing' \u2014 i.e. total local job losses run ~3-4x the first-round direct effect, so induced/direct >= 1. ADH also find non-college non-mfg employment declines, 'suggesting the presence of negative local demand spillovers.' Cross-validates Chodorow-Reich's 1.8 cross-sectional multiplier from the demand side."
+     }
+    ],
+    "caveats": "Concept gaps: (1) the China shock hit geographically concentrated manufacturing (physical channel), whereas AI displacement is economy-wide and cognitive \u2014 national general-equilibrium offsets absent in the CZ design could be larger (or smaller) for AI, so decade-scale persistence is an analogy, not an estimate; (2) $1,000-per-worker import-exposure units do not translate into an automation share \u2014 only the ratios (NILF/unemployment split, transfer offset share, induced/direct) map cleanly; (3) CZ-level net stocks conflate individual reabsorption with induced job losses, so reabsorption_rate inferred from net persistence is a lower-bound-flavored calibration; (4) the +0.55 pp NILF response bundles SSDI, early retirement, and discouragement \u2014 the review quantifies no SSDI-specific hazard or ssdi_annual dollar amount (it notes only that SS retirement+disability and medical/income-assistance categories each grow >$15 per capita at the 75-25 gap, while TAA grows just $0.23); (5) the $58-per-capita transfer response (~$6 per $100 exposure) is a regional per-capita fiscal validation target, not a per-displaced-worker benefit; (6) memory-only (not in fetched text): ADHS (2014, QJE) report cumulative 1992-2007 earnings losses of roughly 46% of initial annual earnings for high- vs low-exposure workers \u2014 use only as a soft cross-check on reemployment_haircut."
+   },
+   {
+    "title": "Chodorow-Reich (2019), \"Geographic Cross-Sectional Fiscal Spending Multipliers: What Have We Learned?\", AEJ: Economic Policy 11(2):1-34",
+    "verified": "Fetched published abstract page https://www.aeaweb.org/articles?id=10.1257/pol.20160465 and full NBER working paper w23577 PDF (text-extracted): https://www.nber.org/system/files/working_papers/w23577/w23577.pdf; also https://www.nber.org/papers/w23577. All quotes verbatim from fetched text (WP wording where noted).",
+    "key_numbers": [
+     {
+      "quantity": "Preferred cross-sectional fiscal spending multiplier (output)",
+      "value": "1.8",
+      "quote": "my preferred point estimate for a cross-sectional multiplier is 1.8",
+      "source_url": "https://www.aeaweb.org/articles?id=10.1257/pol.20160465"
+     },
+     {
+      "quantity": "Implied national multiplier with no monetary-policy offset (deficit-financed)",
+      "value": "~1.7 or above",
+      "quote": "Applying the rough lower bound result, a cross-sectional multiplier of 1.8 implies a zero lower bound deficit-financed national multiplier of about 1.7 or above. (Published AEA version: 'the cross-sectional evidence suggests a national no-monetary-policy-response multiplier of 1.7 or above')",
+      "source_url": "https://www.nber.org/system/files/working_papers/w23577/w23577.pdf"
+     },
+     {
+      "quantity": "ARRA cost per job-year (author's own harmonized 2SLS estimates)",
+      "value": "~$50,000 (2009 dollars); cross-study range roughly $25K-$125K",
+      "quote": "After applying a common econometric framework to instruments from each of the three studies, I consistently find a cost-per-job of the ARRA of roughly $50,000. [...] The cost-per-job across these studies ranges from roughly $25K to $125K, with around $50K emerging as a preferred number.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w23577/w23577.pdf"
+     },
+     {
+      "quantity": "Employment effect of spending (job-years per $100K), cross-study distribution",
+      "value": "~2 job-years per $100K; range 0.76-3.93, mean 2.1, median 1.9",
+      "quote": "Summing up, the estimate of 2 job-years per $100K in column (4) of table 1 appears broadly representative. Put on common footing, the ARRA studies find estimates in the range of 0.76 to 3.93, with a cross-study mean of 2.1 and median of 1.9.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w23577/w23577.pdf"
+     },
+     {
+      "quantity": "Output-per-worker conversion factor and direct GSP output multiplier",
+      "value": "Y/E = $105K (2009); direct GSP output multiplier estimate 1.76",
+      "quote": "Output per worker Y/E in the national income accounts was $105K in 2009. Applying this number to the cost-per-job estimated in column (4) yields an implied output multiplier of around two, reassuringly close to the direct estimate of the output multiplier of 1.76 in column (5).",
+      "source_url": "https://www.nber.org/system/files/working_papers/w23577/w23577.pdf"
+     },
+     {
+      "quantity": "Multiplier on state spending changes driven by balanced-budget rules (Clemens & Miran 2012, survey table row; local financing, transitory)",
+      "value": "on-impact multiplier 0.29, 95% CI [-0.22, 0.79]",
+      "quote": "State balanced budget rules [...] \"On-impact\" multiplier of 0.29 [-0.22,0.79]",
+      "source_url": "https://www.nber.org/system/files/working_papers/w23577/w23577.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "demand_multiplier",
+      "suggested": "1.8 central; sensitivity band 1.0-2.5",
+      "rationale": "Concept match: the model has no monetary-policy reaction, and Chodorow-Reich shows the cross-sectional multiplier is 'a rough lower bound for a particular policy-relevant type of national multiplier, the closed economy, passive monetary policy, deficit-financed multiplier' \u2014 exactly the model's regime \u2014 with 1.8 cross-sectional implying >= ~1.7 nationally. Unit check against the model's Okun chain: 1.8 x $100K / $105K output-per-worker ~ 1.7 job-years per $100K of demand change, matching the directly estimated 2 job-years per $100K. Band 1.0-2.5 trims the cross-study employment range 0.76-3.93 (mean 2.1, median 1.9)."
+     },
+     {
+      "lever": "demand_multiplier",
+      "suggested": "Validation target: ~1 induced job-year lost per $50K (2009$) of net demand withdrawal, i.e. per ~$70-80K in mid-2020s dollars",
+      "rationale": "Cost-per-job ~$50,000 (range $25K-$125K; Wilson-respecification $57K = $100K/1.75) inverts to 2 job-years per $100K. After running a scenario, divide the model's induced (demand-channel) job losses into the net demand withdrawal: the ratio should land near $50K per job-year in 2009 dollars, inflated by the model's baseline_growth_rate/nominal wage path (~1.4-1.6x by 2026) to ~$70-80K. If mpc=0.95 and demand_multiplier=1.8 produce a materially different cost-per-job, the compensation-per-job denominator in the Okun conversion is miscalibrated."
+     },
+     {
+      "lever": "state_cut_share",
+      "suggested": "Apply the full demand_multiplier (~1.8) to state balanced-budget gap closure; treat 0.29x as a conservative low-end for the on-impact effect; the cut-vs-hike split itself is unidentified in this paper (keep default)",
+      "rationale": "The ARRA evidence most relevant to the state channel is windfall federal aid to states (FMAP/Medicaid match) relieving balanced-budget constraints, which generated ~2 job-years per $100K \u2014 symmetry implies state gap closure (the reverse experiment) destroys demand at the same rate, supporting running state cuts through the same demand_multiplier rather than a discounted one. The only direct balanced-budget-rule estimate surveyed (Clemens & Miran 2012) is an on-impact multiplier of 0.29 [-0.22, 0.79] with local financing \u2014 imprecise and CI spanning zero \u2014 so 0.29 serves as a low-end sensitivity, not the central case. The paper provides no estimate of how states split closure between spending cuts and rate hikes, so state_cut_share and state_rate_hike_cap remain free levers."
+     }
+    ],
+    "caveats": "Concept gaps: (1) all estimates come from spending expansions during 2009-2011 slack; applying them to AI-driven demand withdrawal assumes symmetry of contractions and expansions, which the paper does not test; (2) the 1.7+ national mapping assumes passive monetary policy \u2014 if the Fed eases in response to AI displacement, the effective national multiplier falls below the cross-sectional estimate, so 1.8 is an upper-regime calibration; (3) the paper notes higher multipliers under greater slack (state-dependence), so demand_multiplier arguably should rise endogenously as displacement accumulates \u2014 the model's constant lever cannot capture this; (4) dollar figures ($50K/job-year, $105K output/worker) are 2009 levels and must be inflated before comparison with model outputs; (5) the multiplier is total (direct + induced) output per dollar of spending, whereas the model's demand_multiplier converts net withdrawal into *induced* job losses \u2014 calibrate so the model's total response matches 1.8, not induced alone, to avoid double counting; (6) cross-sectional designs difference out federal financing and national confounds, making them cleanest for the state balanced-budget channel and only a lower bound for the federal/national demand channel."
+   }
+  ]
+ },
+ {
+  "cluster": "robot-tax",
+  "papers": [
+   {
+    "title": "Guerreiro, Rebelo, Teles (2022) \"Should Robots Be Taxed?\" (Review of Economic Studies 89(1))",
+    "verified": "Fetched full text: https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf (December 2020 author manuscript of the REStud 2022 paper; abstract identical to published version). OUP page https://academic.oup.com/restud/article-abstract/89/1/279/6219962 was fetched but paywalled.",
+    "key_numbers": [
+     {
+      "quantity": "Optimal robot tax path (Mirrleesian plan, 2018 start): transitional, converging to zero",
+      "value": "5.1% / 2.2% / 0.6% ad-valorem on robot purchases in decades starting 2018/2028/2038; 0 thereafter",
+      "quote": "The optimal robot tax is 5.1, 2.2, and 0.6 percent in the decades that start in 2018, 2028, and 2038, respectively. The robot tax is initially higher than the estimated effective tax rate of 1.8 percent in the status quo tax system after the 2017 tax reform. Once the initial generations retire, the optimal robot tax is zero.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     },
+     {
+      "quantity": "Steady-state optimal robot tax",
+      "value": "0 (zero once current routine-worker generations retire)",
+      "quote": "We find that it is optimal to tax robots while the current generations of routine workers, who can no longer move to non-routine occupations, are active in the labor force. Once these workers retire, optimal robot taxes are zero.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     },
+     {
+      "quantity": "Status-quo US effective taxation of robots (equipment & software capital), pre/post-2017 TCJA",
+      "value": "Effective capital-income tax 10% -> 5%; equivalent ad-valorem robot purchase tax 3.8% -> 1.8%",
+      "quote": "ACEMOGLU et al. (2020) estimate that the effective tax rate on income from equipment and software capital declined from 10 to 5 percent after the 2017 tax reform. Assuming these tax rates apply to robots, they correspond to ad-valorem tax rates of 3.8 and 1.8 percent, respectively.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     },
+     {
+      "quantity": "Aggregate welfare gain from the optimal robot tax (vs optimal income tax with robot tax constrained to zero)",
+      "value": "0.21% consumption-equivalent (utilitarian)",
+      "quote": "In terms of utilitarian social welfare, the optimal robot tax leads to a consumption-equivalent gain of 0.21 percent.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     },
+     {
+      "quantity": "Distribution of gains: initial old routine workers",
+      "value": "Up to 2.2% of consumption (losses of initial non-routine workers of same order)",
+      "quote": "The welfare gains of the initial old generations of routine workers are as high as 2.2 percent of consumption. The losses for the initial non-routine workers are of the same order of magnitude.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     },
+     {
+      "quantity": "Counterfactual optimal plan starting 1988 (start of automation era) \u2014 upper bound on transitional tax",
+      "value": "9.1% / 2.9% / 0.7% in first three decades, then zero",
+      "quote": "Optimal robot taxes are 9.1, 2.9, and 0.7 percent in the first, second, and third decades, respectively. The optimal robot tax is zero from 2018 on.",
+      "source_url": "https://www.kellogg.northwestern.edu/faculty/rebelo/htm/robots.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "GRT-transitional preset: 0.051*auto_cost in years 0-10 (~0.015 at auto_cost=0.3), 0.022*auto_cost years 10-20 (~0.007), 0.006*auto_cost years 20-30 (~0.002), 0 thereafter",
+      "rationale": "GRT's tau_x is ad-valorem on robot purchases; our lever is a share of the saved compensation bill. Annual automation input spend in our model = auto_cost * saved_bill, so revenue-equivalent lever value = tau_x * auto_cost. E.g. 5.1% * 0.3 = 0.0153. The declining decade profile can be approximated as a linear decay to zero over 30 years."
+     },
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "GRT-steady-state preset: 0",
+      "rationale": "Headline result: once workers who chose occupations before the automation shock retire, the optimal robot tax is exactly zero. A 'long-run optimal' preset should turn the lever off."
+     },
+     {
+      "lever": "compute_effective_rate",
+      "suggested": "0.05 (post-2017 status quo); 0.10 for a pre-TCJA counterfactual",
+      "rationale": "Direct concept match: the Acemoglu et al. (2020) effective tax rate on income from equipment and software capital that GRT use to calibrate the status quo is exactly an effective tax rate on the automation-capital pool. Their conversion formula tau_x = [r/(1-tau)+delta]/(r+delta)-1 links this rate to the ad-valorem equivalents (10%->3.8%, 5%->1.8%)."
+     }
+    ],
+    "caveats": "Quotes are from the December 2020 author manuscript (Kellogg), not the paginated REStud version. Base mismatch: their robot tax is ad-valorem on robot purchases, so the mapping onto automation_tax_rate (share of saved wage bill) depends multiplicatively on auto_cost. Their 'robots' means ALL routine-biased technical progress, so the concept spans both our cognitive and physical channels, but the 10-year model periods and OLG retirement structure do not map onto annual reabsorption_rate/attrition_rate. The optimal-tax rationale (loosening incentive constraints while old routine workers cannot re-skill) relies on endogenous occupational choice of future generations \u2014 a margin our model lacks entirely; in our model the tax is purely a fiscal transfer with no efficiency role. Their welfare-optimal rates are not revenue-maximizing rates."
+   },
+   {
+    "title": "Thuemmel (2023) \"Optimal Taxation of Robots\" (Journal of the European Economic Association 21(3), 1154-1190)",
+    "verified": "Fetched full text of the CESifo WP 7317 version: https://www.ifo.de/DocDL/cesifo1_wp7317.pdf (October 2018). Published JEEA abstract excerpts verified via https://econpapers.repec.org/article/oupjeurec/v_3a21_3ay_3a2023_3ai_3a3_3ap_3a1154-1190..htm. The OUP full text (academic.oup.com/jeea/article/21/3/1154/6798383) was paywalled; published-version point estimates not independently verified.",
+    "key_numbers": [
+     {
+      "quantity": "Optimal robot tax for the US (WP version, calibrated to Acemoglu-Restrepo wage impacts)",
+      "value": "1.8% with fixed occupations; 0.86% with occupational choice (ad-valorem on robots)",
+      "quote": "Quantitatively, in the US, the optimal robot tax equals 1.8% if occupations are fixed, but decreases to 0.86% with occupational choice. The welfare impact of introducing a robot tax is small.",
+      "source_url": "https://www.ifo.de/DocDL/cesifo1_wp7317.pdf"
+     },
+     {
+      "quantity": "Welfare gain of introducing the robot tax",
+      "value": "$21.14 per person per year (fixed occupations); $9.22 (occupational switching)",
+      "quote": "Without occupational switching, the optimal robot tax is 1.8%. The welfare gain of introducing a robot tax expressed in dollars per person per year is 21.14$. With occupational switching, the robot tax equals 0.86%, and its welfare impact is reduced to 9.22$.",
+      "source_url": "https://www.ifo.de/DocDL/cesifo1_wp7317.pdf"
+     },
+     {
+      "quantity": "Upper bound on welfare gain as robot prices fall",
+      "value": "Never exceeds $25 per person per year; eventually negligible",
+      "quote": "Without occupational switching, the welfare gain from taxing robots increases at first as the price of robots falls, but it never exceeds 25$ per person per year. Moreover, in both scenarios the welfare gain of taxing robots eventually becomes negligible.",
+      "source_url": "https://www.ifo.de/DocDL/cesifo1_wp7317.pdf"
+     },
+     {
+      "quantity": "Published JEEA version: sign of optimal robot tax depends on robot price",
+      "value": "Subsidy when robots expensive -> tax as robots get cheaper",
+      "quote": "When robots are expensive, a robot subsidy is optimal. As robots get cheaper, it becomes optimal to tax them.",
+      "source_url": "https://econpapers.repec.org/article/oupjeurec/v_3a21_3ay_3a2023_3ai_3a3_3ap_3a1154-1190..htm"
+     },
+     {
+      "quantity": "Published JEEA version: value of differentiating robot tax from general equipment-capital tax",
+      "value": "~0 (income-tax adjustment captures almost all gains)",
+      "quote": "When reforming the status-quo tax system, most welfare gains can be achieved by adjusting the income tax. The additional gains from taxing robots differently from other equipment capital are close to zero.",
+      "source_url": "https://econpapers.repec.org/article/oupjeurec/v_3a21_3ay_3a2023_3ai_3a3_3ap_3a1154-1190..htm"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "Thuemmel preset: 0.0086*auto_cost to 0.018*auto_cost (~0.003-0.005 at auto_cost=0.3)",
+      "rationale": "His tax is ad-valorem on robots; lever value = tau * auto_cost (annual robot spend = auto_cost * saved_bill). Use the 1.8% end when reabsorption_rate is ~0 (his fixed-occupations case) and the 0.86% end when reabsorption_rate is high (his occupational-choice case halves the optimum)."
+     },
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "Thuemmel-published preset: ~0, with compute_effective_rate at the economy-wide equipment-capital rate (~0.05)",
+      "rationale": "The published version's headline is that taxing robots DIFFERENTLY from other equipment capital adds close to zero welfare; the literature-faithful preset is no robot surtax, only the general capital tax carried by compute_effective_rate (GRT's cited post-2017 effective equipment rate is 5%)."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "Pairing rule: automation_tax_rate at the high (1.8%-equivalent) end only when reabsorption_rate <= ~0.05/yr; use the 0.86%-equivalent when reabsorption is active",
+      "rationale": "Occupational switching is the closest analogue of our reabsorption channel; in his model it cuts the optimal robot tax from 1.8% to 0.86% and the welfare gain from $21.14 to $9.22/person/yr, so presets should couple the two levers."
+     }
+    ],
+    "caveats": "The verified point estimates (1.8%/0.86%, $21.14/$9.22, <$25) come from the 2018 CESifo working-paper version; the published JEEA 2023 version adds other capital and reframes the result (subsidy when robots expensive, near-zero gain from differential taxation) \u2014 its abstract sentences are verified but its point estimates were behind the paywall. His optimum can be NEGATIVE (a subsidy); our automation_tax_rate is bounded at 0 and cannot express that. The wage-compression mechanism (robot tax compresses the wage distribution to relax income-tax incentive constraints) has no counterpart in our kernel \u2014 our tax is a pure revenue transfer from retained profit. Welfare gains in $/person/yr are welfare metrics, not revenue, and should not be read as fiscal yields."
+   },
+   {
+    "title": "Costinot, Werning (2023) \"Robots, Trade, and Luddism: A Sufficient Statistic Approach to Optimal Technology Regulation\" (Review of Economic Studies 90(5))",
+    "verified": "Fetched full text of NBER WP 25103 (September 2018): https://www.nber.org/system/files/working_papers/w25103/w25103.pdf, plus the NBER abstract page https://www.nber.org/papers/w25103. Published REStud version (academic.oup.com/restud/article-abstract/90/5/2261/6798670) paywalled; WP numbers match the range cited in the published abstract per secondary sources.",
+    "key_numbers": [
+     {
+      "quantity": "Headline sufficient-statistic optimal robot tax for the US",
+      "value": "1% to 3.7% (ad-valorem on robot spending)",
+      "quote": "Using the reduced-form evidence of Acemoglu and Restrepo (2017b) on the impact of robots in the United States, we find efficient taxes on robots ranging from 1% to 3.7%.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     },
+     {
+      "quantity": "Dependence on the labor-supply elasticity used in the formula",
+      "value": "t*=1% at eps=0.1; 2.7% at eps=0.3; 3.7% at eps=0.5",
+      "quote": "For a labor supply elasticity of \u01eb = 0.1, in the low range of the micro-estimates reviewed in Chetty (2012), equation (3) leads to an optimal tax on robots equal to t\u2217m = 1%. For higher labor supply elasticities of \u01eb = 0.3 or \u01eb = 0.5, the previous tax goes up to t\u2217m = 2.7% and t\u2217m = 3.7%, respectively.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     },
+     {
+      "quantity": "Comparative static: direction of the optimal tax as automation deepens",
+      "value": "Magnitude may DECREASE as automation deepens and inequality rises",
+      "quote": "while distributional concerns create a rationale for non-zero taxes on robots and trade, the magnitude of these taxes may decrease as the process of automation and globalization deepens and inequality increases.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     },
+     {
+      "quantity": "Size of the US robot tax base used in the calibration",
+      "value": "Labor earnings / robot spending ~ 245 (robots ~0.4% of the wage bill); robots ~0.64% of capital services",
+      "quote": "the ratio of total labor earnings to total Chinese imports in 2007 is only 26.4, an order of magnitude smaller than the ratio to total spending on robots, around 245. [footnote:] Graetz and Michaels (2018) estimate the share of robots in total capital services to be around 0.64%.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     },
+     {
+      "quantity": "Wage-incidence sufficient statistic behind the tax",
+      "value": "Relative wage elasticity to robot quantity ~0.5 (Acemoglu-Restrepo based)",
+      "quote": "the average value of the relative wage elasticity, d ln \u03c9 d ln y\u2217m, is of the same order of magnitude as the one implied by the estimates of Acemoglu and Restrepo (2017b), around 0.5.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     },
+     {
+      "quantity": "Contrast case: efficient tariffs on Chinese imports (same formula, bigger base)",
+      "value": "0.03% to 0.11%",
+      "quote": "This leads to an optimal tax on Chinese imports that is much smaller than the tax on robots: t\u2217m = 0.03% for \u01eb = 0.1, 0.08% for \u01eb = 0.3, and 0.11% for \u01eb = 0.5.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w25103/w25103.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "CW sufficient-statistic preset: 0.01*auto_cost to 0.037*auto_cost, central 0.027*auto_cost (~0.003-0.011, central ~0.008 at auto_cost=0.3)",
+      "rationale": "Their t* is ad-valorem on robot spending; lever = t* * auto_cost since our annual automation spend = auto_cost * saved_bill. The 1%/2.7%/3.7% ladder is indexed by the labor-supply elasticity (0.1/0.3/0.5), giving a natural low/central/high preset triple."
+     },
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "Path rule: hold constant or ramp DOWN as cumulative adoption_path rises; never scale up with automation depth",
+      "rationale": "Their comparative static shows the optimal tax magnitude may fall as automation deepens and inequality increases \u2014 the opposite of the intuitive 'tax more as robots spread' rule; matches GRT's declining transitional path."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "Negative sign (substitution) for physical-channel presets; magnitude order ~0.5 relative-wage elasticity",
+      "rationale": "The sufficient statistic is the Acemoglu-Restrepo semi-elasticity of wages to robot penetration, negative through most of the wage distribution \u2014 qualitative support for a substitution-signed survivor_elasticity, though their elasticity is w.r.t. robot quantity, not labor-market slack, so use sign and order of magnitude only."
+     }
+    ],
+    "caveats": "Same base-conversion caveat: t* applies to the buyer price of robots, so mapping to automation_tax_rate scales with auto_cost. Their calibration is 2000s-era industrial robots \u2014 a base of only ~0.4% of labor earnings; the optimal PERCENT may transplant to AI-scale automation but the implied revenue does not, and nothing in the paper covers the cognitive channel. The formula is static (no transition dynamics), so there is no mapping to robotics_lag or adoption_path timing. The 'tax falls as automation deepens' result is from a stylized Rawlsian example, not a calibrated US path. Quotes are from the 2018 NBER WP; the REStud 2023 published text may differ in wording (the 1%-3.7% range is retained in the published abstract per secondary sources)."
+   },
+   {
+    "title": "Holtmann, Braun, Cho, Koch, Langenmayr (2025) \"Investment Effects of a Quasi-Robot Tax: Evidence from South Korea\" (arqus DP No. 308)",
+    "verified": "Fetched full text from EconStor: https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf (arqus Discussion Paper 308, November 2025). Abstract cross-checked on https://ideas.repec.org/p/zbw/arqudp/335022.html. SSRN page returned 403.",
+    "key_numbers": [
+     {
+      "quantity": "Size of the quasi-robot tax: 2018 cut in Korea's automation investment tax credit",
+      "value": "Medium firms 5% -> 3%, large firms 3% -> 1% of acquisition cost (a 2 p.p. rise in the net price of automation assets)",
+      "quote": "Until 2017, medium-sized entities qualified for a 5% credit and large entities for a 3% credit. From 2018 onward, these rates were reduced to 3% and 1%, respectively (see Panel A of Table 1).",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     },
+     {
+      "quantity": "Robot-installation response (cross-country DiD vs Japan)",
+      "value": "-28% robot installations after the reform",
+      "quote": "We find that Korean industries decreased robot installations by 28% relative to their Japanese counterparts following the reform.",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     },
+     {
+      "quantity": "Firm-level investment response of treated firms",
+      "value": "~ -3 percentage points of total assets (tangible + intangible fixed investment)",
+      "quote": "On average, treated firms reduced their investment in tangible and intangible fixed assets (relative to total assets) by approximately 3%-points relative to unaffected firms.",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     },
+     {
+      "quantity": "Employment response (robots-replace-workers evidence)",
+      "value": "Positive for financially unconstrained firms; full-sample average ~0",
+      "quote": "We find evidence of a positive effect on firm-level employment in the sub-sample of less financially constrained firms, suggesting that robots and employees act as substitutes here; the average effect in the full sample is, however, statistically indistinguishable from zero.",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     },
+     {
+      "quantity": "Concurrent estimate (Kang et al. 2024) of the employment effect of the same reform",
+      "value": "+3.8% employment for firms with revenue 50-200bn KRW; earnings per worker fall",
+      "quote": "For the subgroup of firms with revenues between 50 and 200 billion Korean Won, they find that employment increases by about 3.8%, while earnings per worker decrease.",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     },
+     {
+      "quantity": "Materiality of the credit to firms (pre-reform)",
+      "value": "5.2%-15% of total tax payable among users; ~$430m claimed in manufacturing in 2019",
+      "quote": "Among users, the benefit corresponded to 5.2% to 15% of total tax payable, depending on firm size. Thus, the tax credit for automation investment is substantial, making it plausible that its reduction affects investment behavior.",
+      "source_url": "https://www.econstor.eu/bitstream/10419/335022/1/1948706962.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "BEHAVIORAL FLAG, not a level: any preset with ad-valorem-equivalent (automation_tax_rate / auto_cost) above ~0.02 should be treated as adoption-suppressing",
+      "rationale": "Korea's ~2 p.p. rise in the effective price of automation assets cut robot installations 28% \u2014 an arc semi-elasticity of roughly -14 per unit of ad-valorem tax. Our model's automation_tax_rate has NO investment response (pure revenue transfer from retained profit), so it mechanically overstates both revenue and displacement at literature-scale rates unless the response is hand-coded via other levers."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "Hand-coded response: scale the physical-channel adoption ceiling (end value) down by ~14 x (automation_tax_rate / auto_cost), i.e. ~28% lower per 2 p.p. ad-valorem tax, capped at ~50%",
+      "rationale": "The 28% installation decline per 2 p.p. price increase is the only quasi-experimental robot-tax investment elasticity available; applying it to the adoption ceiling emulates the missing behavioral margin in robot-tax presets."
+     },
+     {
+      "lever": "robotics_lag",
+      "suggested": "Alternative hand-coding: lengthen robotics_lag by ~25-30% under robot-tax presets instead of (not in addition to) cutting the adoption ceiling",
+      "rationale": "The measured outcome is a flow (annual installations), so a slower capacity ramp is an equally faithful reading of the -28% flow response as a lower long-run ceiling; choose one encoding to avoid double-counting."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "Sign check only: substitution (negative) in the physical channel",
+      "rationale": "Making robots dearer raised employment at unconstrained firms (+3.8% in the Kang et al. subgroup) with earnings per worker falling \u2014 direct evidence that robots and workers are substitutes at the margin, and that reabsorbed labor comes in at lower wages (qualitatively consistent with a positive reemployment_haircut)."
+     }
+    ],
+    "caveats": "This is the paper whose core finding our model cannot represent: an investment/adoption behavioral response to the tax price of automation \u2014 automation_tax_rate in our kernel changes only the fiscal split, never adoption. The 'tax' is actually a tax-credit reduction (2 p.p. of acquisition cost), not a levy on the saved wage bill; converting it to our lever requires the auto_cost bridge and assumes credit cuts and taxes are symmetric. External validity is weak for US AI scenarios: Korea is the world's densest robot adopter (1,000 robots per 10,000 manufacturing employees), the evidence covers industrial robots only (physical channel \u2014 says nothing about cognitive_feasibility or the cognitive channel), and treatment turns partly on Korean business-group membership. The firm-level outcome is total tangible+intangible investment (a proxy, not robots). Effects are heterogeneous by financial constraint \u2014 a representative-firm disposition split (retained_profit/price/survivor shares) cannot express that constrained firms cut investment while unconstrained firms substituted toward labor. Working paper, not yet peer-reviewed."
+   }
+  ]
+ },
+ {
+  "cluster": "korinek",
+  "papers": [
+   {
+    "title": "Korinek & Suh (2024), \"Scenarios for the Transition to AGI\", NBER WP 32255",
+    "verified": "Fetched https://www.nber.org/papers/w32255 (abstract) and the full 46-page PDF https://www.nber.org/system/files/working_papers/w32255/w32255.pdf (text-extracted locally). All quotes verified against the extracted full text; fi/ff ligatures dropped by PDF extraction were restored (e.g. 'reects'->'reflects').",
+    "key_numbers": [
+     {
+      "quantity": "Business-as-usual task automation rate (fraction of remaining tasks automated per year)",
+      "value": "lambda*g = 0.01 per year",
+      "quote": "scenario business-as-usual, in which \u03a6(i) reflects a rate of task automation of \u03bbg = 0.01 per year",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     },
+     {
+      "quantity": "Business-as-usual output growth (validation target for baseline_growth_rate, real)",
+      "value": "~2%/yr",
+      "quote": "We observe that in the business-as-usual scenario, output grows at approximately 2% per year, and both the returns to capital and the wage bill rise approximately in tandem (with a small decline in the labor share due to the effects of automation).",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     },
+     {
+      "quantity": "AGI scenario horizons: time to full automation of all tasks",
+      "value": "20 years (baseline AGI) / 5 years (aggressive AGI)",
+      "quote": "Panels (b) and (c) show the AGI scenarios, in which the fraction of unautomated tasks collapses to zero in 20 or 5 years, respectively.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     },
+     {
+      "quantity": "Timing of wage collapse in the aggressive (AGI-in-5y) scenario",
+      "value": "~3 years after start (i.e. before full automation)",
+      "quote": "In the aggressive AGI scenario, the wage collapse happens after about 3 years.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     },
+     {
+      "quantity": "Post-collapse steady-state output growth under full automation (vs 2% BAU; intro states 'ten times faster growth than in the business-as-usual scenario')",
+      "value": "18%/yr",
+      "quote": "After the collapse, wages are equal to the returns to capital, and the economy remains in region 2 where labor and capital are perfectly substitutable, with steady-state growth of 18% per year.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     },
+     {
+      "quantity": "Mixed (bout-of-cognitive-automation) scenario: years of wage collapse before capital accumulation restores labor demand",
+      "value": "~9 years",
+      "quote": "Around year 9, the economy has accumulated sufficient capital so that it returns to region 1. Wages rise above A and start growing again in line with further (slower) advances in automation and further capital accumulation.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w32255/w32255.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path",
+      "suggested": "Three preset values: BAU 0 -> 0.18-0.26 over 20-30y; AGI-20y 0 -> 1.0 with n_periods=20; AGI-5y 0 -> 1.0 with n_periods=5 (front-loaded: >~2/3 of the pool automated by year 3)",
+      "rationale": "BAU: unautomated tasks decay exponentially at lambda*g=0.01/yr, so cumulative share automated by year t = 1-e^(-0.01t) = 0.18 at t=20, 0.26 at t=30. Baseline AGI: unautomated fraction hits zero at t=20 -> adoption ceiling reaches 1.0 in 20 periods. Aggressive AGI: zero at t=5; wages collapse at ~3y, implying most of the pool is automated by then. Note the paper's automation index conflates feasibility and adoption, so these paths assume feasibility levers are set near 1 in the AGI presets."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "Mixed preset: ~1.0 for cognitive with fast adoption, while physical_feasibility stays well below 1 (long tail of hard tasks); AGI presets: both feasibilities -> 1.0",
+      "rationale": "The fourth scenario is 'a large bout of automation in the near term\u2014for example because AI rapidly automates cognitive jobs\u2014but ... there remains a long tail of tasks that are harder to automate.' That is exactly the model's cognitive/physical split: near-total cognitive feasibility now, bounded physical/long-tail feasibility. The AGI-defined scenarios (all tasks automatable) mean both feasibility levers at 1.0."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "BAU preset: 0 to +0.2 (mild complementarity); AGI-20y and AGI-5y presets: strongly negative, -0.5 to -1.0",
+      "rationale": "Sign/regime anchor, not an econometric estimate. In BAU the wage bill rises in tandem with output (wages grow ~2%/yr with labor scarce -> weak complementarity). In the AGI scenarios labor becomes perfectly substitutable with capital once automation outpaces capital accumulation and wages collapse to the machine-equivalent rate ('wages are equal to the returns to capital') -> substitution sign, magnitude large enough that rising slack drives survivor wages down toward the machine cost floor. Also implies survivor_raise_ceiling ~1.0 (no raises) in AGI presets."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "AGI presets: ~1.0 (lever maximum); BAU preset: 0.3-0.5",
+      "rationale": "Full automation lifts growth from ~2%/yr to 18%/yr ('ten times faster growth'). With a 66% initial labor share (calibration: Phi0=0.608, K0=4.6 chosen 'to match a 66% initial labor share'), the cumulative output gain from automating the labor bill far exceeds the saved wage bill itself, so the GDP dividend lever should sit at its upper bound in AGI presets. In BAU, most of the 2% trend belongs in baseline_growth_rate, leaving a modest incremental dividend."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "Mixed preset: ~0.1/yr (recovery over ~9 years); AGI presets: ~0 (no recovery, wages stay collapsed)",
+      "rationale": "In the mixed scenario labor demand collapses, then recovers 'around year 9' once capital accumulation restores labor scarcity -> annualized re-employment/recovery hazard ~1/9 = 0.11/yr. In the bounded-task AGI scenarios the economy stays in region 2 forever, so displaced labor demand never returns -> set reabsorption near zero in those presets."
+     }
+    ],
+    "caveats": "This is a full-employment general-equilibrium model: wages adjust and no one is unemployed, so 'wage collapse' maps to the model's wage levers (survivor_elasticity, reemployment_haircut, survivor_raise_ceiling) rather than to displacement headcounts; unemployment-side levers (ui_weeks, lfp_exit_rate, attrition_rate) have no counterpart. Tasks are measured in compute-complexity space, not compensation dollars, so lambda*g=0.01/yr is not directly a share of the wage bill. The 18%/yr post-AGI growth comes from endogenous AK-style capital accumulation, which exceeds anything a one-shot productivity_passthrough in [0,1] can produce. There is no firm-disposition, price, tax, or fiscal channel at all, and no adoption friction distinct from feasibility (the automation index is both). The year-9 recovery in the mixed scenario is driven by capital deepening restoring labor scarcity, not by displaced workers taking lower-wage service jobs, so the reabsorption_rate mapping is a mechanism analogy."
+   },
+   {
+    "title": "Korinek & Stiglitz (2019), \"Artificial Intelligence and Its Implications for Income Distribution and Unemployment\", NBER WP 24174 / chapter in The Economics of Artificial Intelligence: An Agenda",
+    "verified": "Fetched https://www.nber.org/papers/w24174 (abstract) and the full 45-page PDF https://www.nber.org/system/files/working_papers/w24174/w24174.pdf (text-extracted locally). All quotes verified against the extracted full text. Note: the paper is a theory taxonomy with almost no calibrated magnitudes.",
+    "key_numbers": [
+     {
+      "quantity": "Share of US jobs at risk of automation (cited from Frey & Osborne 2017; feasibility ceiling, cognitive+physical combined)",
+      "value": "47%",
+      "quote": "For example, Frey and Osborne (2017) warn that 47% of jobs in the US economy are at risk of being automated by advances in AI\u2010related fields.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w24174/w24174.pdf"
+     },
+     {
+      "quantity": "Expert AGI timing (cited from Bostrom 2014; anchors which preset family is 'central')",
+      "value": "median ~2040-2050; 90% probability within the century",
+      "quote": "although the median estimate in the AI expert community is around 2040 to 2050, with most AI experts assigning a 90% probability to human\u2010 level general artificial intelligence arising within the current century (see Bostrom, 2014)",
+      "source_url": "https://www.nber.org/system/files/working_papers/w24174/w24174.pdf"
+     },
+     {
+      "quantity": "Efficiency/subsistence wage floor mechanism (wage floor below which displacement becomes unemployment, not wage cuts)",
+      "value": "qualitative (wages cannot fall below cost of living)",
+      "quote": "If technological progress continues unabated and the marginal product of workers declines below their cost of living, then classic nutritional efficiency wage theories apply: unemployment would result because workers could not survive working for the market\u2010clearing wage without government support.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w24174/w24174.pdf"
+     },
+     {
+      "quantity": "Frictionless singularity benchmark: wage effect of machine labor when capital adjusts (survivor_elasticity = 0 case), plus transitional decline when it does not",
+      "value": "wage unchanged if K grows with H+M; labor demand falls temporarily otherwise",
+      "quote": "the human wage may actually be unchanged because capital K grows in proportion to effective labor (H + M) so that the marginal productivity of labor and the wage remain unchanged. ... When factors are slow to adjust, the pattern of transition can be complex, with demand for human labor typically going down temporarily.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w24174/w24174.pdf"
+     },
+     {
+      "quantity": "Non-distorting ex-post windfall tax illustration (rent taxation of the innovators' surplus)",
+      "value": "50% of returns over $10 billion with no incentive effect",
+      "quote": "If Bill Gates had been told, ex ante, that government would take away 50% of his returns over $10 billion, there is little reason to believe that it would have had any significant effect on innovation and investment.",
+      "source_url": "https://www.nber.org/system/files/working_papers/w24174/w24174.pdf"
+     },
+     {
+      "quantity": "Feasibility of compensating losers even under a singularity (justifies redistribution levers existing at all)",
+      "value": "qualitative (non-distortionary compensation possible)",
+      "quote": "Under plausible conditions, non-distortionary taxation can be levied to compensate those who otherwise might lose.",
+      "source_url": "https://www.nber.org/papers/w24174"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "~0.4-0.5 combined feasible share across cognitive+physical (e.g. cognitive_feasibility 0.5 with physical_feasibility 0.4) for a 'Frey-Osborne' central preset",
+      "rationale": "The paper's quantitative anchor for exposure is the cited Frey-Osborne 47% of US jobs at risk. That is a technical-feasibility ceiling over a decade or two, not an adoption rate, so it belongs in the feasibility levers with adoption_path handling diffusion; weight the split so employment-weighted total feasible work ~0.47."
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "Implement as the service-floor variant: floor the re-employment wage at subsistence (a low state wage percentile, e.g. 10th-20th), and route workers whose implied market wage falls below the floor into unemployment/lfp_exit_rate instead of deeper cuts",
+      "rationale": "The efficiency-wage channel says wages cannot adjust below the cost of living even in the long run; displacement past that point produces unemployment needing 'government support' rather than ever-lower wages. So the haircut should be bounded by a floor, with the residual absorbed by lfp_exit_rate > 0 (SSDI) in deep-automation presets \u2014 exactly the paper's 'government support' margin."
+     },
+     {
+      "lever": "reabsorption_rate",
+      "suggested": "Keep finite and >0 as the binding transition friction; no point estimate in the paper \u2014 treat as a scenario driver (slower reabsorption = larger transitional unemployment)",
+      "rationale": "The paper's second unemployment channel is definitionally the model's transition pool: 'technological unemployment arises as a transition phenomenon, when jobs are replaced at a faster rate than workers can find new ones.' It validates the model structure (displacement rate vs reabsorption hazard race) but supplies no calibrated hazard."
+     },
+     {
+      "lever": "automation_tax_rate",
+      "suggested": ">0 defensible without efficiency loss to the extent it falls on the innovators' surplus/rents: modest 0.05-0.15 on the full saved bill, or up to ~0.5 if targeted at the rent-like retained_profit_share component",
+      "rationale": "Abstract: non-distortionary taxation can compensate losers; the 50%-of-returns-over-$10B example says high ex-post rates on winner-take-all rents have little incentive cost. The model's automation_tax_rate is levied on the saved compensation bill and paid out of retained profit, so it approximates the paper's surplus tax only insofar as retained_profit_share captures rents rather than normal returns."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "Long-run/BAU presets: ~0 (frictionless capital adjustment leaves wages unchanged); transition presets: negative, ~-0.2 to -0.5",
+      "rationale": "The singularity benchmark has wages unchanged when capital grows in proportion to effective labor (H+M) -> elasticity 0; with slow factor adjustment 'demand for human labor typically going down temporarily' -> negative sign during the transition, magnitude unquantified. Supports making survivor_elasticity more negative in faster-adoption presets."
+     }
+    ],
+    "caveats": "This is a taxonomy/theory paper: apart from cited figures (Frey-Osborne 47%, Bostrom timing), it contains no calibrated magnitudes, so every mapping is a sign/structure anchor rather than a point estimate. The 47% is jobs-at-risk (feasibility), not tasks or wage-bill shares, and is the authors quoting others. The efficiency-wage floor is absolute subsistence, not a statutory or state-percentile wage, so the service-floor mapping is an approximation. Pareto-improvement and non-distortionary-taxation results assume lump-sum instruments and ex-ante contracting that the fiscal model (bracket-based income/payroll taxes, balanced-budget states) does not have. The paper also stresses cases where redistribution is infeasible and technology should be steered instead \u2014 a channel with no lever in the model."
+   },
+   {
+    "title": "Korinek & Lockwood (2026), \"Public Finance in the Age of AI: A Primer\", NBER WP 34873",
+    "verified": "Fetched https://www.nber.org/papers/w34873 (abstract page; the NBER PDF itself returned HTTP 403). Full text verified via the Brookings working-paper version (dated December 30, 2025, posted January 2026, 53 pp.): https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf \u2014 abstract matches the NBER page. All quotes are from the Brookings full text.",
+    "key_numbers": [
+     {
+      "quantity": "Optimal tax rate on AGI capital (Stage 2 'optimal harvesting' result)",
+      "value": "= human discount rate, ~4%/yr of the AGI capital stock",
+      "quote": "In a simple specification of the problem, we find that the optimal tax rate on AGI capital equals the human discount rate\u2014commonly estimated around 4 percent\u2014reflecting the fundamental tradeoff between current human consumption and future growth.",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     },
+     {
+      "quantity": "Tax rate on identifiable AGI rents (market concentration / fixed factors)",
+      "value": "up to ~100% without distortion",
+      "quote": "To the extent that such rents can be identified and isolated, they could be taxed at rates approaching 100 percent without distorting the AGI\u2019s investment decisions\u2014rents are by definition not necessary to induce the activity generating them.",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     },
+     {
+      "quantity": "US macro tax benchmarks: tax-to-GDP ratio and single-instrument equivalents (validation targets for the revenue ledger)",
+      "value": "tax/GDP ~0.25; ~31% pure income-tax equivalent; ~37.5% pure consumption-tax equivalent (consumption ~2/3 of income)",
+      "quote": "the U.S. macroeconomic tax rate, or tax-to-GDP ratio, is around 0.25 (OECD 2024). ... that would correspond to a tax rate of about 31% (= 0.25 / 0.8). If instead all tax revenue were raised from a proportional consumption tax, then, given that consumption is about two-thirds of income (U.S. Bureau of Economic Analysis 2025, NIPA Table 1.1.10), that would correspond to a consumption tax rate of about 37.5% (= 0.25 / (2/3)).",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     },
+     {
+      "quantity": "Calibrated optimal capital-income tax in the iso-elastic benchmark (Stage 1-2 boundary)",
+      "value": "tau*_K ~ 11% of net capital income (beta=.96, sigma=.5, net capital productivity 20%)",
+      "quote": "For example, for the standard values \u03b2 = .96 and \u03c3 = .5 and for net capital productivity of 20% so \u03b3A = 1.2 we find that \u03c4 \u22c6 K \u2248 11%.",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     },
+     {
+      "quantity": "Labor tax base erosion limit (validation target: income+payroll revenue must -> 0 as displacement -> 1)",
+      "value": "max labor-tax revenue / output -> 0 as capital share -> 1",
+      "quote": "We show formally that maximum labor-tax revenue as a share of output approaches zero as the capital share approaches one.",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     },
+     {
+      "quantity": "Staging of robot/compute taxes (when automation_tax_rate and compute_effective_rate should switch on)",
+      "value": "Stage 1: ~0 (distortionary); Stage 2 (AGI economy): the appropriate instruments",
+      "quote": "Proposals that tax AI-related capital goods (e.g., compute taxes and robot taxes) would distort investment during Stage 1 and are more appropriate for Stage 2 when accessing AGI\u2019s value creation requires taxing capital directly.",
+      "source_url": "https://www.brookings.edu/wp-content/uploads/2026/01/Korinek-Lockwood-FINAL-for-website.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "compute_effective_rate",
+      "suggested": "AGI-stage presets: 0.04 (range 0.02-0.11 depending on base); transition/Stage-1 presets: ~0",
+      "rationale": "The optimal harvesting tax on AGI capital is ~4%/yr of the capital stock \u2014 if the model's compute_effective_rate applies annually to the compute-capital pool value, 0.04 is a direct anchor. If instead it is read as a tax on capital income: tau*_K ~ 11% of a 20% net return = ~2.2% of the stock per year, giving the 0.02-0.11 range across interpretations. The paper explicitly recommends against taxing compute in Stage 1 ('exempt AI development; tax AGI entities'), so ramp this lever in only as adoption approaches its AGI-preset ceiling."
+     },
+     {
+      "lever": "automation_tax_rate",
+      "suggested": "0 in BAU and early/Stage-1 years of all presets; >0 only in late AGI-stage presets, or sized to the rent component: ~0.05-0.15 of the saved bill (up to much higher if retained_profit_share is treated as pure rent)",
+      "rationale": "Robot taxes map to taxation of reproducible capital (tau_K): 'would distort investment during Stage 1 and are more appropriate for Stage 2'. Since the model's automation_tax_rate is levied on the saved compensation bill out of retained profit, it approximates rent taxation only for the rent-like share of profits; rents are taxable up to ~100%, normal returns at ~4-11%, so blend by assumed rent share (e.g. 100% x rent share x retained_profit_share / saved bill)."
+     },
+     {
+      "lever": "ubi_recapture_rate",
+      "suggested": "0.25-0.375, implemented as tax clawback only (no means-test/work-conditioning crowd-out)",
+      "rationale": "Stage-1 revenue converges on broad consumption taxation; a UBI dollar paid out and spent faces the economy-wide effective tax wedge, ~25% of GDP overall and ~37.5% if raised purely as a consumption tax (=0.25/(2/3)). The paper (citing Korinek-Juelfs 2024) argues 'conditioning transfers on work is only desirable if work gives rise to positive utility effects that individuals do not rationally internalize' \u2014 i.e., transfers should be unconditional, so model recapture as tax clawback, not means-testing."
+     },
+     {
+      "lever": "interest_rate",
+      "suggested": "~0.04 on federal debt (real); keep consistent with the discount rate used for the AGI-harvesting anchor",
+      "rationale": "The paper's key rate, 'the human discount rate\u2014commonly estimated around 4 percent', is the intertemporal price it uses to trade current human consumption against future growth; using the same 4% for the model's federal debt-service rate keeps the preset internally consistent with the compute_effective_rate anchor."
+     },
+     {
+      "lever": "state_rate_hike_cap",
+      "suggested": "Low/binding cap in AGI presets (rate hikes on labor bases cannot close gaps); lean on state_cut_share instead as displacement deepens",
+      "rationale": "Maximum labor-tax revenue as a share of output approaches zero as the capital share approaches one \u2014 so in high-displacement presets, state income/payroll rate hikes hit a Laffer-style ceiling on a vanishing base. Structurally this says gap-closing should shift toward spending cuts (state_cut_share -> 1) or consumption-style bases the model does not have, rather than allowing unlimited rate hikes."
+     }
+    ],
+    "caveats": "This is a normative optimal-taxation primer, not a forecast: the 4% and 11% figures are what a planner *should* levy under specific utility assumptions, not predicted policy, and the 4% applies to Stage-2 AGI capital *stock* taxation \u2014 applying it to Stage-1 compute spend contradicts the paper's own guidance that compute/robot taxes distort investment during the transition. tau*_K taxes net capital *income*, a different base from the model's compute-pool lever, hence the wide 0.02-0.11 range. The paper's primary Stage-1 instrument, broad consumption taxation (with a return of differential Ramsey commodity taxation), has no direct lever in the model \u2014 ubi_recapture_rate and the existing income/payroll ledger only partially proxy it. Its model uses linear, time-constant taxes plus uniform lump-sum transfers with no displacement dynamics, so it says nothing about ui_weeks, reabsorption, lfp_exit, or federal/state structure. Equity-based pre-Stage-1 instruments it favors (sovereign wealth funds, windfall clauses, Universal Basic Capital) have no lever counterpart. No numeric UBI level is given, so ubi_annual remains unanchored by this paper."
+   }
+  ]
+ },
+ {
+  "cluster": "takeoff",
+  "papers": [
+   {
+    "title": "Davidson (2023), \"What a Compute-Centric Framework Says About Takeoff Speeds\" (Open Philanthropy)",
+    "verified": "Fetched: LessWrong crosspost https://www.lesswrong.com/posts/Gc9FGtdXhK9sCSEYu/what-a-compute-centric-framework-says-about-ai-takeoff and Scott Alexander's summary https://www.astralcodexten.com/p/davidson-on-takeoff-speeds. The canonical report page (openphilanthropy.org, now coefficientgiving.org) returned HTTP 403, so report-internal outputs (e.g. GWP-growth-rate trajectories, %-GDP compute investment at wake-up) could NOT be verified and are omitted. ACX quotes are Scott Alexander's restatement of Davidson's numbers except where he quotes Davidson directly.",
+    "key_numbers": [
+     {
+      "quantity": "Probability distribution of takeoff duration: time from AI capable of 20% of cognitive tasks (20%-AI) to 100% (100%-AI)",
+      "value": "~10% chance <3 months; ~25% <1 year; ~50% <3 years; ~80% <10 years",
+      "quote": "~10% to a <3 month takeoff ... ~25% to a <1 year takeoff ... ~50% to a <3 year takeoff ... ~80% to a <10 year takeoff",
+      "source_url": "https://www.lesswrong.com/posts/Gc9FGtdXhK9sCSEYu/what-a-compute-centric-framework-says-about-ai-takeoff"
+     },
+     {
+      "quantity": "Median takeoff duration, 20% of jobs to 100% of jobs",
+      "value": "~3 years",
+      "quote": "From when AI can do 20% of jobs, Davidson expects it will only take about 3 years for it to be able to do 100% of jobs.",
+      "source_url": "https://www.astralcodexten.com/p/davidson-on-takeoff-speeds"
+     },
+     {
+      "quantity": "Effective-compute gap between 20%-AI and AGI (100%-AI)",
+      "value": "10,000x (~4 orders of magnitude; distribution roughly 1-9 OOMs per ACX)",
+      "quote": "My best guess, defended in the report, is that you need 10,000X more effective compute to train AGI",
+      "source_url": "https://www.lesswrong.com/posts/Gc9FGtdXhK9sCSEYu/what-a-compute-centric-framework-says-about-ai-takeoff"
+     },
+     {
+      "quantity": "Economic value created at the 20%-AI milestone",
+      "value": "~$10 trillion/year added to global GDP (~10% of GWP)",
+      "quote": "20%-AI could readily add ~$10tr/year to global GDP",
+      "source_url": "https://www.lesswrong.com/posts/Gc9FGtdXhK9sCSEYu/what-a-compute-centric-framework-says-about-ai-takeoff"
+     },
+     {
+      "quantity": "Median year of human-level AI (full cognitive automation) in the compute-centric framework",
+      "value": "2043",
+      "quote": "CCF says 2043",
+      "source_url": "https://www.astralcodexten.com/p/davidson-on-takeoff-speeds"
+     },
+     {
+      "quantity": "Time from AGI (100% cognitive automation capability) to superintelligence",
+      "value": "1-12 months (best guess <1 year)",
+      "quote": "My best guess is that we go from AGI...to superintelligence...in 1 - 12 months.",
+      "source_url": "https://www.astralcodexten.com/p/davidson-on-takeoff-speeds"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path",
+      "suggested": "FAST preset: start 0.2 -> end 1.0, with the cumulative ceiling reaching ~0.9-1.0 by year 4-5 of the horizon (front-loaded); sensitivity band: same ramp compressed to 1 year (25th pct) or stretched to 10 years (80th pct)",
+      "rationale": "Median 3 years for capability to go 20% -> 100%. Davidson's runtime-compute framing implies deployment tracks capability closely because inference is cheap once training succeeds (ACX: 'you'll have 100 million AGIs doing software research'); adding ~1-2 years of real-world diffusion on top of the 3-year capability median gives a cumulative adoption ceiling hitting ~1.0 by t+4 to t+5. Set the path's start at 0.2 to encode that the scenario clock starts at the 20%-AI milestone."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "1.0",
+      "rationale": "Davidson's 100%-AI endpoint is defined as AI able to do 100% of cognitive jobs; the 20% starting condition belongs in adoption_path start (0.2), not in feasibility, so the feasibility lever should sit at its ceiling in a Davidson-anchored FAST preset."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "0.5 (range 0.4-0.8)",
+      "rationale": "20%-AI adds ~$10tr/yr on ~$100tr GWP = +10% of GDP at 20% automation; linear extrapolation to full automation gives +50% of GDP, i.e. passthrough ~0.5 under the lever's definition (full automation of the labor bill -> +this fraction of GDP). Davidson expects super-linearity near full automation (superintelligence within a year), which argues for the top of the range."
+     },
+     {
+      "lever": "auto_cost",
+      "suggested": "0.1-0.3 as a horizon average (interpret as high ~0.5 in year 1, falling ~10x/yr)",
+      "rationale": "Effective compute per dollar improves ~1 OOM/year in Davidson's framework (ACX: 'Davidson expects this to grow by about an OOM per year for a while'), so the compute cost of replacing a given task falls ~10x/yr; a first-year cost near half of saved compensation averages to ~0.1-0.2 over a 5-10 year horizon. If the model only supports a constant auto_cost, use 0.2."
+     }
+    ],
+    "caveats": "Davidson's 20%->100% is TECHNICAL CAPABILITY (tasks AI could do at plausible compute cost), not realized adoption \u2014 mapping it directly onto the adoption_path ceiling is the aggressive reading; his own model has deployment lagging capability by under a year only because runtime compute is cheap. All magnitudes are global (GWP), not US. The framework is cognitive-only: it gives no guidance on physical_feasibility or robotics_lag, and nothing on labor-market microstructure (reabsorption_rate, reemployment_haircut, lfp_exit_rate, ui_weeks all unaddressed). Training-compute quantities (10,000x gap, 1e36 FLOP) inform pacing, not any lever directly. The report's GWP-growth-rate outputs could not be fetched (403), so do not cite specific >20%/yr growth claims from this extraction."
+   },
+   {
+    "title": "AI Futures Project, \"AI 2027\" (ai-2027.com) + successor material (AI Futures Model timelines update, Kokotajlo 80k interview)",
+    "verified": "Fetched: https://ai-2027.com/ (truncated at Oct 2027), https://ai-2027.com/race (also truncated before the 2028 robot-economy sections), https://ai-2027.com/summary, https://ai-2027.com/research/takeoff-forecast, https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts, https://80000hours.org/podcast/episodes/daniel-kokotajlo-ai-2027-updates-china-robot-economy/, and https://rogerwong.me/2025/04/ai-2027 (secondary page quoting the race-ending robot passage). The 'million new robots per month' quote is verified via the rogerwong.me fetch; the companion line 'If the SEZ economy were truly autonomous, it would have a doubling time of about a year; since it can trade with the existing human economy, its doubling time is even shorter' appeared only in a search snippet of ai-2027.com/race (page fetch truncated) \u2014 treat as near-verified, not fully fetched. No separate 'AI 2040' scenario exists as of July 2026; the successor material is the AI Futures Model (aifuturesmodel.com) and the timelines-clarification blog post.",
+    "key_numbers": [
+     {
+      "quantity": "Superhuman-coder deployment scale and speed (Mar 2027 milestone)",
+      "value": "200,000 parallel copies ~= 50,000 best-human-coder-equivalents at 30x speed",
+      "quote": "Fast and cheap superhuman coder. OpenBrain runs 200,000 Agent-3 copies in parallel, creating a workforce equivalent to 50,000 copies of the best human coder sped up by 30x.",
+      "source_url": "https://ai-2027.com/"
+     },
+     {
+      "quantity": "Time from superhuman coder (SC) to artificial superintelligence (ASI)",
+      "value": "median ~1 year (SC Mar 2027 -> ASI ~Apr 2028; SIAR median Nov 2027)",
+      "quote": "Our median forecast for the time from the superhuman coder milestone (achieved in Mar 2027) to artificial superintelligence is ~1 year, with wide error margins.",
+      "source_url": "https://ai-2027.com/research/takeoff-forecast"
+     },
+     {
+      "quantity": "Peak AI R&D progress multiplier mid-takeoff (Agent-3 era; milestone ladder is SC 5x, SAR 25x, SIAR 250x, ASI 2000x)",
+      "value": "10x (a year of algorithmic progress per month)",
+      "quote": "The AI R&D progress multiplier is now 10x, meaning that OpenBrain is making about a year of algorithmic progress every month.",
+      "source_url": "https://ai-2027.com/"
+     },
+     {
+      "quantity": "Robot production rate in the Race ending (end of 2028, via special economic zones)",
+      "value": "~1,000,000 new robots per month (~12M/yr)",
+      "quote": "By the end of the year they are producing a million new robots per month.",
+      "source_url": "https://rogerwong.me/2025/04/ai-2027"
+     },
+     {
+      "quantity": "Global AI capital expenditure in the scenario's 2026 (pre-displacement investment scale)",
+      "value": "$1 trillion/yr global AI capex; OpenBrain compute costs $40B vs revenue $35B",
+      "quote": "GLOBAL AI CAPEX $1T",
+      "source_url": "https://ai-2027.com/race"
+     },
+     {
+      "quantity": "Authors' updated medians for transformative AI milestone (TED-AI) as of Jan 2026 \u2014 successor material",
+      "value": "Kokotajlo: Dec 2030; Lifland: Jan 2035 (vs the scenario's 2027-2028)",
+      "quote": "Dec 2030 (2030.95) ... Jan 2035 (~2035.0)",
+      "source_url": "https://blog.aifutures.org/p/clarifying-how-our-ai-timelines-forecasts"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "robotics_lag",
+      "suggested": "3-4 years (FAST preset); 5-6 years if anchoring to the authors' updated medians",
+      "rationale": "SC arrives Mar 2027 but mass robot production hits 1M/month only ~1.75 years later (end-2028), after SEZ factory conversion. 1M robots/month = 12M/yr; against ~50-60M US physical-task workers, even sustained peak output needs ~4-5 years to saturate, and production ramps from near zero. A linear ramp-in of 3-4 years approximates this production-constrained substitution; Kokotajlo's 80k framing (conversion ~5x faster than WW2 mobilization, autonomous-economy doubling in weeks only AFTER build-out) supports lag being build-capacity-bound, not capability-bound."
+     },
+     {
+      "lever": "cognitive_feasibility",
+      "suggested": "1.0 (reached within ~1-2 years of scenario start)",
+      "rationale": "SC (any coding task) Mar 2027 -> SAR Jul 2027 -> ASI ~Apr 2028 median: essentially all cognitive task content becomes technically automatable within ~1 year of the first milestone. For an annual-period model starting at the SC milestone, set cognitive_feasibility = 1.0 and let adoption_path carry the diffusion."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "start 0.05-0.1 -> end 0.9-1.0, ceiling reached by year 4-6",
+      "rationale": "200,000 copies at 30x speed makes intra-firm cognitive deployment effectively instantaneous once capability exists; economy-wide diffusion is bounded by inference compute and integration ($1T global capex in 2026, scaling fast). The scenario narrative has most of the economy automated by ~2029, i.e. within ~2-3 years of SC; adding slack for the non-frontier economy gives a 0.05 -> 0.9+ cumulative ceiling over 4-6 annual periods."
+     },
+     {
+      "lever": "physical_feasibility",
+      "suggested": "0.8-1.0",
+      "rationale": "The race ending's general-purpose robots (1M/month, designed by superintelligent AI, produced in AI-planned SEZs) are depicted doing most manual work; feasibility is high and the binding constraint is production capacity, which is what robotics_lag models. Pair high physical_feasibility with the 3-4 year robotics_lag rather than lowering feasibility."
+     },
+     {
+      "lever": "auto_cost",
+      "suggested": "0.3-0.5 in early years, declining toward 0.1-0.2",
+      "rationale": "In the scenario's 2026, AI capex ($1T global; OpenBrain compute cost $40B) exceeds AI revenue ($35B for the leader) \u2014 investment runs AHEAD of realized wage savings. Once displacement scales, capex of $1-3T/yr against saved US compensation of $3-6T/yr implies auto_cost ~0.3-0.5, falling as algorithmic progress (year-per-month at 10x multiplier) cuts unit inference costs."
+     }
+    ],
+    "caveats": "AI 2027 is a single illustrative scenario, not a forecast distribution (only the takeoff supplement gives percentiles, and those are conditional on SC in Mar 2027). The authors' own medians have since slipped ~3-7 years (TED-AI Dec 2030 / Jan 2035), so the scenario's dates should be read as roughly a fast-decile path \u2014 appropriate for a FAST preset but not a median. It contains no US fiscal, wage, unemployment, UI, or UBI quantities: nothing maps to reabsorption_rate, reemployment_haircut, lfp_exit_rate, ui_weeks, survivor_* or demand_multiplier. Robot counts convert to worker-equivalents only under an assumed robots-per-worker productivity (I used ~1:1). Much of the SEZ robot output is military/industrial build-out, not labor-substituting service work, so 1M/month overstates the displacement-relevant rate. The 2028-2029 race-ending macro text could not be fully fetched (truncation); one supporting line is verified only via a secondary page and a search snippet."
+   },
+   {
+    "title": "MacAskill & Moorhouse (2025), \"Preparing for the Intelligence Explosion\" (Forethought)",
+    "verified": "Fetched: https://www.forethought.org/research/preparing-for-the-intelligence-explosion. The arXiv version (arxiv.org/abs/2506.14863) exists but was not separately fetched; all quotes below are from the Forethought page.",
+    "key_numbers": [
+     {
+      "quantity": "Headline compression claim: technological progress during the intelligence explosion",
+      "value": ">= a century of progress in under 10 years (>=10x acceleration of tech progress)",
+      "quote": "a century's worth of technological development in less than a decade",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     },
+     {
+      "quantity": "Effective training compute growth (raw 4.5x/yr x algorithmic 3x/yr x post-training 3x/yr)",
+      "value": ">30x per year",
+      "quote": "as if physical training compute is scaling more than 30x per year",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     },
+     {
+      "quantity": "Growth rate of the deployable 'AI population' (inference efficiency + hardware)",
+      "value": "~25x per year",
+      "quote": "growing the 'AI population' by about 25x per year",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     },
+     {
+      "quantity": "Growth differential of AI vs human cognitive labor",
+      "value": ">500x faster",
+      "quote": "total AI cognitive labour is growing more than 500x faster than total human cognitive labour",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     },
+     {
+      "quantity": "Potential decade-scale growth in total AI research effort (inference compute x effective training compute)",
+      "value": "10^11 (hundred-billion-fold) over a decade, i.e. just over 10x/yr average",
+      "quote": "one hundred billion-fold (10^11), averaging just over 10x per year",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     },
+     {
+      "quantity": "Conservative-case AI research effort scaling after human-parity AI",
+      "value": "5x per year for the following decade",
+      "quote": "AI research effort would continue scaling, on average, at 5x per year for the decade following human parity",
+      "source_url": "https://www.forethought.org/research/preparing-for-the-intelligence-explosion"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "baseline_growth_rate",
+      "suggested": "FAST upper end: 0.08-0.15 nominal (vs ~0.04 trend); use 0.06-0.08 if you want %-GDP denominators to stay interpretable",
+      "rationale": "Century-in-a-decade = >=10x the rate of technological progress. If technology contributes ~2pp of the ~2% real trend, 10x tech progress implies real growth potential of ~10-20%/yr at the peak; discounting for measured-GDP lag behind 'technological development' and adding ~2% inflation gives a defensible nominal upper band of 8-15%. Warning: this lever feeds %-GDP denominators, so raising it mechanically shrinks reported fiscal gaps as % of GDP."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "0.9-1.0 (lever ceiling) for the FAST preset",
+      "rationale": "Their claim survives conservative assumptions (no software feedback loop, compute scaling stops): >=10x research acceleration means automation's GDP dividend exceeds mere replacement of the saved wage bill. Since the lever caps the dividend at 1.0x the automated labor bill, the intelligence-explosion reading saturates it: set 1.0, with 0.9 as the cautious edge. Anything above the cap must instead show up via baseline_growth_rate."
+     },
+     {
+      "lever": "adoption_path",
+      "suggested": "supports n_periods <= 3 years from feasibility to saturation (end ~1.0)",
+      "rationale": "AI population growing ~25x/yr and total AI research effort ~10x/yr means that once a task class is feasible, the number of deployable AI worker-equivalents crosses the entire US workforce (~1.6e8) within ~2 years from even a modest base (e.g. 1e6 x 25^2 = 6.25e8), so the cumulative adoption ceiling is compute-permitting within <=3 years; the binding constraint becomes organizational, not capacity."
+     },
+     {
+      "lever": "auto_cost",
+      "suggested": "0.1-0.3 sustained over the horizon",
+      "rationale": "Compute headroom of ~10,000x before power limits, with effective compute per dollar improving ~3x/yr from algorithms alone, means automation input spend keeps GROWING in absolute terms while cost per replaced task falls; against a saved wage bill growing with cumulative adoption, a roughly constant 0.1-0.3 share of saved compensation spent on compute is the natural steady-state reading (5x/yr conservative scaling case supports the upper end)."
+     }
+    ],
+    "caveats": "The paper quantifies research INPUTS (compute, algorithmic efficiency, AI cognitive labor), not GDP, employment, or wages \u2014 'a century's worth of technological development' is not measured GDP growth, so the baseline_growth_rate mapping is a modeling choice, not the authors' claim; they explicitly do not forecast output growth rates. Nothing maps to any labor-market lever (reabsorption_rate, reemployment_haircut, lfp_exit_rate, attrition_rate, ui_weeks), the firm-disposition split, or any tax/transfer lever. All scaling figures are global frontier-AI trends, not US-economy quantities. The 25x/yr AI-population and 500x differential figures describe pre-explosion trend extrapolation, not a post-displacement equilibrium, so using them to pace adoption_path assumes compute is the only bottleneck."
+   }
+  ]
+ },
+ {
+  "cluster": "fiscal-comparators",
+  "papers": [
+   {
+    "title": "Price, Carter C. & Suresh, Akshaya (2025), \"Federal Revenue When AI Replaces Labor: An Examination of Economic Scenarios with Highly Capable Artificial Intelligence\", RAND Working Paper WR-A4443-1, November 2025",
+    "verified": "Fetched and fully extracted: https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf (downloaded via curl with browser UA after WebFetch returned 403; all quotes verified against extracted text). Landing page: https://www.rand.org/pubs/working_papers/WRA4443-1.html",
+    "key_numbers": [
+     {
+      "quantity": "Baseline federal revenue composition: share from individuals and share directly from labor (validation anchor for the model's t=0 revenue ledger)",
+      "value": "84% of 2024 federal revenue from individual + payroll taxes; ~66% directly from labor; labor-related taxes ~65% of total (37% payroll + 28% wage/salary share of PIT)",
+      "quote": "In 2024, the bulk of federal revenue, 84 percent, came from either individual taxes or payroll taxes, which are both derived primarily from labor (about 66 percent of federal revenue is due directly to labor). Thus, labor displacing technologies could disrupt the majority of federal revenue.",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     },
+     {
+      "quantity": "Share of federal revenue directly vulnerable, by scenario (static accounting ladder; end-state validation targets)",
+      "value": "0% (S1 monopolistic+new jobs) / 65% (S2 monopolistic+no new jobs) / 20% (S3 at-cost+new jobs) / 83% (S4 at-cost+no new jobs)",
+      "quote": "83 percent of federal tax revenue would be directly vulnerable to disruption from the loss of both capital and labor income.",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     },
+     {
+      "quantity": "Headline simulation validation target: federal revenue loss under at-cost (deflationary) AI pricing with a 10% employment shock",
+      "value": "~25% lower federal revenue (via ~26% lower nominal GDP by 2035)",
+      "quote": "Lower nominal GDP would also lower federal revenues by about a quarter if AI leads to substantive deflation. This makes it much harder to service the national debt because interest payments are based on the debt in nominal dollars.",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     },
+     {
+      "quantity": "Table S.1/4 simulation values at 2035 for a 10% employment shock (baseline / S1 / S2 / S3 / S4): nominal GDP; also PIT revenue %GDP 14.0/14.2/12.5/15.6/14.5, corporate %GDP 2.8/3.6/3.0/1.9/0.7, inflation 2.0/1.7/3.5/-2.0/-2.0",
+      "value": "Nominal GDP 2035: $43.9T baseline vs $43.0T (S1), $48.3T (S2), $32.4T (S3), $33.2T (S4)",
+      "quote": "Nominal GDP 2035 ($ Trillions 43.9 43.0 48.3 32.4 33.2",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     },
+     {
+      "quantity": "Shock specification, reemployment scenarios (S1/S3): displacement magnitude and duration of unemployment before full reabsorption",
+      "value": "Unemployment 4.2% -> 14.2% (i.e. +10pp) for exactly 5 years, then full return to baseline",
+      "quote": "We increase the unemployment rate to 14.2 percent and set this increase to last for 5 years; after 5 years, we assume that humans can find new jobs, and unemployment returns to its baseline.",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     },
+     {
+      "quantity": "Shock specification, no-new-jobs scenarios (S2/S4): labor-force participation exit; plus transfer-consumption assumption for the unemployed",
+      "value": "LFPR 62.7% -> 52.7% for 10 years; unemployed consume at an average of 60% of prior rate via transfers",
+      "quote": "In our model, the base LFPR in 2025 is 62.7 percent, and is projected to remain at this level. We decrease the LFPR to 52.7 percent and set this decrease to last for 10 years.",
+      "source_url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4400/WRA4443-1/RAND_WRA4443-1.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path (with cognitive_feasibility/physical_feasibility)",
+      "suggested": "RAND-replication preset: one-shot cumulative displacement of 0.10 of the workforce at t=1, flat thereafter (e.g. combined feasibility 0.60 x adoption_path 0.167->0.167; n_periods=10, horizon 2025-2035)",
+      "rationale": "Their transitional simulation displaces exactly 10% of workers in a single year with no further shocks: 0.10 / 0.60 feasible share = 0.167 of feasible work adopted immediately. Use their Table 4 2035 values (revenue -~25% nominal under at-cost pricing; corporate revenue 2.8%->0.7% GDP in S4; PIT 14.0%->12.5% GDP in S2) as validation targets for this preset, not as lever inputs."
+     },
+     {
+      "lever": "reabsorption_rate + reemployment_haircut",
+      "suggested": "New-jobs scenarios (S1/S3): reabsorption_rate ~= 0.2/yr (full reabsorption within 5 years), reemployment_haircut = 0",
+      "rationale": "Unemployment returns fully to baseline after exactly 5 years -> continuous-rate equivalent 1/5yr = 0.2/yr clears the pool on their timetable. They assume reemployment at similar compensation ('Even if displaced workers found other jobs with similar compensation, the temporary disruption... could be comparable to a recession'), so haircut = 0 in this preset."
+     },
+     {
+      "lever": "lfp_exit_rate",
+      "suggested": "No-new-jobs scenarios (S2/S4): lfp_exit_rate ~= 1.0/yr (immediate exit) with reabsorption_rate = 0",
+      "rationale": "The entire 10pp displaced cohort is moved out of the labor force in year 1 (LFPR 62.7%->52.7%) and stays out for the whole 10-year horizon; the fastest our exit channel can replicate that is exit at ~100%/yr for benefit-exhausted workers with zero reabsorption."
+     },
+     {
+      "lever": "retained_profit_share / price_reduction_share / price_passthrough",
+      "suggested": "Monopolistic presets: retained_profit_share ~= 1.0, price_reduction_share ~= 0. At-cost presets: price_reduction_share ~= 1.0 with price_passthrough = 1.0",
+      "rationale": "Their pricing axis is exactly our disposition split. At-cost pricing is implemented as core PCE inflation going from +2% to -2% for 10 years (a 4pp/yr deflation swing, calibrated to 1866-1897 industrialization deflation), producing nominal GDP 26% below baseline by 2035 ($32.4T vs $43.9T) - i.e. the full saved bill flows to price cuts that fully deflate the price level."
+     },
+     {
+      "lever": "productivity_passthrough",
+      "suggested": "~0.5-0.6 (the compensation share of GDP) for a RAND-equivalent 'output-neutral' preset",
+      "rationale": "They adjust TFP (+11% in S1/S3, +5% in S2/S4) 'so that the net change in output associated with replacing human labor is zero' - i.e. the dividend exactly replaces displaced labor's output contribution and no more. In our units (full automation of the labor bill -> +passthrough x GDP), GDP-neutrality means the dividend equals displaced compensation, so passthrough ~= compensation share of GDP (~0.53), a deliberate lower bound: 'we assume that labor productivity does not increase so that we can produce a lower bound on the revenue changes.'"
+     }
+    ],
+    "caveats": "Concept mismatches: (1) Revenue outcomes are reported as %-of-GDP at 2035 from a DSGE (FRB/US) with an active Fed monetary response and 60%-replacement transfers - our model has no monetary block, so match their %-revenue-loss targets, not their interest-rate/inflation paths. (2) The deflation channel hits NOMINAL GDP and debt service; our price_passthrough deflates the price level but our ledger is anchored differently - compare in %-GDP space. (3) The 65%/20%/83% ladder is static accounting 'vulnerability' (revenue at risk), not a simulated loss - use as an upper bound, not a point target. (4) Their shock is one-off and rectangular (5y or 10y) rather than a diffusion path, and reemployment carries no wage haircut - so reemployment_haircut, ui_weeks, attrition_rate and survivor_elasticity have no counterpart. (5) No compute tax, automation tax, or state-level fiscal content; their 'AI excise tax' is only a policy suggestion. (6) The 10% displacement level is explicitly arbitrary ('The specific level of 10 percent is arbitrary')."
+   },
+   {
+    "title": "Ieong, Trish; Saputra, Akbar; Maniar, Anuja & Cheng, Deric (2026), \"Mapping Tax Risks From Labour-Displacing AI\", Windfall Trust, May 2026",
+    "verified": "Fully extracted from local PDF /Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf (37 pages; all quotes verified against extracted text). Companion simulator referenced in the paper: https://windfalltrust.github.io/ai-shock/",
+    "key_numbers": [
+     {
+      "quantity": "Headline validation targets: cumulative 10-year change in total tax revenue and net fiscal impact for the 'average OECD country', six scenarios (displacement 12/30/48% x domestic value capture 90/30%)",
+      "value": "Total tax revenue: +0.2% / -2.8% / -7.3% (high capture) and -1.8% / -7.7% / -15.3% (low capture); net fiscal impact: -0.8% / -8.4% / -20.0% and -2.8% / -13.4% / -28.0%",
+      "quote": "The following table summarises the cumulative 10-year changes under six different scenarios in the simulation. ... High impact (48% displacement); Low domestic value capture (30%) -15.3% -28.0%",
+      "source_url": "https://windfalltrust.github.io/ai-shock/"
+     },
+     {
+      "quantity": "Effective-tax-rate ladder (the paper's core mechanism): exposed-labor ETR vs capital ETR; also transition-labor ETR 31%, re-employment ETR 35%, consumption tax 20%, foreign-firm share taxed 0%",
+      "value": "Labor (exposed, pre-shock) 39%; capital 26.7% (avg of 20.5% corporate EATR and 33.0% integrated dividend ETR); consumer-surplus allocation taxed only via 20% VAT on 50% of it",
+      "quote": "Because the ETR on capital income (26.7%) is lower than the ETR on exposed labour income (39%), the rise in capital tax revenues never fully compensates for the fall in labour tax revenues. This is the central mechanism through which productivity-enhancing AI can reduce total tax revenue.",
+      "source_url": "/Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf"
+     },
+     {
+      "quantity": "Exposure x displacement decomposition (their two-parameter analog of our feasibility x adoption)",
+      "value": "Exposed sectors = 60% of jobs (constant, upper bound; literature range 35-65%); displacement rate of exposed = 20% / 50% / 80% -> net 12% / 30% / 48% of all workers",
+      "quote": "We use a constant 60% estimate across all three scenarios as an upper bound, varying instead the labour displacement rate. This is a modelling simplification, as the same net displacement can be reached through different combinations of the two parameters (e.g. 60% exposed sectors with 50% displacement is equivalent to 30% exposed sectors and 100% displacement).",
+      "source_url": "/Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf"
+     },
+     {
+      "quantity": "Permanent labor-force exit rates of displaced workers, by scenario (empirically grounded: Farber 2015 ~10% post-Great-Recession; Jacobson-LaLonde-Sullivan 1992 ~20% of high-tenure)",
+      "value": "10% (Low) / 20% (Medium) / 30% (High) of displaced workers, over shock lengths of 3 / 6 / 9 years",
+      "quote": "Our model accordingly uses permanent exit rates of 10% (Low Impact), 20% (Medium Impact) and 30% (High Impact).",
+      "source_url": "/Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf"
+     },
+     {
+      "quantity": "Long-run wage scarring on re-employment (anchored to Jacobson et al. ~25%, Couch-Placzek ~15%, Davis-von Wachter ~20% in recessions); transition wage ratio 33% of prior wage during the shock",
+      "value": "Re-employment wage = 80% / 70% / 60% of pre-displacement wage, i.e. scarring 20% / 30% / 40%",
+      "quote": "Our model assumes that re-employed workers earn 80% (Low Impact), 70% (Medium Impact), or 60% (High Impact) of their pre-displacement wages, which corresponds to wage scarring rates of 20%, 30%, and 40% respectively.",
+      "source_url": "/Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf"
+     },
+     {
+      "quantity": "Allocation of displaced wages (their disposition table): domestic firms / consumers / residual (foreign firms + AI operating costs) under 90% vs 30% domestic value capture",
+      "value": "High capture: 45% firms / 45% consumers / 10% residual. Low capture: 15% / 15% / 70%",
+      "quote": "Allocation 90% Domestic Value Capture 30% Domestic Value Capture Domestic firms 45% 15% Consumers 45% 15% Residual (foreign firms and operating costs) 10% 70%",
+      "source_url": "/Users/alex/Downloads/Mapping Tax Risks From Labour-Displacing AI.pdf"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path (with cognitive_feasibility/physical_feasibility)",
+      "suggested": "Combined feasible share ~0.60; cumulative adoption end = 0.20 (Low) / 0.50 (Medium) / 0.80 (High), reached as a one-shot at t=1 in their model - smooth over ~3/6/9 years for our diffusion. Medium maps to cognitive-heavy feasibility ('drop-in remote worker... limited physical capabilities'); High adds robotics (physical_feasibility > 0, shorter robotics_lag)",
+      "rationale": "Their displacement = 60% exposed x {20%, 50%, 80%} displaced = {12%, 30%, 48%} of all workers, exactly our feasibility x cumulative-adoption factorization. Their scenario descriptions give the cognitive/physical split: Medium = 'Significant improvement at cognitive tasks, but limited physical capabilities'; High = 'Mastery of cognitive tasks plus significant progress in robotics.'"
+     },
+     {
+      "lever": "reemployment_haircut",
+      "suggested": "0.20 / 0.30 / 0.40 (Low / Medium / High presets)",
+      "rationale": "Direct 1:1 mapping - their long-run wage scarring is defined identically to our permanent re-employment wage cut (re-employed at 80/70/60% of prior wage). Their 33% transition wage ratio additionally maps onto our service-floor wage during the transition pool (displaced earn 33% of prior wage while searching, taxed at 31% ETR)."
+     },
+     {
+      "lever": "lfp_exit_rate",
+      "suggested": "~0.03/yr in all three presets (0.10/3y, 0.20/6y, 0.30/9y all annualize to ~0.033/yr of the displaced pool)",
+      "rationale": "Permanent exits of 10%/20%/30% of displaced workers accrue over shock lengths of 3/6/9 years: 0.10/3 = 0.033, 0.20/6 = 0.033, 0.30/9 = 0.033 per year - a remarkably stable ~3.3%/yr exit hazard to feed our SSDI channel. Their exits are excluded from benefit spending ('This excludes workers who permanently exit the labour force... from the benefit spending calculation'), whereas ours draw ssdi_annual - a deliberate divergence to document."
+     },
+     {
+      "lever": "retained_profit_share / price_reduction_share / survivor_gains_share",
+      "suggested": "High-value-capture preset: 0.45 / 0.45 / 0.0 (residual 0.10 split between auto_cost and offshore_share). Low-value-capture preset: 0.15 / 0.15 / 0.0 (residual 0.70)",
+      "rationale": "Their three-way allocation of the displaced wage pool (domestic firms / consumers / residual) is our disposition vector: firms = retained_profit_share, consumers = price_reduction_share (consumer surplus from lower prices), survivor raises = 0 (non-displaced wages held constant, flagged as a key uncertainty). The residual is auto_cost x offshore leakage combined: 'the proportions flowing to domestic firms and consumers determine the amount available for taxation... while the residual category does not contribute to domestic tax revenues.'"
+     },
+     {
+      "lever": "compute_effective_rate + offshore_share",
+      "suggested": "compute_effective_rate: 0.205-0.33, central 0.267 (their capital ETR) if the compute pool is taxed like domestic profits; offshore_share: 0.10 (high capture) to 0.70 (low capture) as an UPPER bound, since their residual bundles untaxed foreign profits with AI operating costs",
+      "rationale": "Their capital ETR of 26.7% = average of 20.5% corporate EATR and 33.0% integrated dividend ETR is the best literature anchor for the effective rate on AI-capital income. Foreign-firm payments are taxed at 0% ('treated as Business Profits under the OECD Model... no PE exists, such that the allocation to foreign firms goes untaxed'), which is exactly our offshore_share = untaxed leak. Their ETR sensitivity check is a useful invariant: equalizing labor and capital ETRs at 35% flips low/medium scenarios to revenue gains (+1.53%/+0.42%)."
+     }
+    ],
+    "caveats": "(1) Calibrated to the 'average OECD country', not the US: tax base is 46.1% labor / 13.75% capital / 31.2% consumption / 8.95% other - the US federal base is far more labor-skewed (84% individual+payroll per RAND) and has no VAT, so their consumption-tax offsets mostly vanish federally and their %-revenue losses likely understate the US case. (2) Results are CUMULATIVE 10-year percent changes vs a static baseline (no GDP growth, no discounting) - convert before comparing to our annual %-GDP series. (3) Pure accounting model: one-off shock, step-change full re-employment when the shock ends, no demand multiplier, no induced losses, no price level (their 'consumers' allocation is untaxed surplus, not our price_passthrough deflation). (4) Benefit spending = 40% of pre-displacement wages for the entire 3-9 year shock - closer to a European replacement scheme than our ui_weeks; their exits get zero benefits vs our ssdi_annual. (5) The 26.7% capital ETR applies to domestic firm profits generally, not to a compute-capital pool; our compute_effective_rate taxes a narrower base. (6) The residual category conflates auto_cost with offshore_share - splitting 10%/70% between the two levers is our judgment call, not theirs. (7) Their High-impact assumptions deliberately exceed the empirical scarring/exit literature ('our assumptions go beyond the range observed in past displacement episodes')."
+   },
+   {
+    "title": "Epoch AI (2025), \"GATE: An Integrated Assessment Model for AI Automation\" (arXiv:2503.04941)",
+    "verified": "Fetched and fully extracted: https://arxiv.org/pdf/2503.04941 (85 pages; all quotes verified against extracted text). Abstract page https://arxiv.org/abs/2503.04941 also fetched; interactive playground at https://epoch.ai/gate not fetched.",
+    "key_numbers": [
+     {
+      "quantity": "Full-automation compute requirement T (upper anchor of the automation function; Cotra bio-anchors median)",
+      "value": "Default 1e36.5 eFLOP; range 1e33 to 1e41",
+      "quote": "AGI training requirements - T (eFLOP) 1e33 to 1e41 (1e36.5) Effective FLOP required to train AI systems capable of automating all tasks.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     },
+     {
+      "quantity": "Initial fraction of automatable tasks f_init (t=0 intercept of the automation trajectory)",
+      "value": "Default 0.1; range 0.05 to 0.2 (anchored to compute's ~0.1% GWP share and Acemoglu-Restrepo's ~10% net task-content change 1987-2017)",
+      "quote": "Initial fraction of automated tasks - finit (dimensionless) 0.05 to 0.2 (0.1) Initial fraction of tasks in the economy that can be automated.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     },
+     {
+      "quantity": "FLOP gap fraction (controls how front- vs back-loaded the automation ramp is between today's compute and T)",
+      "value": "Default 0.55 (table; bullet text derives 0.52); range 0.4 to 0.8. 0 = only AGI automates anything; 1 = linear progress from today",
+      "quote": "Flop gap fraction - \u2206f (dimensionless) 0.4 to 0.8 (0.55) Ratio between the training compute needed to automate all tasks and the training compute needed to automate the least demanding currently-unautomated tasks.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     },
+     {
+      "quantity": "Starting point and speed of compute scaling (with T and Delta-f, this pins the automation-fraction trajectory in time)",
+      "value": "Largest initial training run CT(0) = 5e25 eFLOP; historical trend ~5 OOM of compute scaling per decade (0.5 OOM/yr)",
+      "quote": "On current trends, a decade involves 5 OOMs compute scaling (Epoch AI, 2023), i.e. 1e30.5 FLOP.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     },
+     {
+      "quantity": "Task substitution parameter (are AI-automated and human tasks complements or substitutes?)",
+      "value": "rho = -0.65 default (range -5 to -0.2), i.e. elasticity of substitution ~0.6 (Knoblach et al. long-run aggregate range 0.45-0.87) - tasks are gross complements",
+      "quote": "Substitution parameter \u03c1: -5 to -0.2 (-0.65). Knoblach et al. (2019) measure long-run elasticities of substitutions for the aggregate economy at in the range of 0.45-0.87.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     },
+     {
+      "quantity": "Labor reallocation regimes (the model's only 'displacement' concept - two polar cases bracketing worker outcomes)",
+      "value": "Perfect reallocation (default) vs complete displacement (permanent labor-force exit); no intermediate friction in v1",
+      "quote": "We analyze two polar opposite scenarios: perfect reallocation, where workers displaced by automation smoothly transition to remaining non-automated tasks, and complete displacement, where automated workers permanently exit the labor force.",
+      "source_url": "https://arxiv.org/pdf/2503.04941"
+     }
+    ],
+    "lever_mappings": [
+     {
+      "lever": "adoption_path",
+      "suggested": "GATE-median shape: back-loaded convex ramp - hold ~0.10 for roughly the first decade, then ramp steeply to ~1.0 over the following ~12 years (e.g. start 0.10, end 1.0, n_periods 20-25, with most mass after year 10). Pessimistic (Delta-f=0.4, T=1e41): essentially flat within a 25y horizon; optimistic (Delta-f=0.8, T=1e33): near-linear ramp starting immediately",
+      "rationale": "Unit arithmetic: gap = log10(T) - log10(CT(0)) = 36.5 - 25.7 ~= 10.8 OOM. Automation of the marginal task begins once compute is within Delta-f x gap ~= 5.9 OOM of T, i.e. after (10.8-5.9)/0.5 ~= 10 years at the 0.5 OOM/yr trend; full automation ~10.8/0.5 ~= 22 years out. The paper's Figure 5(e-f) axes (2024-2044, 0-100%) display exactly this family. Note our adoption_path is a share of FEASIBLE work while GATE's f(t) is a share of ALL tasks - with cognitive+physical feasibility set near 1, the two coincide."
+     },
+     {
+      "lever": "cognitive_feasibility + physical_feasibility",
+      "suggested": "Combined feasible-now share ~0.10 (range 0.05-0.2) for a GATE-anchored t=0; treat GATE presets as feasibility growing toward 1.0 over the horizon rather than a static ceiling",
+      "rationale": "f_init = 0.1 is GATE's estimate of tasks automatable at simulation start (2025), cross-validated against Acemoglu-Restrepo's ~10% task-content displacement over 1987-2017. GATE does not split cognitive vs physical - it is compute-only with no robotics production constraint - so allocate the 0.10 mostly to cognitive_feasibility and treat robotics_lag as exogenous to GATE."
+     },
+     {
+      "lever": "reabsorption_rate + lfp_exit_rate (bracketing pair)",
+      "suggested": "GATE-optimistic bound: reabsorption_rate -> high (>=1/yr) with reemployment_haircut = 0 (perfect reallocation, the playground default). GATE-pessimistic bound: reabsorption_rate = 0 and lfp_exit_rate ~= 1/yr (complete displacement = permanent labor-force exit). Use as MC endpoints, not point estimates",
+      "rationale": "GATE models no intermediate labor friction: 'perfect reallocation, where workers displaced by automation smoothly transition to remaining non-automated tasks, and complete displacement, where automated workers permanently exit the labor force.' These are exactly the two corners of our (reabsorption_rate, lfp_exit_rate) plane; GATE's own authors flag retraining/reallocation extensions as future work."
+     },
+     {
+      "lever": "survivor_elasticity",
+      "suggested": "Positive (complementarity) in GATE-flavored presets; magnitude tied to elasticity of substitution ~0.45-0.87 (rho = -0.65), with survivor_raise_ceiling likely binding at high automation fractions",
+      "rationale": "With tasks as gross complements (sigma < 1), non-automated tasks become the bottleneck: 'The lower this parameter, the less substitutability there is between tasks and the stronger the bottleneck effect exerted by non-automated tasks.' Bottlenecked human tasks command rising marginal product -> survivors' market wage rises with automation, the opposite sign of a slack-driven substitution story - i.e. survivor_elasticity > 0."
+     },
+     {
+      "lever": "auto_cost (weak) + productivity_passthrough (upper bound)",
+      "suggested": "auto_cost: ~0.3-0.7 of the saved bill flowing to compute in aggressive GATE presets (initial compute investment $200B/yr default, rising toward tens of percent of GWP in simulations). productivity_passthrough: >=1.0 for GATE-like explosive-growth presets (their GWP-growth-vs-automation panel spans 0% to 1000% growth), vs our conservative sub-1 defaults",
+      "rationale": "GATE's default initial compute investment is $200B/yr and its Figure 5(b) axis for 'Predicted investment in compute-related capital' runs to 50% of GWP; with a ~45% baseline labor share ('This corresponds to a labor share of around 45%'), compute spend relative to the displaced labor bill lands roughly at 0.2-1.1, hence auto_cost 0.3-0.7 as a loose anchor. On output: GATE's growth outcomes at high automation vastly exceed the displaced wage bill, so any GATE-consistent preset needs productivity_passthrough at or above 1 - useful as the optimistic edge of our MC range, not a central value."
+     }
+    ],
+    "caveats": "(1) GATE computes a fundamentally different output: global GWP growth under optimal-planner investment, with NO fiscal block - no taxes, government, UI, or revenue concept - so it provides adoption-shape and elasticity anchors only, no revenue validation targets. (2) Its automation fraction is a share of TASKS (which enter symmetrically), not workers or wage bill; mapping to our headcount-based displacement assumes uniform task-worker weights. (3) The trajectory is endogenous - compute investment responds to automation returns - so the 'adoption path' shifts with parameters; my year arithmetic uses the exogenous 0.5 OOM/yr historical trend and is only indicative (the paper publishes no calibrated year-by-year baseline table in text; figures are illustrative). (4) Defaults are extremely uncertain: T spans 8 OOMs (1e33-1e41), and the FLOP-gap default is internally inconsistent (0.55 in Table 9, 0.52 in the derivation bullet). (5) No robotics/embodiment channel, so robotics_lag and physical_feasibility have no GATE analog. (6) Wages, prices and interest rates are explicitly deferred to future work ('quantities of interest such as prices, wages and interest rates'), so the survivor_elasticity mapping is inferred from the production structure, not from reported wage paths. (7) The complete-displacement case removes workers from the labor force permanently with no transition pool - it bounds but does not calibrate reabsorption_rate, ui_weeks, or reemployment_haircut."
+   }
+  ]
+ }
+]
