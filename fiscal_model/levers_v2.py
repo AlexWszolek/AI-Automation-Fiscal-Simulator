@@ -163,7 +163,9 @@ DEFAULTS_SHIPPED = replace(
     lfp_exit_rate=0.03,
     attrition_rate=0.025,           # overhaul: baseline natural exit of the long-term unemployed
     demand_multiplier=0.5,          # Phase 5: second-round demand → lagged employment flow (decision I)
-    automation_tax_rate=0.07,       # overhaul: a modest robot tax (7% of the automated comp bill)
+    automation_tax_rate=0.0,        # presets build: taxation moved to the POLICY OVERLAYS
+    #   (presets.OVERLAYS). The old 0.07 default was ~10–25× the optimal-robot-tax literature once
+    #   converted from ad-valorem-on-robot-spending to our saved-bill base (docs/PRESET_EVIDENCE §5.1).
     ubi_recapture_rate=0.25,        # coherence: ~avg effective clawback + means-test crowd-out on UBI
     baseline_growth_rate=0.04,      # coherence: nominal trend growth for the %-GDP denominators
     robotics_lag=4.0,               # coherence C6: robotic capacity builds over ~4 years of AI deployment

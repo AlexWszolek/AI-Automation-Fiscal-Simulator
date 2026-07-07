@@ -68,31 +68,40 @@ the conversion. Three recurring unit traps:
 
 ---
 
-## 2. Draft scenario presets
+## 2. Scenario presets — as shipped (`fiscal_model/presets.py`)
 
-Six world-states. Values not shown inherit `DEFAULTS_SHIPPED`. All presets keep rung 1
+Seven world-states. Values not shown inherit `DEFAULTS_SHIPPED`. All presets keep rung 1
 (service-floor) reabsorption; `reemployment_haircut` binds via `w_d = max(w·(1−haircut), floor)`.
+Two values are snapped to their sidebar widget grids (recorded in the preset provenance): Windfall
+`lfp_exit_rate` 0.033 → **0.03** and capital ETR 0.267 → **0.27**.
 
-| Lever | ①Acemoglu<br>Modest AI | ②Brynjolfsson<br>Augmentation | ③Windfall<br>Medium | ④China-Shock<br>Grind | ⑤Korinek-Suh<br>AGI-20y | ⑥AI 2027<br>Takeoff |
-|---|---|---|---|---|---|---|
-| `cognitive_feasibility` | 0.20 | 0.30 | 0.55 | 0.30 | 1.0 | 1.0 |
-| `physical_feasibility` | 0.05 | 0.10 | 0.20 | 0.20 | 1.0 | 0.90 |
-| `robotics_lag` | 8 | 6 | 5 | 4 | 10 | 3 |
-| adoption start → end | 0.02→0.23 | 0.02→0.30 | 0.05→0.50 | 0.05→0.40 | 0.05→1.0 | 0.10→1.0 |
-| `n_periods` | 10 | 10 | 10 | 15 | 20 | 8 |
-| `reabsorption_rate` | 0.50 | 0.60 | 0.30 | 0.075 | 0.05 | 0.10 |
-| `reemployment_haircut` | 0.13 | 0.10 | 0.30 | 0.25 | 0.40 | 0.40 |
-| `lfp_exit_rate` | 0.03 | 0.02 | 0.033 | 0.10 | 0.05 | 0.05 |
-| `attrition_rate` | 0.025 | 0.025 | 0.025 | 0.04 | 0.025 | 0.025 |
-| retained/price/survivor | .60/.35/.05 | .55/.25/.20 | .50/.50/.00 | .70/.20/.10 | .80/.15/.05 | .70/.20/.10 |
-| `auto_cost` | 0.05 | 0.10 | 0.10 | 0.10 | 0.15 | 0.30 |
-| `survivor_elasticity` | 0.0 | +0.10 | −0.15 | −0.30 | −0.50 | −0.50 |
-| `productivity_passthrough` | 0.15 | 0.50 | 0.30 | 0.20 | 0.90 | 0.90 |
-| `price_passthrough` | 0.3 | 0.3 | 0.5 | 0.3 | 0.5 | 0.5 |
-| `demand_multiplier` | 0.3 | 0.3 | 0.5 | 1.5 | 1.0 | 1.2 |
-| `baseline_growth_rate` | 0.04 | 0.045 | 0.04 | 0.035 | 0.06 | 0.08 |
-| `compute_effective_rate` | 0.10 | 0.10 | 0.267 | 0.10 | 0.05 | 0.05 |
-| `automation_tax_rate` | 0 | 0 | 0 | 0 | 0 | 0 |
+| Lever | ①Acemoglu<br>Modest AI | ②Brynjolfsson<br>Augmentation | ③Windfall<br>Medium | ④China-Shock<br>Grind | ⑤Korinek-Suh<br>AGI-20y | ⑥Korinek-Suh<br>AGI-5y | ⑦AI 2027<br>Takeoff |
+|---|---|---|---|---|---|---|---|
+| `cognitive_feasibility` | 0.20 | 0.30 | 0.55 | 0.30 | 1.0 | 1.0 | 1.0 |
+| `physical_feasibility` | 0.05 | 0.10 | 0.20 | 0.20 | 1.0 | 1.0 | 0.90 |
+| `robotics_lag` | 8 | 6 | 5 | 4 | 10 | 2 | 3 |
+| adoption start → end | 0.02→0.23 | 0.02→0.30 | 0.05→0.50 | 0.05→0.40 | 0.05→1.0 | 0.20→1.0 † | 0.10→1.0 |
+| `n_periods` | 10 | 10 | 10 | 15 | 20 | 10 | 8 |
+| `reabsorption_rate` | 0.50 | 0.60 | 0.30 | 0.075 | 0.05 | 0.05 | 0.10 |
+| `reemployment_haircut` | 0.13 | 0.10 | 0.30 | 0.25 | 0.40 | 0.40 | 0.40 |
+| `lfp_exit_rate` | 0.03 | 0.02 | 0.03 | 0.10 | 0.05 | 0.10 | 0.05 |
+| `attrition_rate` | 0.025 | 0.025 | 0.025 | 0.04 | 0.025 | 0.025 | 0.025 |
+| retained/price/survivor | .60/.35/.05 | .55/.25/.20 | .50/.50/.00 | .70/.20/.10 | .80/.15/.05 | .80/.15/.05 | .70/.20/.10 |
+| `auto_cost` | 0.05 | 0.10 | 0.10 | 0.10 | 0.15 | 0.20 | 0.30 |
+| `survivor_elasticity` | 0.0 | +0.10 | −0.15 | −0.30 | −0.50 | −0.50 | −0.50 |
+| `productivity_passthrough` | 0.15 | 0.50 | 0.30 | 0.20 | 0.90 | 0.90 | 0.90 |
+| `price_passthrough` | 0.3 | 0.3 | 0.5 | 0.3 | 0.5 | 0.5 | 0.5 |
+| `demand_multiplier` | 0.3 | 0.3 | 0.5 | 1.5 | 1.0 | 1.5 | 1.2 |
+| `baseline_growth_rate` | 0.04 | 0.045 | 0.04 | 0.035 | 0.06 | 0.08 | 0.08 |
+| `compute_effective_rate` | 0.10 | 0.10 | 0.27 | 0.10 | 0.05 | 0.05 | 0.05 |
+| `interest_rate` | 0.03 | 0.03 | 0.03 | 0.03 | 0.04 | 0.04 | 0.04 |
+| state cut share / hike cap | — | — | — | — | .5 / .5 | .5 / .5 | — |
+| `automation_tax_rate` | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+† ⑥'s path is kinked and PARAMETRIC (it survives horizon changes): linear 0.20→1.0 reaching **full
+automation at year 5**, flat thereafter — Korinek-Suh's aggressive transition viewed over a 10-year
+fiscal window. ⑤⑥ also set `interest_rate=0.04` (Korinek-Lockwood discount anchor) and close state
+gaps half by spending cuts under a low rate-hike cap (labor-base hikes cannot close AGI-stage gaps).
 
 Presets ship with the robot tax **off**; taxation is a composable *policy overlay* (§3), so the
 scenario answers "what does the world do to the budget" and the overlay answers "what does policy
@@ -109,9 +118,9 @@ strong productivity (GenAI at Work → 0.50), mild scarring (haircut 0.10, reabs
 J-Curve lag keeps robotics at 6y.
 
 **③ Windfall — Medium.** Their Medium scenario translated: 0.6 feasible × adoption→0.50,
-haircut 0.30, lfp 0.033/yr, high-value-capture disposition (0.50/0.50/0), capital taxed at their
-ETR (0.267). The closest thing to a direct comparator run — their Medium/high-capture 10y total-revenue
-target is **−2.8%** (low-capture −7.7%).
+haircut 0.30, lfp 0.033/yr (ui 0.03), high-value-capture disposition (0.50/0.50/0), capital taxed at
+their ETR (0.267 → ui 0.27). The closest thing to a direct comparator run — their Medium/high-capture
+10y total-revenue target is **−2.8%** (low-capture −7.7%).
 
 **④ China-Shock Grind.** A moderate shock met by the labor market ADH actually measured: reabsorption
 0.075/yr (decade-scale adjustment), LFP exit dominant (0.10/yr), JLS-severity haircut 0.25, demand
@@ -120,10 +129,14 @@ moderate but nothing heals.
 
 **⑤ Korinek-Suh — AGI in 20 years.** Full automation over 20 periods, wage collapse before the end
 (elasticity −0.50, haircut 0.40, reabsorption ~0), productivity near ceiling, capital keeps the
-gains (0.80 retained). Their aggressive variant (AGI-5y: end 1.0 with n_periods=5, collapse at year
-~3) is a sensitivity run, not a separate preset.
+gains (0.80 retained), states forced onto spending cuts.
 
-**⑥ AI 2027 — Takeoff.** Cognitive feasibility 1.0 near-immediately, robots ramp in 3y (SEZ
+**⑥ Korinek-Suh — AGI in 5 years.** The aggressive transition as its own preset (the stress case the
+fiscal question most needs): kinked adoption reaching 1.0 at year 5 — their wage collapse hits ~year
+3 — over a 10-year window, crash robotics build-out (lag 2), heavy compute (auto_cost 0.20), mass LFP
+exit (0.10/yr), crisis demand regime (dm 1.5), growth at the explosion band's edge (0.08).
+
+**⑦ AI 2027 — Takeoff.** Cognitive feasibility 1.0 near-immediately, robots ramp in 3y (SEZ
 build-out), adoption ceiling by year ~5, heavy compute investment (auto_cost 0.30), growth 0.08.
 Note the authors' own updated medians (Dec 2030 / Jan 2035) have slipped from the scenario's dates —
 this preset is the *shape* of a fast takeoff, dated optimistically.
@@ -149,10 +162,11 @@ this preset is the *shape* of a fast takeoff, dated optimistically.
 
 ## 5. Calibration tensions with DEFAULTS_SHIPPED
 
-1. **`automation_tax_rate = 0.07` is far above the optimal-tax literature.** On the saved-bill base
-   it is equivalent to a ~23–70% ad-valorem robot tax (depending on auto_cost); Costinot-Werning's
-   ceiling is 3.7%, Thuemmel's published answer is ≈0, GRT's steady state is 0. Recommend shipping
-   ~0.01 (≈ CW central at auto_cost 0.3) or 0 with the tax moved to the overlays.
+1. **`automation_tax_rate = 0.07` was far above the optimal-tax literature.** On the saved-bill base
+   it was equivalent to a ~23–70% ad-valorem robot tax (depending on auto_cost); Costinot-Werning's
+   ceiling is 3.7%, Thuemmel's published answer is ≈0, GRT's steady state is 0.
+   **RESOLVED (presets build): `DEFAULTS_SHIPPED.automation_tax_rate = 0.0`** — taxation moved
+   entirely to the policy overlays (`fiscal_model/presets.py`).
 2. **`demand_multiplier = 0.5` is the monetary-offset reading.** Chodorow-Reich's cross-sectional
    1.8 (national ≥1.7 with passive Fed) and ADH's ≥2× amplification argue crisis presets need
    1.0–1.8; 0.5 remains defensible as a shipped default with an active Fed.

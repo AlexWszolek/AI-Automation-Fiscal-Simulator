@@ -54,7 +54,10 @@ PERTURBED = {
     "auto_cost": (0.0, 1.0), "offshore_share": (0.0, 1.0), "compute_effective_rate": (0.0, 1.0),
     "automation_tax_rate": (0.0, 1.0),          # bound rule (after shares + auto_cost)
     "ubi_recapture_rate": (0.0, 1.0), "baseline_growth_rate": (0.0, 0.10),
-    "demand_multiplier": (0.0, 1.0), "price_passthrough": (0.0, 1.0),
+    # dm bound tracks the UI slider max (2.0): a (0,1) bound would clip every draw around a preset
+    # base of 1.2–1.5 to exactly 1.0 — point mass at the edge, degenerate tornado row. ρ ≈ 0.22·dm
+    # stays < 1 even for ±2σ draws around 2.0 (the model's fail-loud guard is the backstop).
+    "demand_multiplier": (0.0, 2.0), "price_passthrough": (0.0, 1.0),
     "productivity_passthrough": (0.0, 1.0),
     "mpc": (0.01, 1.0), "consumption_stickiness": (0.01, 1.0),
     "interest_rate": (0.0, 0.10), "ubi_annual": (0.0, np.inf), "ssdi_annual": (0.0, np.inf),

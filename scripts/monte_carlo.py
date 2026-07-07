@@ -8,6 +8,7 @@ HTML fan/tornado charts (altair — no extra deps needed for HTML export).
 Examples:
   .venv/bin/python scripts/monte_carlo.py --n 2000 --spread 0.15 --seed 0
   .venv/bin/python scripts/monte_carlo.py --preset shipped --set ubi_annual=12000 --set demand_multiplier=0.6
+  .venv/bin/python scripts/monte_carlo.py --preset ai-2027 --overlay cw-robot-tax --n 500
 """
 from __future__ import annotations
 
@@ -23,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))   # project root
 import numpy as np
 import pandas as pd
 
-from fiscal_model import loaders, mc, reabsorption
+from fiscal_model import loaders, mc, presets, reabsorption
 from fiscal_model.dynamics import precompute_worker_deltas
 from fiscal_model.kernel import KernelParams
 from fiscal_model.levers_v2 import DEFAULTS_SHIPPED, DEFAULTS_V1REDUCTION, V2Params
@@ -42,8 +43,12 @@ def main() -> None:
     ap.add_argument("--n", type=int, default=2000)
     ap.add_argument("--spread", type=float, default=0.15)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--periods", type=int, default=10)
-    ap.add_argument("--preset", choices=["shipped", "reduction"], default="shipped")
+    ap.add_argument("--periods", type=int, default=None,
+                    help="horizon (default: the preset's native horizon; 10 for shipped/reduction)")
+    ap.add_argument("--preset", choices=["shipped", "reduction", *presets.PRESETS], default="shipped")
+    ap.add_argument("--overlay", action="append", default=[], choices=list(presets.OVERLAYS),
+                    help="policy overlay applied after --set (repeatable; derives from the final "
+                         "auto_cost/retained, so --set auto_cost=… affects the robot-tax rate)")
     ap.add_argument("--rung", type=int, choices=[0, 1], default=None,
                     help="reabsorption rung (default: 1 if the engine artifacts exist)")
     ap.add_argument("--set", action="append", default=[], metavar="LEVER=VALUE",
@@ -51,14 +56,23 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 
-    base = DEFAULTS_SHIPPED if args.preset == "shipped" else DEFAULTS_V1REDUCTION
     rung = args.rung if args.rung is not None else (1 if reabsorption.engine_artifacts_exist() else 0)
     overrides = dict(parse_set(kv) for kv in getattr(args, "set"))
     if "ui_weeks" in overrides:
         overrides["ui_weeks"] = int(overrides["ui_weeks"])
-    base = replace(base, **SCEN, n_periods=args.periods,
-                   adoption_path=list(np.linspace(0.1, 0.9, args.periods)),
-                   reabsorption_rung=rung, **overrides)
+    if args.preset in presets.PRESETS:
+        # named preset: its own scenario + horizon — no SCEN/adoption stomp
+        base = presets.to_params(presets.PRESETS[args.preset], n_periods=args.periods)
+        base = replace(base, reabsorption_rung=rung, **overrides)
+    else:
+        periods = args.periods if args.periods is not None else 10
+        base = DEFAULTS_SHIPPED if args.preset == "shipped" else DEFAULTS_V1REDUCTION
+        base = replace(base, **SCEN, n_periods=periods,
+                       adoption_path=list(np.linspace(0.1, 0.9, periods)),
+                       reabsorption_rung=rung, **overrides)
+    base, overlay_notes = presets.apply_overlays(base, args.overlay)
+    for note in overlay_notes:
+        print("overlay:", note)
 
     out = args.out or Path("data/mc_runs") / time.strftime("%Y%m%d-%H%M%S")
     out.mkdir(parents=True, exist_ok=True)
@@ -80,6 +94,7 @@ def main() -> None:
     (out / "summary.json").write_text(json.dumps({
         "base": {f: (v if not isinstance(v, (list, tuple)) else list(v))
                  for f, v in vars(base).items()},
+        "preset": args.preset, "overlays": args.overlay, "overlay_notes": overlay_notes,
         "n": args.n, "spread": args.spread, "seed": args.seed, "runtime_s": round(runtime, 1),
         "percentiles": res.percentiles.to_dict(orient="records"),
         "tornado": res.tornado.to_dict(orient="records"),

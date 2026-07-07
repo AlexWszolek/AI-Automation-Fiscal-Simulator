@@ -232,6 +232,16 @@ retained′·(1−auto_cost′); off values never perturbed). FROZEN per draw: c
 and the declared-but-inert placeholders. mpc/stickiness sensitivity reflects only their live paths.
 | `surplus_capture`, `dividend_tax_rate`, `passthrough_individual_rate`, `marginal_taxable_multiplier` | frozen in the delta cache | build-time only — inert on a fixed cache |
 
+**Scenario presets & policy overlays** (`fiscal_model/presets.py`): seven literature-anchored world
+states (Acemoglu-modest → AI-2027 takeoff) load full lever configurations into the sidebar; four
+policy overlays (Costinot-Werning / GRT robot taxes, UBI + recapture, compute-pool parity) compose on
+top and OVERRIDE the corresponding levers. Presets ship with `automation_tax_rate = 0` — taxation is
+an overlay, so scenario (what the world does) and policy (what government recovers) stay separable.
+Robot-tax overlays convert ad-valorem-on-robot-spending rates to our saved-bill base by × `auto_cost`.
+Values, anchors, and validation targets: `docs/PRESET_EVIDENCE.md`; every preset passes the full
+conservation battery (`tests/test_presets.py`). CLI: `scripts/monte_carlo.py --preset ai-2027
+--overlay cw-robot-tax`.
+
 ---
 
 ## Conservation identities (the invariants these equations satisfy)

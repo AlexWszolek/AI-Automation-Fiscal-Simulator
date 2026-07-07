@@ -14,6 +14,7 @@ Run:  .venv/bin/streamlit run app/streamlit_app.py
 """
 from __future__ import annotations
 
+import math
 import sys
 from dataclasses import replace
 from pathlib import Path
@@ -25,6 +26,7 @@ import pandas as pd
 import streamlit as st
 
 from fiscal_model import loaders, levers, reabsorption
+from fiscal_model import presets as presets_mod
 from fiscal_model.dynamics import DynamicModel, DynamicsParams, precompute_worker_deltas
 from fiscal_model.dynamics_v2 import DynamicModelV2
 from fiscal_model.kernel import KernelParams
@@ -82,6 +84,68 @@ st.title("AI Automation — Fiscal Consequences")
 sb = st.sidebar
 engine = sb.radio("Engine", ["v2 — multi-actor (feedbacks)", "v1 — static kernel"], index=0)
 is_v2 = engine.startswith("v2")
+
+# ----------------------------------------------------------------- scenario presets (v2 only)
+# Loading mechanism: NO sidebar widget passes key=, so streamlit hashes each widget's identity from
+# its parameters (label/min/max/value/step/help). Swapping a widget's value= default when the preset
+# changes therefore RESETS it to the preset value, while user tweaks persist as long as the preset
+# stays put. DO NOT add a static key= to these widgets — with a user key the identity shrinks to
+# min/max/step and preset loading silently stops working. Known limit: if two presets share a
+# widget's default, switching between them does not clear a tweak on that widget — the "modified
+# from preset" caption (main area) is the honest surface for that.
+_CUSTOM_DEFAULTS = dict(cog=0.70, phys=0.20, robotics_lag=4, adopt0=0.10, adopt1=0.60, n_periods=10,
+                        reab=0.0, haircut=0.30, ui_weeks=26, interest=0.03, ubi=0,
+                        retained=0.6, price=0.2, auto_cost=0.10, compute_rate=0.10,
+                        unbounded=False, ceiling=1.5, elasticity=-0.15, spillover=0.5,
+                        price_pt=0.3, prod_pt=0.30, growth=0.04, lfp=0.03, attrition=0.025,
+                        atax=0.0, ubi_recapture=0.25, demand=0.5,
+                        state_resp="mix", state_cut=0.0, rate_cap=1.0)
+
+
+def preset_widget_defaults(preset) -> dict:
+    """Widget defaults derived from to_params(preset) — presets.py stays the single source of truth."""
+    p = presets_mod.to_params(preset)
+    return dict(cog=p.cognitive_feasibility, phys=p.physical_feasibility,
+                robotics_lag=int(p.robotics_lag), adopt0=preset.adoption_start,
+                adopt1=preset.adoption_end, n_periods=p.n_periods,
+                reab=p.reabsorption_rate, haircut=p.reemployment_haircut, ui_weeks=p.ui_weeks,
+                interest=p.interest_rate, ubi=int(p.ubi_annual),
+                retained=p.retained_profit_share, price=p.price_reduction_share,
+                auto_cost=p.auto_cost, compute_rate=p.compute_effective_rate,
+                unbounded=math.isinf(p.survivor_raise_ceiling),
+                ceiling=p.survivor_raise_ceiling if math.isfinite(p.survivor_raise_ceiling) else 1.5,
+                elasticity=p.survivor_elasticity, spillover=p.survivor_spillover_to_profit,
+                price_pt=p.price_passthrough, prod_pt=p.productivity_passthrough,
+                growth=p.baseline_growth_rate, lfp=p.lfp_exit_rate, attrition=p.attrition_rate,
+                atax=p.automation_tax_rate, ubi_recapture=p.ubi_recapture_rate,
+                demand=p.demand_multiplier, state_resp=p.state_response,
+                state_cut=p.state_cut_share, rate_cap=p.state_rate_hike_cap)
+
+
+_preset = None
+overlay_keys: list = []
+if is_v2:
+    _names = {p.name: k for k, p in presets_mod.PRESETS.items()}
+    _choice = sb.selectbox("Scenario preset", ["Custom"] + list(_names),
+                           help="Literature-anchored world states (docs/PRESET_EVIDENCE.md). "
+                                "Selecting one loads its levers into the sliders below; tweak from "
+                                "there. Government policy (robot tax, UBI, compute taxation) "
+                                "composes separately as overlays.")
+    if _choice != "Custom":
+        _preset = presets_mod.PRESETS[_names[_choice]]
+        sb.caption(_preset.blurb + ("" if rung1_ok else " ⚠️ Presets are calibrated to the "
+                                    "service-floor reabsorption engine — artifacts absent, running "
+                                    "the flat-haircut fallback degrades their fidelity."))
+    overlay_keys = sb.multiselect(
+        "Policy overlays", list(presets_mod.OVERLAYS),
+        format_func=lambda k: presets_mod.OVERLAYS[k].name,
+        help="Applied ON TOP of the sliders, after everything else — they OVERRIDE the "
+             "corresponding levers (captions below show exactly what was set).")
+    if all(k in overlay_keys for k in ("cw-robot-tax", "grt-robot-tax")):
+        sb.warning("Both robot taxes set the same lever — using Costinot-Werning, dropping GRT.")
+        overlay_keys.remove("grt-robot-tax")
+
+d = preset_widget_defaults(_preset) if _preset is not None else _CUSTOM_DEFAULTS
 st.caption("Set the levers; the accounting is the point. Watch the tax base migrate from **labor** to "
            "**capital**, revenue fall faster than employment, and — unlike Washington — **states must "
            "balance**, so they hike rates until they can't, then cut. "
@@ -90,30 +154,40 @@ st.caption("Set the levers; the accounting is the point. Watch the tax base migr
 
 # ----------------------------------------------------------------- shared scenario levers
 sb.header("Automation scenario")
-cog = sb.slider("Cognitive feasibility (AI capability)", 0.0, 1.0, 0.70, 0.05)
-phys = sb.slider("Robotics feasibility (physical work)", 0.0, 1.0, 0.20, 0.05)
-robotics_lag = sb.slider("Robotics capacity build-out lag (years)", 0, 15, 4, 1,
+cog = sb.slider("Cognitive feasibility (AI capability)", 0.0, 1.0, d["cog"], 0.05)
+phys = sb.slider("Robotics feasibility (physical work)", 0.0, 1.0, d["phys"], 0.05)
+robotics_lag = sb.slider("Robotics capacity build-out lag (years)", 0, 15, d["robotics_lag"], 1,
                          help="Physical automation needs AI-driven industrial capacity: the robot channel "
                               "ramps linearly from 0 to full feasibility over this many years (0 = "
                               "capacity exists from day one). v2 only.")
-adopt0 = sb.slider("Automated by year 1 — % of feasible work", 0.0, 1.0, 0.10, 0.05)
-adopt1 = sb.slider("Automated by the final year — % of feasible work", 0.0, 1.0, 0.60, 0.05,
+adopt0 = sb.slider("Automated by year 1 — % of feasible work", 0.0, 1.0, d["adopt0"], 0.01)
+adopt1 = sb.slider("Automated by the final year — % of feasible work", 0.0, 1.0, d["adopt1"], 0.01,
                    help="A cumulative diffusion CEILING: the automated stock reaches feasibility × this "
                         "share by the horizon (an S-curve), so 0.6 ≈ 60% of the feasibly-automatable jobs "
                         "are automated by the end — not a compounding per-year rate.")
-n_periods = sb.slider("Horizon (years)", 3, 30, 10)
+n_periods = sb.slider("Horizon (years)", 3, 30, d["n_periods"])
 mapping = sb.selectbox("Exposure → share mapping", ["percentile", "logistic"])
-adoption_path = list(np.linspace(adopt0, adopt1, n_periods))
+# The kinked preset path survives horizon changes (it is parametric), but moving the adoption
+# sliders reverts to a linear ramp. isclose, not ==: the frontend returns min+k·step in JS doubles.
+if (_preset is not None and _preset.adoption_reach_year is not None
+        and math.isclose(adopt0, _preset.adoption_start, abs_tol=0.004)
+        and math.isclose(adopt1, _preset.adoption_end, abs_tol=0.004)):
+    adoption_path = presets_mod.build_adoption_path(_preset, n_periods)
+else:
+    adoption_path = list(np.linspace(adopt0, adopt1, n_periods))
+    if _preset is not None and _preset.adoption_reach_year is not None:
+        sb.caption(f"⚠️ Adoption sliders moved — the preset's kinked path (full automation at year "
+                   f"{_preset.adoption_reach_year}) was replaced by a linear ramp.")
 
 sb.header("Labor market")
-reab = sb.slider("Reabsorption rate / yr  (0 = the thesis)", 0.0, 1.0, 0.0, 0.05)
-haircut = sb.slider("Re-employment wage cut (haircut)", 0.0, 1.0, 0.30, 0.05,
+reab = sb.slider("Reabsorption rate / yr  (0 = the thesis)", 0.0, 1.0, d["reab"], 0.025)
+haircut = sb.slider("Re-employment wage cut (haircut)", 0.0, 1.0, d["haircut"], 0.01,
                     help="The reabsorbed re-emerge at (1−haircut)×origin wage, floored at a state service "
                          "wage. 0 = full-wage recovery (fiscally whole); a bigger cut drops the household "
                          "toward EITC/SNAP/Medicaid eligibility.")
-ui_weeks = sb.slider("UI duration (weeks)", 0, 52, 26)
-interest = sb.slider("Interest rate on federal debt", 0.0, 0.10, 0.03, 0.005)
-ubi = sb.slider("UBI per worker / yr ($)", 0, 30_000, 0, 1_000)
+ui_weeks = sb.slider("UI duration (weeks)", 0, 52, d["ui_weeks"])
+interest = sb.slider("Interest rate on federal debt", 0.0, 0.10, d["interest"], 0.005)
+ubi = sb.slider("UBI per worker / yr ($)", 0, 30_000, d["ubi"], 1_000)
 
 if not is_v2:
     # -------------------------------------------------- v1 path (unchanged thesis demo) --------------
@@ -155,29 +229,34 @@ if not is_v2:
 
 # -------------------------------------------------- v2 path (multi-actor) ----------------------------
 sb.header("① Firm disposition of saved wages")
-retained = sb.slider("→ Retained profit (share of net saving)", 0.0, 1.0, 0.6, 0.05)
+retained = sb.slider("→ Retained profit (share of net saving)", 0.0, 1.0, d["retained"], 0.05)
 price_max = round(1.0 - retained, 2)
 if price_max > 0:
-    price = sb.slider("→ Price reduction (share)", 0.0, price_max, min(0.2, price_max), 0.05)
+    # min() keeps a preset's default legal after the user raises `retained` past it (e.g. Windfall
+    # loads price=0.50; retained dragged to 0.80 would otherwise put value > max and crash).
+    price = sb.slider("→ Price reduction (share)", 0.0, price_max, min(d["price"], price_max), 0.05)
 else:
     price = 0.0                                              # retained = 100% → no room for price/survivor
 survivor_share = max(0.0, 1.0 - retained - price)
 sb.caption(f"→ **Survivor raises**: {survivor_share:.0%} (the remainder)")
-auto_cost = sb.slider("Cost of automation (fraction of comp → compute)", 0.0, 1.0, 0.10, 0.05)
-compute_rate = sb.slider("Compute pool — effective tax rate", 0.0, 0.4, 0.10, 0.01)
+auto_cost = sb.slider("Cost of automation (fraction of comp → compute)", 0.0, 1.0, d["auto_cost"], 0.05)
+compute_rate = sb.slider("Compute pool — effective tax rate", 0.0, 0.4, d["compute_rate"], 0.01)
 
 sb.header("② Survivor wages  [A]")
-survivor_unbounded = sb.checkbox("Unbounded raise (optimistic)", value=False)
-ceiling = sb.slider("Raise ceiling (× baseline wage)", 1.0, 3.0, 1.5, 0.1, disabled=survivor_unbounded)
-elasticity = sb.slider("Market wage elasticity to slack (− substitute / + complement)", -0.5, 0.5, -0.15, 0.05)
-spillover = sb.slider("Un-absorbable raise → profit (vs price)", 0.0, 1.0, 0.5, 0.05)
+survivor_unbounded = sb.checkbox("Unbounded raise (optimistic)", value=d["unbounded"])
+ceiling = sb.slider("Raise ceiling (× baseline wage)", 1.0, 3.0, d["ceiling"], 0.1,
+                    disabled=survivor_unbounded)
+elasticity = sb.slider("Market wage elasticity to slack (− substitute / + complement)", -0.5, 0.5,
+                       d["elasticity"], 0.05)
+spillover = sb.slider("Un-absorbable raise → profit (vs price)", 0.0, 1.0, d["spillover"], 0.05)
 
 sb.header("③ Macro feedback")
-price_pt = sb.slider("Price pass-through (deflation → real/%-GDP only)", 0.0, 1.0, 0.3, 0.05)
-prod_pt = sb.slider("Productivity dividend (full automation → +this share of GDP)", 0.0, 1.0, 0.30, 0.05,
+price_pt = sb.slider("Price pass-through (deflation → real/%-GDP only)", 0.0, 1.0, d["price_pt"], 0.05)
+prod_pt = sb.slider("Productivity dividend (full automation → +this share of GDP)", 0.0, 1.0,
+                    d["prod_pt"], 0.05,
                     help="Output-weighted: automation of the high-value work first. Grows real GDP, so "
                          "it cushions the deficit as a share of GDP (switch the denominator below to see it).")
-growth = sb.slider("Baseline trend growth (nominal, %-GDP denominators)", 0.0, 0.08, 0.04, 0.005,
+growth = sb.slider("Baseline trend growth (nominal, %-GDP denominators)", 0.0, 0.08, d["growth"], 0.005,
                    help="≈2% real + 2% inflation. Grows the GDP denominator over time so debt/GDP is "
                         "honest at long horizons; nominal dollar columns are unchanged.")
 
@@ -185,8 +264,8 @@ sb.header("④ Government & demand  [H]")
 rung = 1 if rung1_ok else 0
 if not rung1_ok:
     sb.warning("Benefit-lookup / NOC artifacts absent — reabsorption falls back to the flat-haircut model.")
-lfp_exit = sb.slider("LFP exit / SSDI rate (of exhausted)", 0.0, 0.2, 0.03, 0.01)
-attrition = sb.slider("Natural attrition of long-term unemployed / yr", 0.0, 0.1, 0.025, 0.005,
+lfp_exit = sb.slider("LFP exit / SSDI rate (of exhausted)", 0.0, 0.2, d["lfp"], 0.01)
+attrition = sb.slider("Natural attrition of long-term unemployed / yr", 0.0, 0.1, d["attrition"], 0.005,
                       help="Retirement / mortality / discouragement — so the exhausted don't sit forever.")
 # The robot tax is paid from retained profit, so its feasible max is retained·(1−auto_cost). When that
 # bound collapses (e.g. auto_cost → 1: automation costs eat the whole saved bill), there is no profit to
@@ -198,19 +277,24 @@ if atx_bound < 0.01:
                "(retained × (1−auto cost) ≈ 0).")
 else:
     automation_tax = sb.slider("Automation (robot) tax — share of the automated comp bill", 0.0, atx_bound,
-                               min(0.07, atx_bound), 0.01,
-                               help="The government response: a federal levy on the automated jobs' saved "
-                                    "compensation, PAID from retained profit (corp-deductible) — so the max "
-                                    "is bounded by the profit share. Watch it pull the deficit back.")
-ubi_recapture = sb.slider("UBI recapture (tax clawback + benefit crowd-out)", 0.0, 0.6, 0.25, 0.05,
+                               min(d["atax"], atx_bound), 0.01,
+                               help="A federal levy on the automated jobs' saved compensation, PAID from "
+                                    "retained profit (corp-deductible) — so the max is bounded by the "
+                                    "profit share. Ships at 0: the literature-anchored rates live in the "
+                                    "policy overlays above (Costinot-Werning ≈ 0.3–1%, not 7%).")
+ubi_recapture = sb.slider("UBI recapture (tax clawback + benefit crowd-out)", 0.0, 0.6,
+                          d["ubi_recapture"], 0.05,
                           help="Share of the UBI outlay the government gets back — income-tax clawback "
                                "plus means-tested benefits the UBI displaces (~20–30% in practice).")
-demand = sb.slider("Second-round demand multiplier", 0.0, 1.0, 0.5, 0.05,
+demand = sb.slider("Second-round demand multiplier", 0.0, 2.0, d["demand"], 0.05,
                    help="Okun-style LEVEL multiplier: the induced-layoff stock tracks the standing net "
-                        "demand shortfall — UBI/raises visibly stabilize; austerity/wage cuts deepen it.")
-state_resp = sb.selectbox("State budget response", ["mix", "raise_rates", "cut_spending"])
-state_cut_share = sb.slider("Of the gap, share closed by spending cuts (mix)", 0.0, 1.0, 0.0, 0.05)
-rate_cap = sb.slider("Max feasible rate hike (× base)", 0.1, 3.0, 1.0, 0.1)
+                        "demand shortfall — UBI/raises visibly stabilize; austerity/wage cuts deepen it. "
+                        "0.5 ≈ an active Fed offsetting half; 1.8 = Chodorow-Reich's no-offset multiplier.")
+_sr_opts = ["mix", "raise_rates", "cut_spending"]
+state_resp = sb.selectbox("State budget response", _sr_opts, index=_sr_opts.index(d["state_resp"]))
+state_cut_share = sb.slider("Of the gap, share closed by spending cuts (mix)", 0.0, 1.0,
+                            d["state_cut"], 0.05)
+rate_cap = sb.slider("Max feasible rate hike (× base)", 0.1, 3.0, d["rate_cap"], 0.1)
 denominator = sb.radio("Headline denominator", ["absolute", "pct_gdp"], horizontal=True,
                        help="Switch to % of GDP to see the productivity dividend and price channel move the headline.")
 
@@ -230,11 +314,18 @@ ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
           state_cut_share=state_cut_share, state_rate_hike_cap=rate_cap, automation_tax_rate=automation_tax,
           interest=interest, ubi=ubi, ubi_recapture_rate=ubi_recapture, baseline_growth_rate=growth,
           denominator=denominator)
-res = DynamicModelV2(data, deltas, build_v2_params(ui)).run()
+# Overlays apply AFTER the sliders and OVERRIDE the corresponding levers; v2p is the single source
+# of truth for every consumer below (model run, JSON export, MC base, UBI warning).
+v2p, _overlay_notes = presets_mod.apply_overlays(build_v2_params(ui), overlay_keys)
+for _note in _overlay_notes:
+    sb.caption("🏛 " + _note)
+res = DynamicModelV2(data, deltas, v2p).run()
 sb.download_button("⬇ Export assumptions (JSON)",
                    _json.dumps({"engine": "v2",
+                                "preset": _preset.key if _preset is not None else "custom",
+                                "overlays": overlay_keys,
                                 "exportedAt": _dt.datetime.now().isoformat(timespec="seconds"),
-                                "levers": _dc.asdict(build_v2_params(ui))}, indent=1),
+                                "levers": _dc.asdict(v2p)}, indent=1),
                    "assumptions.json", "application/json")
 final = res.iloc[-1]
 
@@ -249,6 +340,29 @@ c[2].metric("Federal debt (Δ cumulative)", f"${final['fed_debt_B']:,.0f}B")
 c[3].metric("State gap (must close/yr)", f"${final['state_gap_B']:,.0f}B",
             help="Closed by rate hikes until the cap binds, then forced spending cuts.")
 c[4].metric("States hitting rate cap", f"{int(final['n_states_capped'])} / 51")
+
+if _preset is not None:
+    # deviation check on the preset-controlled fields only; isclose absorbs JS-double slider echoes
+    _pp = presets_mod.to_params(_preset, n_periods=ui["n_periods"])
+    _ui_p = build_v2_params(ui)
+
+    def _differs(a, b):
+        if isinstance(a, list) and isinstance(b, list):
+            return not np.allclose(np.asarray(a, float), np.asarray(b, float), atol=1e-9)
+        if isinstance(a, float) or isinstance(b, float):
+            return not math.isclose(float(a), float(b), abs_tol=1e-6)
+        return a != b
+
+    _mods = [f for f in sorted(set(_preset.overrides) | {"adoption_path"})
+             if _differs(getattr(_ui_p, f), getattr(_pp, f))]
+    if _mods:
+        st.caption("⚠️ sliders modified from the preset: " + ", ".join(f"`{f}`" for f in _mods))
+    with st.expander(f"Preset provenance — {_preset.name}"):
+        st.caption("Anchors from `docs/PRESET_EVIDENCE.md` — every number fetch-verified against "
+                   "the cited paper (verbatim quotes + URLs in `docs/research/preset-evidence-raw.json`).")
+        for _fld, _src in _preset.provenance.items():
+            _val = getattr(_pp, _fld, None)
+            st.markdown(f"- **{_fld}**{f' = `{_val:g}`' if isinstance(_val, float) else ''} — {_src}")
 
 left, right = st.columns(2)
 with left:
@@ -269,9 +383,9 @@ with right:
     st.line_chart(res.set_index("period")[["W_survivor"]])
     st.line_chart(res.set_index("period")[["survivor_gain_fed_B", "survivor_wage_cost_B"]])
 
-if ubi > 0 and final["ubi_required_rate"] > 1.0:
-    st.warning(f"A \\${ubi:,}/yr UBI needs a **{final['ubi_required_rate']:.0%}** average rate on the eroded "
-               "base by the final year — **>100% is unfundable**.")
+if v2p.ubi_annual > 0 and final["ubi_required_rate"] > 1.0:   # v2p, not the slider: overlays add UBI too
+    st.warning(f"A \\${v2p.ubi_annual:,.0f}/yr UBI needs a **{final['ubi_required_rate']:.0%}** average rate "
+               "on the eroded base by the final year — **>100% is unfundable**.")
 
 # -------------------------------------------------- Fiscal summary table ----------------------------
 st.subheader("Fiscal summary")
@@ -320,16 +434,17 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
     mc_spread = mc2.slider("Spread (relative 1σ, ±2σ truncated)", 0.05, 0.30, 0.15, 0.01)
     mc_seed = mc3.number_input("Seed", 0, 9999, 0)
 
-    base_v2p = build_v2_params(ui)
+    base_v2p = v2p          # the FINAL params: preset + slider tweaks + overlays
 
     @st.cache_resource
-    def get_mc_context(frozen_key, _data, _deltas, _base):
+    def get_mc_context(base_repr, _data, _deltas, _base):
+        # Keyed on the FULL base repr: presets/overlays change PERTURBED fields, which are not in
+        # mc.FROZEN — a frozen-only key would silently return a context centered on a stale base.
         return mc_mod.ScenarioContext(_data, _deltas, _base)
 
     mc_key = (repr(base_v2p), mc_n, mc_spread, int(mc_seed))
     if st.button("Run Monte Carlo", type="primary"):
-        frozen_key = tuple(getattr(base_v2p, f) for f in mc_mod.FROZEN)
-        ctx = get_mc_context(frozen_key, data, deltas, base_v2p)
+        ctx = get_mc_context(repr(base_v2p), data, deltas, base_v2p)
         bar = st.progress(0.0, text="running draws…")
         result = mc_mod.run_mc(ctx, n=mc_n, spread=mc_spread, seed=int(mc_seed),
                                progress=lambda i, n: bar.progress(i / n, text=f"draw {i}/{n}"))
