@@ -1,0 +1,18 @@
+# Light, report-style theme — matches the technical report's print figures.
+[theme]
+base = "light"
+primaryColor = "#2c5f8a"                 # deep blue: buttons, sliders, focus states
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f6f8"     # sidebar + widget wells
+textColor = "#1a1f2b"
+font = "sans serif"
+# categorical series palette (colorblind-aware, professional); charts also set colors explicitly
+chartCategoricalColors = [
+  "#3b6ea5",  # blue
+  "#d9a441",  # amber
+  "#4e937a",  # teal-green
+  "#b3554d",  # muted red
+  "#7d6ca3",  # purple
+  "#6b7b8c",  # slate
+  "#a98467",  # brown
+]

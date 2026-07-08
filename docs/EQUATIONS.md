@@ -222,6 +222,9 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `ubi_annual` | `ubi_outlay = ubi·baseline_emp` | federal outlay ↑ + reported required rate |
 | `denominator` | headline = $B or %-GDP | reporting only |
 | `mpc`, `consumption_stickiness` | **live** in Step 9 (+ frozen in cons cache) | second-round demand magnitude |
+| `income_tax_mult` | scales `ch[inc_fed]`, `ch[inc_state]`, `ui_tax`, survivor inc recapture (Step 7) | flat income-tax surcharge/cut on the SHOCK's flows (static scoring; payroll, demand basis, baseline anchors untouched); 1.0 = current law |
+| `corp_tax_mult` | scales `corp_offset` + `overflow_corp_tax` (Steps 3–5) | capital-tax mult on the recapture bundle (corp+dividend+pass-through); compute/robot taxes keep their own rates |
+| `cons_tax_mult` | scales `ch[cons_state]` (Step 7) | state consumption-tax surcharge/cut (reaches the rung-1 reab term that `consumption_scale` cannot) |
 
 **Monte Carlo whitelist** (`fiscal_model/mc.py`): the local-uncertainty sampler perturbs all CONTINUOUS
 levers above (constraint-aware: disposition shares renormalized on the simplex; the robot tax clipped to

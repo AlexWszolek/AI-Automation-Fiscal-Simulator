@@ -87,7 +87,7 @@ fiscal_delta(worker) =
 - [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
 - [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
 - [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
-- [x] **Website** — `app/streamlit_app.py`: interactive levers → live deficit/debt/employment/state-gap charts + cost→offset→net + UBI required-rate; verified rendering
+- [x] **Website** — `app/streamlit_app.py`: light report-style theme, static labeled charts with captions, collapsible lever groups with per-lever help, two headline rows (jobs lost, cumulative income-tax loss, GDP effect, …), a state section (shortfall-before-response + hardest-hit table), and tax-regime dials (income/capital/consumption ×)
 - [x] **Scenario presets** — `fiscal_model/presets.py`: 7 literature-anchored world states (Acemoglu → AI-2027) + 4 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
 
 ### Complete: model backend + website

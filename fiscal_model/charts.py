@@ -39,12 +39,18 @@ def fan_chart(percentiles: pd.DataFrame, base_run: pd.DataFrame, metric: str,
 
 
 def tornado_chart(tornado: pd.DataFrame, target: str, title: str = "",
-                  top: int = 15, width: int = 520) -> alt.Chart:
-    """Signed Spearman-ρ bars for the |ρ|-ranked top levers against one final-year target."""
+                  top: int = 15, width: int = 520,
+                  pos_color: str | None = None, neg_color: str | None = None) -> alt.Chart:
+    """Signed Spearman-ρ bars for the |ρ|-ranked top levers against one final-year target.
+
+    Pass pos_color/neg_color to color by sign (e.g. worsens-the-deficit vs improves)."""
     t = tornado.query("target == @target").head(top)
+    color = (alt.condition("datum.spearman > 0", alt.value(pos_color), alt.value(neg_color))
+             if pos_color and neg_color else alt.Undefined)
     return alt.Chart(t).mark_bar().encode(
         x=alt.X("spearman:Q", title=f"Spearman ρ vs {target}"),
         y=alt.Y("lever:N", sort=t["lever"].tolist(), title=None),
+        color=color,
     ).properties(width=width, height=24 * len(t) + 20, title=title)
 
 

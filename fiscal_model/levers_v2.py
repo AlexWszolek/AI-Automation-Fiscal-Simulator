@@ -90,6 +90,20 @@ class V2Params:
     baseline_growth_rate: float = 0.0           # nominal trend growth g of the %-GDP DENOMINATORS only
     #   ((1+g)^t; ≈2% real + 2% inflation shipped). Nominal dollar columns and the job divisor are
     #   unchanged — fixes r>g=0 inverting the debt/GDP dynamics at long horizons. 0 = off (v1-reduction).
+    # ---------------- tax-regime multipliers (NEW; 1.0 = current law = v1) ----------------
+    # Flat surcharge/cut multipliers on each channel's SHOCK-INDUCED fiscal flows (static scoring):
+    # they rescale the ledger only — take-home pay for demand purposes, the reabsorption engine's
+    # wage math, and the absolute baseline revenue anchors all stay at current-law rates.
+    income_tax_mult: float = 1.0    # scales income-tax dollars: displaced losses (fed+state), the
+    #   survivor raises' income-tax recapture, and the tax on UI benefits. Payroll (FICA) is
+    #   statutorily distinct and deliberately NOT covered. Note the sign: under displacement a
+    #   higher-income-tax regime LOSES more revenue per displaced worker.
+    corp_tax_mult: float = 1.0      # scales the CAPITAL-tax recapture bundle: the corporate offset
+    #   (corp + dividend + pass-through individual tax on the routed surplus) and the survivor
+    #   overflow's corporate tax. Compute-pool and robot taxes keep their own rates.
+    cons_tax_mult: float = 1.0      # scales the state consumption-tax channel (the US has no
+    #   federal consumption tax). Unlike the structural consumption_scale, this is live per-run
+    #   and also reaches the rung-1 reabsorbed consumption term.
     ubi_recapture_rate: float = 0.0             # share of the UBI outlay recaptured (income-tax clawback +
     #   means-tested crowd-out combined; literature ~20-30%). The baked transfer grids never see UBI as
     #   income (UBI never enters the interp argument), so this is the ONLY clawback — no double-count.
@@ -188,4 +202,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         # Overhaul: new gated policy levers (0 at reduction). (ssdi_annual is NOT listed: it is inert at
         # reduction via lfp_exit_rate=0, and the same default ships in both configs.)
         "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate",
-        "robotics_lag"))
+        "robotics_lag",
+        # tax-regime multipliers: 1.0 = current law (their off value)
+        "income_tax_mult", "corp_tax_mult", "cons_tax_mult"))

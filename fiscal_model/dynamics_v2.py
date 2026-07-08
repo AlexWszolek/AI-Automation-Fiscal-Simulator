@@ -132,6 +132,11 @@ class DynamicModelV2:
         assert params.automation_tax_rate <= params.retained_profit_share * (1.0 - params.auto_cost) + 1e-9, \
             "automation_tax_rate exceeds retained_profit_share·(1−auto_cost) — no profit left to pay it"
         assert 0.0 <= params.baseline_growth_rate <= 0.10, "baseline_growth_rate out of [0, 0.10]"
+        for _n, _v in (("income_tax_mult", params.income_tax_mult),
+                       ("corp_tax_mult", params.corp_tax_mult),
+                       ("cons_tax_mult", params.cons_tax_mult)):
+            # surcharges may exceed 1 (not the [0,1] loop above); negative/non-finite is nonsense
+            assert np.isfinite(_v) and _v >= 0.0, f"{_n}={_v} must be finite and ≥ 0"
         assert params.ssdi_annual >= 0.0, "ssdi_annual must be ≥ 0"
         assert params.robotics_lag >= 0.0, "robotics_lag must be ≥ 0 (years of capacity build-out)"
         assert (params.reabsorption_rung, params.reabsorption_floor_pctile, params.consumption_scale,
@@ -203,6 +208,9 @@ class DynamicModelV2:
         p = v1.p
         st = workers.WorkerStocks.initial(v1.emp0)        # 5-state machine (Phase 1)
         reab_factor = workers.reabsorbed_loss_factor(v2p) if v2p.reabsorption_rung == 0 else None
+        # tax-regime multipliers (static scoring, ledger-only). Skip the multiply entirely at 1.0 —
+        # the C8 fast path stays bit-identical and no extra arrays are allocated.
+        im, cm, km = v2p.income_tax_mult, v2p.corp_tax_mult, v2p.cons_tax_mult
         debt = 0.0
         baseline_emp = v1.emp0.sum()
         baseline_rev = None
@@ -252,9 +260,20 @@ class DynamicModelV2:
                 else:                                          # Rung 1: full re-eval at w_d, all channels
                     cc = cc + st.reabsorbed * self._reab1[c]
                 ch[c] = cc
+            # tax-regime mults on the displaced channels — ONE site covers the during-UI blend, the
+            # after-phase, and BOTH reabsorption rungs (everything flows through ch). Fresh arrays,
+            # so no shared-cache mutation; every downstream consumer (net_fed, state_net, ledger
+            # deltas, output columns → C6/C6-state) reads these same entries.
+            if im != 1.0:
+                ch["inc_fed"] = ch["inc_fed"] * im
+                ch["inc_state"] = ch["inc_state"] * im
+            if km != 1.0:
+                ch["cons_state"] = ch["cons_state"] * km
 
             ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
-            ui_tax_fed = 0.10 * ui_outlay_fed
+            ui_tax_fed = 0.10 * ui_outlay_fed                 # income tax on UI benefits
+            if im != 1.0:
+                ui_tax_fed = ui_tax_fed * im
 
             # --- steps 3-4: disposition router. The AUTOMATED-JOBS base is the cumulative automation-
             #     displaced stock `auto_disp` (coherence fix): a job stays automated after the worker moves
@@ -288,8 +307,12 @@ class DynamicModelV2:
                 W_surv = min(W_surv, ceiling)                            # market truncated at the cap
             W_surv = max(W_surv, 0.0)
             sd = self._survivor.delta(W_surv)
-            sd_fed = (sd["inc_fed"] + sd["payroll"]) * employed_post      # per-cell GAIN (revenue +)
-            sd_state = sd["inc_state"] * employed_post
+            # income mult on the raises' income-tax recapture; payroll stays statutory (separable —
+            # the engine returns the three channels distinct)
+            sd_inc_fed = sd["inc_fed"] * im if im != 1.0 else sd["inc_fed"]
+            sd_inc_state = sd["inc_state"] * im if im != 1.0 else sd["inc_state"]
+            sd_fed = (sd_inc_fed + sd["payroll"]) * employed_post         # per-cell GAIN (revenue +)
+            sd_state = sd_inc_state * employed_post
 
             # the profit overflow is recovered as corporate tax at the same per-profit-$ rate the router
             # uses (Σ auto_disp·corp_pw / saved_bill — linear in the surplus base, note C); the price
@@ -297,6 +320,13 @@ class DynamicModelV2:
             corp_full = float((auto_disp * v1.corp).sum())
             corp_rate_per_profit = (corp_full / disp.saved_bill) if disp.saved_bill > 0 else 0.0
             overflow_corp_tax = corp_rate_per_profit * overflow_to_profit
+            # corp mult on the capital-recapture bundle — ONE local consumed at all three corp-offset
+            # sites (net_fed, ledger delta, corp_offset_B column); never inside route(), so the
+            # C2/C5b partition legs (retained/price/survivor) stay untouched.
+            corp_offset_cell = disp.corporate_offset_cell if cm == 1.0 \
+                else disp.corporate_offset_cell * cm
+            if cm != 1.0:
+                overflow_corp_tax = overflow_corp_tax * cm
             price_reduction_total = disp.price_reduction + overflow_to_price
 
             # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
@@ -312,7 +342,7 @@ class DynamicModelV2:
             # federal: losses positive; the survivor GAIN and the profit-overflow recovery are subtracted
             # (W<1 → sd<0 → adds to deficit); the survivor netting is ADDED (less corp recovery).
             fed = (ch["inc_fed"] + ch["payroll_fed"] + ch["transfer_fed"]
-                   + ui_outlay_fed - ui_tax_fed - disp.corporate_offset_cell - sd_fed)
+                   + ui_outlay_fed - ui_tax_fed - corp_offset_cell - sd_fed)
             net_fed = fed.sum() - cp.tax_fed - overflow_corp_tax
 
             # --- step 8: state balanced-budget close (H, C6-state, C7). Compose per-state net loss, then
@@ -385,13 +415,16 @@ class DynamicModelV2:
 
             rev_lost = ch["inc_fed"].sum() + ch["inc_state"].sum() + ch["payroll_fed"].sum()
             if baseline_rev is None:
-                baseline_rev = (v1.emp0 * (v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
+                # income mult on the two inc components (payroll not) keeps revenue_lost_pct a
+                # rate-consistent ratio — the numerator inherited the scaling through ch.
+                baseline_rev = (v1.emp0 * ((v1.arr["after"]["inc_fed"]
+                                            + v1.arr["after"]["inc_state"]) * im
                                            + v1.arr["after"]["payroll_fed"])).sum()
 
             # absolute ledger (Phase 5): federal revenue-side delta ($B, negative = revenue lost) +
             # post-close state figures, netted against the real base-linkage absolutes.
             fed_rev_delta_B = (-(ch["inc_fed"].sum() + ch["payroll_fed"].sum()) + ui_tax_fed.sum()
-                               + disp.corporate_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
+                               + corp_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
                                + overflow_corp_tax
                                + automation_tax) / 1e9   # automation tax is federal revenue (not UBI — an outlay)
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
@@ -413,7 +446,7 @@ class DynamicModelV2:
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,
                 "transfers_added_B": (ch["transfer_fed"].sum() + ch["transfer_state"].sum()
                                       + ui_outlay_fed.sum()) / 1e9,
-                "corp_offset_B": disp.corporate_offset_cell.sum() / 1e9,
+                "corp_offset_B": corp_offset_cell.sum() / 1e9,
                 "compute_pool_tax_B": cp.tax_fed / 1e9,
                 "saved_bill_B": disp.saved_bill / 1e9,
                 "automation_spend_B": disp.automation_spend / 1e9,
@@ -482,7 +515,31 @@ class DynamicModelV2:
             # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition ---
             st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate, v2p.attrition_rate)
 
+        # retain the FINAL period's state close for the per-state table (fresh arrays each call —
+        # verified safe to keep). An attribute, not output columns, so C8 (a column comparison) and
+        # the MC fast path (attribute lands on the per-draw shallow copy) are untouched.
+        self._last_close, self._last_state_net, self._last_taxable_base = close, state_net, taxable_base
         return pd.DataFrame(out)
+
+    @property
+    def state_table(self) -> pd.DataFrame:
+        """Final-year per-state close, one row per jurisdiction (row i ↔ v1.uniq_states[i]).
+
+        `net_B` is SIGNED (survivor-gain-heavy states can run a surplus; `shortfall_B` floors them
+        at 0); `spending_cut_B` includes PLANNED cuts under the mix — `at_cap` flags where a forced
+        component exists. Only populated after run(); unavailable through mc.ScenarioContext.run
+        (which returns just the DataFrame)."""
+        close = self._last_close
+        base = np.where(self._last_taxable_base > 0, self._last_taxable_base, np.nan)
+        return pd.DataFrame({
+            "state": self._v1.uniq_states,
+            "net_B": self._last_state_net / 1e9,
+            "shortfall_B": close.gap / 1e9,
+            "rate_hike_B": close.recovered / 1e9,
+            "spending_cut_B": close.spending_cut / 1e9,
+            "implied_rate_hike_pct": 100.0 * close.recovered / base,
+            "at_cap": close.capped,
+        })
 
 
 if __name__ == "__main__":
