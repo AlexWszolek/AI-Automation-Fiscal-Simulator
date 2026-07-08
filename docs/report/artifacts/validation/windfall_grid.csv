@@ -1,0 +1,7 @@
+scenario,capture,model_pct,target_pct
+low,high,-0.46,0.2
+low,low,-0.73,-1.8
+medium,high,-1.35,-2.8
+medium,low,-1.96,-7.7
+high,high,-2.42,-7.3
+high,low,-3.36,-15.3

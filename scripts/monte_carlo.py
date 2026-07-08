@@ -100,25 +100,15 @@ def main() -> None:
         "tornado": res.tornado.to_dict(orient="records"),
     }, indent=1, default=str))
 
-    import altair as alt
+    from fiscal_model import charts
+    charts.enable_print_theme()
     for mcol, fname in (("fed_deficit_B", "fan_deficit"), ("fed_debt_B", "fan_debt"),
                         ("employment_drop_pct", "fan_employment")):
-        wide = (res.percentiles.query("metric == @mcol")
-                .pivot(index="period", columns="pct", values="value").reset_index()
-                .rename(columns={p: f"p{p}" for p in mc.PCTS}))
-        wide["base"] = res.base_run[mcol].to_numpy()
-        chart = (alt.Chart(wide).mark_area(opacity=0.22).encode(x="period:Q", y="p10:Q", y2="p90:Q")
-                 + alt.Chart(wide).mark_area(opacity=0.35).encode(x="period:Q", y="p25:Q", y2="p75:Q")
-                 + alt.Chart(wide).mark_line(strokeWidth=2).encode(x="period:Q", y=alt.Y("p50:Q", title=mcol))
-                 + alt.Chart(wide).mark_line(strokeDash=[6, 3], color="black").encode(x="period:Q", y="base:Q"))
-        chart.properties(width=640, height=360, title=mcol).save(str(out / f"{fname}.html"))
+        charts.fan_chart(res.percentiles, res.base_run, mcol, title=mcol,
+                         width=640, height=360).save(str(out / f"{fname}.html"))
     for target, fname in (("final_fed_deficit_B", "tornado_deficit"),
                           ("final_employment_drop_pct", "tornado_employment")):
-        t = res.tornado.query("target == @target").head(15)
-        alt.Chart(t).mark_bar().encode(
-            x=alt.X("spearman:Q", title=f"Spearman ρ vs {target}"),
-            y=alt.Y("lever:N", sort=t["lever"].tolist(), title=None),
-        ).properties(width=520, height=24 * len(t) + 20).save(str(out / f"{fname}.html"))
+        charts.tornado_chart(res.tornado, target).save(str(out / f"{fname}.html"))
 
     top = res.tornado.query("target == 'final_fed_deficit_B'").head(5)
     print(f"artifacts → {out}")

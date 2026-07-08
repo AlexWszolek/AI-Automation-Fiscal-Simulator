@@ -19,3 +19,6 @@ data/interim/*.csv
 # Large external source extracts kept outside the repo (ACS PUMS, etc.)
 data/external/
 data/mc_runs/
+docs/report/artifacts/**/*.parquet
+scripts/docx_render/node_modules/
+docs/report/artifacts/docspec.json
