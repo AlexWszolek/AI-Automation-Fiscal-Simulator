@@ -81,8 +81,11 @@ def test_income_mult_exact_proportionality_and_direction(runs):
     # payroll, compute, robot tax untouched
     for col in ("payroll_fed_loss_B", "compute_pool_tax_B", "automation_tax_B", "ubi_recapture_B"):
         assert np.allclose(im0[col], base0[col], rtol=1e-12), col
-    # with feedback ON: a higher-income-tax regime loses MORE from displacement
-    assert r["im"]["fed_deficit_B"].iloc[-1] > r["base"]["fed_deficit_B"].iloc[-1]
+    # the DELTA side alone loses more per displaced worker, but the baseline surcharge dominates:
+    # net, a higher-income-tax regime IMPROVES the balance (total = mult·(baseline − losses))
+    assert r["im"]["fed_deficit_B"].iloc[-1] < r["base"]["fed_deficit_B"].iloc[-1]
+    extra_losses = (im0["inc_fed_loss_B"] - base0["inc_fed_loss_B"]).iloc[-1]
+    assert 0 < extra_losses < im0["income_surcharge_fed_B"].iloc[-1]   # both effects real; surcharge wins
     # revenue_lost_pct stays rate-consistent (numerator and denominator both scaled)
     assert np.allclose(im0["revenue_lost_pct"], base0["revenue_lost_pct"], rtol=5e-2)
 
@@ -99,15 +102,20 @@ def test_corp_mult_exact_proportionality_and_direction(runs):
     assert r["cm"]["fed_deficit_B"].iloc[-1] < r["base"]["fed_deficit_B"].iloc[-1]  # more recapture
 
 
-def test_cons_mult_state_side_only(runs):
+def test_cons_mult_channels(runs):
     r, _ = runs
-    base0, km0 = r["base0"], r["km0"]
+    base0, km0 = r["base0"], r["km0"]                  # km = 0.8: a consumption-tax CUT
     assert np.allclose(km0["cons_state_loss_B"], 0.8 * base0["cons_state_loss_B"], rtol=1e-12)
-    # federal columns untouched at dm=0 (no state-close feedback path back to the federal side)
-    for col in ("inc_fed_loss_B", "corp_offset_B", "fed_deficit_B"):
+    # the displaced-channel federal columns are untouched; the FEDERAL effect is exactly the
+    # excise surcharge (negative here — a cut loses baseline revenue)
+    for col in ("inc_fed_loss_B", "corp_offset_B"):
         assert np.allclose(km0[col], base0[col], rtol=1e-12), col
-    # the state gap shrinks with a smaller consumption loss (feedback ON)
-    assert r["km"]["state_gap_B"].sum() < r["base"]["state_gap_B"].sum()
+    assert np.allclose(km0["excise_surcharge_fed_B"], -0.2 * 101.6, rtol=1e-9)
+    assert np.allclose(km0["fed_deficit_B"] - base0["fed_deficit_B"], 0.2 * 101.6, rtol=1e-6)
+    # state side: the cut REDUCES the shock loss (smaller cons deltas) but FORFEITS baseline
+    # revenue (negative surcharge) — the baseline dominates, so gaps grow with a cut
+    assert np.allclose(km0["cons_surcharge_state_B"], -0.2 * 873.7, rtol=1e-9)
+    assert r["km"]["state_gap_B"].sum() > r["base"]["state_gap_B"].sum()
 
 
 def test_feedback_coupling_is_real(runs):
@@ -117,6 +125,50 @@ def test_feedback_coupling_is_real(runs):
     ratio = (r["im"]["inc_fed_loss_B"] / r["base"]["inc_fed_loss_B"]).to_numpy()
     assert np.isclose(ratio[0], 1.2, rtol=1e-9)
     assert not np.allclose(ratio[1:], 1.2, rtol=1e-6)
+
+
+def test_no_automation_tax_hike_reduces_debt(data, deltas):
+    """THE user requirement: with no automation, raising a tax mult must REDUCE the deficit/debt
+    (net fiscal impact positive) via the baseline surcharge — total = mult·(baseline − losses)."""
+    none = dict(cognitive_feasibility=0.0, physical_feasibility=0.0,
+                adoption_path=[0.0] * 10)
+    base = DynamicModelV2(data, deltas, replace(R, **none)).run()
+    hike = DynamicModelV2(data, deltas, replace(R, **none, income_tax_mult=1.1)).run()
+    assert np.allclose(base["fed_deficit_B"], 0.0, atol=1e-6)          # nothing happens at baseline
+    # a 10% income surcharge collects 10% of the $2,403.2B baseline line, every year
+    assert np.allclose(hike["income_surcharge_fed_B"], 0.1 * 2403.2, rtol=1e-9)
+    assert np.allclose(-hike["fed_deficit_B"], 0.1 * 2403.2, rtol=1e-6)  # net fiscal impact POSITIVE
+    assert hike["fed_debt_B"].iloc[-1] < base["fed_debt_B"].iloc[-1] - 2000   # debt falls, a lot
+    # state side: the surcharge shrinks (here: zeroes) state gaps
+    assert np.allclose(hike["income_surcharge_state_B"], 0.1 * 536.2, rtol=1e-9)
+    assert (hike["state_gap_B"] <= base["state_gap_B"] + 1e-9).all()
+
+
+def test_surcharge_columns_and_reconciliation(runs, data, deltas):
+    r, base = runs
+    res = r["all"]                                     # im=1.3, cm=0.7, km=1.5
+    assert np.allclose(res["income_surcharge_fed_B"], 0.3 * 2403.2, rtol=1e-9)
+    assert np.allclose(res["corp_surcharge_fed_B"], -0.3 * 491.7, rtol=1e-9)   # a CUT loses revenue
+    assert np.allclose(res["excise_surcharge_fed_B"], 0.5 * 101.6, rtol=1e-9)
+    assert np.allclose(res["cons_surcharge_state_B"], 0.5 * 873.7, rtol=1e-9)
+    # summary must reconcile with the new rows (it asserts internally)
+    from fiscal_model import summary
+    from fiscal_model.government import RevenueLedger
+    for grouping in ("tax", "channel"):
+        summary.build_fiscal_summary(res, RevenueLedger(data), grouping, "busd")
+
+
+def test_extreme_scenario_no_employment_oscillation(data, deltas, rung):
+    """Regression for the audit-verified limit cycle: with the active-pool allocation key,
+    employment declines monotonically at near-total automation (no release-re-displace whipsaw)."""
+    from fiscal_model import presets
+    if rung == 0:
+        pytest.skip("presets are calibrated to rung 1")
+    res = DynamicModelV2(data, deltas, presets.to_params(presets.PRESETS["agi-20y"])).run()
+    emp = res["employed_M"].to_numpy()
+    d = np.diff(emp)
+    d = d[np.abs(d) > 0.01]
+    assert (d <= 0).all(), f"employment must decline monotonically; diffs {np.round(d, 2)}"
 
 
 def test_state_table(data, deltas, rung):

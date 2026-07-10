@@ -56,13 +56,17 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"]
              + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"]
-             + res["ssdi_outlay_B"])
+             + res["ssdi_outlay_B"]
+             - res["income_surcharge_fed_B"] - res["corp_surcharge_fed_B"]   # baseline tax-regime
+             - res["excise_surcharge_fed_B"])                                # surcharges (revenue)
     assert _rel(recon, res["fed_deficit_B"]), "C6 federal reconciliation"
 
     # C6-state: the signed per-state total reconstructs from its labeled components (pins sd_state's sign
     # and the bincount — a state-side sign error would otherwise flow silently into the gap).
     state_recon = (res["inc_state_loss_B"] + res["cons_state_loss_B"] + res["transfer_state_B"]
-                   - res["survivor_gain_state_B"])
+                   - res["survivor_gain_state_B"]
+                   - res["income_surcharge_state_B"] - res["corp_surcharge_state_B"]
+                   - res["cons_surcharge_state_B"])
     assert _rel(state_recon, res["state_net_total_B"]), "C6-state composition"
     # C7: the close is exact — recovered + spending_cut covers the gap, residual ~0, every state balances.
     assert (res["state_rate_hike_B"] + res["state_spending_cut_B"]

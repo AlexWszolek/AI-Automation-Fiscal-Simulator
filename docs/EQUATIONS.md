@@ -154,7 +154,11 @@ net_pw:  exhausted/induced = wage − after_inc − emp_fica − after_transfers
          reabsorbed        = the take-home scar net of the transfers replacing it ;  retired = 0
 hh_withdrawal = Σ stocks·net_pw − wage_bill·(W_surv−1) − ubi_outlay·(1−recapture)     [signed]
 k             = demand_multiplier·mpc·stickiness / (VA_BASE/baseline_emp)
-target_cell   = k·[ max(0, hh_withdrawal)·emp_share_national                          [national]
+active        = employed_post + induced        # allocation key: the demand-exposed pool. Keying on
+                                               # employed alone made cells with induced stock but
+                                               # zero employment lose their target → spurious full
+                                               # releases → a limit cycle at near-total automation.
+target_cell   = k·[ max(0, hh_withdrawal)·active_share_national                       [national]
                   + contraction[s]·employed/state_emp[s] ]                            [austerity in-state]
 flow          = target_cell − induced_stock              # SIGNED; applied at the START of t+1 (Step 1-2)
 ```
@@ -222,9 +226,9 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `ubi_annual` | `ubi_outlay = ubi·baseline_emp` | federal outlay ↑ + reported required rate |
 | `denominator` | headline = $B or %-GDP | reporting only |
 | `mpc`, `consumption_stickiness` | **live** in Step 9 (+ frozen in cons cache) | second-round demand magnitude |
-| `income_tax_mult` | scales `ch[inc_fed]`, `ch[inc_state]`, `ui_tax`, survivor inc recapture (Step 7) | flat income-tax surcharge/cut on the SHOCK's flows (static scoring; payroll, demand basis, baseline anchors untouched); 1.0 = current law |
-| `corp_tax_mult` | scales `corp_offset` + `overflow_corp_tax` (Steps 3–5) | capital-tax mult on the recapture bundle (corp+dividend+pass-through); compute/robot taxes keep their own rates |
-| `cons_tax_mult` | scales `ch[cons_state]` (Step 7) | state consumption-tax surcharge/cut (reaches the rung-1 reab term that `consumption_scale` cannot) |
+| `income_tax_mult` | scales `ch[inc_fed]`, `ch[inc_state]`, `ui_tax`, survivor inc recapture (Step 7) **+ surcharge (m−1)·[$2,403.2B fed + $536.2B state] baseline receipts (Step 8.5 / state_net)** | true flat surcharge: revenue = m·(baseline − losses); with no automation, raising it cuts the deficit. Payroll NOT covered. Static scoring: no behavioral or take-home/demand effect |
+| `corp_tax_mult` | scales `corp_offset` + `overflow_corp_tax` (Steps 3–5) **+ surcharge (m−1)·[$491.7B fed + $172.0B state]** | capital-tax mult on the recapture bundle (corp+dividend+pass-through); compute/robot taxes keep their own rates |
+| `cons_tax_mult` | scales `ch[cons_state]` (Step 7) **+ surcharge (m−1)·[$873.7B state + $101.6B fed excise]** | consumption-tax surcharge/cut; reaches the rung-1 reab term that `consumption_scale` cannot. State surcharges allocated per state (income: wage-bill share; corporate: employment share; consumption: taxable-PCE share) and SHRINK gaps before the close |
 
 **Monte Carlo whitelist** (`fiscal_model/mc.py`): the local-uncertainty sampler perturbs all CONTINUOUS
 levers above (constraint-aware: disposition shares renormalized on the simplex; the robot tax clipped to

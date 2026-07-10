@@ -91,19 +91,20 @@ class V2Params:
     #   ((1+g)^t; ≈2% real + 2% inflation shipped). Nominal dollar columns and the job divisor are
     #   unchanged — fixes r>g=0 inverting the debt/GDP dynamics at long horizons. 0 = off (v1-reduction).
     # ---------------- tax-regime multipliers (NEW; 1.0 = current law = v1) ----------------
-    # Flat surcharge/cut multipliers on each channel's SHOCK-INDUCED fiscal flows (static scoring):
-    # they rescale the ledger only — take-home pay for demand purposes, the reabsorption engine's
-    # wage math, and the absolute baseline revenue anchors all stay at current-law rates.
-    income_tax_mult: float = 1.0    # scales income-tax dollars: displaced losses (fed+state), the
-    #   survivor raises' income-tax recapture, and the tax on UI benefits. Payroll (FICA) is
-    #   statutorily distinct and deliberately NOT covered. Note the sign: under displacement a
-    #   higher-income-tax regime LOSES more revenue per displaced worker.
-    corp_tax_mult: float = 1.0      # scales the CAPITAL-tax recapture bundle: the corporate offset
-    #   (corp + dividend + pass-through individual tax on the routed surplus) and the survivor
-    #   overflow's corporate tax. Compute-pool and robot taxes keep their own rates.
-    cons_tax_mult: float = 1.0      # scales the state consumption-tax channel (the US has no
-    #   federal consumption tax). Unlike the structural consumption_scale, this is live per-run
-    #   and also reaches the rung-1 reabsorbed consumption term.
+    # A true flat surcharge/cut: each lever scales its channel's SHOCK-INDUCED flows AND collects
+    # (mult−1)·the 2024 baseline receipts line, so total revenue = mult·(baseline − losses). With
+    # no automation, raising a mult therefore reduces the deficit. STATIC SCORING: no behavioral
+    # response, no take-home/demand effect (a tax hike does not itself contract employment), and
+    # state surpluses created by a big surcharge are floored at 0 by the balanced-budget close.
+    income_tax_mult: float = 1.0    # income-tax dollars: displaced losses (fed+state), survivor
+    #   raises' recapture, tax on UI benefits + a surcharge on the $2,403B federal / $536B state
+    #   baseline individual-income receipts. Payroll (FICA) is statutorily distinct — NOT covered.
+    corp_tax_mult: float = 1.0      # the CAPITAL-tax bundle: corporate offset (corp + dividend +
+    #   pass-through tax on the routed surplus), overflow corporate tax + a surcharge on the $492B
+    #   federal / $172B state baseline corporate receipts. Compute/robot taxes keep their own rates.
+    cons_tax_mult: float = 1.0      # consumption taxes: the state channel (incl. the rung-1
+    #   reabsorbed term structural consumption_scale cannot reach) + a surcharge on the $874B
+    #   state sales/excise and $102B federal excise baselines.
     ubi_recapture_rate: float = 0.0             # share of the UBI outlay recaptured (income-tax clawback +
     #   means-tested crowd-out combined; literature ~20-30%). The baked transfer grids never see UBI as
     #   income (UBI never enters the interp argument), so this is the ONLY clawback — no double-count.

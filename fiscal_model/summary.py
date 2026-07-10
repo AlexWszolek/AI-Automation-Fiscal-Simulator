@@ -42,6 +42,10 @@ def _tax_rows(res: pd.DataFrame) -> list:
         ("Federal revenue changes", "Automation (robot) tax", r["automation_tax_B"], "fed", "flow"),
         ("Federal revenue changes", "UBI recapture", r["ubi_recapture_B"], "fed", "flow"),
         ("Federal revenue changes", "Tax on UI benefits", r["ui_tax_fed_B"], "fed", "flow"),
+        # baseline tax-regime surcharges (the income/capital/consumption × dials; 0 at current law)
+        ("Federal revenue changes", "Income tax surcharge", r["income_surcharge_fed_B"], "fed", "flow"),
+        ("Federal revenue changes", "Capital tax surcharge", r["corp_surcharge_fed_B"], "fed", "flow"),
+        ("Federal revenue changes", "Excise surcharge", r["excise_surcharge_fed_B"], "fed", "flow"),
     ]
     rev_total = sum(row[2] for row in rev)
     out = [
@@ -60,6 +64,9 @@ def _tax_rows(res: pd.DataFrame) -> list:
         ("State & local", "State income tax", -r["inc_state_loss_B"], "state", "flow"),
         ("State & local", "State consumption tax", -r["cons_state_loss_B"], "state", "flow"),
         ("State & local", "Survivor wage taxes (state)", r["survivor_gain_state_B"], "state", "flow"),
+        ("State & local", "State income surcharge", r["income_surcharge_state_B"], "state", "flow"),
+        ("State & local", "State corporate surcharge", r["corp_surcharge_state_B"], "state", "flow"),
+        ("State & local", "State consumption surcharge", r["cons_surcharge_state_B"], "state", "flow"),
     ]
     state_out = ("State & local", "State transfers (outlay)", r["transfer_state_B"], "state", "flow")
     net_state = -r["state_net_total_B"]
@@ -89,19 +96,24 @@ def _channel_rows(res: pd.DataFrame) -> list:
     labour_back = r["survivor_gain_fed_B"] + r["survivor_gain_state_B"]
     capital_back = (r["corp_offset_B"] + r["compute_pool_tax_B"]
                     + r["survivor_overflow_corp_tax_B"] + r["automation_tax_B"])
+    surcharges = (r["income_surcharge_fed_B"] + r["income_surcharge_state_B"]
+                  + r["corp_surcharge_fed_B"] + r["corp_surcharge_state_B"]
+                  + r["excise_surcharge_fed_B"] + r["cons_surcharge_state_B"])
     ch1 = labour_lost + labour_back + capital_back
     ch3_taxed = -r["cons_state_loss_B"]
     spending = (r["transfer_fed_B"] + r["transfer_state_B"] + r["ssdi_outlay_B"]
                 + (r["ui_outlay_fed_B"] - r["ui_tax_fed_B"])
                 + (r["ubi_outlay_B"] - r["ubi_recapture_B"]))
     ch4 = -spending
-    combined = ch1 + ch3_taxed + ch4
+    combined = ch1 + ch3_taxed + ch4 + surcharges
     # channel partition must reconcile to the combined federal + state net
     target = -(r["fed_deficit_B"] + r["state_net_total_B"])
     assert np.allclose(combined.to_numpy(), target.to_numpy(), rtol=1e-9, atol=1e-6), \
         "channel view does not reconcile to the combined federal+state net"
 
     return [
+        ("⓪ Tax-regime surcharges", "Baseline surcharges (income+capital+consumption dials)",
+         surcharges, "combined", "flow"),
         ("① Labour → capital", "Labour taxes lost (displaced)", labour_lost, "combined", "flow"),
         ("① Labour → capital", "Labour taxes gained (survivors)", labour_back, "combined", "flow"),
         ("① Labour → capital", "Capital-side recoveries", capital_back, "combined", "flow"),

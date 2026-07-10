@@ -101,15 +101,19 @@ def ts_chart(df: pd.DataFrame, cols: list, y_title: str, kind: str = "line",
     mark = {"line": alt.Chart(long).mark_line(strokeWidth=2.5),
             "area": alt.Chart(long).mark_area(opacity=0.85),
             "bar": alt.Chart(long).mark_bar()}[kind]
+    # legend below the plot, never truncated: labelLimit=0 disables label clipping; column count
+    # adapts so long labels wrap into rows instead of running off the container edge
+    legend = alt.Legend(orient="bottom", columns=1 if len(labels) <= 2 else 2,
+                        labelLimit=0, symbolLimit=0, titleLimit=0)
     enc = mark.encode(
         x=alt.X("period:Q", title="year", axis=alt.Axis(tickMinStep=1, format="d")),
         y=alt.Y("value:Q", title=y_title, stack=stack),
         color=alt.Color("series:N", title=None, sort=labels,
                         scale=alt.Scale(domain=labels, range=PALETTE[:len(labels)]),
-                        legend=alt.Legend(orient="bottom", columns=2, labelLimit=280)),
+                        legend=legend),
         order=alt.Order("color_series_sort_index:Q") if kind == "area" else alt.Order(),
     )
-    return enc.properties(height=height)
+    return enc.properties(height=height, padding={"left": 5, "right": 15, "top": 5, "bottom": 5})
 
 
 def show_chart(chart: alt.Chart, caption: str) -> None:
@@ -191,7 +195,7 @@ if is_v2:
                                 "composes separately as overlays.")
     if _choice != "Custom":
         _preset = presets_mod.PRESETS[_names[_choice]]
-        sb.caption(_preset.blurb + ("" if rung1_ok else " ⚠️ Presets are calibrated to the "
+        sb.caption(_preset.blurb + ("" if rung1_ok else "Presets are calibrated to the "
                                     "service-floor reabsorption engine — artifacts absent, running "
                                     "the flat-haircut fallback degrades their fidelity."))
     overlay_keys = sb.multiselect(
@@ -216,7 +220,7 @@ st.caption("Set the levers; the accounting is the point. Watch the tax base migr
 # is_v2 INSIDE their group so v1 mode shows only the shared levers.
 rung = (1 if rung1_ok else 0)
 
-with sb.expander("🤖 Automation & adoption", expanded=True):
+with sb.expander("Automation & adoption", expanded=True):
     cog = st.slider("Cognitive feasibility (AI capability)", 0.0, 1.0, d["cog"], 0.05,
                     help="Of the work that is cognitively exposed to AI (Yale exposure index), the "
                          "share that is technically automatable. Literature anchors: ~0.15 (bare "
@@ -252,10 +256,10 @@ if (_preset is not None and _preset.adoption_reach_year is not None
 else:
     adoption_path = list(np.linspace(adopt0, adopt1, n_periods))
     if _preset is not None and _preset.adoption_reach_year is not None:
-        sb.caption(f"⚠️ Adoption sliders moved — the preset's kinked path (full automation at year "
+        sb.caption(f"Adoption sliders moved — the preset's kinked path (full automation at year "
                    f"{_preset.adoption_reach_year}) was replaced by a linear ramp.")
 
-with sb.expander("👷 Labor market", expanded=False):
+with sb.expander("Labor market", expanded=False):
     reab = st.slider("Reabsorption rate / yr  (0 = the thesis)", 0.0, 1.0, d["reab"], 0.025,
                      help="Annual rate at which long-term displaced workers find new (lower-wage) "
                           "work. Evidence: 0.6–0.75 in normal markets (Farber), 0.05–0.10 in the "
@@ -281,7 +285,7 @@ with sb.expander("👷 Labor market", expanded=False):
                                    "pool from persisting forever.")
 
 if is_v2:
-    with sb.expander("🏭 Firms & compute", expanded=False):
+    with sb.expander("Firms & compute", expanded=False):
         retained = st.slider("Saved wages → retained profit (share)", 0.0, 1.0, d["retained"], 0.05,
                              help="Of the wage bill firms stop paying (net of automation costs), "
                                   "the share kept as profit — taxed at effective corporate rates "
@@ -308,7 +312,7 @@ if is_v2:
                                       "post-TCJA rate on equipment/software capital; 0.27 = parity "
                                       "with domestic capital (the compute-parity overlay).")
 
-    with sb.expander("💵 Survivor wages", expanded=False):
+    with sb.expander("Survivor wages", expanded=False):
         survivor_unbounded = st.checkbox("Unbounded raise (optimistic)", value=d["unbounded"],
                                          help="Remove the raise ceiling entirely — survivors "
                                               "absorb whatever the routed share funds.")
@@ -328,7 +332,7 @@ if is_v2:
                                    "(corporate-taxed), 0.0 = all to prices (nearly untaxed). "
                                    "Drives the federal/state split of that overflow.")
 
-    with sb.expander("📈 Macro & demand", expanded=False):
+    with sb.expander("Macro & demand", expanded=False):
         price_pt = st.slider("Price pass-through (deflation → real/%-GDP views)", 0.0, 1.0,
                              d["price_pt"], 0.05,
                              help="Share of the firms' price-cut disposition that actually deflates "
@@ -350,26 +354,34 @@ if is_v2:
                                 "austerity deepens it. 0.5 ≈ an active Fed offsetting half; "
                                 "1.8 = Chodorow-Reich's no-offset estimate.")
 
-with sb.expander("🏛 Government policy", expanded=False):
+with sb.expander("Government policy", expanded=False):
     if is_v2:
-        st.caption("**Tax-regime dials** — flat surcharge/cut multipliers on the shock's fiscal "
-                   "flows (1.0 = current law). Static scoring: take-home pay for demand purposes "
-                   "and the baseline revenue anchors stay at current-law rates.")
+        st.caption("**Tax-regime dials** — true flat surcharges/cuts (1.0 = current law): each "
+                   "scales its channel's shock flows AND collects (×−1) of the 2024 baseline "
+                   "receipts line, so revenue = mult × (baseline − losses). Raising a dial "
+                   "reduces the deficit even with no automation. Static scoring: no behavioral "
+                   "response, and no take-home/demand effect from the tax change itself.")
         income_mult = st.slider("Income tax ×", 0.5, 1.5, d["income_mult"], 0.05,
-                                help="Scales every income-tax dollar the shock moves: displaced "
-                                     "losses (federal + state), the raises' tax recapture, and "
-                                     "tax on UI benefits. Payroll (FICA) is statutorily separate "
-                                     "and not covered. Note: under displacement, a HIGHER income "
-                                     "tax regime loses MORE revenue.")
+                                help="A surcharge on the $2,403B federal + $536B state baseline "
+                                     "individual-income receipts, plus scaling of every income-tax "
+                                     "dollar the shock moves (displaced losses, raises' recapture, "
+                                     "tax on UI). Payroll (FICA) is statutorily separate and not "
+                                     "covered. Two opposing effects under displacement: the "
+                                     "surcharge collects more, but each displaced worker also "
+                                     "loses more — the surcharge dominates until the wage base "
+                                     "collapses.")
         corp_mult = st.slider("Capital taxes ×", 0.5, 1.5, d["corp_mult"], 0.05,
-                              help="Scales the capital-recapture bundle: the corporate offset "
-                                   "(corp + dividend + pass-through tax on the retained surplus) "
-                                   "and the overflow corporate tax. The compute-pool and robot "
-                                   "taxes keep their own rates.")
+                              help="A surcharge on the $492B federal + $172B state baseline "
+                                   "corporate receipts, plus scaling of the capital-recapture "
+                                   "bundle (corporate offset incl. dividend and pass-through tax, "
+                                   "overflow corporate tax). The compute-pool and robot taxes "
+                                   "keep their own rates.")
         cons_mult = st.slider("Consumption taxes ×", 0.5, 1.5, d["cons_mult"], 0.05,
-                              help="Scales the state consumption-tax channel (the US has no "
-                                   "federal consumption tax). Raising it is the classic 'tax the "
-                                   "spending, not the wage' response — see how little it moves.")
+                              help="A surcharge on the $874B state sales/excise + $102B federal "
+                                   "excise baselines, plus scaling of the state consumption-tax "
+                                   "channel. The classic 'tax the spending, not the wage' "
+                                   "response — note how small these bases are next to income "
+                                   "taxes: the US has no VAT to fall back on.")
         # The robot tax is paid from retained profit, so its feasible max is retained·(1−auto_cost).
         atx_bound = round(min(0.30, retained * (1.0 - auto_cost)), 2)
         if atx_bound < 0.01:
@@ -398,7 +410,7 @@ with sb.expander("🏛 Government policy", expanded=False):
                               "discount-rate anchor used in the AGI presets.")
 
 if is_v2:
-    with sb.expander("🗽 States (balanced budgets)", expanded=False):
+    with sb.expander("States (balanced budgets)", expanded=False):
         if not rung1_ok:
             st.warning("Benefit-lookup / NOC artifacts absent — reabsorption falls back to the "
                        "flat-haircut model.")
@@ -416,7 +428,7 @@ if is_v2:
                              help="Political/economic ceiling on rate increases. Once a state "
                                   "hits it, the remainder becomes FORCED spending cuts.")
 
-    with sb.expander("⚙️ Display", expanded=False):
+    with sb.expander("Display", expanded=False):
         denominator = st.radio("Headline denominator", ["absolute", "pct_gdp"], horizontal=True,
                                help="Switch to % of GDP to see the productivity dividend and the "
                                     "price channel move the headline.")

@@ -85,6 +85,36 @@ class DynamicModelV2:
 
         # Phase 5: the absolute revenue ledger (deltas net against the real base-linkage absolutes).
         self._ledger = government.RevenueLedger(data)
+        # tax-regime surcharge bases (lever-free): the 2024 receipts per line, and per-state
+        # allocation shares for the state-side surcharges. Anchored on maps_to_base (NOT the
+        # receipt_source label — 'income' collides with the corporate-income row) and assert-pinned
+        # so a receipts-file edit fails loud.
+        _r = data.receipts
+
+        def _base(level, maps):
+            return float(_r.loc[(_r["level"] == level)
+                                & _r["maps_to_base"].str.contains(maps, na=False),
+                                "amount_busd"].sum()) * 1e9
+        self._fed_inc_base = _base("Federal", "Labor")
+        self._fed_corp_base = _base("Federal", "Corporate profits")
+        self._fed_cons_base = _base("Federal", "Consumption")
+        self._st_inc_base = _base("State & local", "Labor")
+        self._st_corp_base = _base("State & local", "Corporate profits")
+        self._st_cons_base = _base("State & local", "Consumption")
+        for _v, _exp in ((self._fed_inc_base, 2403.2e9), (self._fed_corp_base, 491.7e9),
+                         (self._fed_cons_base, 101.6e9), (self._st_inc_base, 536.2e9),
+                         (self._st_corp_base, 172.0e9), (self._st_cons_base, 873.7e9)):
+            assert abs(_v - _exp) < 1e6, f"receipts surcharge base drifted: {_v} != {_exp}"
+        _v1 = self._v1
+        _n_st = len(_v1.uniq_states)
+        _wb = np.bincount(_v1.state_of_cell, weights=_v1.emp0 * _v1.wage, minlength=_n_st)
+        self._surch_inc_share = _wb / _wb.sum()                      # income: by baseline wage bill
+        _eb = np.bincount(_v1.state_of_cell, weights=_v1.emp0, minlength=_n_st)
+        self._surch_corp_share = _eb / _eb.sum()                     # corporate: by employment (crude)
+        _cb = (data.consumption.set_index("state").reindex(_v1.uniq_states)
+               ["total_taxable_pce_musd"].to_numpy())
+        assert not np.isnan(_cb).any(), "consumption base missing a state"
+        self._surch_cons_share = _cb / _cb.sum()                     # consumption: by taxable PCE
         # Hoisted lever-free pieces of the demand-withdrawal basis (per-cell arrays; see _bind_params).
         v1 = self._v1
         self._inc_after_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
@@ -211,6 +241,24 @@ class DynamicModelV2:
         # tax-regime multipliers (static scoring, ledger-only). Skip the multiply entirely at 1.0 —
         # the C8 fast path stays bit-identical and no extra arrays are allocated.
         im, cm, km = v2p.income_tax_mult, v2p.corp_tax_mult, v2p.cons_tax_mult
+        # BASELINE surcharges: a real tax change also collects on the un-displaced baseline, so
+        # with the delta scaling the lever is a true flat surcharge: total = mult·(baseline−losses).
+        # With no automation, raising a mult now reduces the deficit — constants, hoisted once;
+        # exact zeros at mult=1 keep every new column 0.0 and C8 untouched.
+        _mults_live = im != 1.0 or cm != 1.0 or km != 1.0
+        if _mults_live:
+            inc_surch_fed = (im - 1.0) * self._fed_inc_base
+            corp_surch_fed = (cm - 1.0) * self._fed_corp_base
+            cons_surch_fed = (km - 1.0) * self._fed_cons_base
+            surch_fed_total = inc_surch_fed + corp_surch_fed + cons_surch_fed
+            inc_surch_st = (im - 1.0) * self._st_inc_base * self._surch_inc_share
+            corp_surch_st = (cm - 1.0) * self._st_corp_base * self._surch_corp_share
+            cons_surch_st = (km - 1.0) * self._st_cons_base * self._surch_cons_share
+            surch_state = inc_surch_st + corp_surch_st + cons_surch_st   # per-state GAIN array
+        else:
+            inc_surch_fed = corp_surch_fed = cons_surch_fed = surch_fed_total = 0.0
+            inc_surch_st = corp_surch_st = cons_surch_st = None
+            surch_state = None
         debt = 0.0
         baseline_emp = v1.emp0.sum()
         baseline_rev = None
@@ -351,6 +399,8 @@ class DynamicModelV2:
             #     contraction, which feeds lagged demand (I) and is gated by demand_multiplier. ---
             state_cell = ch["inc_state"] + ch["cons_state"] + ch["transfer_state"] - sd_state
             state_net = np.bincount(v1.state_of_cell, weights=state_cell, minlength=len(v1.uniq_states))
+            if _mults_live:                              # baseline surcharges SHRINK the state gaps
+                state_net = state_net - surch_state      # (revenue gain; enters BEFORE the close)
             # remaining labour income (W-scaled) + the reabsorbed's actual earnings at w_d (coherence fix:
             # they pay taxes, so the close can tax them — ~12% of the base was invisible before)
             taxable_base = np.bincount(v1.state_of_cell,
@@ -371,7 +421,8 @@ class DynamicModelV2:
             # benefit — ~$162B/yr missing by y10). Federal; not in the baked transfer grids (no overlap
             # beyond the small documented SSI-concurrency approximation). Inert at reduction (exited ≡ 0).
             ssdi_outlay = st.exited.sum() * v2p.ssdi_annual
-            net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax + ssdi_outlay
+            net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax + ssdi_outlay \
+                - surch_fed_total                        # baseline tax surcharges: federal revenue
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
@@ -404,10 +455,19 @@ class DynamicModelV2:
                  * p.kernel_params.consumption_stickiness / self._va_per_worker
                  if self._va_per_worker > 0 else 0.0)
             contraction_s = close.spending_cut * government.MPC_GOV + close.recovered * v2p.mpc
-            state_emp = np.bincount(v1.state_of_cell, weights=employed_post,
-                                    minlength=len(v1.uniq_states))
-            in_state_share = employed_post / np.where(state_emp > 0, state_emp, 1.0)[v1.state_of_cell]
-            emp_share = employed_post / employed_post.sum() if employed_post.sum() > 0 else 0.0
+            # Allocation key = the ACTIVE demand-exposed pool (employed + induced), NOT employed
+            # alone. The induced target is a per-cell STOCK target: with an employed-only key, a
+            # cell whose employment automation zeroed but whose induced stock persists gets
+            # share→0 → target→0 → a spurious FULL release of workers into jobs that no longer
+            # exist, which the target then re-concentrates on and re-displaces — a period-2 limit
+            # cycle at near-total automation (audit-verified: employed oscillated 1.0M↔13.9M at
+            # agi-20y t=17-19; with this key the decline is monotone and sign-flips drop to 0).
+            # Inert at reduction: demand_multiplier=0 ⇒ k=0 ⇒ the key is never consulted.
+            active = employed_post + st.induced
+            state_active = np.bincount(v1.state_of_cell, weights=active,
+                                       minlength=len(v1.uniq_states))
+            in_state_share = active / np.where(state_active > 0, state_active, 1.0)[v1.state_of_cell]
+            emp_share = active / active.sum() if active.sum() > 0 else 0.0
             induced_target = k * (max(0.0, hh_withdrawal) * emp_share
                                   + contraction_s[v1.state_of_cell] * in_state_share)
             induced_flow_pending = induced_target - st.induced          # SIGNED; consumed at START of t+1
@@ -426,7 +486,8 @@ class DynamicModelV2:
             fed_rev_delta_B = (-(ch["inc_fed"].sum() + ch["payroll_fed"].sum()) + ui_tax_fed.sum()
                                + corp_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
                                + overflow_corp_tax
-                               + automation_tax) / 1e9   # automation tax is federal revenue (not UBI — an outlay)
+                               + automation_tax
+                               + surch_fed_total) / 1e9  # automation tax + surcharges are revenue
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
 
@@ -482,6 +543,13 @@ class DynamicModelV2:
                 "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
                 "ssdi_outlay_B": ssdi_outlay / 1e9,                    # coherence: SSDI on the exited
+                # baseline tax-regime surcharges ((mult−1)·2024 receipts line; 0.0 at mult=1)
+                "income_surcharge_fed_B": inc_surch_fed / 1e9,
+                "corp_surcharge_fed_B": corp_surch_fed / 1e9,
+                "excise_surcharge_fed_B": cons_surch_fed / 1e9,
+                "income_surcharge_state_B": (inc_surch_st.sum() / 1e9 if _mults_live else 0.0),
+                "corp_surcharge_state_B": (corp_surch_st.sum() / 1e9 if _mults_live else 0.0),
+                "cons_surcharge_state_B": (cons_surch_st.sum() / 1e9 if _mults_live else 0.0),
                 # --- Phase 5: state balanced-budget close (H, C7) ---
                 # C6-state composition: the signed state total reconstructs from its labeled components
                 # (inc + cons + transfer − survivor gain), pinning sd_state's sign and the bincount.

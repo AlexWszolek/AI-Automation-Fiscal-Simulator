@@ -32,8 +32,10 @@ class MacroState:
 def productivity_index(automated_comp_fraction: float, v2p) -> float:
     """Y_t: the automation productivity dividend. OUTPUT-weighted (the caller passes the automated share
     of the COMPENSATION bill, not headcount — high-value cognitive work automates first, so output runs
-    ahead of headcount). At full automation of the labour bill (fraction→1), Y = 1 + productivity_passthrough,
-    i.e. GDP grows by that share. Reporting/denominator only; the taxable side is the automation-tax lever."""
+    ahead of headcount). NOTE the reachable ceiling: the per-cell comp base sums to ~0.93·COMP_TOTAL
+    (different BEA aggregates), so at full automation of the MODELED base fraction ≈ 0.93 and
+    Y ≈ 1 + 0.93·productivity_passthrough — not the full 1 + passthrough. Reporting/denominator only;
+    the taxable side is the automation-tax lever."""
     return 1.0 + v2p.productivity_passthrough * automated_comp_fraction
 
 
