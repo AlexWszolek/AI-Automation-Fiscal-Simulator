@@ -239,6 +239,18 @@ retained′·(1−auto_cost′); off values never perturbed). FROZEN per draw: c
 and the declared-but-inert placeholders. mpc/stickiness sensitivity reflects only their live paths.
 | `surplus_capture`, `dividend_tax_rate`, `passthrough_individual_rate`, `marginal_taxable_multiplier` | frozen in the delta cache | build-time only — inert on a fixed cache |
 
+**Global LHS screening** (`mc.lhs_draws` + `mc.GLOBAL_RANGES`; runner `scripts/global_screening.py`):
+the whole-space complement to the local sampler — a Latin hypercube over 26 dimensions at their full UI
+ranges, each tagged `uncertainty` | `policy` and analyzed on separate tornado panels (Spearman ρ +
+debiased binned η²; disagreement flags non-monotone/conditionally-activated levers). The disposition
+simplex is drawn exactly uniform via stick-breaking (retained = 1−√(1−u), the Beta(1,2) marginal); the
+robot tax is sampled as a FRACTION of the bound retained·(1−auto_cost) so its rank is independent of
+retained's. Every point passes `assert_all_invariants`; a dedicated 20-year batch in the
+high-adoption/hot-demand/low-reabsorption corner regression-guards the demand-controller allocation fix
+(flag: ≥2 above-threshold employment-diff sign alternations). Interpretation discipline: the local MC
+bands measure robustness to lever mis-calibration WITHIN a scenario; the cross-preset spread plus this
+screening carry the model's uncertainty story (report §7.9).
+
 **Scenario presets & policy overlays** (`fiscal_model/presets.py`): seven literature-anchored world
 states (Acemoglu-modest → AI-2027 takeoff) load full lever configurations into the sidebar; four
 policy overlays (Costinot-Werning / GRT robot taxes, UBI + recapture, compute-pool parity) compose on

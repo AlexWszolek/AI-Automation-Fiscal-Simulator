@@ -1,0 +1,92 @@
+{
+ "config": {
+  "n": 10000,
+  "n_cycle": 400,
+  "seed": 0,
+  "sampler": "lhs",
+  "n_dims": 26,
+  "n_periods": 10,
+  "generated": "2026-07-10 12:28",
+  "git_sha": "b6f045b"
+ },
+ "regimes": {
+  "improves_pct": 6.5,
+  "band_0_1_pct": 11.7,
+  "band_1_3_pct": 29.6,
+  "band_gt3_pct": 52.2,
+  "capped_anywhere_pct": 0.5
+ },
+ "checks": {
+  "invariant_failures": 0,
+  "oscillation_flagged": 0,
+  "cycle_batch_max_alternations": 0
+ },
+ "deficit_delta_final_B": {
+  "p5": -107.0,
+  "p25": 678.0,
+  "p50": 1453.0,
+  "p75": 2326.0,
+  "p95": 3550.0
+ },
+ "top_drivers": {
+  "uncertainty": [
+   {
+    "lever": "retained_profit_share",
+    "spearman": -0.161,
+    "eta2": 0.0321
+   },
+   {
+    "lever": "price_reduction_share",
+    "spearman": 0.14,
+    "eta2": 0.025
+   },
+   {
+    "lever": "reabsorption_rate",
+    "spearman": -0.108,
+    "eta2": 0.0154
+   },
+   {
+    "lever": "auto_cost",
+    "spearman": 0.084,
+    "eta2": 0.0094
+   },
+   {
+    "lever": "lfp_exit_rate",
+    "spearman": 0.065,
+    "eta2": 0.0063
+   }
+  ],
+  "policy": [
+   {
+    "lever": "ubi_annual",
+    "spearman": 0.818,
+    "eta2": 0.6314
+   },
+   {
+    "lever": "ubi_recapture_rate",
+    "spearman": -0.32,
+    "eta2": 0.119
+   },
+   {
+    "lever": "compute_effective_rate",
+    "spearman": -0.161,
+    "eta2": 0.0302
+   },
+   {
+    "lever": "automation_tax_frac",
+    "spearman": -0.097,
+    "eta2": 0.0158
+   },
+   {
+    "lever": "interest_rate",
+    "spearman": -0.018,
+    "eta2": 0.0017
+   }
+  ]
+ },
+ "figures": {
+  "global_tornado_uncertainty": "screening/global_tornado_uncertainty.png",
+  "global_tornado_policy": "screening/global_tornado_policy.png",
+  "regime_scatter": "screening/regime_scatter.png"
+ }
+}

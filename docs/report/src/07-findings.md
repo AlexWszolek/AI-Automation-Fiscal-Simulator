@@ -10,6 +10,16 @@ perturbations of spread {{n:config.spread}}, seed {{n:config.seed}}), and the to
 final-year deficit variance to individual assumptions. Dollar figures are nominal changes against
 the 2024 baseline; the fiscal summary "Total" column sums flow rows over the scenario horizon.
 
+A word on what the bands are — and are not. The Monte Carlo perturbs each lever independently by
+±15 percent around its scenario setting, so a band measures **robustness to lever mis-calibration
+within a world**: how wrong the headline could be if each anchor is somewhat off. It is not a
+calibrated probability interval — the perturbation spread is a convention, not an estimated
+distribution. The model's honest uncertainty statement is the **spread across the seven
+scenarios** (the cross-preset table in Section 7.8 and the comparison dot plot), which is driven
+by genuinely contested quantities: how much work AI can do, how fast firms adopt it, and whether
+the labor market heals or scars. Which of those quantities matter *anywhere* in the lever space —
+not just near a preset — is the subject of the global screening in Section 7.9.
+
 ## 7.1 Acemoglu — Modest AI
 
 If AI stays inside Acemoglu's ten-year bounds, the fiscal system barely notices. Employment falls
@@ -176,3 +186,59 @@ requirement is a shock *transmitter*. Across scenarios, state gaps scale with di
 rate-hike caps bind in the severe worlds, and every dollar of forced spending cuts re-enters the
 demand channel as first-round-multiplier withdrawal — visible in the induced-layoff stocks and in
 the difference between scenarios with and without state stress in their configuration.
+
+## 7.9 Global sensitivity screening
+
+The per-scenario bands above are deliberately local. To ask which assumptions matter *anywhere* —
+and where in the lever space the fiscal picture changes qualitatively — we sweep the whole space:
+a {{n:screening.config.n|,.0f}}-point Latin hypercube over {{n:screening.config.n_dims}} lever
+dimensions spanning the full interface ranges (adoption ceilings from 5 to 100 percent of exposed
+work, reabsorption from frozen to near-frictionless, demand amplification from none to
+crisis-regime, and the policy dials from off to their maxima), each point run at a common ten-year
+horizon. Every one of the {{n:screening.config.n|,.0f}} runs passes the full conservation battery
+— the C1–C8 identities hold at every sampled corner of the space
+({{n:screening.checks.invariant_failures}} failures) — and an employment-oscillation screen
+({{n:screening.checks.oscillation_flagged}} runs flagged). A dedicated
+{{n:screening.config.n_cycle}}-point batch at a twenty-year horizon, concentrated in the
+near-total-automation corner that produced the demand-controller artifact fixed during development
+(high adoption, hot demand feedback, cold re-employment), regression-guards that fix: no sampled
+path shows more than {{n:screening.checks.cycle_batch_max_alternations}} above-threshold
+employment reversal, against a flag threshold of two.
+
+**The regime map.** Classified by the final-year deficit change as a share of GDP, the global
+space splits into four regimes: the federal balance *improves* in
+{{n:screening.regimes.improves_pct|.0f}} percent of the space (survivor-wage and capital-recapture
+channels outrunning small displacement), worsens by under one percent of GDP in
+{{n:screening.regimes.band_0_1_pct|.0f}} percent, by one to three percent in
+{{n:screening.regimes.band_1_3_pct|.0f}} percent, and by more than three percent of GDP — fiscal
+stress on the scale of a permanent Great-Recession revenue shock — in
+{{n:screening.regimes.band_gt3_pct|.0f}} percent. State rate-hike caps bind somewhere along the
+path in {{n:screening.regimes.capped_anywhere_pct|.1f}} percent of the space. The seven presets of
+this section were chosen before this sweep was run; the map confirms they span the regimes rather
+than clustering in one.
+
+{{fig:screening.figures.regime_scatter|Global regime map: each point is one sampled world, positioned by the two strongest uncertainty drivers and colored by its final-year fiscal regime.}}
+
+**The global tornado.** Rank correlations against the final-year deficit are computed per lever
+and reported on two panels — the *uncertainty* dimensions (what the world does) separately from
+the *policy* dimensions (what governments choose) — because the policy dollars are mechanically
+large: a maxed UBI dial moves trillions and would otherwise drown the attribution of genuine
+uncertainty. Among the uncertainty dimensions the strongest global driver is
+`{{n:screening.top_drivers.uncertainty.0.lever}}`
+(ρ = {{n:screening.top_drivers.uncertainty.0.spearman|+.2f}}); among policy dimensions it is
+`{{n:screening.top_drivers.policy.0.lever}}`
+(ρ = {{n:screening.top_drivers.policy.0.spearman|+.2f}}). Alongside the rank correlation each
+lever carries a binned correlation ratio (η², a first-order Sobol proxy): agreement between the
+two indicates a monotone effect, while a high η² with a near-zero ρ flags the conditionally
+activated levers — a robotics lag matters only where physical feasibility is high, UBI recapture
+only where UBI is on — whose influence rank correlation alone understates.
+
+{{fig:screening.figures.global_tornado_uncertainty|Global drivers of the final-year federal deficit across the whole lever space — uncertainty dimensions.}}
+
+{{fig:screening.figures.global_tornado_policy|Global drivers of the final-year federal deficit — policy dimensions. The UBI dial dominates by construction: it is the only lever that moves trillions of dollars directly.}}
+
+Two honest caveats. First, the sweep samples the lever space *uniformly* — it weights a
+five-year-AGI corner equally with a modest-AI corner, so regime frequencies describe the model's
+behavior over its input space, not probabilities over futures. Second, the screening holds the
+model's structure fixed; it explores parameter space, not specification space — the
+simplifications table in Section 10 is the honest account of the latter.

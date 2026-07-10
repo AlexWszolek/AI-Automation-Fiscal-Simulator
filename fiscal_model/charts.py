@@ -77,6 +77,19 @@ def overlay_recovery_bars(matrix: pd.DataFrame, width: int = 620) -> alt.Chart:
     ).properties(width=width, height=70)
 
 
+def regime_scatter(df: pd.DataFrame, x: str, y: str, x_title: str, y_title: str,
+                   regime_field: str = "regime", order: list | None = None,
+                   colors: list | None = None, width: int = 620, height: int = 380) -> alt.Chart:
+    """Global-screening regime map: sampled points over the top-2 drivers, colored by fiscal regime."""
+    scale = (alt.Scale(domain=order, range=colors) if order and colors
+             else alt.Scale(domain=order) if order else alt.Undefined)
+    return alt.Chart(df).mark_circle(size=14, opacity=0.55).encode(
+        x=alt.X(f"{x}:Q", title=x_title),
+        y=alt.Y(f"{y}:Q", title=y_title),
+        color=alt.Color(f"{regime_field}:N", title="fiscal regime", scale=scale),
+    ).properties(width=width, height=height)
+
+
 def enable_print_theme() -> None:
     """White-background print theme for headless PNG/HTML export. Opt-in (never at import)."""
     @alt.theme.register("fiscal_report", enable=True)

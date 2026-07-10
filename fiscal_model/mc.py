@@ -136,6 +136,113 @@ def sample_draws(base: V2Params, n: int, spread: float, seed: int = 0) -> list:
     return draws
 
 
+# ---- global LHS screening sampler (scripts/global_screening.py) --------------------------------------
+# Finite GLOBAL ranges for the whole-space sweep — aligned to the UI slider ranges, NOT to PERTURBED's
+# clip bounds (those contain infs and serve the local jitter above). Each dim: (lo, hi, tag) with
+# tag ∈ {"uncertainty", "policy"} — the analysis reports the two groups on separate tornado panels so
+# policy dollars (a $30k UBI) don't mechanically drown the uncertainty attribution.
+# Non-affine dims (transforms in lhs_draws; the (lo, hi) documents the reachable range):
+#   retained/price — 2-dim stick-breaking, exactly uniform on the disposition simplex (retained =
+#     1−√(1−u), the Beta(1,2) marginal; monotone in u, so the LHS stratification survives — normalizing
+#     three uniforms would be non-uniform on the simplex AND destroy the stratified marginals);
+#     survivor = the remainder (collinear — excluded from the tornado, recorded descriptively);
+#   automation_tax_frac — a FRACTION of the capacity bound retained·(1−auto_cost). Sampling the realized
+#     rate would either mass-clip at the bound or inherit retained's ranks (probe: ρ(realized, retained)
+#     ≈ 0.49) — the tornado ranks the independent-by-construction fraction, the realized rate is recorded
+#     descriptively;
+#   ui_weeks — floor(53u) clipped to 52: equal weight on every integer (round(52u) half-weights the ends);
+#   adoption_end — sets a linear adoption path 0.05 → end over the template's horizon.
+# reabsorption caps at 0.8 (not 1): workers.age_and_transition asserts reab+lfp ≤ 1, and lfp reaches 0.2
+# — independent U(0,1)×U(0,0.2) would crash ~10% of draws; 0.8 already exceeds the literature envelope.
+# rate_cap caps at 1.0 (not the slider's 3): above ~1 the cap never binds at a 10y horizon (inert dim).
+GLOBAL_RANGES = {
+    # ---- uncertainty: what the world does ----
+    "cognitive_feasibility": (0.0, 1.0, "uncertainty"),
+    "physical_feasibility": (0.0, 1.0, "uncertainty"),
+    "robotics_lag": (0.0, 15.0, "uncertainty"),
+    "adoption_end": (0.05, 1.0, "uncertainty"),
+    "ui_weeks": (0, 52, "uncertainty"),
+    "reabsorption_rate": (0.0, 0.8, "uncertainty"),
+    "reemployment_haircut": (0.0, 1.0, "uncertainty"),
+    "lfp_exit_rate": (0.0, 0.2, "uncertainty"),
+    "attrition_rate": (0.0, 0.1, "uncertainty"),
+    "survivor_elasticity": (-0.5, 0.5, "uncertainty"),
+    "survivor_raise_ceiling": (1.0, 3.0, "uncertainty"),
+    "survivor_spillover_to_profit": (0.0, 1.0, "uncertainty"),
+    "retained_profit_share": (0.0, 1.0, "uncertainty"),      # stick-breaking (see above)
+    "price_reduction_share": (0.0, 1.0, "uncertainty"),      # stick-breaking (see above)
+    "auto_cost": (0.0, 1.0, "uncertainty"),
+    "baseline_growth_rate": (0.0, 0.08, "uncertainty"),
+    "demand_multiplier": (0.0, 2.0, "uncertainty"),          # ρ(dm=2) ≈ 0.44 < 1 at fixed mpc/stickiness
+    "price_passthrough": (0.0, 1.0, "uncertainty"),
+    "productivity_passthrough": (0.0, 1.0, "uncertainty"),
+    # ---- policy: what governments choose ----
+    "compute_effective_rate": (0.0, 0.4, "policy"),
+    "automation_tax_frac": (0.0, 1.0, "policy"),             # fraction of bound (see above)
+    "ubi_annual": (0.0, 30_000.0, "policy"),
+    "ubi_recapture_rate": (0.0, 0.6, "policy"),
+    "interest_rate": (0.0, 0.10, "policy"),
+    "state_cut_share": (0.0, 1.0, "policy"),
+    "state_rate_hike_cap": (0.01, 1.0, "policy"),
+}
+# FIXED at the template's values (structural/categorical or deliberately out of scope): reabsorption
+# rung + floor percentile, exposure mapping, state_response mix, ssdi_annual, mpc/consumption_stickiness
+# (also sidesteps the half-frozen-mpc caveat above), offshore 0, the three tax-regime mults at 1.0
+# (pure policy dials with a mechanical answer), n_periods.
+
+
+def lhs_draws(base: V2Params, n: int, seed: int = 0, range_overrides: dict | None = None):
+    """Global Latin-hypercube sample over GLOBAL_RANGES, templated on `base`.
+
+    Returns (draws, samples): `draws[i]` is a `replace(base, **row_i)` derivative (never a fresh
+    V2Params — the ScenarioContext frozen-field guard compares every non-whitelisted field to the
+    template's), and `samples` is a DataFrame with one column per GLOBAL_RANGES dim (the tornado
+    inputs), descriptive columns `automation_tax_rate` (realized) and `survivor_gains_share` (the
+    simplex remainder), and the raw stratified `u_<dim>` columns (self-documenting: recorded output
+    can be re-mapped without re-running).
+
+    Each dim gets its OWN permutation — reusing one across dims is the classic hand-rolled-LHS bug
+    (perfect cross-dim rank correlation). `range_overrides` narrows {dim: (lo, hi)} for targeted
+    batches (e.g. the limit-cycle corner); overrides on the stick-breaking dims are ignored (their
+    transform reads u directly).
+    """
+    ranges = dict(GLOBAL_RANGES)
+    for dim, (lo, hi) in (range_overrides or {}).items():
+        ranges[dim] = (lo, hi, GLOBAL_RANGES[dim][2])
+    dims = list(ranges)
+    rng = np.random.default_rng(seed)
+    u = np.empty((n, len(dims)))
+    for k in range(len(dims)):
+        u[:, k] = (rng.permutation(n) + rng.random(n)) / n   # stratified: one point per 1/n stratum
+    U = {d: u[:, k] for k, d in enumerate(dims)}
+
+    vals = {d: lo + U[d] * (hi - lo) for d, (lo, hi, _t) in ranges.items()}
+    retained = 1.0 - np.sqrt(1.0 - U["retained_profit_share"])
+    price = (1.0 - retained) * U["price_reduction_share"]
+    survivor = 1.0 - retained - price            # float error ~1 ulp ≪ the model's 1e-9 simplex assert
+    vals["retained_profit_share"], vals["price_reduction_share"] = retained, price
+    tax_rate = vals["automation_tax_frac"] * retained * (1.0 - vals["auto_cost"])
+    vals["ui_weeks"] = np.minimum(np.floor(53.0 * U["ui_weeks"]), 52).astype(int)
+
+    lever_dims = [d for d in dims if d not in ("adoption_end", "automation_tax_frac", "ui_weeks")]
+    draws, rows = [], []
+    for i in range(n):
+        d = {dim: float(vals[dim][i]) for dim in lever_dims}
+        d["survivor_gains_share"] = float(survivor[i])
+        d["automation_tax_rate"] = float(tax_rate[i])
+        d["ui_weeks"] = int(vals["ui_weeks"][i])
+        d["adoption_path"] = list(np.linspace(0.05, float(vals["adoption_end"][i]), base.n_periods))
+        draws.append(replace(base, **d))
+        row = {dim: (int(vals[dim][i]) if dim == "ui_weeks" else float(vals[dim][i])) for dim in dims}
+        row["automation_tax_rate"] = float(tax_rate[i])      # realized rate — descriptive, NOT ranked
+        row["survivor_gains_share"] = float(survivor[i])     # simplex remainder — descriptive, NOT ranked
+        rows.append(row)
+    samples = pd.DataFrame(rows)
+    for k, dim in enumerate(dims):
+        samples[f"u_{dim}"] = u[:, k]
+    return draws, samples
+
+
 class ScenarioContext:
     """Build-once/run-many wrapper: a template `DynamicModelV2` whose lever-dependent members are
     re-bound per draw. Refuses draws that differ on FROZEN fields (they are baked into the template)."""

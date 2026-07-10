@@ -162,15 +162,15 @@
     "productivity_gain_pct": 5.41
    },
    "cumulative": {
-    "net_fiscal_impact_B": -1635.8,
-    "cum10_net_fiscal_impact_B": -1635.8,
+    "net_fiscal_impact_B": -1635.9,
+    "cum10_net_fiscal_impact_B": -1635.9,
     "cum10_pct_of_baseline_fed_revenue": -3.28,
     "state_gap_B": 558.8,
     "cum10y_total_revenue_pct": -1.35
    },
    "mc": {
     "final_fed_deficit_B": {
-     "p10": 136.59,
+     "p10": 136.6,
      "p25": 164.15,
      "p50": 198.46,
      "p75": 240.53,
@@ -221,11 +221,11 @@
    "adoption_end": 0.4,
    "final": {
     "employment_drop_pct": 19.4,
-    "fed_deficit_delta_B": 624.3,
-    "net_fiscal_impact_B": -624.3,
-    "fed_deficit_abs_B": 2457.3,
+    "fed_deficit_delta_B": 624.4,
+    "net_fiscal_impact_B": -624.4,
+    "fed_deficit_abs_B": 2457.4,
     "fed_deficit_abs_pct_gdp": 5.1,
-    "fed_debt_B": 5059.2,
+    "fed_debt_B": 5059.6,
     "state_gap_B": 123.3,
     "fed_revenue_B": 4650.5,
     "n_states_capped": 0,
@@ -233,19 +233,19 @@
     "productivity_gain_pct": 1.83
    },
    "cumulative": {
-    "net_fiscal_impact_B": -4434.5,
-    "cum10_net_fiscal_impact_B": -1846.9,
+    "net_fiscal_impact_B": -4434.9,
+    "cum10_net_fiscal_impact_B": -1847.0,
     "cum10_pct_of_baseline_fed_revenue": -3.71,
-    "state_gap_B": 947.0,
+    "state_gap_B": 947.2,
     "cum10y_total_revenue_pct": -1.57
    },
    "mc": {
     "final_fed_deficit_B": {
-     "p10": 384.4,
-     "p25": 461.81,
-     "p50": 544.41,
-     "p75": 664.62,
-     "p90": 803.32
+     "p10": 384.42,
+     "p25": 461.83,
+     "p50": 544.45,
+     "p75": 664.76,
+     "p90": 803.46
     },
     "final_employment_drop_pct": {
      "p10": 13.54,
@@ -291,60 +291,60 @@
    "adoption_start": 0.05,
    "adoption_end": 1.0,
    "final": {
-    "employment_drop_pct": 98.8,
-    "fed_deficit_delta_B": 1881.6,
-    "net_fiscal_impact_B": -1881.6,
-    "fed_deficit_abs_B": 3714.6,
-    "fed_deficit_abs_pct_gdp": 2.6,
-    "fed_debt_B": 35960.6,
-    "state_gap_B": 532.8,
-    "fed_revenue_B": 4475.5,
+    "employment_drop_pct": 100.0,
+    "fed_deficit_delta_B": 1989.7,
+    "net_fiscal_impact_B": -1989.7,
+    "fed_deficit_abs_B": 3822.7,
+    "fed_deficit_abs_pct_gdp": 2.8,
+    "fed_debt_B": 36444.7,
+    "state_gap_B": 543.4,
+    "fed_revenue_B": 4328.8,
     "n_states_capped": 0,
-    "induced_M": 7.13,
-    "productivity_gain_pct": 63.67
+    "induced_M": 15.19,
+    "productivity_gain_pct": 59.12
    },
    "cumulative": {
-    "net_fiscal_impact_B": -26945.3,
-    "cum10_net_fiscal_impact_B": -8047.6,
+    "net_fiscal_impact_B": -27412.9,
+    "cum10_net_fiscal_impact_B": -8048.4,
     "cum10_pct_of_baseline_fed_revenue": -16.15,
-    "state_gap_B": 7201.5,
+    "state_gap_B": 7293.5,
     "cum10y_total_revenue_pct": -7.43
    },
    "mc": {
     "final_fed_deficit_B": {
-     "p10": 1599.11,
-     "p25": 1713.05,
-     "p50": 1867.93,
-     "p75": 2018.42,
-     "p90": 2141.61
+     "p10": 1688.81,
+     "p25": 1815.47,
+     "p50": 1957.79,
+     "p75": 2104.23,
+     "p90": 2249.73
     },
     "final_employment_drop_pct": {
      "p10": 86.89,
-     "p25": 91.56,
-     "p50": 95.5,
-     "p75": 98.54,
-     "p90": 99.3
+     "p25": 94.19,
+     "p50": 99.61,
+     "p75": 100.0,
+     "p90": 100.0
     },
     "top_deficit_levers": [
      {
       "lever": "lfp_exit_rate",
-      "spearman": 0.48
+      "spearman": 0.51
+     },
+     {
+      "lever": "demand_multiplier",
+      "spearman": 0.36
      },
      {
       "lever": "ssdi_annual",
-      "spearman": 0.35
+      "spearman": 0.36
      },
      {
       "lever": "reabsorption_rate",
-      "spearman": -0.29
+      "spearman": -0.28
      },
      {
-      "lever": "attrition_rate",
-      "spearman": -0.24
-     },
-     {
-      "lever": "reemployment_haircut",
-      "spearman": 0.17
+      "lever": "mpc",
+      "spearman": 0.25
      }
     ]
    },
@@ -362,60 +362,60 @@
    "adoption_start": 0.2,
    "adoption_end": 1.0,
    "final": {
-    "employment_drop_pct": 99.8,
-    "fed_deficit_delta_B": 2567.4,
-    "net_fiscal_impact_B": -2567.4,
-    "fed_deficit_abs_B": 4400.4,
-    "fed_deficit_abs_pct_gdp": 4.6,
-    "fed_debt_B": 23244.9,
-    "state_gap_B": 627.5,
-    "fed_revenue_B": 4162.4,
+    "employment_drop_pct": 100.0,
+    "fed_deficit_delta_B": 2750.7,
+    "net_fiscal_impact_B": -2750.7,
+    "fed_deficit_abs_B": 4583.7,
+    "fed_deficit_abs_pct_gdp": 5.0,
+    "fed_debt_B": 24654.1,
+    "state_gap_B": 620.8,
+    "fed_revenue_B": 4020.3,
     "n_states_capped": 0,
-    "induced_M": 11.25,
-    "productivity_gain_pct": 66.77
+    "induced_M": 13.74,
+    "productivity_gain_pct": 60.52
    },
    "cumulative": {
-    "net_fiscal_impact_B": -20058.2,
-    "cum10_net_fiscal_impact_B": -20058.2,
-    "cum10_pct_of_baseline_fed_revenue": -40.25,
-    "state_gap_B": 5136.5,
-    "cum10y_total_revenue_pct": -14.2
+    "net_fiscal_impact_B": -21364.8,
+    "cum10_net_fiscal_impact_B": -21364.8,
+    "cum10_pct_of_baseline_fed_revenue": -42.88,
+    "state_gap_B": 5307.6,
+    "cum10y_total_revenue_pct": -15.61
    },
    "mc": {
     "final_fed_deficit_B": {
-     "p10": 2256.93,
-     "p25": 2397.85,
-     "p50": 2560.9,
-     "p75": 2718.25,
-     "p90": 2889.19
+     "p10": 2467.55,
+     "p25": 2592.01,
+     "p50": 2755.84,
+     "p75": 2930.13,
+     "p90": 3085.11
     },
     "final_employment_drop_pct": {
-     "p10": 89.11,
-     "p25": 91.14,
-     "p50": 96.54,
-     "p75": 99.64,
-     "p90": 99.9
+     "p10": 97.83,
+     "p25": 100.0,
+     "p50": 100.0,
+     "p75": 100.0,
+     "p90": 100.0
     },
     "top_deficit_levers": [
      {
       "lever": "lfp_exit_rate",
-      "spearman": 0.59
+      "spearman": 0.57
      },
      {
       "lever": "ssdi_annual",
-      "spearman": 0.52
+      "spearman": 0.53
      },
      {
       "lever": "reabsorption_rate",
-      "spearman": -0.22
+      "spearman": -0.24
      },
      {
       "lever": "demand_multiplier",
-      "spearman": 0.16
+      "spearman": 0.23
      },
      {
       "lever": "attrition_rate",
-      "spearman": -0.15
+      "spearman": -0.18
      }
     ]
    },
@@ -433,60 +433,60 @@
    "adoption_start": 0.1,
    "adoption_end": 1.0,
    "final": {
-    "employment_drop_pct": 98.7,
-    "fed_deficit_delta_B": 2204.0,
-    "net_fiscal_impact_B": -2204.0,
-    "fed_deficit_abs_B": 4037.0,
-    "fed_deficit_abs_pct_gdp": 5.0,
-    "fed_debt_B": 12548.9,
-    "state_gap_B": 606.1,
-    "fed_revenue_B": 3851.2,
+    "employment_drop_pct": 99.1,
+    "fed_deficit_delta_B": 2226.3,
+    "net_fiscal_impact_B": -2226.3,
+    "fed_deficit_abs_B": 4059.3,
+    "fed_deficit_abs_pct_gdp": 5.1,
+    "fed_debt_B": 12574.3,
+    "state_gap_B": 611.9,
+    "fed_revenue_B": 3828.9,
     "n_states_capped": 0,
-    "induced_M": 23.06,
-    "productivity_gain_pct": 62.95
+    "induced_M": 24.08,
+    "productivity_gain_pct": 62.68
    },
    "cumulative": {
-    "net_fiscal_impact_B": -11403.2,
-    "cum10_net_fiscal_impact_B": -11403.2,
-    "cum10_pct_of_baseline_fed_revenue": -28.61,
-    "state_gap_B": 2917.6,
-    "cum10y_total_revenue_pct": -12.39
+    "net_fiscal_impact_B": -11428.5,
+    "cum10_net_fiscal_impact_B": -11428.5,
+    "cum10_pct_of_baseline_fed_revenue": -28.67,
+    "state_gap_B": 2925.6,
+    "cum10y_total_revenue_pct": -12.44
    },
    "mc": {
     "final_fed_deficit_B": {
-     "p10": 1852.07,
-     "p25": 1977.71,
-     "p50": 2099.5,
-     "p75": 2215.98,
-     "p90": 2327.55
+     "p10": 1853.63,
+     "p25": 1981.65,
+     "p50": 2106.7,
+     "p75": 2232.11,
+     "p90": 2340.73
     },
     "final_employment_drop_pct": {
      "p10": 80.98,
-     "p25": 87.94,
-     "p50": 93.43,
-     "p75": 97.37,
-     "p90": 98.56
+     "p25": 87.92,
+     "p50": 93.36,
+     "p75": 97.38,
+     "p90": 99.52
     },
     "top_deficit_levers": [
      {
       "lever": "reabsorption_rate",
-      "spearman": -0.43
+      "spearman": -0.42
      },
      {
       "lever": "demand_multiplier",
-      "spearman": 0.34
+      "spearman": 0.39
      },
      {
       "lever": "adoption_end",
-      "spearman": 0.28
+      "spearman": 0.31
      },
      {
       "lever": "mpc",
-      "spearman": 0.27
+      "spearman": 0.3
      },
      {
-      "lever": "price_reduction_share",
-      "spearman": 0.24
+      "lever": "consumption_stickiness",
+      "spearman": 0.23
      }
     ]
    },
@@ -583,8 +583,8 @@
    },
    "compute-parity": {
     "final_recovery_B": 0.0,
-    "cum_recovery_B": 0.0,
-    "pct_of_cum_gap": 0.0,
+    "cum_recovery_B": -0.0,
+    "pct_of_cum_gap": -0.0,
     "cum_instrument_B": 0.0,
     "note": "Compute-pool parity tax: effective rate 0.27 (Windfall capital ETR 26.7%) vs the 0.05 post-TCJA status quo"
    }
@@ -605,9 +605,9 @@
     "note": "GRT transitional robot tax (decade 1): 5.1% ad-valorem \u00d7 auto_cost 10% \u2192 automation_tax_rate = 0.0051 of the saved compensation bill \u2014 held constant beyond year 10; GRT's decade-2 rate is 2.2% and their steady state is ZERO, so this overstates the tax at long horizons"
    },
    "ubi": {
-    "final_recovery_B": -887.6,
-    "cum_recovery_B": -16890.4,
-    "pct_of_cum_gap": -380.9,
+    "final_recovery_B": -887.5,
+    "cum_recovery_B": -16890.0,
+    "pct_of_cum_gap": -380.8,
     "cum_instrument_B": -19398.2,
     "note": "UBI: $12,000/worker/yr with 30% recapture (income-tax clawback, Korinek-Lockwood 0.25\u20130.375)"
    },
@@ -621,97 +621,97 @@
   },
   "agi-20y": {
    "cw-robot-tax": {
-    "final_recovery_B": 33.8,
-    "cum_recovery_B": 359.9,
+    "final_recovery_B": 31.3,
+    "cum_recovery_B": 356.8,
     "pct_of_cum_gap": 1.3,
-    "cum_instrument_B": 459.9,
+    "cum_instrument_B": 456.0,
     "note": "Costinot-Werning optimal robot tax: 2.7% ad-valorem \u00d7 auto_cost 15% \u2192 automation_tax_rate = 0.0040 of the saved compensation bill"
    },
    "grt-robot-tax": {
-    "final_recovery_B": 63.8,
-    "cum_recovery_B": 679.8,
+    "final_recovery_B": 59.2,
+    "cum_recovery_B": 674.0,
     "pct_of_cum_gap": 2.5,
-    "cum_instrument_B": 868.8,
+    "cum_instrument_B": 861.4,
     "note": "GRT transitional robot tax (decade 1): 5.1% ad-valorem \u00d7 auto_cost 15% \u2192 automation_tax_rate = 0.0076 of the saved compensation bill \u2014 held constant beyond year 10; GRT's decade-2 rate is 2.2% and their steady state is ZERO, so this overstates the tax at long horizons"
    },
    "ubi": {
-    "final_recovery_B": -1226.1,
-    "cum_recovery_B": -21148.3,
-    "pct_of_cum_gap": -78.5,
+    "final_recovery_B": -1118.5,
+    "cum_recovery_B": -20684.2,
+    "pct_of_cum_gap": -75.5,
     "cum_instrument_B": -25864.2,
     "note": "UBI: $12,000/worker/yr with 30% recapture (income-tax clawback, Korinek-Lockwood 0.25\u20130.375)"
    },
    "compute-parity": {
-    "final_recovery_B": 351.3,
-    "cum_recovery_B": 3747.7,
-    "pct_of_cum_gap": 13.9,
-    "cum_instrument_B": 3747.7,
+    "final_recovery_B": 326.2,
+    "cum_recovery_B": 3715.9,
+    "pct_of_cum_gap": 13.6,
+    "cum_instrument_B": 3715.9,
     "note": "Compute-pool parity tax: effective rate 0.27 (Windfall capital ETR 26.7%) vs the 0.05 post-TCJA status quo"
    }
   },
   "agi-5y": {
    "cw-robot-tax": {
-    "final_recovery_B": 47.2,
-    "cum_recovery_B": 348.1,
-    "pct_of_cum_gap": 1.7,
-    "cum_instrument_B": 444.8,
+    "final_recovery_B": 42.8,
+    "cum_recovery_B": 333.1,
+    "pct_of_cum_gap": 1.6,
+    "cum_instrument_B": 425.5,
     "note": "Costinot-Werning optimal robot tax: 2.7% ad-valorem \u00d7 auto_cost 20% \u2192 automation_tax_rate = 0.0054 of the saved compensation bill"
    },
    "grt-robot-tax": {
-    "final_recovery_B": 89.1,
-    "cum_recovery_B": 657.5,
-    "pct_of_cum_gap": 3.3,
-    "cum_instrument_B": 840.3,
+    "final_recovery_B": 80.8,
+    "cum_recovery_B": 629.3,
+    "pct_of_cum_gap": 2.9,
+    "cum_instrument_B": 803.7,
     "note": "GRT transitional robot tax (decade 1): 5.1% ad-valorem \u00d7 auto_cost 20% \u2192 automation_tax_rate = 0.0102 of the saved compensation bill"
    },
    "ubi": {
-    "final_recovery_B": -1209.4,
-    "cum_recovery_B": -11619.6,
-    "pct_of_cum_gap": -57.9,
+    "final_recovery_B": -1165.4,
+    "cum_recovery_B": -11229.7,
+    "pct_of_cum_gap": -52.6,
     "cum_instrument_B": -12932.1,
     "note": "UBI: $12,000/worker/yr with 30% recapture (income-tax clawback, Korinek-Lockwood 0.25\u20130.375)"
    },
    "compute-parity": {
-    "final_recovery_B": 491.2,
-    "cum_recovery_B": 3624.7,
-    "pct_of_cum_gap": 18.1,
-    "cum_instrument_B": 3624.7,
+    "final_recovery_B": 445.3,
+    "cum_recovery_B": 3467.1,
+    "pct_of_cum_gap": 16.2,
+    "cum_instrument_B": 3467.1,
     "note": "Compute-pool parity tax: effective rate 0.27 (Windfall capital ETR 26.7%) vs the 0.05 post-TCJA status quo"
    }
   },
   "ai-2027": {
    "cw-robot-tax": {
-    "final_recovery_B": 66.7,
-    "cum_recovery_B": 297.4,
+    "final_recovery_B": 66.5,
+    "cum_recovery_B": 297.1,
     "pct_of_cum_gap": 2.6,
-    "cum_instrument_B": 380.0,
+    "cum_instrument_B": 379.6,
     "note": "Costinot-Werning optimal robot tax: 2.7% ad-valorem \u00d7 auto_cost 30% \u2192 automation_tax_rate = 0.0081 of the saved compensation bill"
    },
    "grt-robot-tax": {
-    "final_recovery_B": 126.1,
-    "cum_recovery_B": 561.7,
+    "final_recovery_B": 125.5,
+    "cum_recovery_B": 561.1,
     "pct_of_cum_gap": 4.9,
-    "cum_instrument_B": 717.7,
+    "cum_instrument_B": 717.0,
     "note": "GRT transitional robot tax (decade 1): 5.1% ad-valorem \u00d7 auto_cost 30% \u2192 automation_tax_rate = 0.0153 of the saved compensation bill"
    },
    "ubi": {
-    "final_recovery_B": -1100.7,
-    "cum_recovery_B": -8876.8,
-    "pct_of_cum_gap": -77.8,
+    "final_recovery_B": -1078.4,
+    "cum_recovery_B": -8853.0,
+    "pct_of_cum_gap": -77.5,
     "cum_instrument_B": -10345.7,
     "note": "UBI: $12,000/worker/yr with 30% recapture (income-tax clawback, Korinek-Lockwood 0.25\u20130.375)"
    },
    "compute-parity": {
-    "final_recovery_B": 694.7,
-    "cum_recovery_B": 3095.9,
+    "final_recovery_B": 691.8,
+    "cum_recovery_B": 3092.9,
     "pct_of_cum_gap": 27.1,
-    "cum_instrument_B": 3095.9,
+    "cum_instrument_B": 3092.9,
     "note": "Compute-pool parity tax: effective rate 0.27 (Windfall capital ETR 26.7%) vs the 0.05 post-TCJA status quo"
    }
   }
  },
- "generated": "2026-07-07 22:05",
- "git_sha": "6a01216",
+ "generated": "2026-07-10 12:15",
+ "git_sha": "b6f045b",
  "config": {
   "n": 1000,
   "spread": 0.15,
@@ -782,6 +782,98 @@
  "comparison": {
   "figures": {
    "final_outcome_dotplot": "comparison/final_outcome_dotplot.png"
+  }
+ },
+ "screening": {
+  "config": {
+   "n": 10000,
+   "n_cycle": 400,
+   "seed": 0,
+   "sampler": "lhs",
+   "n_dims": 26,
+   "n_periods": 10,
+   "generated": "2026-07-10 12:28",
+   "git_sha": "b6f045b"
+  },
+  "regimes": {
+   "improves_pct": 6.5,
+   "band_0_1_pct": 11.7,
+   "band_1_3_pct": 29.6,
+   "band_gt3_pct": 52.2,
+   "capped_anywhere_pct": 0.5
+  },
+  "checks": {
+   "invariant_failures": 0,
+   "oscillation_flagged": 0,
+   "cycle_batch_max_alternations": 0
+  },
+  "deficit_delta_final_B": {
+   "p5": -107.0,
+   "p25": 678.0,
+   "p50": 1453.0,
+   "p75": 2326.0,
+   "p95": 3550.0
+  },
+  "top_drivers": {
+   "uncertainty": [
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.161,
+     "eta2": 0.0321
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.14,
+     "eta2": 0.025
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.108,
+     "eta2": 0.0154
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.084,
+     "eta2": 0.0094
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.065,
+     "eta2": 0.0063
+    }
+   ],
+   "policy": [
+    {
+     "lever": "ubi_annual",
+     "spearman": 0.818,
+     "eta2": 0.6314
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": -0.32,
+     "eta2": 0.119
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.161,
+     "eta2": 0.0302
+    },
+    {
+     "lever": "automation_tax_frac",
+     "spearman": -0.097,
+     "eta2": 0.0158
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.018,
+     "eta2": 0.0017
+    }
+   ]
+  },
+  "figures": {
+   "global_tornado_uncertainty": "screening/global_tornado_uncertainty.png",
+   "global_tornado_policy": "screening/global_tornado_policy.png",
+   "regime_scatter": "screening/regime_scatter.png"
   }
  }
 }

@@ -374,6 +374,13 @@ def main() -> None:
                       "combined_revenue0_B": round(env.ledger.fed_revenue0
                                                    + env.ledger.state_revenue0, 1)},
     })
+    # Foreign fragments ("screening" belongs to scripts/global_screening.py) are re-read at write
+    # time — this build loaded the manifest ~an hour ago and must not clobber a concurrent update.
+    if manifest_path.exists():
+        fresh = json.loads(manifest_path.read_text())
+        for k in ("screening",):
+            if k in fresh:
+                manifest[k] = fresh[k]
     tmp = manifest_path.with_suffix(".json.tmp")
     tmp.write_text(json.dumps(manifest, indent=1))
     tmp.rename(manifest_path)

@@ -697,9 +697,12 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
     st.caption("Samples N slightly-perturbed lever settings around YOUR configuration (seeded, "
                "constraint-aware; levers that are off stay off) and re-runs the model. Fan = P10–P90 and "
                "P25–P75 bands with the median and your base run; tornado = Spearman rank correlation of "
-               "each varied lever with the final-year outcome. Note: mpc/stickiness sensitivity reflects "
-               "only their live paths (demand, state close, reabsorption) — the cached displaced-worker "
-               "consumption channel stays at bake-time values.")
+               "each varied lever with the final-year outcome. **Read the bands as robustness to lever "
+               "mis-calibration within this scenario, not as a probability interval** — the ±15% spread "
+               "is a convention. The honest uncertainty statement is the spread ACROSS scenario presets "
+               "(which world we are in), not the band around one of them. Note: mpc/stickiness "
+               "sensitivity reflects only their live paths (demand, state close, reabsorption) — the "
+               "cached displaced-worker consumption channel stays at bake-time values.")
     mc1, mc2, mc3 = st.columns(3)
     mc_n = mc1.slider("Draws (N)", 100, 1000, 300, 50)
     mc_spread = mc2.slider("Spread (relative 1σ, ±2σ truncated)", 0.05, 0.30, 0.15, 0.01)

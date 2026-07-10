@@ -89,6 +89,7 @@ fiscal_delta(worker) =
 - [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
 - [x] **Website** — `app/streamlit_app.py`: light report-style theme, static labeled charts with captions, collapsible lever groups with per-lever help, two headline rows (jobs lost, cumulative income-tax loss, GDP effect, …), a state section (shortfall-before-response + hardest-hit table), and tax-regime dials (income/capital/consumption ×)
 - [x] **Scenario presets** — `fiscal_model/presets.py`: 7 literature-anchored world states (Acemoglu → AI-2027) + 4 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
+- [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 7 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.9)
 
 ### Complete: model backend + website
 `loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (66 tests).
