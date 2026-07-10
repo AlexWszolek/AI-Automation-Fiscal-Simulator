@@ -506,12 +506,15 @@ for _note in _overlay_notes:
     sb.caption("🏛 " + _note)
 m = DynamicModelV2(data, deltas, v2p)   # keep the model object: state_table lives on it
 res = m.run()
+_levers = _dc.asdict(v2p)
+if not math.isfinite(_levers["survivor_raise_ceiling"]):
+    _levers["survivor_raise_ceiling"] = None    # JSON has no Infinity token; null = unbounded raise
 sb.download_button("⬇ Export assumptions (JSON)",
                    _json.dumps({"engine": "v2",
                                 "preset": _preset.key if _preset is not None else "custom",
                                 "overlays": overlay_keys,
                                 "exportedAt": _dt.datetime.now().isoformat(timespec="seconds"),
-                                "levers": _dc.asdict(v2p)}, indent=1),
+                                "levers": _levers}, indent=1, allow_nan=False),
                    "assumptions.json", "application/json")
 final = res.iloc[-1]
 

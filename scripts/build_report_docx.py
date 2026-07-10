@@ -126,7 +126,6 @@ def windfall_table(manifest: dict) -> dict:
 
 
 def overlay_table(manifest: dict) -> dict:
-    from collections import OrderedDict
     names = {"cw-robot-tax": "Robot tax (CW optimal)", "grt-robot-tax": "Robot tax (GRT trans.)",
              "ubi": "UBI $12k + 30% recapture", "compute-parity": "Compute parity 0.27"}
     header = ["Preset", *names.values()]

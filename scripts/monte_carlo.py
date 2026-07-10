@@ -22,12 +22,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))   # project root -> import fiscal_model
 
 import numpy as np
-import pandas as pd
-
 from fiscal_model import loaders, mc, presets, reabsorption
 from fiscal_model.dynamics import precompute_worker_deltas
 from fiscal_model.kernel import KernelParams
-from fiscal_model.levers_v2 import DEFAULTS_SHIPPED, DEFAULTS_V1REDUCTION, V2Params
+from fiscal_model.levers_v2 import DEFAULTS_SHIPPED, DEFAULTS_V1REDUCTION
 from fiscal_model.transfers import TransferLookup
 
 SCEN = dict(cognitive_feasibility=0.85, physical_feasibility=0.25)

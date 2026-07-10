@@ -143,11 +143,13 @@ class DynamicModelV2:
             "corp_offset_scale is superseded by the disposition router (corporate XOR) — keep it 1.0"
         assert params.surplus_capture == 1.0, \
             "surplus_capture is inert in V2 (frozen in the delta cache); the router controls corporate"
-        # Input-domain guards (fail loud — an off-sum or out-of-range lever silently breaks conservation:
-        # off-sum disposition shares break C2/C5b; auto_cost>1 drives net_saving<0 past the C-gate;
-        # offshore>1 makes compute tax negative; price_passthrough>1 can push the price level negative).
-        assert abs(disposition.shares_sum(params) - 1.0) < 1e-9, \
-            "disposition shares (retained/price/survivor) must sum to 1"
+        # Input-domain guards — ValueError, not assert: these reject USER-suppliable lever values
+        # (Streamlit sliders, MC draws, CLI --set), so they must survive `python -O`, which strips
+        # asserts. An out-of-range lever silently breaks conservation: off-sum disposition shares
+        # break C2/C5b; auto_cost>1 drives net_saving<0 past the C-gate; offshore>1 makes compute
+        # tax negative; price_passthrough>1 can push the price level negative.
+        if abs(disposition.shares_sum(params) - 1.0) >= 1e-9:
+            raise ValueError("disposition shares (retained/price/survivor) must sum to 1")
         for _n, _v in (("retained_profit_share", params.retained_profit_share),
                        ("price_reduction_share", params.price_reduction_share),
                        ("survivor_gains_share", params.survivor_gains_share),
@@ -156,19 +158,25 @@ class DynamicModelV2:
                        ("automation_tax_rate", params.automation_tax_rate),
                        ("survivor_spillover_to_profit", params.survivor_spillover_to_profit),
                        ("ubi_recapture_rate", params.ubi_recapture_rate)):
-            assert 0.0 <= _v <= 1.0, f"{_n}={_v} is out of its documented [0, 1] domain"
+            if not 0.0 <= _v <= 1.0:
+                raise ValueError(f"{_n}={_v} is out of its documented [0, 1] domain")
         # The robot tax is paid from retained profit (corp-deductible via disp_factor) — a rate above the
         # retained-profit capacity would drive the corporate base negative. Fail loud.
-        assert params.automation_tax_rate <= params.retained_profit_share * (1.0 - params.auto_cost) + 1e-9, \
-            "automation_tax_rate exceeds retained_profit_share·(1−auto_cost) — no profit left to pay it"
-        assert 0.0 <= params.baseline_growth_rate <= 0.10, "baseline_growth_rate out of [0, 0.10]"
+        if params.automation_tax_rate > params.retained_profit_share * (1.0 - params.auto_cost) + 1e-9:
+            raise ValueError("automation_tax_rate exceeds retained_profit_share·(1−auto_cost)"
+                             " — no profit left to pay it")
+        if not 0.0 <= params.baseline_growth_rate <= 0.10:
+            raise ValueError("baseline_growth_rate out of [0, 0.10]")
         for _n, _v in (("income_tax_mult", params.income_tax_mult),
                        ("corp_tax_mult", params.corp_tax_mult),
                        ("cons_tax_mult", params.cons_tax_mult)):
             # surcharges may exceed 1 (not the [0,1] loop above); negative/non-finite is nonsense
-            assert np.isfinite(_v) and _v >= 0.0, f"{_n}={_v} must be finite and ≥ 0"
-        assert params.ssdi_annual >= 0.0, "ssdi_annual must be ≥ 0"
-        assert params.robotics_lag >= 0.0, "robotics_lag must be ≥ 0 (years of capacity build-out)"
+            if not (np.isfinite(_v) and _v >= 0.0):
+                raise ValueError(f"{_n}={_v} must be finite and ≥ 0")
+        if params.ssdi_annual < 0.0:
+            raise ValueError("ssdi_annual must be ≥ 0")
+        if params.robotics_lag < 0.0:
+            raise ValueError("robotics_lag must be ≥ 0 (years of capacity build-out)")
         assert (params.reabsorption_rung, params.reabsorption_floor_pctile, params.consumption_scale,
                 params.exposure_mapping, params.logistic_midpoint,
                 params.logistic_steepness) == self._built_structural, \
@@ -564,7 +572,6 @@ class DynamicModelV2:
                 "n_states_capped": int(close.capped.sum()),
                 "state_balanced": bool(np.all(close.residual <= 1e-6 * np.maximum(close.gap, 1.0))),
                 # --- Phase 5: lagged demand (I) — induced jobs QUEUED for next period ---
-                "induced_target_M": float(induced_target.sum()) / 1e6,
                 "induced_pending_M": float(induced_flow_pending.sum()) / 1e6,   # SIGNED flow queued for t+1
                 "standing_withdrawal_B": standing_withdrawal / 1e9,             # a LEVEL, not a flow
                 # --- Phase 5: absolute revenue ledger ---

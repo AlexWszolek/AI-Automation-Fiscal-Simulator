@@ -69,7 +69,7 @@ def test_robot_tax_is_paid_from_retained_profit(data, deltas):
 
 def test_robot_tax_capacity_bound_raises(data, deltas):
     # a rate above retained_profit_share·(1−auto_cost) has no profit to pay it — fail loud
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         DynamicModelV2(data, deltas, replace(R, retained_profit_share=0.1, price_reduction_share=0.4,
                                              survivor_gains_share=0.5, automation_tax_rate=0.2))
 

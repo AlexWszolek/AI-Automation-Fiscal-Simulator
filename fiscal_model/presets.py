@@ -14,7 +14,7 @@ Pure module: no streamlit. The app derives its widget defaults from `to_params(p
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 from typing import Callable, Optional
 
 import numpy as np

@@ -13,7 +13,6 @@ worker_wage) + residual_income, difference per program, and split fed/state by f
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
 

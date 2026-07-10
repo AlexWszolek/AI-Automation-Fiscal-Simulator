@@ -27,7 +27,6 @@ from .government import RevenueLedger
 
 # (group, label, column expression, scope, kind)
 # scope: which baseline the pct_baseline units divide by — fed | state | combined | passthrough (%-GDP)
-_S = None  # placeholder for readability in the spec lambdas
 
 
 def _tax_rows(res: pd.DataFrame) -> list:

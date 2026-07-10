@@ -297,7 +297,7 @@ def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: i
             res = context.run(v2p)
             if invariant_every and i % invariant_every == 0:
                 assert_all_invariants(res, v2p, baseline_M)
-        except AssertionError as e:              # fail loud, with the draw pinned for reproduction
+        except (AssertionError, ValueError) as e:   # fail loud, with the draw pinned for reproduction
             raise AssertionError(f"MC draw {i} failed: {e}\nlevers: {_draw_scalars(v2p)}") from e
         scal = _draw_scalars(v2p)
         scal.update({"draw": i,

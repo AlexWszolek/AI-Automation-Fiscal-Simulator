@@ -61,9 +61,9 @@ def test_guard_listing():
 
 
 def test_domain_guard(data, deltas):
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         DynamicModelV2(data, deltas, replace(R, **SCEN, income_tax_mult=-0.1))
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         DynamicModelV2(data, deltas, replace(R, **SCEN, corp_tax_mult=float("inf")))
 
 

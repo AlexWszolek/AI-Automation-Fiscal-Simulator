@@ -171,11 +171,11 @@ def test_price_double_application_all_nominal(data, deltas):
 def test_offsum_and_out_of_domain_levers_raise(data, deltas):
     # off-sum disposition shares silently break C2/C5b; out-of-[0,1] inputs silently break C-gate/C3/P —
     # the model must reject them at construction, not run green to a wrong answer.
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError):
         DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, retained_profit_share=0.5,
                                              price_reduction_share=0.5, survivor_gains_share=0.5))
     for bad in (dict(auto_cost=1.5), dict(offshore_share=1.2), dict(price_passthrough=2.0)):
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **bad))
 
 

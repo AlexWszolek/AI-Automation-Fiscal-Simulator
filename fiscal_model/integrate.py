@@ -33,8 +33,8 @@ import pandas as pd
 
 from . import loaders
 from .kernel import FiscalDelta, KernelParams
-from .rates import IncomeTax, PayrollFICA, build_engines
-from .transfers import TransferLookup, DEFAULT_FED_SHARE, PROGRAMS
+from .rates import build_engines
+from .transfers import TransferLookup
 
 INTERIM = Path(__file__).resolve().parent.parent / "data" / "interim"
 NOC_BAND_EDGES = [-np.inf, 25_000, 55_000, np.inf]   # must match noc.DEFAULT_BAND_EDGES

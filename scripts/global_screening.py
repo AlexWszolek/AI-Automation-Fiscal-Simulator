@@ -117,7 +117,7 @@ def run_sweep(data, deltas, base, n: int, seed: int, label: str,
                     if res[c].dtype.kind == "f":
                         assert np.array_equal(fresh[c].to_numpy(), res[c].to_numpy()), \
                             f"context deviates from fresh construction on {c!r}"
-        except AssertionError as e:                 # fail loud, pinned for reproduction
+        except (AssertionError, ValueError) as e:   # fail loud, pinned for reproduction
             raise AssertionError(
                 f"{label} draw {i} (seed {seed}) failed: {e}\nlevers: {samples.iloc[i].to_dict()}"
             ) from e
