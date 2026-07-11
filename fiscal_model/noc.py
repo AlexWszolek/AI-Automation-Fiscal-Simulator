@@ -104,6 +104,7 @@ def build_noc_distribution(pums_dir: Path = PUMS_DIR,
     dist_f = {key: _weighted_dist(g) for key, g in df.groupby("filing")}
     n_fsb = df.groupby(["filing", "state", "band"]).size().to_dict()
     n_fs = df.groupby(["filing", "state"]).size().to_dict()
+    n_f = df.groupby("filing").size().to_dict()
 
     rows = []
     for filing in filings:
@@ -116,7 +117,7 @@ def build_noc_distribution(pums_dir: Path = PUMS_DIR,
                 elif n_fs.get((filing, state), 0) >= min_unweighted:
                     dist, src, n_used = dist_fs[(filing, state)], "filing_state", n_fs[(filing, state)]
                 else:
-                    dist, src, n_used = dist_f[filing], "filing_national", n1
+                    dist, src, n_used = dist_f[filing], "filing_national", n_f[filing]
                 for k in CHILD_BUCKETS:
                     rows.append({
                         "filing_status": filing, "state": state,

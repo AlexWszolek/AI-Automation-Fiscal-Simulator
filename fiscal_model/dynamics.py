@@ -37,6 +37,9 @@ from .transfers import TransferLookup
 
 INTERIM = Path(__file__).resolve().parent.parent / "data" / "interim"
 DELTA_CACHE = INTERIM / "worker_deltas_by_occ_state.parquet"
+# UI benefits are federally taxable income; ~10% is a rough average effective rate on them
+# (no source-grade estimate wired — a sensitivity candidate). ONE definition, both engines.
+UI_FED_TAX_RATE = 0.10
 
 _CHANNELS = ["inc_fed", "inc_state", "payroll_fed", "cons_state", "transfer_fed", "transfer_state"]
 
@@ -175,7 +178,7 @@ class DynamicModel:
                     ch[c] += R * p.reemployment_haircut * self.arr["after"][c]
 
             ui_outlay_fed = (new * self.ui * self.ui_share)
-            ui_tax_fed = 0.10 * ui_outlay_fed                                    # rough tax on UI (federal)
+            ui_tax_fed = UI_FED_TAX_RATE * ui_outlay_fed
             # corporate recovery on the CUMULATIVE automated stock (coherence fix, matches v2): a job stays
             # automated after its worker is reabsorbed — the saved labour cost keeps flowing to capital.
             corp_offset_fed = auto_disp * self.corp

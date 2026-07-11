@@ -79,8 +79,10 @@ def service_floor_by_state(data: loaders.FiscalData, pctile: float = 0.30):
 class ReabsorptionEngine:
     """Live per-run reabsorbed fiscal delta (all 6 channels) at a haircut-driven destination wage
     `w_d = max(origin·(1−haircut), service_floor)`. Unifies the old Rung-0/Rung-1 split into ONE dial:
-    haircut=0 → w_d=origin → zero delta (reabsorbed fiscally WHOLE, so full reabsorption doesn't grow the
-    deficit); a bigger haircut → deeper cut → income/payroll tax lost AND the means-tested cross-threshold
+    haircut=0 → w_d=origin → zero delta (reabsorbed fiscally WHOLE, so full reabsorption doesn't grow
+    the deficit) — EXCEPT cells whose origin wage sits below the service floor, which re-employ AT the
+    floor (a small gain: the floor is the going wage for the service work they move into);
+    a bigger haircut → deeper cut → income/payroll tax lost AND the means-tested cross-threshold
     fire. Evaluated AT-MEAN per cell (like `survivor.SurvivorEngine` — fast enough to recompute live for
     the UI, no 83s disk cache); the within-cell lognormal integration of the transfer cliffs
     (`integrate_reemployment`) is the higher-fidelity offline path, traded here for interactivity. The

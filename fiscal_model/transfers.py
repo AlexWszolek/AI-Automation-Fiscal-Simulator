@@ -8,7 +8,7 @@ function and differences it across residual-income phases — never importing Po
 
 Marginal object (per worker): transfers(without the worker's earnings) − transfers(with).
 The kernel passes `residual_income` (UI during the window, 0 after exhaustion); we evaluate
-net benefits at income_before = household_income and income_after = (household_income −
+net benefits at income_before = household_income and income_after = max(0, household_income −
 worker_wage) + residual_income, difference per program, and split fed/state by funding share.
 """
 from __future__ import annotations

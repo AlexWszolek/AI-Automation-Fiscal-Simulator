@@ -34,7 +34,7 @@ from . import loaders, rates
 
 
 # --------------------------------------------------------------------- levers
-@dataclass
+@dataclass(frozen=True)   # frozen: instances are shared as defaults/templates — mutation must fail loud
 class KernelParams:
     # --- corporate channel ---
     surplus_capture: float = 1.0
@@ -136,9 +136,9 @@ class FiscalDelta:
 
 # --------------------------------------------------------------------- kernel
 class Kernel:
-    def __init__(self, data: loaders.FiscalData, params: KernelParams = KernelParams()):
+    def __init__(self, data: loaders.FiscalData, params: Optional[KernelParams] = None):
         self.data = data
-        self.params = params
+        self.params = params if params is not None else KernelParams()
         self.income, self.fica = rates.build_engines(data)
         self._cap = data.capital.set_index("industry")
         self._cons = data.consumption.set_index("state")["eff_tax_rate_frac"]

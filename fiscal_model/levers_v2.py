@@ -22,7 +22,7 @@ from . import levers
 from .kernel import KernelParams
 
 
-@dataclass
+@dataclass(frozen=True)   # frozen: DEFAULTS_* are shared singletons — use dataclasses.replace, never mutate
 class V2Params:
     # ---------------- diffusion (v1 shared scenario knobs) ----------------
     exposure_mapping: str = "percentile"

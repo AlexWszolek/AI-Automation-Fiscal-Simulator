@@ -151,6 +151,7 @@ def main():
     print(f"-> {OUT_DIR/'benefit_lookup.parquet'}")
     if failures:
         print("FAILURES:", failures[:10])
+        raise SystemExit(f"{len(failures)} cell(s) failed to bake — the lookup is incomplete; fix and re-run")
 
 
 if __name__ == "__main__":

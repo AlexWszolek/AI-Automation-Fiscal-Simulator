@@ -94,7 +94,7 @@ def sample_draws(base: V2Params, n: int, spread: float, seed: int = 0) -> list:
         # 1) the disposition simplex (skip degenerate corners like (1,0,0): zeros self-preserve there,
         #    and renormalizing a single jittered survivor returns exactly 1.0)
         shares = np.array([getattr(base, s) for s in _SIMPLEX], float)
-        jittered = np.array([j(x) if x > 0 else 0.0 for x in shares])
+        jittered = np.array([max(0.0, j(x)) if x > 0 else 0.0 for x in shares])
         tot = jittered.sum()
         if tot > 0:
             for name, val in zip(_SIMPLEX, jittered / tot):

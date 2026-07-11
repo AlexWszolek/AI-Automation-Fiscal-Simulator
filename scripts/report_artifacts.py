@@ -349,7 +349,7 @@ def main() -> None:
             except AssertionError as e:
                 failures.append((key, str(e)))
                 print(f"\n  !! {key} FAILED: {e}")
-        if len(manifest["presets"]) == len(presets.PRESETS):
+        if args.preset is None and len(manifest["presets"]) == len(presets.PRESETS):
             manifest["comparison"] = build_comparison(manifest["presets"])
             build_recovery_matrix(manifest["overlays"],
                                   {k: v["name"] for k, v in manifest["presets"].items()})

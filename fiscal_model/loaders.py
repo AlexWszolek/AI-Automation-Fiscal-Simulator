@@ -272,16 +272,15 @@ def load_government(data_dir: Path = DATA_DIR, validate: bool = True) -> dict:
     if validate:
         assert len(receipts) == 15, f"expected 15 receipt line items, got {len(receipts)}"
         assert len(transfers) == 17, f"expected 17 transfer programs, got {len(transfers)}"
-        fed_inc = receipts.loc[receipts["receipt_source"].str.contains("income", case=False)
-                              & receipts["level"].eq("Federal"), "amount_busd"]
         medicaid = transfers.loc[transfers["program"].str.contains("Medicaid", case=False),
                                  "amount_busd"]
         _assert_close(medicaid.iloc[0], 938.2, rel=1e-3, name="Medicaid outlay")
         ind = base.loc[base["tax_stream"].str.contains("income", case=False)
                        & base["model_base"].notna(), "avg_effective_rate"]
-        # individual income effective rate ~ 19.5%
-        assert any(abs(v - 0.1953) < 5e-3 for v in base["avg_effective_rate"].dropna()), \
-            "individual income effective rate ~19.5% not found"
+        # the INDIVIDUAL income stream itself must carry ~19.5% (scanning every stream would
+        # let a corrupted individual rate pass on a coincidental match elsewhere)
+        assert any(abs(v - 0.1953) < 5e-3 for v in ind), \
+            "individual income effective rate ~19.5% not found in the income streams"
 
     return {"receipts": receipts, "transfers": transfers, "base_linkage": base}
 

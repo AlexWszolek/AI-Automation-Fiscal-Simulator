@@ -71,7 +71,8 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     # C7: the close is exact — recovered + spending_cut covers the gap, residual ~0, every state balances.
     assert (res["state_rate_hike_B"] + res["state_spending_cut_B"]
             >= res["state_gap_B"] - 1e-6).all(), "C7 gap covered"
-    assert (res["state_close_residual_B"] <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all(), "C7 residual"
+    assert (res["state_close_residual_B"].abs()
+            <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all(), "C7 residual"
     assert res["state_balanced"].all(), "C7 balanced flag"
 
     # absolute ledger: the absolute federal deficit is exactly the baseline anchor + the modeled delta.

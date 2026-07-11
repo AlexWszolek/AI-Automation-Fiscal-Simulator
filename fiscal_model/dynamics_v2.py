@@ -34,7 +34,7 @@ import numpy as np
 import pandas as pd
 
 from . import loaders, workers, compute_pool, macro, survivor, reabsorption, government, levers
-from .dynamics import DynamicModel
+from .dynamics import DynamicModel, UI_FED_TAX_RATE
 from .firms import disposition
 from .levers_v2 import V2Params
 
@@ -327,7 +327,7 @@ class DynamicModelV2:
                 ch["cons_state"] = ch["cons_state"] * km
 
             ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
-            ui_tax_fed = 0.10 * ui_outlay_fed                 # income tax on UI benefits
+            ui_tax_fed = UI_FED_TAX_RATE * ui_outlay_fed      # income tax on UI benefits
             if im != 1.0:
                 ui_tax_fed = ui_tax_fed * im
 
@@ -583,8 +583,10 @@ class DynamicModelV2:
 
             # carry this period's cumulative slack to t+1 (decision J.1 keeps ΔW_market predetermined).
             # slack (coherence fix): the reabsorbed are EMPLOYED (service jobs) and the retired left the
-            # labour force with their baseline twin — neither should suppress survivor wages. At reduction
-            # the only consumer (market_frac) is elasticity-gated → C8-safe.
+            # labour force with their baseline twin — neither should suppress survivor wages. `exited`
+            # (SSDI) DELIBERATELY stays in slack: unlike retired, their baseline twin still works, so an
+            # exit is shock-induced non-employment relative to baseline. At reduction the only consumer
+            # (market_frac) is elasticity-gated → C8-safe.
             lf = baseline_emp - st.retired.sum()
             slack_prev = 1.0 - (employed_post.sum() + st.reabsorbed.sum()) / lf if lf > 0 else 0.0
             # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition ---

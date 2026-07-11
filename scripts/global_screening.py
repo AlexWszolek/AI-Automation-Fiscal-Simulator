@@ -115,7 +115,8 @@ def run_sweep(data, deltas, base, n: int, seed: int, label: str,
                 fresh = DynamicModelV2(data, deltas, v2p).run()
                 for c in res.columns:
                     if res[c].dtype.kind == "f":
-                        assert np.array_equal(fresh[c].to_numpy(), res[c].to_numpy()), \
+                        assert np.array_equal(fresh[c].to_numpy(), res[c].to_numpy(),
+                                              equal_nan=True), \
                             f"context deviates from fresh construction on {c!r}"
         except (AssertionError, ValueError) as e:   # fail loud, pinned for reproduction
             raise AssertionError(
@@ -230,7 +231,8 @@ def main() -> None:
     sha = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True, cwd=ART.parents[2]).stdout.strip()
     pcts = results["fed_deficit_B"].quantile([.05, .25, .50, .75, .95])
-    top = lambda tag: [{"lever": r.lever, "spearman": round(r.spearman, 3), "eta2": r.eta2}
+    top = lambda tag: [{"lever": r.lever, "spearman": round(r.spearman, 3),
+                        "eta2": r.eta2, "eta2_debiased": r.eta2_debiased}
                        for r in tornado[tornado.tag == tag].head(5).itertuples()]
     frag = {
         "config": {"n": args.n, "n_cycle": args.n_cycle, "seed": args.seed, "sampler": "lhs",

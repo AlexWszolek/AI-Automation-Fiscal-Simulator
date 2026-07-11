@@ -54,20 +54,23 @@ def main() -> None:
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 
-    rung = args.rung if args.rung is not None else (1 if reabsorption.engine_artifacts_exist() else 0)
+    # "reduction" must stay a true v1-reduction (rung 0) unless --rung is explicit; the
+    # artifact-driven default would silently stomp it to rung 1 and break its meaning.
+    rung = args.rung if args.rung is not None else (
+        0 if args.preset == "reduction" else (1 if reabsorption.engine_artifacts_exist() else 0))
     overrides = dict(parse_set(kv) for kv in getattr(args, "set"))
     if "ui_weeks" in overrides:
         overrides["ui_weeks"] = int(overrides["ui_weeks"])
     if args.preset in presets.PRESETS:
         # named preset: its own scenario + horizon — no SCEN/adoption stomp
         base = presets.to_params(presets.PRESETS[args.preset], n_periods=args.periods)
-        base = replace(base, reabsorption_rung=rung, **overrides)
+        base = replace(base, **{"reabsorption_rung": rung, **overrides})   # --set wins on collision
     else:
         periods = args.periods if args.periods is not None else 10
         base = DEFAULTS_SHIPPED if args.preset == "shipped" else DEFAULTS_V1REDUCTION
-        base = replace(base, **SCEN, n_periods=periods,
-                       adoption_path=list(np.linspace(0.1, 0.9, periods)),
-                       reabsorption_rung=rung, **overrides)
+        base = replace(base, **{**SCEN, "n_periods": periods,
+                                "adoption_path": list(np.linspace(0.1, 0.9, periods)),
+                                "reabsorption_rung": rung, **overrides})
     base, overlay_notes = presets.apply_overlays(base, args.overlay)
     for note in overlay_notes:
         print("overlay:", note)
