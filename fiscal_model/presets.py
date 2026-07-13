@@ -296,6 +296,93 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
             compute_effective_rate="capital undertaxed status quo (§1)",
             interest_rate="Korinek-Lockwood ~4% (§1)"),
     ),
+
+    Preset(
+        key="ai2040-plan-a", name="AI 2040 — Plan A (The Deal)",
+        blurb="AI Futures' managed transition: US-China consortium slows the takeoff; 95% of tasks "
+              "automatable by 2035-36; employment 62%→12% over 2032-2040. World state only — their "
+              "permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
+        adoption_start=0.05, adoption_end=1.0, n_periods=14, adoption_reach_year=9,
+        overrides=dict(cognitive_feasibility=0.95, physical_feasibility=0.95, robotics_lag=9.0,
+                       reabsorption_rate=0.15, reemployment_haircut=0.30, lfp_exit_rate=0.05,
+                       retained_profit_share=0.55, price_reduction_share=0.30, auto_cost=0.30,
+                       survivor_elasticity=0.10, productivity_passthrough=0.90,
+                       price_passthrough=0.50, demand_multiplier=1.00,
+                       baseline_growth_rate=0.08, compute_effective_rate=0.05,
+                       interest_rate=0.04, state_cut_share=0.5, state_rate_hike_cap=0.5),
+        provenance=dict(
+            cognitive_feasibility="AI 2040 App.X n1: AI automates 50% of cognitive tasks by 2032, "
+                                  "95% by 2035 (would be 100% but for bans) → terminal 0.95 (§2⑧)",
+            adoption="kinked: reach 1.0 at year 9 (2036: 'pretty much everything'); value-weighted "
+                     "AI/robot labor share 20% (2032) → 85% (2035). Our linear kink front-loads the "
+                     "mid-path drop vs their flat-to-2032 employment — their early stability comes "
+                     "from new-job creation the model maps onto reabsorption (§2⑧)",
+            physical_feasibility="robots 35% of physical tasks 2032, 95% by 2036 (App.X n1) (§2⑧)",
+            robotics_lag="robot channel full at 2036 = year 9 from the 2027 start (§2⑧)",
+            reabsorption_rate="2032-34: displaced white-collar 'get new jobs doing things AIs "
+                              "can't do' — positions explicitly temporary; low-moderate 0.15 (§2⑧)",
+            reemployment_haircut="refuge jobs are physical/service work (§2⑧)",
+            lfp_exit_rate="orderly exit; their voluntary dividend-living maps to NILF under "
+                          "current law (employment rate 62%→12%) (§2⑧)",
+            retained_profit_share="firms reinvest nearly all revenue (capex expensing zeroes "
+                                  "taxable income — their fn42); 0.55/0.30/0.15 split (§2⑧)",
+            price_reduction_share="'goods and services generally falling in price' (App.X #4) (§2⑧)",
+            auto_cost="'corporations reinvesting nearly all their revenue into datacenters, "
+                      "factories, robots' → slider-max capex share 0.30 (§2⑧)",
+            survivor_elasticity="human-bottlenecked work rises in price; remaining 5% of tasks pay "
+                                "~$120K/worker (fn48) → mild complementarity +0.10 (§2⑧)",
+            productivity_passthrough="GDP growth ~100%/yr 2032-2037 — far beyond the lever ceiling; "
+                                     "0.90 = near max, magnitude unrepresentable (documented) (§2⑧)",
+            price_passthrough="relative-price shift to cheap goods/services (§2⑧)",
+            demand_multiplier="managed transition; in-world dividends cushion demand but are "
+                              "policy — moderate 1.0 under current law (§2⑧)",
+            baseline_growth_rate="slider max 0.08; their ~100%/yr is unrepresentable (§2⑧)",
+            compute_effective_rate="status quo 0.05; their permit fees (10× federal revenue by "
+                                   "2032) are the policy question, not the world state (§2⑧)",
+            interest_rate="their ~100% real rates unrepresentable; Korinek-Lockwood ~4% for "
+                          "cross-preset comparability (§2⑧)",
+            state_cut_share="AGI-class gaps close by cuts (§1)",
+            state_rate_hike_cap="see state_cut_share (§1)"),
+    ),
+
+    Preset(
+        key="ai2040-plan-d", name="AI 2040 — Plan D (The Race)",
+        blurb="AI Futures' no-deal branch: full AI R&D automation 2030, superintelligence early "
+              "2031, integration 'as fast as markets allow' — their AI 2027 Race ending on a 2030 "
+              "fuse. 10 years (2027-2036).",
+        adoption_start=0.05, adoption_end=1.0, n_periods=10, adoption_reach_year=7,
+        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.95, robotics_lag=6.0,
+                       reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
+                       retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.30,
+                       survivor_elasticity=-0.50, productivity_passthrough=0.90,
+                       price_passthrough=0.50, demand_multiplier=1.50,
+                       baseline_growth_rate=0.08, compute_effective_rate=0.05,
+                       interest_rate=0.04, state_cut_share=0.5, state_rate_hike_cap=0.5),
+        provenance=dict(
+            cognitive_feasibility="'ASI early 2031, 10,000× AI R&D speedup' — no pause, no bans; "
+                                  "full cognitive feasibility (§2⑨)",
+            adoption="kinked: reach 1.0 at year 7 (2034) — takeoff 2030-31 then 'integrated into "
+                     "everything approximately as fast as the markets and laws allow'; their "
+                     "no-regulation counterfactual is >1000× growth by 2033 (App.X) (§2⑨)",
+            physical_feasibility="unregulated robot explosion post-ASI; 0.95 terminal (§2⑨)",
+            robotics_lag="robot capacity full ~2033 = year 6 from 2027 (takeoff+2) (§2⑨)",
+            reabsorption_rate="no managed transition, no dividend, no time — AI-2027-race value (§2⑨)",
+            reemployment_haircut="service-floor landings (§2⑨)",
+            lfp_exit_rate="mass exit in the crash regime (§2⑨)",
+            retained_profit_share="no deal, no permits, no sharing: capital keeps it; "
+                                  "0.80/0.15/0.05 (§2⑨)",
+            price_reduction_share="see retained (§2⑨)",
+            auto_cost="race-peak capex share, slider max (§2⑨)",
+            survivor_elasticity="crisis substitution, slider max -0.50 (§2⑨)",
+            productivity_passthrough="near ceiling; their magnitude unrepresentable (§2⑨)",
+            price_passthrough="strong deflation (§2⑨)",
+            demand_multiplier="no-offset crisis regime (WW3-risk world, no dividend) (§2⑨)",
+            baseline_growth_rate="slider max (§2⑨)",
+            compute_effective_rate="light-touch regulation: capital undertaxed status quo (§2⑨)",
+            interest_rate="comparability anchor ~4% (§2⑨)",
+            state_cut_share="AGI-class gaps close by cuts (§1)",
+            state_rate_hike_cap="see state_cut_share (§1)"),
+    ),
 ]}
 
 

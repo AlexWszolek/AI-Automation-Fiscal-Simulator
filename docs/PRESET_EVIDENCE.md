@@ -141,6 +141,33 @@ build-out), adoption ceiling by year ~5, heavy compute investment (auto_cost 0.3
 Note the authors' own updated medians (Dec 2030 / Jan 2035) have slipped from the scenario's dates —
 this preset is the *shape* of a fast takeoff, dated optimistically.
 
+**⑧ AI 2040 — Plan A (The Deal).** AI Futures Project, *AI 2040* (ai-2040.com; local PDF, not
+web-fetched). Their managed transition: a 2029 US-China deal slows the takeoff; period 0 = 2027,
+horizon 14y (2027–2040). Verified anchors: AI automates **50% of cognitive / 35% of physical tasks
+by 2032, 95% of both by 2035–36** (App. X n.1) → terminal feasibilities 0.95/0.95, robotics_lag 9;
+value-weighted AI/robot labor share **20% (2032) → 85% (2035)**; **employment rate 62% → 12% over
+2032–2040** (per-year sidebar stats); remaining workers' wage bill ≈ **$120K/employed** (n.48) →
+survivor elasticity +0.10 (complementarity); firms **reinvest nearly all revenue** (capex expensing
+zeroes taxable corporate income, n.42) → auto_cost 0.30; **GDP growth ~100%/yr 2032–2037** and
+~100% real rates (App. X) — both far beyond the model's lever ceilings (productivity_passthrough
+0.90 and interest 0.04 shipped; magnitude divergence documented in provenance). Two deliberate
+exclusions: their **permit-fee cap-and-trade** ($50T FY2032, $180T 2034) and **Citizen's Dividend**
+($45K → $1M/person) are POLICY, not world state — the preset models Plan A's world under current
+US law; compose the UBI/compute-parity overlays to approximate their regime. Two known shape
+divergences (documented in the preset provenance): our linear kink front-loads the mid-path
+employment drop (their employment is flat to 2032 because new jobs absorb the displaced — mapped
+onto reabsorption 0.15), and our current-law world keeps 81M working at reduced wages in 2040
+where theirs retire onto dividends.
+
+**⑨ AI 2040 — Plan D (The Race).** The no-deal branch: light-touch regulation, full AI-R&D
+automation 2030, **superintelligence early 2031** (10,000× R&D speedup chart), integration "as
+fast as the markets and laws allow" — the paper's own gloss: *AI 2027's Race ending on a 2030
+fuse*. Period 0 = 2027, horizon 10y; kinked adoption reaching 1.0 at year 7 (2034); crisis
+labor-market values carried from the AI-2027/AGI presets (reabsorption 0.05, haircut 0.40, lfp
+0.10, elasticity −0.50, dm 1.50); disposition 0.80/0.15/0.05 (no deal, no permits, no sharing);
+their no-regulation counterfactual is **>1000× growth by 2033** (App. X) — unrepresentable,
+lever ceilings apply as in ⑧.
+
 ## 3. Policy overlays (composable on any preset)
 
 | Overlay | Levers | Anchor |
