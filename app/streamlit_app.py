@@ -140,7 +140,7 @@ if _err is not None:
     st.stop()
 data, deltas, rung1_ok = _backend
 
-st.title("AI Automation — Fiscal Consequences")
+st.title("Fiscal Consequences of AI Automation")
 sb = st.sidebar
 engine = sb.radio("Engine", ["v2 — multi-actor (feedbacks)", "v1 — static kernel"], index=0)
 is_v2 = engine.startswith("v2")
@@ -242,7 +242,7 @@ with sb.expander("Automation & adoption", expanded=True):
                             "rate. 0.6 means 60% of the feasibly-automatable jobs are automated "
                             "by the end.")
     n_periods = st.slider("Horizon (years)", 3, 30, d["n_periods"],
-                          help="Simulation length. Presets carry their native horizon (8–20 years).")
+                          help="Simulation length. Presets carry their native horizon (8-20 years).")
     mapping = st.selectbox("Exposure → share mapping", ["percentile", "logistic"],
                            help="How the continuous exposure score becomes a per-occupation "
                                 "automatable share: by percentile rank (default) or a logistic "
@@ -262,10 +262,10 @@ else:
 with sb.expander("Labor market", expanded=False):
     reab = st.slider("Reabsorption rate / yr  (0 = the thesis)", 0.0, 1.0, d["reab"], 0.025,
                      help="Annual rate at which long-term displaced workers find new (lower-wage) "
-                          "work. Evidence: 0.6–0.75 in normal markets (Farber), 0.05–0.10 in the "
+                          "work. Evidence: 0.6-0.75 in normal markets (Farber), 0.05-0.10 in the "
                           "China-shock adjustment. 0 = displacement is permanent.")
     haircut = st.slider("Re-employment wage cut (haircut)", 0.0, 1.0, d["haircut"], 0.01,
-                        help="The re-employed earn (1−haircut) × their old wage, floored at a state "
+                        help="The re-employed earn (1-haircut) × their old wage, floored at a state "
                              "service wage. Evidence: ~0.13 typical, 0.25 for high-tenure mass "
                              "layoffs. A bigger cut can drop the household into EITC/SNAP/Medicaid "
                              "eligibility — which the model prices exactly.")
@@ -289,7 +289,7 @@ if is_v2:
         retained = st.slider("Saved wages → retained profit (share)", 0.0, 1.0, d["retained"], 0.05,
                              help="Of the wage bill firms stop paying (net of automation costs), "
                                   "the share kept as profit — taxed at effective corporate rates "
-                                  "(~17–18%), far below the labor-tax wedge it replaces.")
+                                  "(~17-18%), far below the labor-tax wedge it replaces.")
         price_max = round(1.0 - retained, 2)
         if price_max > 0:
             # min() keeps a preset's default legal after the user raises `retained` past it
@@ -306,7 +306,7 @@ if is_v2:
                               d["auto_cost"], 0.05,
                               help="What firms spend on compute/automation inputs per dollar of "
                                    "compensation saved. Flows to the compute-capital pool below. "
-                                   "Evidence: 0.3–0.5 in build-out years, ~0.05–0.10 steady state.")
+                                   "Evidence: 0.3-0.5 in build-out years, ~0.05-0.10 steady state.")
         compute_rate = st.slider("Compute pool — effective tax rate", 0.0, 0.4, d["compute_rate"], 0.01,
                                  help="Effective tax on the compute-capital pool. ~0.05 = the "
                                       "post-TCJA rate on equipment/software capital; 0.27 = parity "
@@ -321,7 +321,7 @@ if is_v2:
                             help="Cap on the still-employed wage index. Raises beyond it spill to "
                                  "profit or prices (spillover below). Raises are funded from the "
                                  "routed survivor share and re-taxed at full marginal rates.")
-        elasticity = st.slider("Market wage response to slack (− substitute / + complement)",
+        elasticity = st.slider("Market wage response to slack (- substitute / + complement)",
                                -0.5, 0.5, d["elasticity"], 0.05,
                                help="How survivors' market wages respond to labor-market slack: "
                                     "negative = AI substitutes for labor and slack pushes wages "
@@ -343,7 +343,7 @@ if is_v2:
                             d["prod_pt"], 0.05,
                             help="Output-weighted real-GDP gain: automating the whole comp bill "
                                  "raises GDP by this fraction. Acemoglu's arithmetic implies "
-                                 "~0.15; the micro/AGI evidence 0.5–1.0. Cushions %-GDP views.")
+                                 "~0.15; the micro/AGI evidence 0.5-1.0. Cushions %-GDP views.")
         growth = st.slider("Baseline trend growth (nominal, %-GDP denominators)", 0.0, 0.08,
                            d["growth"], 0.005,
                            help="≈2% real + 2% inflation. Grows the GDP denominator so debt/GDP "
@@ -357,8 +357,8 @@ if is_v2:
 with sb.expander("Government policy", expanded=False):
     if is_v2:
         st.caption("**Tax-regime dials** — true flat surcharges/cuts (1.0 = current law): each "
-                   "scales its channel's shock flows AND collects (×−1) of the 2024 baseline "
-                   "receipts line, so revenue = mult × (baseline − losses). Raising a dial "
+                   "scales its channel's shock flows AND collects (×-1) of the 2024 baseline "
+                   "receipts line, so revenue = mult × (baseline - losses). Raising a dial "
                    "reduces the deficit even with no automation. Static scoring: no behavioral "
                    "response, and no take-home/demand effect from the tax change itself.")
         income_mult = st.slider("Income tax ×", 0.5, 1.5, d["income_mult"], 0.05,
@@ -382,12 +382,12 @@ with sb.expander("Government policy", expanded=False):
                                    "channel. The classic 'tax the spending, not the wage' "
                                    "response — note how small these bases are next to income "
                                    "taxes: the US has no VAT to fall back on.")
-        # The robot tax is paid from retained profit, so its feasible max is retained·(1−auto_cost).
+        # The robot tax is paid from retained profit, so its feasible max is retained·(1-auto_cost).
         atx_bound = round(min(0.30, retained * (1.0 - auto_cost)), 2)
         if atx_bound < 0.01:
             automation_tax = 0.0
             st.caption("Automation tax: **0%** — no retained profit left to pay it "
-                       "(retained × (1−auto cost) ≈ 0).")
+                       "(retained × (1-auto cost) ≈ 0).")
         else:
             automation_tax = st.slider("Automation (robot) tax — share of the automated comp bill",
                                        0.0, atx_bound, min(d["atax"], atx_bound), 0.01,
@@ -395,7 +395,7 @@ with sb.expander("Government policy", expanded=False):
                                             "compensation, PAID from retained profit "
                                             "(corp-deductible). Ships at 0: the literature-anchored "
                                             "rates live in the policy overlays "
-                                            "(Costinot-Werning ≈ 0.3–1%, not 7%).")
+                                            "(Costinot-Werning ≈ 0.3-1%, not 7%).")
     ubi = st.slider("UBI per worker / yr ($)", 0, 30_000, d["ubi"], 1_000,
                     help="A universal payment per baseline worker, booked as a federal outlay. "
                          "The overlay ships $12k with 30% recapture.")
@@ -404,7 +404,7 @@ with sb.expander("Government policy", expanded=False):
                                   d["ubi_recapture"], 0.05,
                                   help="Share of the UBI outlay the government gets back — "
                                        "income-tax clawback plus means-tested benefits the UBI "
-                                       "displaces (~20–30% in practice).")
+                                       "displaces (~20-30% in practice).")
     interest = st.slider("Interest rate on federal debt", 0.0, 0.10, d["interest"], 0.005,
                          help="New deficits accumulate into debt at this rate. ~0.04 matches the "
                               "discount-rate anchor used in the AGI presets.")
@@ -449,8 +449,8 @@ if not is_v2:
     res = DynamicModel(data, deltas, lp, dp).run()
     final = res.iloc[-1]
     c = st.columns(5)
-    c[0].metric("Employment", f"−{final['employment_drop_pct']:.0f}%")
-    c[1].metric("Labor revenue", f"−{final['revenue_lost_pct']:.0f}%")
+    c[0].metric("Employment", f"-{final['employment_drop_pct']:.0f}%")
+    c[1].metric("Labor revenue", f"-{final['revenue_lost_pct']:.0f}%")
     c[2].metric("Federal deficit (final yr)", f"${final['fed_deficit_B']:,.0f}B")
     c[3].metric("Federal debt (cumulative)", f"${final['fed_debt_B']:,.0f}B")
     c[4].metric("State gap (must close/yr)", f"${final['state_gap_B']:,.0f}B")
@@ -527,7 +527,7 @@ c[0].metric("Jobs lost (final yr)", f"{_jobs_lost_M:,.1f}M",
             help="Workers not employed at the final year who would be under the baseline: on UI, "
                  "exhausted, exited to SSDI, or laid off by the demand shortfall. Excludes the "
                  "re-employed and natural retirement.")
-c[1].metric("Employment", f"−{final['employment_drop_pct']:.0f}%",
+c[1].metric("Employment", f"-{final['employment_drop_pct']:.0f}%",
             help="Decline of the employed-at-original-wage stock vs the 163M baseline (the "
                  "re-employed-at-lower-wage count as not employed here).")
 c[2].metric("Federal income tax lost (cumulative)", f"${_inc_tax_lost_cum:,.0f}B",
@@ -646,7 +646,7 @@ with s_right:
                "the rate-hike cap binds).")
 _stbl = m.state_table.sort_values("shortfall_B", ascending=False).reset_index(drop=True)
 _stbl_disp = _stbl.rename(columns={
-    "state": "State", "net_B": "Net position ($B, − = surplus)", "shortfall_B": "Shortfall ($B)",
+    "state": "State", "net_B": "Net position ($B, - = surplus)", "shortfall_B": "Shortfall ($B)",
     "rate_hike_B": "Rate hikes ($B)", "spending_cut_B": "Spending cuts ($B)",
     "implied_rate_hike_pct": "Implied rate hike (% of base)", "at_cap": "Hit rate cap"})
 st.markdown(f"**Hardest-hit states (final year)** — "
@@ -676,7 +676,7 @@ fs_df = summary_mod.build_fiscal_summary(
     grouping="tax" if fs_group == "By tax category" else "channel",
     units="busd" if fs_units == "$B" else "pct_baseline")
 st.caption("Revenue lines are signed revenue **changes** (negative = lost revenue); outlay lines are "
-           "spending changes (positive = more spending); **Net fiscal impact = −deficit change** "
+           "spending changes (positive = more spending); **Net fiscal impact = -deficit change** "
            "(negative = worse). Flows sum into *Total*; levels show the final year. Memo rows document "
            "untaxed magnitudes (offshore leakage, consumer surplus) and are excluded from nets."
            + (" Channels follow the labour→capital / resident→non-resident / consumer-surplus / "
@@ -698,8 +698,8 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
     from fiscal_model import mc as mc_mod
 
     st.caption("Samples N slightly-perturbed lever settings around YOUR configuration (seeded, "
-               "constraint-aware; levers that are off stay off) and re-runs the model. Fan = P10–P90 and "
-               "P25–P75 bands with the median and your base run; tornado = Spearman rank correlation of "
+               "constraint-aware; levers that are off stay off) and re-runs the model. Fan = P10-P90 and "
+               "P25-P75 bands with the median and your base run; tornado = Spearman rank correlation of "
                "each varied lever with the final-year outcome. **Read the bands as robustness to lever "
                "mis-calibration within this scenario, not as a probability interval** — the ±15% spread "
                "is a convention. The honest uncertainty statement is the spread ACROSS scenario presets "
