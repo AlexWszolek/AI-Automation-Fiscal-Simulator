@@ -98,13 +98,26 @@ fiscal_delta(worker) =
 **Headline scenario (CLI):**  `.venv/bin/python -m fiscal_model.dynamics`
 
 ## Setup (fresh clone)
-The model and app need a Python 3.12 venv plus three regenerable, gitignored artifacts
-(NOC distribution, PolicyEngine benefit lookup, per-worker delta cache). One idempotent
-command builds everything (downloads ~251 MB of ACS PUMS on first run):
+The five runtime artifacts the model loads (NOC distribution, PolicyEngine benefit lookup +
+meta, UI params, per-worker delta cache — ~5.6 MB under `data/interim/`) ship WITH the repo,
+so a fresh clone runs out of the box:
+
+```bash
+uv venv --python 3.12 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+.venv/bin/streamlit run app/streamlit_app.py
+```
+
+To REGENERATE the artifacts from source (after changing the bake, the NOC build, or kernel
+params), one idempotent command rebuilds everything (downloads ~251 MB of ACS PUMS on first run):
 
 ```bash
 bash scripts/bootstrap.sh
 ```
+
+**Deploy (Streamlit Community Cloud):** point the app at `app/streamlit_app.py`, set Python
+to 3.12 in the advanced settings, done — the runtime artifacts and `requirements.txt` are all
+it needs (the PolicyEngine bake and PUMS download never run on the deploy box).
 
 Step by step: `uv venv --python 3.12 .venv` → `uv pip install --python .venv/bin/python -r requirements.txt`
 → download PUMS into `data/external/` → `python -m fiscal_model.noc` →

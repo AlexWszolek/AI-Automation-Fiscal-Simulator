@@ -1,0 +1,1837 @@
+filing_status,state,income_band_lo,income_band_hi,n_children,prob,source_level,n_unweighted
+Single,Alabama,,25000.0,0,1.0,filing_state_band,2717
+Single,Alabama,,25000.0,1,0.0,filing_state_band,2717
+Single,Alabama,,25000.0,2,0.0,filing_state_band,2717
+Single,Alabama,,25000.0,3+,0.0,filing_state_band,2717
+Single,Alabama,25000.0,55000.0,0,1.0,filing_state_band,2395
+Single,Alabama,25000.0,55000.0,1,0.0,filing_state_band,2395
+Single,Alabama,25000.0,55000.0,2,0.0,filing_state_band,2395
+Single,Alabama,25000.0,55000.0,3+,0.0,filing_state_band,2395
+Single,Alabama,55000.0,,0,1.0,filing_state_band,2307
+Single,Alabama,55000.0,,1,0.0,filing_state_band,2307
+Single,Alabama,55000.0,,2,0.0,filing_state_band,2307
+Single,Alabama,55000.0,,3+,0.0,filing_state_band,2307
+Single,Alaska,,25000.0,0,1.0,filing_state_band,210
+Single,Alaska,,25000.0,1,0.0,filing_state_band,210
+Single,Alaska,,25000.0,2,0.0,filing_state_band,210
+Single,Alaska,,25000.0,3+,0.0,filing_state_band,210
+Single,Alaska,25000.0,55000.0,0,1.0,filing_state_band,236
+Single,Alaska,25000.0,55000.0,1,0.0,filing_state_band,236
+Single,Alaska,25000.0,55000.0,2,0.0,filing_state_band,236
+Single,Alaska,25000.0,55000.0,3+,0.0,filing_state_band,236
+Single,Alaska,55000.0,,0,1.0,filing_state_band,374
+Single,Alaska,55000.0,,1,0.0,filing_state_band,374
+Single,Alaska,55000.0,,2,0.0,filing_state_band,374
+Single,Alaska,55000.0,,3+,0.0,filing_state_band,374
+Single,Arizona,,25000.0,0,1.0,filing_state_band,2597
+Single,Arizona,,25000.0,1,0.0,filing_state_band,2597
+Single,Arizona,,25000.0,2,0.0,filing_state_band,2597
+Single,Arizona,,25000.0,3+,0.0,filing_state_band,2597
+Single,Arizona,25000.0,55000.0,0,1.0,filing_state_band,3059
+Single,Arizona,25000.0,55000.0,1,0.0,filing_state_band,3059
+Single,Arizona,25000.0,55000.0,2,0.0,filing_state_band,3059
+Single,Arizona,25000.0,55000.0,3+,0.0,filing_state_band,3059
+Single,Arizona,55000.0,,0,1.0,filing_state_band,4733
+Single,Arizona,55000.0,,1,0.0,filing_state_band,4733
+Single,Arizona,55000.0,,2,0.0,filing_state_band,4733
+Single,Arizona,55000.0,,3+,0.0,filing_state_band,4733
+Single,Arkansas,,25000.0,0,1.0,filing_state_band,1720
+Single,Arkansas,,25000.0,1,0.0,filing_state_band,1720
+Single,Arkansas,,25000.0,2,0.0,filing_state_band,1720
+Single,Arkansas,,25000.0,3+,0.0,filing_state_band,1720
+Single,Arkansas,25000.0,55000.0,0,1.0,filing_state_band,1484
+Single,Arkansas,25000.0,55000.0,1,0.0,filing_state_band,1484
+Single,Arkansas,25000.0,55000.0,2,0.0,filing_state_band,1484
+Single,Arkansas,25000.0,55000.0,3+,0.0,filing_state_band,1484
+Single,Arkansas,55000.0,,0,1.0,filing_state_band,1312
+Single,Arkansas,55000.0,,1,0.0,filing_state_band,1312
+Single,Arkansas,55000.0,,2,0.0,filing_state_band,1312
+Single,Arkansas,55000.0,,3+,0.0,filing_state_band,1312
+Single,California,,25000.0,0,1.0,filing_state_band,10483
+Single,California,,25000.0,1,0.0,filing_state_band,10483
+Single,California,,25000.0,2,0.0,filing_state_band,10483
+Single,California,,25000.0,3+,0.0,filing_state_band,10483
+Single,California,25000.0,55000.0,0,1.0,filing_state_band,9610
+Single,California,25000.0,55000.0,1,0.0,filing_state_band,9610
+Single,California,25000.0,55000.0,2,0.0,filing_state_band,9610
+Single,California,25000.0,55000.0,3+,0.0,filing_state_band,9610
+Single,California,55000.0,,0,1.0,filing_state_band,24767
+Single,California,55000.0,,1,0.0,filing_state_band,24767
+Single,California,55000.0,,2,0.0,filing_state_band,24767
+Single,California,55000.0,,3+,0.0,filing_state_band,24767
+Single,Colorado,,25000.0,0,1.0,filing_state_band,1922
+Single,Colorado,,25000.0,1,0.0,filing_state_band,1922
+Single,Colorado,,25000.0,2,0.0,filing_state_band,1922
+Single,Colorado,,25000.0,3+,0.0,filing_state_band,1922
+Single,Colorado,25000.0,55000.0,0,1.0,filing_state_band,2281
+Single,Colorado,25000.0,55000.0,1,0.0,filing_state_band,2281
+Single,Colorado,25000.0,55000.0,2,0.0,filing_state_band,2281
+Single,Colorado,25000.0,55000.0,3+,0.0,filing_state_band,2281
+Single,Colorado,55000.0,,0,1.0,filing_state_band,5014
+Single,Colorado,55000.0,,1,0.0,filing_state_band,5014
+Single,Colorado,55000.0,,2,0.0,filing_state_band,5014
+Single,Colorado,55000.0,,3+,0.0,filing_state_band,5014
+Single,Connecticut,,25000.0,0,1.0,filing_state_band,1121
+Single,Connecticut,,25000.0,1,0.0,filing_state_band,1121
+Single,Connecticut,,25000.0,2,0.0,filing_state_band,1121
+Single,Connecticut,,25000.0,3+,0.0,filing_state_band,1121
+Single,Connecticut,25000.0,55000.0,0,1.0,filing_state_band,1363
+Single,Connecticut,25000.0,55000.0,1,0.0,filing_state_band,1363
+Single,Connecticut,25000.0,55000.0,2,0.0,filing_state_band,1363
+Single,Connecticut,25000.0,55000.0,3+,0.0,filing_state_band,1363
+Single,Connecticut,55000.0,,0,1.0,filing_state_band,2707
+Single,Connecticut,55000.0,,1,0.0,filing_state_band,2707
+Single,Connecticut,55000.0,,2,0.0,filing_state_band,2707
+Single,Connecticut,55000.0,,3+,0.0,filing_state_band,2707
+Single,Delaware,,25000.0,0,1.0,filing_state_band,334
+Single,Delaware,,25000.0,1,0.0,filing_state_band,334
+Single,Delaware,,25000.0,2,0.0,filing_state_band,334
+Single,Delaware,,25000.0,3+,0.0,filing_state_band,334
+Single,Delaware,25000.0,55000.0,0,1.0,filing_state_band,415
+Single,Delaware,25000.0,55000.0,1,0.0,filing_state_band,415
+Single,Delaware,25000.0,55000.0,2,0.0,filing_state_band,415
+Single,Delaware,25000.0,55000.0,3+,0.0,filing_state_band,415
+Single,Delaware,55000.0,,0,1.0,filing_state_band,666
+Single,Delaware,55000.0,,1,0.0,filing_state_band,666
+Single,Delaware,55000.0,,2,0.0,filing_state_band,666
+Single,Delaware,55000.0,,3+,0.0,filing_state_band,666
+Single,District of Columbia,,25000.0,0,1.0,filing_state_band,298
+Single,District of Columbia,,25000.0,1,0.0,filing_state_band,298
+Single,District of Columbia,,25000.0,2,0.0,filing_state_band,298
+Single,District of Columbia,,25000.0,3+,0.0,filing_state_band,298
+Single,District of Columbia,25000.0,55000.0,0,1.0,filing_state_band,201
+Single,District of Columbia,25000.0,55000.0,1,0.0,filing_state_band,201
+Single,District of Columbia,25000.0,55000.0,2,0.0,filing_state_band,201
+Single,District of Columbia,25000.0,55000.0,3+,0.0,filing_state_band,201
+Single,District of Columbia,55000.0,,0,1.0,filing_state_band,1331
+Single,District of Columbia,55000.0,,1,0.0,filing_state_band,1331
+Single,District of Columbia,55000.0,,2,0.0,filing_state_band,1331
+Single,District of Columbia,55000.0,,3+,0.0,filing_state_band,1331
+Single,Florida,,25000.0,0,1.0,filing_state_band,8222
+Single,Florida,,25000.0,1,0.0,filing_state_band,8222
+Single,Florida,,25000.0,2,0.0,filing_state_band,8222
+Single,Florida,,25000.0,3+,0.0,filing_state_band,8222
+Single,Florida,25000.0,55000.0,0,1.0,filing_state_band,8980
+Single,Florida,25000.0,55000.0,1,0.0,filing_state_band,8980
+Single,Florida,25000.0,55000.0,2,0.0,filing_state_band,8980
+Single,Florida,25000.0,55000.0,3+,0.0,filing_state_band,8980
+Single,Florida,55000.0,,0,1.0,filing_state_band,13408
+Single,Florida,55000.0,,1,0.0,filing_state_band,13408
+Single,Florida,55000.0,,2,0.0,filing_state_band,13408
+Single,Florida,55000.0,,3+,0.0,filing_state_band,13408
+Single,Georgia,,25000.0,0,1.0,filing_state_band,4012
+Single,Georgia,,25000.0,1,0.0,filing_state_band,4012
+Single,Georgia,,25000.0,2,0.0,filing_state_band,4012
+Single,Georgia,,25000.0,3+,0.0,filing_state_band,4012
+Single,Georgia,25000.0,55000.0,0,1.0,filing_state_band,3922
+Single,Georgia,25000.0,55000.0,1,0.0,filing_state_band,3922
+Single,Georgia,25000.0,55000.0,2,0.0,filing_state_band,3922
+Single,Georgia,25000.0,55000.0,3+,0.0,filing_state_band,3922
+Single,Georgia,55000.0,,0,1.0,filing_state_band,6104
+Single,Georgia,55000.0,,1,0.0,filing_state_band,6104
+Single,Georgia,55000.0,,2,0.0,filing_state_band,6104
+Single,Georgia,55000.0,,3+,0.0,filing_state_band,6104
+Single,Hawaii,,25000.0,0,1.0,filing_state_band,383
+Single,Hawaii,,25000.0,1,0.0,filing_state_band,383
+Single,Hawaii,,25000.0,2,0.0,filing_state_band,383
+Single,Hawaii,,25000.0,3+,0.0,filing_state_band,383
+Single,Hawaii,25000.0,55000.0,0,1.0,filing_state_band,365
+Single,Hawaii,25000.0,55000.0,1,0.0,filing_state_band,365
+Single,Hawaii,25000.0,55000.0,2,0.0,filing_state_band,365
+Single,Hawaii,25000.0,55000.0,3+,0.0,filing_state_band,365
+Single,Hawaii,55000.0,,0,1.0,filing_state_band,839
+Single,Hawaii,55000.0,,1,0.0,filing_state_band,839
+Single,Hawaii,55000.0,,2,0.0,filing_state_band,839
+Single,Hawaii,55000.0,,3+,0.0,filing_state_band,839
+Single,Idaho,,25000.0,0,1.0,filing_state_band,655
+Single,Idaho,,25000.0,1,0.0,filing_state_band,655
+Single,Idaho,,25000.0,2,0.0,filing_state_band,655
+Single,Idaho,,25000.0,3+,0.0,filing_state_band,655
+Single,Idaho,25000.0,55000.0,0,1.0,filing_state_band,756
+Single,Idaho,25000.0,55000.0,1,0.0,filing_state_band,756
+Single,Idaho,25000.0,55000.0,2,0.0,filing_state_band,756
+Single,Idaho,25000.0,55000.0,3+,0.0,filing_state_band,756
+Single,Idaho,55000.0,,0,1.0,filing_state_band,975
+Single,Idaho,55000.0,,1,0.0,filing_state_band,975
+Single,Idaho,55000.0,,2,0.0,filing_state_band,975
+Single,Idaho,55000.0,,3+,0.0,filing_state_band,975
+Single,Illinois,,25000.0,0,1.0,filing_state_band,4814
+Single,Illinois,,25000.0,1,0.0,filing_state_band,4814
+Single,Illinois,,25000.0,2,0.0,filing_state_band,4814
+Single,Illinois,,25000.0,3+,0.0,filing_state_band,4814
+Single,Illinois,25000.0,55000.0,0,1.0,filing_state_band,5606
+Single,Illinois,25000.0,55000.0,1,0.0,filing_state_band,5606
+Single,Illinois,25000.0,55000.0,2,0.0,filing_state_band,5606
+Single,Illinois,25000.0,55000.0,3+,0.0,filing_state_band,5606
+Single,Illinois,55000.0,,0,1.0,filing_state_band,8482
+Single,Illinois,55000.0,,1,0.0,filing_state_band,8482
+Single,Illinois,55000.0,,2,0.0,filing_state_band,8482
+Single,Illinois,55000.0,,3+,0.0,filing_state_band,8482
+Single,Indiana,,25000.0,0,1.0,filing_state_band,2917
+Single,Indiana,,25000.0,1,0.0,filing_state_band,2917
+Single,Indiana,,25000.0,2,0.0,filing_state_band,2917
+Single,Indiana,,25000.0,3+,0.0,filing_state_band,2917
+Single,Indiana,25000.0,55000.0,0,1.0,filing_state_band,3574
+Single,Indiana,25000.0,55000.0,1,0.0,filing_state_band,3574
+Single,Indiana,25000.0,55000.0,2,0.0,filing_state_band,3574
+Single,Indiana,25000.0,55000.0,3+,0.0,filing_state_band,3574
+Single,Indiana,55000.0,,0,1.0,filing_state_band,3759
+Single,Indiana,55000.0,,1,0.0,filing_state_band,3759
+Single,Indiana,55000.0,,2,0.0,filing_state_band,3759
+Single,Indiana,55000.0,,3+,0.0,filing_state_band,3759
+Single,Iowa,,25000.0,0,1.0,filing_state_band,1422
+Single,Iowa,,25000.0,1,0.0,filing_state_band,1422
+Single,Iowa,,25000.0,2,0.0,filing_state_band,1422
+Single,Iowa,,25000.0,3+,0.0,filing_state_band,1422
+Single,Iowa,25000.0,55000.0,0,1.0,filing_state_band,1850
+Single,Iowa,25000.0,55000.0,1,0.0,filing_state_band,1850
+Single,Iowa,25000.0,55000.0,2,0.0,filing_state_band,1850
+Single,Iowa,25000.0,55000.0,3+,0.0,filing_state_band,1850
+Single,Iowa,55000.0,,0,1.0,filing_state_band,1891
+Single,Iowa,55000.0,,1,0.0,filing_state_band,1891
+Single,Iowa,55000.0,,2,0.0,filing_state_band,1891
+Single,Iowa,55000.0,,3+,0.0,filing_state_band,1891
+Single,Kansas,,25000.0,0,1.0,filing_state_band,1262
+Single,Kansas,,25000.0,1,0.0,filing_state_band,1262
+Single,Kansas,,25000.0,2,0.0,filing_state_band,1262
+Single,Kansas,,25000.0,3+,0.0,filing_state_band,1262
+Single,Kansas,25000.0,55000.0,0,1.0,filing_state_band,1564
+Single,Kansas,25000.0,55000.0,1,0.0,filing_state_band,1564
+Single,Kansas,25000.0,55000.0,2,0.0,filing_state_band,1564
+Single,Kansas,25000.0,55000.0,3+,0.0,filing_state_band,1564
+Single,Kansas,55000.0,,0,1.0,filing_state_band,1576
+Single,Kansas,55000.0,,1,0.0,filing_state_band,1576
+Single,Kansas,55000.0,,2,0.0,filing_state_band,1576
+Single,Kansas,55000.0,,3+,0.0,filing_state_band,1576
+Single,Kentucky,,25000.0,0,1.0,filing_state_band,2417
+Single,Kentucky,,25000.0,1,0.0,filing_state_band,2417
+Single,Kentucky,,25000.0,2,0.0,filing_state_band,2417
+Single,Kentucky,,25000.0,3+,0.0,filing_state_band,2417
+Single,Kentucky,25000.0,55000.0,0,1.0,filing_state_band,2095
+Single,Kentucky,25000.0,55000.0,1,0.0,filing_state_band,2095
+Single,Kentucky,25000.0,55000.0,2,0.0,filing_state_band,2095
+Single,Kentucky,25000.0,55000.0,3+,0.0,filing_state_band,2095
+Single,Kentucky,55000.0,,0,1.0,filing_state_band,2200
+Single,Kentucky,55000.0,,1,0.0,filing_state_band,2200
+Single,Kentucky,55000.0,,2,0.0,filing_state_band,2200
+Single,Kentucky,55000.0,,3+,0.0,filing_state_band,2200
+Single,Louisiana,,25000.0,0,1.0,filing_state_band,2711
+Single,Louisiana,,25000.0,1,0.0,filing_state_band,2711
+Single,Louisiana,,25000.0,2,0.0,filing_state_band,2711
+Single,Louisiana,,25000.0,3+,0.0,filing_state_band,2711
+Single,Louisiana,25000.0,55000.0,0,1.0,filing_state_band,2085
+Single,Louisiana,25000.0,55000.0,1,0.0,filing_state_band,2085
+Single,Louisiana,25000.0,55000.0,2,0.0,filing_state_band,2085
+Single,Louisiana,25000.0,55000.0,3+,0.0,filing_state_band,2085
+Single,Louisiana,55000.0,,0,1.0,filing_state_band,2278
+Single,Louisiana,55000.0,,1,0.0,filing_state_band,2278
+Single,Louisiana,55000.0,,2,0.0,filing_state_band,2278
+Single,Louisiana,55000.0,,3+,0.0,filing_state_band,2278
+Single,Maine,,25000.0,0,1.0,filing_state_band,700
+Single,Maine,,25000.0,1,0.0,filing_state_band,700
+Single,Maine,,25000.0,2,0.0,filing_state_band,700
+Single,Maine,,25000.0,3+,0.0,filing_state_band,700
+Single,Maine,25000.0,55000.0,0,1.0,filing_state_band,814
+Single,Maine,25000.0,55000.0,1,0.0,filing_state_band,814
+Single,Maine,25000.0,55000.0,2,0.0,filing_state_band,814
+Single,Maine,25000.0,55000.0,3+,0.0,filing_state_band,814
+Single,Maine,55000.0,,0,1.0,filing_state_band,850
+Single,Maine,55000.0,,1,0.0,filing_state_band,850
+Single,Maine,55000.0,,2,0.0,filing_state_band,850
+Single,Maine,55000.0,,3+,0.0,filing_state_band,850
+Single,Maryland,,25000.0,0,1.0,filing_state_band,1729
+Single,Maryland,,25000.0,1,0.0,filing_state_band,1729
+Single,Maryland,,25000.0,2,0.0,filing_state_band,1729
+Single,Maryland,,25000.0,3+,0.0,filing_state_band,1729
+Single,Maryland,25000.0,55000.0,0,1.0,filing_state_band,1930
+Single,Maryland,25000.0,55000.0,1,0.0,filing_state_band,1930
+Single,Maryland,25000.0,55000.0,2,0.0,filing_state_band,1930
+Single,Maryland,25000.0,55000.0,3+,0.0,filing_state_band,1930
+Single,Maryland,55000.0,,0,1.0,filing_state_band,4644
+Single,Maryland,55000.0,,1,0.0,filing_state_band,4644
+Single,Maryland,55000.0,,2,0.0,filing_state_band,4644
+Single,Maryland,55000.0,,3+,0.0,filing_state_band,4644
+Single,Massachusetts,,25000.0,0,1.0,filing_state_band,2486
+Single,Massachusetts,,25000.0,1,0.0,filing_state_band,2486
+Single,Massachusetts,,25000.0,2,0.0,filing_state_band,2486
+Single,Massachusetts,,25000.0,3+,0.0,filing_state_band,2486
+Single,Massachusetts,25000.0,55000.0,0,1.0,filing_state_band,2407
+Single,Massachusetts,25000.0,55000.0,1,0.0,filing_state_band,2407
+Single,Massachusetts,25000.0,55000.0,2,0.0,filing_state_band,2407
+Single,Massachusetts,25000.0,55000.0,3+,0.0,filing_state_band,2407
+Single,Massachusetts,55000.0,,0,1.0,filing_state_band,6006
+Single,Massachusetts,55000.0,,1,0.0,filing_state_band,6006
+Single,Massachusetts,55000.0,,2,0.0,filing_state_band,6006
+Single,Massachusetts,55000.0,,3+,0.0,filing_state_band,6006
+Single,Michigan,,25000.0,0,1.0,filing_state_band,4334
+Single,Michigan,,25000.0,1,0.0,filing_state_band,4334
+Single,Michigan,,25000.0,2,0.0,filing_state_band,4334
+Single,Michigan,,25000.0,3+,0.0,filing_state_band,4334
+Single,Michigan,25000.0,55000.0,0,1.0,filing_state_band,5081
+Single,Michigan,25000.0,55000.0,1,0.0,filing_state_band,5081
+Single,Michigan,25000.0,55000.0,2,0.0,filing_state_band,5081
+Single,Michigan,25000.0,55000.0,3+,0.0,filing_state_band,5081
+Single,Michigan,55000.0,,0,1.0,filing_state_band,5842
+Single,Michigan,55000.0,,1,0.0,filing_state_band,5842
+Single,Michigan,55000.0,,2,0.0,filing_state_band,5842
+Single,Michigan,55000.0,,3+,0.0,filing_state_band,5842
+Single,Minnesota,,25000.0,0,1.0,filing_state_band,2016
+Single,Minnesota,,25000.0,1,0.0,filing_state_band,2016
+Single,Minnesota,,25000.0,2,0.0,filing_state_band,2016
+Single,Minnesota,,25000.0,3+,0.0,filing_state_band,2016
+Single,Minnesota,25000.0,55000.0,0,1.0,filing_state_band,2451
+Single,Minnesota,25000.0,55000.0,1,0.0,filing_state_band,2451
+Single,Minnesota,25000.0,55000.0,2,0.0,filing_state_band,2451
+Single,Minnesota,25000.0,55000.0,3+,0.0,filing_state_band,2451
+Single,Minnesota,55000.0,,0,1.0,filing_state_band,3449
+Single,Minnesota,55000.0,,1,0.0,filing_state_band,3449
+Single,Minnesota,55000.0,,2,0.0,filing_state_band,3449
+Single,Minnesota,55000.0,,3+,0.0,filing_state_band,3449
+Single,Mississippi,,25000.0,0,1.0,filing_state_band,1743
+Single,Mississippi,,25000.0,1,0.0,filing_state_band,1743
+Single,Mississippi,,25000.0,2,0.0,filing_state_band,1743
+Single,Mississippi,,25000.0,3+,0.0,filing_state_band,1743
+Single,Mississippi,25000.0,55000.0,0,1.0,filing_state_band,1387
+Single,Mississippi,25000.0,55000.0,1,0.0,filing_state_band,1387
+Single,Mississippi,25000.0,55000.0,2,0.0,filing_state_band,1387
+Single,Mississippi,25000.0,55000.0,3+,0.0,filing_state_band,1387
+Single,Mississippi,55000.0,,0,1.0,filing_state_band,1143
+Single,Mississippi,55000.0,,1,0.0,filing_state_band,1143
+Single,Mississippi,55000.0,,2,0.0,filing_state_band,1143
+Single,Mississippi,55000.0,,3+,0.0,filing_state_band,1143
+Single,Missouri,,25000.0,0,1.0,filing_state_band,3002
+Single,Missouri,,25000.0,1,0.0,filing_state_band,3002
+Single,Missouri,,25000.0,2,0.0,filing_state_band,3002
+Single,Missouri,,25000.0,3+,0.0,filing_state_band,3002
+Single,Missouri,25000.0,55000.0,0,1.0,filing_state_band,3333
+Single,Missouri,25000.0,55000.0,1,0.0,filing_state_band,3333
+Single,Missouri,25000.0,55000.0,2,0.0,filing_state_band,3333
+Single,Missouri,25000.0,55000.0,3+,0.0,filing_state_band,3333
+Single,Missouri,55000.0,,0,1.0,filing_state_band,3301
+Single,Missouri,55000.0,,1,0.0,filing_state_band,3301
+Single,Missouri,55000.0,,2,0.0,filing_state_band,3301
+Single,Missouri,55000.0,,3+,0.0,filing_state_band,3301
+Single,Montana,,25000.0,0,1.0,filing_state_band,469
+Single,Montana,,25000.0,1,0.0,filing_state_band,469
+Single,Montana,,25000.0,2,0.0,filing_state_band,469
+Single,Montana,,25000.0,3+,0.0,filing_state_band,469
+Single,Montana,25000.0,55000.0,0,1.0,filing_state_band,605
+Single,Montana,25000.0,55000.0,1,0.0,filing_state_band,605
+Single,Montana,25000.0,55000.0,2,0.0,filing_state_band,605
+Single,Montana,25000.0,55000.0,3+,0.0,filing_state_band,605
+Single,Montana,55000.0,,0,1.0,filing_state_band,639
+Single,Montana,55000.0,,1,0.0,filing_state_band,639
+Single,Montana,55000.0,,2,0.0,filing_state_band,639
+Single,Montana,55000.0,,3+,0.0,filing_state_band,639
+Single,Nebraska,,25000.0,0,1.0,filing_state_band,832
+Single,Nebraska,,25000.0,1,0.0,filing_state_band,832
+Single,Nebraska,,25000.0,2,0.0,filing_state_band,832
+Single,Nebraska,,25000.0,3+,0.0,filing_state_band,832
+Single,Nebraska,25000.0,55000.0,0,1.0,filing_state_band,1039
+Single,Nebraska,25000.0,55000.0,1,0.0,filing_state_band,1039
+Single,Nebraska,25000.0,55000.0,2,0.0,filing_state_band,1039
+Single,Nebraska,25000.0,55000.0,3+,0.0,filing_state_band,1039
+Single,Nebraska,55000.0,,0,1.0,filing_state_band,1103
+Single,Nebraska,55000.0,,1,0.0,filing_state_band,1103
+Single,Nebraska,55000.0,,2,0.0,filing_state_band,1103
+Single,Nebraska,55000.0,,3+,0.0,filing_state_band,1103
+Single,Nevada,,25000.0,0,1.0,filing_state_band,1142
+Single,Nevada,,25000.0,1,0.0,filing_state_band,1142
+Single,Nevada,,25000.0,2,0.0,filing_state_band,1142
+Single,Nevada,,25000.0,3+,0.0,filing_state_band,1142
+Single,Nevada,25000.0,55000.0,0,1.0,filing_state_band,1303
+Single,Nevada,25000.0,55000.0,1,0.0,filing_state_band,1303
+Single,Nevada,25000.0,55000.0,2,0.0,filing_state_band,1303
+Single,Nevada,25000.0,55000.0,3+,0.0,filing_state_band,1303
+Single,Nevada,55000.0,,0,1.0,filing_state_band,2189
+Single,Nevada,55000.0,,1,0.0,filing_state_band,2189
+Single,Nevada,55000.0,,2,0.0,filing_state_band,2189
+Single,Nevada,55000.0,,3+,0.0,filing_state_band,2189
+Single,New Hampshire,,25000.0,0,1.0,filing_state_band,474
+Single,New Hampshire,,25000.0,1,0.0,filing_state_band,474
+Single,New Hampshire,,25000.0,2,0.0,filing_state_band,474
+Single,New Hampshire,,25000.0,3+,0.0,filing_state_band,474
+Single,New Hampshire,25000.0,55000.0,0,1.0,filing_state_band,575
+Single,New Hampshire,25000.0,55000.0,1,0.0,filing_state_band,575
+Single,New Hampshire,25000.0,55000.0,2,0.0,filing_state_band,575
+Single,New Hampshire,25000.0,55000.0,3+,0.0,filing_state_band,575
+Single,New Hampshire,55000.0,,0,1.0,filing_state_band,999
+Single,New Hampshire,55000.0,,1,0.0,filing_state_band,999
+Single,New Hampshire,55000.0,,2,0.0,filing_state_band,999
+Single,New Hampshire,55000.0,,3+,0.0,filing_state_band,999
+Single,New Jersey,,25000.0,0,1.0,filing_state_band,2379
+Single,New Jersey,,25000.0,1,0.0,filing_state_band,2379
+Single,New Jersey,,25000.0,2,0.0,filing_state_band,2379
+Single,New Jersey,,25000.0,3+,0.0,filing_state_band,2379
+Single,New Jersey,25000.0,55000.0,0,1.0,filing_state_band,2635
+Single,New Jersey,25000.0,55000.0,1,0.0,filing_state_band,2635
+Single,New Jersey,25000.0,55000.0,2,0.0,filing_state_band,2635
+Single,New Jersey,25000.0,55000.0,3+,0.0,filing_state_band,2635
+Single,New Jersey,55000.0,,0,1.0,filing_state_band,6001
+Single,New Jersey,55000.0,,1,0.0,filing_state_band,6001
+Single,New Jersey,55000.0,,2,0.0,filing_state_band,6001
+Single,New Jersey,55000.0,,3+,0.0,filing_state_band,6001
+Single,New Mexico,,25000.0,0,1.0,filing_state_band,1059
+Single,New Mexico,,25000.0,1,0.0,filing_state_band,1059
+Single,New Mexico,,25000.0,2,0.0,filing_state_band,1059
+Single,New Mexico,,25000.0,3+,0.0,filing_state_band,1059
+Single,New Mexico,25000.0,55000.0,0,1.0,filing_state_band,912
+Single,New Mexico,25000.0,55000.0,1,0.0,filing_state_band,912
+Single,New Mexico,25000.0,55000.0,2,0.0,filing_state_band,912
+Single,New Mexico,25000.0,55000.0,3+,0.0,filing_state_band,912
+Single,New Mexico,55000.0,,0,1.0,filing_state_band,1263
+Single,New Mexico,55000.0,,1,0.0,filing_state_band,1263
+Single,New Mexico,55000.0,,2,0.0,filing_state_band,1263
+Single,New Mexico,55000.0,,3+,0.0,filing_state_band,1263
+Single,New York,,25000.0,0,1.0,filing_state_band,7674
+Single,New York,,25000.0,1,0.0,filing_state_band,7674
+Single,New York,,25000.0,2,0.0,filing_state_band,7674
+Single,New York,,25000.0,3+,0.0,filing_state_band,7674
+Single,New York,25000.0,55000.0,0,1.0,filing_state_band,7437
+Single,New York,25000.0,55000.0,1,0.0,filing_state_band,7437
+Single,New York,25000.0,55000.0,2,0.0,filing_state_band,7437
+Single,New York,25000.0,55000.0,3+,0.0,filing_state_band,7437
+Single,New York,55000.0,,0,1.0,filing_state_band,14391
+Single,New York,55000.0,,1,0.0,filing_state_band,14391
+Single,New York,55000.0,,2,0.0,filing_state_band,14391
+Single,New York,55000.0,,3+,0.0,filing_state_band,14391
+Single,North Carolina,,25000.0,0,1.0,filing_state_band,4829
+Single,North Carolina,,25000.0,1,0.0,filing_state_band,4829
+Single,North Carolina,,25000.0,2,0.0,filing_state_band,4829
+Single,North Carolina,,25000.0,3+,0.0,filing_state_band,4829
+Single,North Carolina,25000.0,55000.0,0,1.0,filing_state_band,4937
+Single,North Carolina,25000.0,55000.0,1,0.0,filing_state_band,4937
+Single,North Carolina,25000.0,55000.0,2,0.0,filing_state_band,4937
+Single,North Carolina,25000.0,55000.0,3+,0.0,filing_state_band,4937
+Single,North Carolina,55000.0,,0,1.0,filing_state_band,6507
+Single,North Carolina,55000.0,,1,0.0,filing_state_band,6507
+Single,North Carolina,55000.0,,2,0.0,filing_state_band,6507
+Single,North Carolina,55000.0,,3+,0.0,filing_state_band,6507
+Single,North Dakota,,25000.0,0,1.0,filing_state_band,373
+Single,North Dakota,,25000.0,1,0.0,filing_state_band,373
+Single,North Dakota,,25000.0,2,0.0,filing_state_band,373
+Single,North Dakota,,25000.0,3+,0.0,filing_state_band,373
+Single,North Dakota,25000.0,55000.0,0,1.0,filing_state_band,420
+Single,North Dakota,25000.0,55000.0,1,0.0,filing_state_band,420
+Single,North Dakota,25000.0,55000.0,2,0.0,filing_state_band,420
+Single,North Dakota,25000.0,55000.0,3+,0.0,filing_state_band,420
+Single,North Dakota,55000.0,,0,1.0,filing_state_band,546
+Single,North Dakota,55000.0,,1,0.0,filing_state_band,546
+Single,North Dakota,55000.0,,2,0.0,filing_state_band,546
+Single,North Dakota,55000.0,,3+,0.0,filing_state_band,546
+Single,Ohio,,25000.0,0,1.0,filing_state_band,5243
+Single,Ohio,,25000.0,1,0.0,filing_state_band,5243
+Single,Ohio,,25000.0,2,0.0,filing_state_band,5243
+Single,Ohio,,25000.0,3+,0.0,filing_state_band,5243
+Single,Ohio,25000.0,55000.0,0,1.0,filing_state_band,6402
+Single,Ohio,25000.0,55000.0,1,0.0,filing_state_band,6402
+Single,Ohio,25000.0,55000.0,2,0.0,filing_state_band,6402
+Single,Ohio,25000.0,55000.0,3+,0.0,filing_state_band,6402
+Single,Ohio,55000.0,,0,1.0,filing_state_band,7275
+Single,Ohio,55000.0,,1,0.0,filing_state_band,7275
+Single,Ohio,55000.0,,2,0.0,filing_state_band,7275
+Single,Ohio,55000.0,,3+,0.0,filing_state_band,7275
+Single,Oklahoma,,25000.0,0,1.0,filing_state_band,1858
+Single,Oklahoma,,25000.0,1,0.0,filing_state_band,1858
+Single,Oklahoma,,25000.0,2,0.0,filing_state_band,1858
+Single,Oklahoma,,25000.0,3+,0.0,filing_state_band,1858
+Single,Oklahoma,25000.0,55000.0,0,1.0,filing_state_band,1760
+Single,Oklahoma,25000.0,55000.0,1,0.0,filing_state_band,1760
+Single,Oklahoma,25000.0,55000.0,2,0.0,filing_state_band,1760
+Single,Oklahoma,25000.0,55000.0,3+,0.0,filing_state_band,1760
+Single,Oklahoma,55000.0,,0,1.0,filing_state_band,1667
+Single,Oklahoma,55000.0,,1,0.0,filing_state_band,1667
+Single,Oklahoma,55000.0,,2,0.0,filing_state_band,1667
+Single,Oklahoma,55000.0,,3+,0.0,filing_state_band,1667
+Single,Oregon,,25000.0,0,1.0,filing_state_band,1682
+Single,Oregon,,25000.0,1,0.0,filing_state_band,1682
+Single,Oregon,,25000.0,2,0.0,filing_state_band,1682
+Single,Oregon,,25000.0,3+,0.0,filing_state_band,1682
+Single,Oregon,25000.0,55000.0,0,1.0,filing_state_band,1814
+Single,Oregon,25000.0,55000.0,1,0.0,filing_state_band,1814
+Single,Oregon,25000.0,55000.0,2,0.0,filing_state_band,1814
+Single,Oregon,25000.0,55000.0,3+,0.0,filing_state_band,1814
+Single,Oregon,55000.0,,0,1.0,filing_state_band,3147
+Single,Oregon,55000.0,,1,0.0,filing_state_band,3147
+Single,Oregon,55000.0,,2,0.0,filing_state_band,3147
+Single,Oregon,55000.0,,3+,0.0,filing_state_band,3147
+Single,Pennsylvania,,25000.0,0,1.0,filing_state_band,5424
+Single,Pennsylvania,,25000.0,1,0.0,filing_state_band,5424
+Single,Pennsylvania,,25000.0,2,0.0,filing_state_band,5424
+Single,Pennsylvania,,25000.0,3+,0.0,filing_state_band,5424
+Single,Pennsylvania,25000.0,55000.0,0,1.0,filing_state_band,6313
+Single,Pennsylvania,25000.0,55000.0,1,0.0,filing_state_band,6313
+Single,Pennsylvania,25000.0,55000.0,2,0.0,filing_state_band,6313
+Single,Pennsylvania,25000.0,55000.0,3+,0.0,filing_state_band,6313
+Single,Pennsylvania,55000.0,,0,1.0,filing_state_band,7713
+Single,Pennsylvania,55000.0,,1,0.0,filing_state_band,7713
+Single,Pennsylvania,55000.0,,2,0.0,filing_state_band,7713
+Single,Pennsylvania,55000.0,,3+,0.0,filing_state_band,7713
+Single,Rhode Island,,25000.0,0,1.0,filing_state_band,423
+Single,Rhode Island,,25000.0,1,0.0,filing_state_band,423
+Single,Rhode Island,,25000.0,2,0.0,filing_state_band,423
+Single,Rhode Island,,25000.0,3+,0.0,filing_state_band,423
+Single,Rhode Island,25000.0,55000.0,0,1.0,filing_state_band,415
+Single,Rhode Island,25000.0,55000.0,1,0.0,filing_state_band,415
+Single,Rhode Island,25000.0,55000.0,2,0.0,filing_state_band,415
+Single,Rhode Island,25000.0,55000.0,3+,0.0,filing_state_band,415
+Single,Rhode Island,55000.0,,0,1.0,filing_state_band,791
+Single,Rhode Island,55000.0,,1,0.0,filing_state_band,791
+Single,Rhode Island,55000.0,,2,0.0,filing_state_band,791
+Single,Rhode Island,55000.0,,3+,0.0,filing_state_band,791
+Single,South Carolina,,25000.0,0,1.0,filing_state_band,2466
+Single,South Carolina,,25000.0,1,0.0,filing_state_band,2466
+Single,South Carolina,,25000.0,2,0.0,filing_state_band,2466
+Single,South Carolina,,25000.0,3+,0.0,filing_state_band,2466
+Single,South Carolina,25000.0,55000.0,0,1.0,filing_state_band,2464
+Single,South Carolina,25000.0,55000.0,1,0.0,filing_state_band,2464
+Single,South Carolina,25000.0,55000.0,2,0.0,filing_state_band,2464
+Single,South Carolina,25000.0,55000.0,3+,0.0,filing_state_band,2464
+Single,South Carolina,55000.0,,0,1.0,filing_state_band,2932
+Single,South Carolina,55000.0,,1,0.0,filing_state_band,2932
+Single,South Carolina,55000.0,,2,0.0,filing_state_band,2932
+Single,South Carolina,55000.0,,3+,0.0,filing_state_band,2932
+Single,South Dakota,,25000.0,0,1.0,filing_state_band,383
+Single,South Dakota,,25000.0,1,0.0,filing_state_band,383
+Single,South Dakota,,25000.0,2,0.0,filing_state_band,383
+Single,South Dakota,,25000.0,3+,0.0,filing_state_band,383
+Single,South Dakota,25000.0,55000.0,0,1.0,filing_state_band,484
+Single,South Dakota,25000.0,55000.0,1,0.0,filing_state_band,484
+Single,South Dakota,25000.0,55000.0,2,0.0,filing_state_band,484
+Single,South Dakota,25000.0,55000.0,3+,0.0,filing_state_band,484
+Single,South Dakota,55000.0,,0,1.0,filing_state_band,533
+Single,South Dakota,55000.0,,1,0.0,filing_state_band,533
+Single,South Dakota,55000.0,,2,0.0,filing_state_band,533
+Single,South Dakota,55000.0,,3+,0.0,filing_state_band,533
+Single,Tennessee,,25000.0,0,1.0,filing_state_band,3252
+Single,Tennessee,,25000.0,1,0.0,filing_state_band,3252
+Single,Tennessee,,25000.0,2,0.0,filing_state_band,3252
+Single,Tennessee,,25000.0,3+,0.0,filing_state_band,3252
+Single,Tennessee,25000.0,55000.0,0,1.0,filing_state_band,3262
+Single,Tennessee,25000.0,55000.0,1,0.0,filing_state_band,3262
+Single,Tennessee,25000.0,55000.0,2,0.0,filing_state_band,3262
+Single,Tennessee,25000.0,55000.0,3+,0.0,filing_state_band,3262
+Single,Tennessee,55000.0,,0,1.0,filing_state_band,3930
+Single,Tennessee,55000.0,,1,0.0,filing_state_band,3930
+Single,Tennessee,55000.0,,2,0.0,filing_state_band,3930
+Single,Tennessee,55000.0,,3+,0.0,filing_state_band,3930
+Single,Texas,,25000.0,0,1.0,filing_state_band,9613
+Single,Texas,,25000.0,1,0.0,filing_state_band,9613
+Single,Texas,,25000.0,2,0.0,filing_state_band,9613
+Single,Texas,,25000.0,3+,0.0,filing_state_band,9613
+Single,Texas,25000.0,55000.0,0,1.0,filing_state_band,9650
+Single,Texas,25000.0,55000.0,1,0.0,filing_state_band,9650
+Single,Texas,25000.0,55000.0,2,0.0,filing_state_band,9650
+Single,Texas,25000.0,55000.0,3+,0.0,filing_state_band,9650
+Single,Texas,55000.0,,0,1.0,filing_state_band,15018
+Single,Texas,55000.0,,1,0.0,filing_state_band,15018
+Single,Texas,55000.0,,2,0.0,filing_state_band,15018
+Single,Texas,55000.0,,3+,0.0,filing_state_band,15018
+Single,Utah,,25000.0,0,1.0,filing_state_band,618
+Single,Utah,,25000.0,1,0.0,filing_state_band,618
+Single,Utah,,25000.0,2,0.0,filing_state_band,618
+Single,Utah,,25000.0,3+,0.0,filing_state_band,618
+Single,Utah,25000.0,55000.0,0,1.0,filing_state_band,867
+Single,Utah,25000.0,55000.0,1,0.0,filing_state_band,867
+Single,Utah,25000.0,55000.0,2,0.0,filing_state_band,867
+Single,Utah,25000.0,55000.0,3+,0.0,filing_state_band,867
+Single,Utah,55000.0,,0,1.0,filing_state_band,1551
+Single,Utah,55000.0,,1,0.0,filing_state_band,1551
+Single,Utah,55000.0,,2,0.0,filing_state_band,1551
+Single,Utah,55000.0,,3+,0.0,filing_state_band,1551
+Single,Vermont,,25000.0,0,1.0,filing_state_band,277
+Single,Vermont,,25000.0,1,0.0,filing_state_band,277
+Single,Vermont,,25000.0,2,0.0,filing_state_band,277
+Single,Vermont,,25000.0,3+,0.0,filing_state_band,277
+Single,Vermont,25000.0,55000.0,0,1.0,filing_state_band,328
+Single,Vermont,25000.0,55000.0,1,0.0,filing_state_band,328
+Single,Vermont,25000.0,55000.0,2,0.0,filing_state_band,328
+Single,Vermont,25000.0,55000.0,3+,0.0,filing_state_band,328
+Single,Vermont,55000.0,,0,1.0,filing_state_band,507
+Single,Vermont,55000.0,,1,0.0,filing_state_band,507
+Single,Vermont,55000.0,,2,0.0,filing_state_band,507
+Single,Vermont,55000.0,,3+,0.0,filing_state_band,507
+Single,Virginia,,25000.0,0,1.0,filing_state_band,2849
+Single,Virginia,,25000.0,1,0.0,filing_state_band,2849
+Single,Virginia,,25000.0,2,0.0,filing_state_band,2849
+Single,Virginia,,25000.0,3+,0.0,filing_state_band,2849
+Single,Virginia,25000.0,55000.0,0,1.0,filing_state_band,3119
+Single,Virginia,25000.0,55000.0,1,0.0,filing_state_band,3119
+Single,Virginia,25000.0,55000.0,2,0.0,filing_state_band,3119
+Single,Virginia,25000.0,55000.0,3+,0.0,filing_state_band,3119
+Single,Virginia,55000.0,,0,1.0,filing_state_band,6366
+Single,Virginia,55000.0,,1,0.0,filing_state_band,6366
+Single,Virginia,55000.0,,2,0.0,filing_state_band,6366
+Single,Virginia,55000.0,,3+,0.0,filing_state_band,6366
+Single,Washington,,25000.0,0,1.0,filing_state_band,2399
+Single,Washington,,25000.0,1,0.0,filing_state_band,2399
+Single,Washington,,25000.0,2,0.0,filing_state_band,2399
+Single,Washington,,25000.0,3+,0.0,filing_state_band,2399
+Single,Washington,25000.0,55000.0,0,1.0,filing_state_band,2819
+Single,Washington,25000.0,55000.0,1,0.0,filing_state_band,2819
+Single,Washington,25000.0,55000.0,2,0.0,filing_state_band,2819
+Single,Washington,25000.0,55000.0,3+,0.0,filing_state_band,2819
+Single,Washington,55000.0,,0,1.0,filing_state_band,6070
+Single,Washington,55000.0,,1,0.0,filing_state_band,6070
+Single,Washington,55000.0,,2,0.0,filing_state_band,6070
+Single,Washington,55000.0,,3+,0.0,filing_state_band,6070
+Single,West Virginia,,25000.0,0,1.0,filing_state_band,1128
+Single,West Virginia,,25000.0,1,0.0,filing_state_band,1128
+Single,West Virginia,,25000.0,2,0.0,filing_state_band,1128
+Single,West Virginia,,25000.0,3+,0.0,filing_state_band,1128
+Single,West Virginia,25000.0,55000.0,0,1.0,filing_state_band,977
+Single,West Virginia,25000.0,55000.0,1,0.0,filing_state_band,977
+Single,West Virginia,25000.0,55000.0,2,0.0,filing_state_band,977
+Single,West Virginia,25000.0,55000.0,3+,0.0,filing_state_band,977
+Single,West Virginia,55000.0,,0,1.0,filing_state_band,790
+Single,West Virginia,55000.0,,1,0.0,filing_state_band,790
+Single,West Virginia,55000.0,,2,0.0,filing_state_band,790
+Single,West Virginia,55000.0,,3+,0.0,filing_state_band,790
+Single,Wisconsin,,25000.0,0,1.0,filing_state_band,2323
+Single,Wisconsin,,25000.0,1,0.0,filing_state_band,2323
+Single,Wisconsin,,25000.0,2,0.0,filing_state_band,2323
+Single,Wisconsin,,25000.0,3+,0.0,filing_state_band,2323
+Single,Wisconsin,25000.0,55000.0,0,1.0,filing_state_band,3040
+Single,Wisconsin,25000.0,55000.0,1,0.0,filing_state_band,3040
+Single,Wisconsin,25000.0,55000.0,2,0.0,filing_state_band,3040
+Single,Wisconsin,25000.0,55000.0,3+,0.0,filing_state_band,3040
+Single,Wisconsin,55000.0,,0,1.0,filing_state_band,3698
+Single,Wisconsin,55000.0,,1,0.0,filing_state_band,3698
+Single,Wisconsin,55000.0,,2,0.0,filing_state_band,3698
+Single,Wisconsin,55000.0,,3+,0.0,filing_state_band,3698
+Single,Wyoming,,25000.0,0,1.0,filing_state_band,261
+Single,Wyoming,,25000.0,1,0.0,filing_state_band,261
+Single,Wyoming,,25000.0,2,0.0,filing_state_band,261
+Single,Wyoming,,25000.0,3+,0.0,filing_state_band,261
+Single,Wyoming,25000.0,55000.0,0,1.0,filing_state_band,316
+Single,Wyoming,25000.0,55000.0,1,0.0,filing_state_band,316
+Single,Wyoming,25000.0,55000.0,2,0.0,filing_state_band,316
+Single,Wyoming,25000.0,55000.0,3+,0.0,filing_state_band,316
+Single,Wyoming,55000.0,,0,1.0,filing_state_band,355
+Single,Wyoming,55000.0,,1,0.0,filing_state_band,355
+Single,Wyoming,55000.0,,2,0.0,filing_state_band,355
+Single,Wyoming,55000.0,,3+,0.0,filing_state_band,355
+Head of household,Alabama,,25000.0,0,0.3803012798223279,filing_state_band,779
+Head of household,Alabama,,25000.0,1,0.2651733536728994,filing_state_band,779
+Head of household,Alabama,,25000.0,2,0.1810258768633697,filing_state_band,779
+Head of household,Alabama,,25000.0,3+,0.173499489641403,filing_state_band,779
+Head of household,Alabama,25000.0,55000.0,0,0.5169480766789387,filing_state_band,1034
+Head of household,Alabama,25000.0,55000.0,1,0.23677372942321526,filing_state_band,1034
+Head of household,Alabama,25000.0,55000.0,2,0.1526300198891287,filing_state_band,1034
+Head of household,Alabama,25000.0,55000.0,3+,0.09364817400871736,filing_state_band,1034
+Head of household,Alabama,55000.0,,0,0.609477534835665,filing_state_band,1666
+Head of household,Alabama,55000.0,,1,0.23281114741280612,filing_state_band,1666
+Head of household,Alabama,55000.0,,2,0.10318058697048393,filing_state_band,1666
+Head of household,Alabama,55000.0,,3+,0.05453073078104493,filing_state_band,1666
+Head of household,Alaska,,25000.0,0,0.29987293519695046,filing_state_band,62
+Head of household,Alaska,,25000.0,1,0.25819567979669633,filing_state_band,62
+Head of household,Alaska,,25000.0,2,0.22566709021601017,filing_state_band,62
+Head of household,Alaska,,25000.0,3+,0.21626429479034306,filing_state_band,62
+Head of household,Alaska,25000.0,55000.0,0,0.33687750895085167,filing_state_band,96
+Head of household,Alaska,25000.0,55000.0,1,0.4007811652381469,filing_state_band,96
+Head of household,Alaska,25000.0,55000.0,2,0.0980796354562222,filing_state_band,96
+Head of household,Alaska,25000.0,55000.0,3+,0.16426169035477922,filing_state_band,96
+Head of household,Alaska,55000.0,,0,0.46508519879719346,filing_state_band,251
+Head of household,Alaska,55000.0,,1,0.2483572780933289,filing_state_band,251
+Head of household,Alaska,55000.0,,2,0.21888109292051824,filing_state_band,251
+Head of household,Alaska,55000.0,,3+,0.06767643018895943,filing_state_band,251
+Head of household,Arizona,,25000.0,0,0.49145163484649224,filing_state_band,632
+Head of household,Arizona,,25000.0,1,0.19979441597508804,filing_state_band,632
+Head of household,Arizona,,25000.0,2,0.16910797696249602,filing_state_band,632
+Head of household,Arizona,,25000.0,3+,0.1396459722159237,filing_state_band,632
+Head of household,Arizona,25000.0,55000.0,0,0.49858153661304316,filing_state_band,1012
+Head of household,Arizona,25000.0,55000.0,1,0.24301615379480676,filing_state_band,1012
+Head of household,Arizona,25000.0,55000.0,2,0.14704458981376411,filing_state_band,1012
+Head of household,Arizona,25000.0,55000.0,3+,0.11135771977838596,filing_state_band,1012
+Head of household,Arizona,55000.0,,0,0.5988636195492949,filing_state_band,2920
+Head of household,Arizona,55000.0,,1,0.1991861858751461,filing_state_band,2920
+Head of household,Arizona,55000.0,,2,0.13334122486424102,filing_state_band,2920
+Head of household,Arizona,55000.0,,3+,0.06860896971131794,filing_state_band,2920
+Head of household,Arkansas,,25000.0,0,0.4233860225557233,filing_state_band,397
+Head of household,Arkansas,,25000.0,1,0.22746647722227156,filing_state_band,397
+Head of household,Arkansas,,25000.0,2,0.19909421898588048,filing_state_band,397
+Head of household,Arkansas,,25000.0,3+,0.15005328123612469,filing_state_band,397
+Head of household,Arkansas,25000.0,55000.0,0,0.42914853101196954,filing_state_band,648
+Head of household,Arkansas,25000.0,55000.0,1,0.29077801958650706,filing_state_band,648
+Head of household,Arkansas,25000.0,55000.0,2,0.16796789989118607,filing_state_band,648
+Head of household,Arkansas,25000.0,55000.0,3+,0.11210554951033733,filing_state_band,648
+Head of household,Arkansas,55000.0,,0,0.5896733933873484,filing_state_band,930
+Head of household,Arkansas,55000.0,,1,0.19103215741532886,filing_state_band,930
+Head of household,Arkansas,55000.0,,2,0.15461728146545217,filing_state_band,930
+Head of household,Arkansas,55000.0,,3+,0.06467716773187057,filing_state_band,930
+Head of household,California,,25000.0,0,0.43341000939714164,filing_state_band,2931
+Head of household,California,,25000.0,1,0.2587701851179255,filing_state_band,2931
+Head of household,California,,25000.0,2,0.18878454026069863,filing_state_band,2931
+Head of household,California,,25000.0,3+,0.11903526522423424,filing_state_band,2931
+Head of household,California,25000.0,55000.0,0,0.49718890864918647,filing_state_band,4760
+Head of household,California,25000.0,55000.0,1,0.24226696999847352,filing_state_band,4760
+Head of household,California,25000.0,55000.0,2,0.15760134917671897,filing_state_band,4760
+Head of household,California,25000.0,55000.0,3+,0.10294277217562102,filing_state_band,4760
+Head of household,California,55000.0,,0,0.628666463901414,filing_state_band,17094
+Head of household,California,55000.0,,1,0.20161458757492204,filing_state_band,17094
+Head of household,California,55000.0,,2,0.1182852707664028,filing_state_band,17094
+Head of household,California,55000.0,,3+,0.05143367775726118,filing_state_band,17094
+Head of household,Colorado,,25000.0,0,0.38535992331611063,filing_state_band,343
+Head of household,Colorado,,25000.0,1,0.2894816823697192,filing_state_band,343
+Head of household,Colorado,,25000.0,2,0.21298482687676806,filing_state_band,343
+Head of household,Colorado,,25000.0,3+,0.1121735674374021,filing_state_band,343
+Head of household,Colorado,25000.0,55000.0,0,0.4426200983881428,filing_state_band,526
+Head of household,Colorado,25000.0,55000.0,1,0.30946392698397635,filing_state_band,526
+Head of household,Colorado,25000.0,55000.0,2,0.14612695550388333,filing_state_band,526
+Head of household,Colorado,25000.0,55000.0,3+,0.10178901912399753,filing_state_band,526
+Head of household,Colorado,55000.0,,0,0.5684140760046932,filing_state_band,2043
+Head of household,Colorado,55000.0,,1,0.2524921406883951,filing_state_band,2043
+Head of household,Colorado,55000.0,,2,0.12877179783432302,filing_state_band,2043
+Head of household,Colorado,55000.0,,3+,0.05032198547258869,filing_state_band,2043
+Head of household,Connecticut,,25000.0,0,0.3534002491713876,filing_state_band,272
+Head of household,Connecticut,,25000.0,1,0.33245574857196586,filing_state_band,272
+Head of household,Connecticut,,25000.0,2,0.19197950212735948,filing_state_band,272
+Head of household,Connecticut,,25000.0,3+,0.12216450012928703,filing_state_band,272
+Head of household,Connecticut,25000.0,55000.0,0,0.4516785900924441,filing_state_band,432
+Head of household,Connecticut,25000.0,55000.0,1,0.2746472528066603,filing_state_band,432
+Head of household,Connecticut,25000.0,55000.0,2,0.19510568900582057,filing_state_band,432
+Head of household,Connecticut,25000.0,55000.0,3+,0.07856846809507506,filing_state_band,432
+Head of household,Connecticut,55000.0,,0,0.623604210733435,filing_state_band,1492
+Head of household,Connecticut,55000.0,,1,0.2154311574597865,filing_state_band,1492
+Head of household,Connecticut,55000.0,,2,0.12645112892911603,filing_state_band,1492
+Head of household,Connecticut,55000.0,,3+,0.03451350287766245,filing_state_band,1492
+Head of household,Delaware,,25000.0,0,0.3686828716789146,filing_state_band,68
+Head of household,Delaware,,25000.0,1,0.2664782362916902,filing_state_band,68
+Head of household,Delaware,,25000.0,2,0.21526286037309214,filing_state_band,68
+Head of household,Delaware,,25000.0,3+,0.14957603165630298,filing_state_band,68
+Head of household,Delaware,25000.0,55000.0,0,0.4690974060349391,filing_state_band,118
+Head of household,Delaware,25000.0,55000.0,1,0.3059158284806776,filing_state_band,118
+Head of household,Delaware,25000.0,55000.0,2,0.1973928004235045,filing_state_band,118
+Head of household,Delaware,25000.0,55000.0,3+,0.027593965060878772,filing_state_band,118
+Head of household,Delaware,55000.0,,0,0.5767230821739043,filing_state_band,368
+Head of household,Delaware,55000.0,,1,0.21895641349956835,filing_state_band,368
+Head of household,Delaware,55000.0,,2,0.12666385592965126,filing_state_band,368
+Head of household,Delaware,55000.0,,3+,0.07765664839687607,filing_state_band,368
+Head of household,District of Columbia,,25000.0,0,0.3552355235523552,filing_state_band,81
+Head of household,District of Columbia,,25000.0,1,0.1713771377137714,filing_state_band,81
+Head of household,District of Columbia,,25000.0,2,0.23174317431743174,filing_state_band,81
+Head of household,District of Columbia,,25000.0,3+,0.24164416441644165,filing_state_band,81
+Head of household,District of Columbia,25000.0,55000.0,0,0.4850563806882458,filing_state,367
+Head of household,District of Columbia,25000.0,55000.0,1,0.23285771630843338,filing_state,367
+Head of household,District of Columbia,25000.0,55000.0,2,0.17921395467649529,filing_state,367
+Head of household,District of Columbia,25000.0,55000.0,3+,0.10287194832682553,filing_state,367
+Head of household,District of Columbia,55000.0,,0,0.5755011892626571,filing_state_band,238
+Head of household,District of Columbia,55000.0,,1,0.255181787291879,filing_state_band,238
+Head of household,District of Columbia,55000.0,,2,0.14593951749915052,filing_state_band,238
+Head of household,District of Columbia,55000.0,,3+,0.023377505946313284,filing_state_band,238
+Head of household,Florida,,25000.0,0,0.42017282149881763,filing_state_band,1639
+Head of household,Florida,,25000.0,1,0.2736590863886495,filing_state_band,1639
+Head of household,Florida,,25000.0,2,0.17761276492298173,filing_state_band,1639
+Head of household,Florida,,25000.0,3+,0.12855532718955115,filing_state_band,1639
+Head of household,Florida,25000.0,55000.0,0,0.5108980627240906,filing_state_band,3285
+Head of household,Florida,25000.0,55000.0,1,0.25757124838796536,filing_state_band,3285
+Head of household,Florida,25000.0,55000.0,2,0.15342318212094158,filing_state_band,3285
+Head of household,Florida,25000.0,55000.0,3+,0.07810750676700254,filing_state_band,3285
+Head of household,Florida,55000.0,,0,0.6499659151057546,filing_state_band,8385
+Head of household,Florida,55000.0,,1,0.20742715433294692,filing_state_band,8385
+Head of household,Florida,55000.0,,2,0.10798968208089549,filing_state_band,8385
+Head of household,Florida,55000.0,,3+,0.034617248480402964,filing_state_band,8385
+Head of household,Georgia,,25000.0,0,0.42253004983875697,filing_state_band,1110
+Head of household,Georgia,,25000.0,1,0.2528877162122545,filing_state_band,1110
+Head of household,Georgia,,25000.0,2,0.1628261506889475,filing_state_band,1110
+Head of household,Georgia,,25000.0,3+,0.16175608326004104,filing_state_band,1110
+Head of household,Georgia,25000.0,55000.0,0,0.49413669480744765,filing_state_band,1825
+Head of household,Georgia,25000.0,55000.0,1,0.2541829536255349,filing_state_band,1825
+Head of household,Georgia,25000.0,55000.0,2,0.15282988319648433,filing_state_band,1825
+Head of household,Georgia,25000.0,55000.0,3+,0.09885046837053313,filing_state_band,1825
+Head of household,Georgia,55000.0,,0,0.5888515165434367,filing_state_band,4141
+Head of household,Georgia,55000.0,,1,0.22585691213171247,filing_state_band,4141
+Head of household,Georgia,55000.0,,2,0.13157911448003168,filing_state_band,4141
+Head of household,Georgia,55000.0,,3+,0.05371245684481916,filing_state_band,4141
+Head of household,Hawaii,,25000.0,0,0.3525199669512531,filing_state_band,65
+Head of household,Hawaii,,25000.0,1,0.3689066372900028,filing_state_band,65
+Head of household,Hawaii,,25000.0,2,0.10754613054255026,filing_state_band,65
+Head of household,Hawaii,,25000.0,3+,0.17102726521619388,filing_state_band,65
+Head of household,Hawaii,25000.0,55000.0,0,0.4123200217332247,filing_state_band,127
+Head of household,Hawaii,25000.0,55000.0,1,0.33177125781037764,filing_state_band,127
+Head of household,Hawaii,25000.0,55000.0,2,0.13406682966585168,filing_state_band,127
+Head of household,Hawaii,25000.0,55000.0,3+,0.12184189079054605,filing_state_band,127
+Head of household,Hawaii,55000.0,,0,0.6109762088567618,filing_state_band,707
+Head of household,Hawaii,55000.0,,1,0.1783563758860271,filing_state_band,707
+Head of household,Hawaii,55000.0,,2,0.1459049757877746,filing_state_band,707
+Head of household,Hawaii,55000.0,,3+,0.06476243946943645,filing_state_band,707
+Head of household,Idaho,,25000.0,0,0.2972651605231867,filing_state_band,104
+Head of household,Idaho,,25000.0,1,0.3733650416171225,filing_state_band,104
+Head of household,Idaho,,25000.0,2,0.25360964837778155,filing_state_band,104
+Head of household,Idaho,,25000.0,3+,0.07576014948190929,filing_state_band,104
+Head of household,Idaho,25000.0,55000.0,0,0.4235586960012847,filing_state_band,220
+Head of household,Idaho,25000.0,55000.0,1,0.33687971735988437,filing_state_band,220
+Head of household,Idaho,25000.0,55000.0,2,0.15858358760237676,filing_state_band,220
+Head of household,Idaho,25000.0,55000.0,3+,0.08097799903645415,filing_state_band,220
+Head of household,Idaho,55000.0,,0,0.4681273972390018,filing_state_band,586
+Head of household,Idaho,55000.0,,1,0.2978865475099772,filing_state_band,586
+Head of household,Idaho,55000.0,,2,0.1454260291628492,filing_state_band,586
+Head of household,Idaho,55000.0,,3+,0.0885600260881718,filing_state_band,586
+Head of household,Illinois,,25000.0,0,0.39458665863574766,filing_state_band,1019
+Head of household,Illinois,,25000.0,1,0.28758470109923207,filing_state_band,1019
+Head of household,Illinois,,25000.0,2,0.17399488028911309,filing_state_band,1019
+Head of household,Illinois,,25000.0,3+,0.14383375997590725,filing_state_band,1019
+Head of household,Illinois,25000.0,55000.0,0,0.4577534182105196,filing_state_band,1744
+Head of household,Illinois,25000.0,55000.0,1,0.2642108823861046,filing_state_band,1744
+Head of household,Illinois,25000.0,55000.0,2,0.19253263784372074,filing_state_band,1744
+Head of household,Illinois,25000.0,55000.0,3+,0.08550306155965506,filing_state_band,1744
+Head of household,Illinois,55000.0,,0,0.5961114365962515,filing_state_band,4697
+Head of household,Illinois,55000.0,,1,0.23118052487236332,filing_state_band,4697
+Head of household,Illinois,55000.0,,2,0.12003199919028813,filing_state_band,4697
+Head of household,Illinois,55000.0,,3+,0.052676039341096964,filing_state_band,4697
+Head of household,Indiana,,25000.0,0,0.3375560833993138,filing_state_band,594
+Head of household,Indiana,,25000.0,1,0.30994152046783624,filing_state_band,594
+Head of household,Indiana,,25000.0,2,0.15704740870386577,filing_state_band,594
+Head of household,Indiana,,25000.0,3+,0.19545498742898418,filing_state_band,594
+Head of household,Indiana,25000.0,55000.0,0,0.40053501226685584,filing_state_band,1127
+Head of household,Indiana,25000.0,55000.0,1,0.2855147645650439,filing_state_band,1127
+Head of household,Indiana,25000.0,55000.0,2,0.20538854896396797,filing_state_band,1127
+Head of household,Indiana,25000.0,55000.0,3+,0.1085616742041323,filing_state_band,1127
+Head of household,Indiana,55000.0,,0,0.5534869885029052,filing_state_band,2345
+Head of household,Indiana,55000.0,,1,0.24512841513166028,filing_state_band,2345
+Head of household,Indiana,55000.0,,2,0.13946408703177154,filing_state_band,2345
+Head of household,Indiana,55000.0,,3+,0.061920509333663,filing_state_band,2345
+Head of household,Iowa,,25000.0,0,0.26538345864661655,filing_state_band,218
+Head of household,Iowa,,25000.0,1,0.38661654135338347,filing_state_band,218
+Head of household,Iowa,,25000.0,2,0.1874887218045113,filing_state_band,218
+Head of household,Iowa,,25000.0,3+,0.16051127819548872,filing_state_band,218
+Head of household,Iowa,25000.0,55000.0,0,0.3543748195206468,filing_state_band,428
+Head of household,Iowa,25000.0,55000.0,1,0.31080951005871593,filing_state_band,428
+Head of household,Iowa,25000.0,55000.0,2,0.19512946385600155,filing_state_band,428
+Head of household,Iowa,25000.0,55000.0,3+,0.13968620656463568,filing_state_band,428
+Head of household,Iowa,55000.0,,0,0.44956674041297934,filing_state_band,962
+Head of household,Iowa,55000.0,,1,0.286688790560472,filing_state_band,962
+Head of household,Iowa,55000.0,,2,0.1727046460176991,filing_state_band,962
+Head of household,Iowa,55000.0,,3+,0.09103982300884955,filing_state_band,962
+Head of household,Kansas,,25000.0,0,0.36778983438035406,filing_state_band,186
+Head of household,Kansas,,25000.0,1,0.2312524711154066,filing_state_band,186
+Head of household,Kansas,,25000.0,2,0.22286166146817205,filing_state_band,186
+Head of household,Kansas,,25000.0,3+,0.1780960330360673,filing_state_band,186
+Head of household,Kansas,25000.0,55000.0,0,0.424337303518162,filing_state_band,396
+Head of household,Kansas,25000.0,55000.0,1,0.34360786138907107,filing_state_band,396
+Head of household,Kansas,25000.0,55000.0,2,0.14882904228987284,filing_state_band,396
+Head of household,Kansas,25000.0,55000.0,3+,0.08322579280289408,filing_state_band,396
+Head of household,Kansas,55000.0,,0,0.5043283746777543,filing_state_band,881
+Head of household,Kansas,55000.0,,1,0.2518682729634571,filing_state_band,881
+Head of household,Kansas,55000.0,,2,0.16815961320480283,filing_state_band,881
+Head of household,Kansas,55000.0,,3+,0.07564373915398581,filing_state_band,881
+Head of household,Kentucky,,25000.0,0,0.43173293823996584,filing_state_band,604
+Head of household,Kentucky,,25000.0,1,0.2631108263591345,filing_state_band,604
+Head of household,Kentucky,,25000.0,2,0.18975159839293104,filing_state_band,604
+Head of household,Kentucky,,25000.0,3+,0.1154046370079686,filing_state_band,604
+Head of household,Kentucky,25000.0,55000.0,0,0.5064465102169061,filing_state_band,820
+Head of household,Kentucky,25000.0,55000.0,1,0.26931244447333635,filing_state_band,820
+Head of household,Kentucky,25000.0,55000.0,2,0.13792281522893238,filing_state_band,820
+Head of household,Kentucky,25000.0,55000.0,3+,0.08631823008082515,filing_state_band,820
+Head of household,Kentucky,55000.0,,0,0.5634408602150538,filing_state_band,1473
+Head of household,Kentucky,55000.0,,1,0.2397786581148211,filing_state_band,1473
+Head of household,Kentucky,55000.0,,2,0.13575426020247752,filing_state_band,1473
+Head of household,Kentucky,55000.0,,3+,0.061026221467647614,filing_state_band,1473
+Head of household,Louisiana,,25000.0,0,0.38170215861732093,filing_state_band,791
+Head of household,Louisiana,,25000.0,1,0.24047225599933486,filing_state_band,791
+Head of household,Louisiana,,25000.0,2,0.1978507363410553,filing_state_band,791
+Head of household,Louisiana,,25000.0,3+,0.17997484904228894,filing_state_band,791
+Head of household,Louisiana,25000.0,55000.0,0,0.4428054327631495,filing_state_band,1027
+Head of household,Louisiana,25000.0,55000.0,1,0.27797264398744315,filing_state_band,1027
+Head of household,Louisiana,25000.0,55000.0,2,0.16573771542059068,filing_state_band,1027
+Head of household,Louisiana,25000.0,55000.0,3+,0.11348420782881671,filing_state_band,1027
+Head of household,Louisiana,55000.0,,0,0.584377504188825,filing_state_band,1519
+Head of household,Louisiana,55000.0,,1,0.24766275709671937,filing_state_band,1519
+Head of household,Louisiana,55000.0,,2,0.10780457006872102,filing_state_band,1519
+Head of household,Louisiana,55000.0,,3+,0.06015516864573468,filing_state_band,1519
+Head of household,Maine,,25000.0,0,0.3328018425015502,filing_state_band,100
+Head of household,Maine,,25000.0,1,0.3676144919833466,filing_state_band,100
+Head of household,Maine,,25000.0,2,0.1431481973602622,filing_state_band,100
+Head of household,Maine,,25000.0,3+,0.156435468154841,filing_state_band,100
+Head of household,Maine,25000.0,55000.0,0,0.4795424799408183,filing_state_band,163
+Head of household,Maine,25000.0,55000.0,1,0.2127695897114892,filing_state_band,163
+Head of household,Maine,25000.0,55000.0,2,0.21544414727138222,filing_state_band,163
+Head of household,Maine,25000.0,55000.0,3+,0.09224378307631025,filing_state_band,163
+Head of household,Maine,55000.0,,0,0.5466243280825187,filing_state_band,412
+Head of household,Maine,55000.0,,1,0.2321565697445157,filing_state_band,412
+Head of household,Maine,55000.0,,2,0.17302783139281488,filing_state_band,412
+Head of household,Maine,55000.0,,3+,0.048191270780150675,filing_state_band,412
+Head of household,Maryland,,25000.0,0,0.38771589544656876,filing_state_band,386
+Head of household,Maryland,,25000.0,1,0.2919368246051538,filing_state_band,386
+Head of household,Maryland,,25000.0,2,0.1847418490810012,filing_state_band,386
+Head of household,Maryland,,25000.0,3+,0.13560543086727625,filing_state_band,386
+Head of household,Maryland,25000.0,55000.0,0,0.4937288051067225,filing_state_band,609
+Head of household,Maryland,25000.0,55000.0,1,0.23308148813085977,filing_state_band,609
+Head of household,Maryland,25000.0,55000.0,2,0.18266257729902255,filing_state_band,609
+Head of household,Maryland,25000.0,55000.0,3+,0.09052712946339517,filing_state_band,609
+Head of household,Maryland,55000.0,,0,0.6132600959306823,filing_state_band,2720
+Head of household,Maryland,55000.0,,1,0.2159117282995513,filing_state_band,2720
+Head of household,Maryland,55000.0,,2,0.12002295115787302,filing_state_band,2720
+Head of household,Maryland,55000.0,,3+,0.050805224611893345,filing_state_band,2720
+Head of household,Massachusetts,,25000.0,0,0.3684368058728083,filing_state_band,483
+Head of household,Massachusetts,,25000.0,1,0.26170859654373885,filing_state_band,483
+Head of household,Massachusetts,,25000.0,2,0.22602750515918651,filing_state_band,483
+Head of household,Massachusetts,,25000.0,3+,0.1438270924242663,filing_state_band,483
+Head of household,Massachusetts,25000.0,55000.0,0,0.48576522307240855,filing_state_band,688
+Head of household,Massachusetts,25000.0,55000.0,1,0.27698849480106746,filing_state_band,688
+Head of household,Massachusetts,25000.0,55000.0,2,0.16979857596864031,filing_state_band,688
+Head of household,Massachusetts,25000.0,55000.0,3+,0.06744770615788366,filing_state_band,688
+Head of household,Massachusetts,55000.0,,0,0.6086754363275814,filing_state_band,2781
+Head of household,Massachusetts,55000.0,,1,0.21474583995368832,filing_state_band,2781
+Head of household,Massachusetts,55000.0,,2,0.12563586200100998,filing_state_band,2781
+Head of household,Massachusetts,55000.0,,3+,0.05094286171772038,filing_state_band,2781
+Head of household,Michigan,,25000.0,0,0.38305129106925234,filing_state_band,900
+Head of household,Michigan,,25000.0,1,0.2714803333796815,filing_state_band,900
+Head of household,Michigan,,25000.0,2,0.17948193648119218,filing_state_band,900
+Head of household,Michigan,,25000.0,3+,0.16598643906987395,filing_state_band,900
+Head of household,Michigan,25000.0,55000.0,0,0.4624101728712537,filing_state_band,1535
+Head of household,Michigan,25000.0,55000.0,1,0.2700997564656464,filing_state_band,1535
+Head of household,Michigan,25000.0,55000.0,2,0.17487074155393442,filing_state_band,1535
+Head of household,Michigan,25000.0,55000.0,3+,0.0926193291091655,filing_state_band,1535
+Head of household,Michigan,55000.0,,0,0.599022025006102,filing_state_band,3261
+Head of household,Michigan,55000.0,,1,0.207129947810252,filing_state_band,3261
+Head of household,Michigan,55000.0,,2,0.14174055414926323,filing_state_band,3261
+Head of household,Michigan,55000.0,,3+,0.052107473034382706,filing_state_band,3261
+Head of household,Minnesota,,25000.0,0,0.33837004085777145,filing_state_band,268
+Head of household,Minnesota,,25000.0,1,0.3986654739743249,filing_state_band,268
+Head of household,Minnesota,,25000.0,2,0.18340062374585983,filing_state_band,268
+Head of household,Minnesota,,25000.0,3+,0.07956386142204386,filing_state_band,268
+Head of household,Minnesota,25000.0,55000.0,0,0.4266800461291917,filing_state_band,548
+Head of household,Minnesota,25000.0,55000.0,1,0.28189728766343664,filing_state_band,548
+Head of household,Minnesota,25000.0,55000.0,2,0.14693944794740074,filing_state_band,548
+Head of household,Minnesota,25000.0,55000.0,3+,0.14448321825997096,filing_state_band,548
+Head of household,Minnesota,55000.0,,0,0.47372397955404105,filing_state_band,1680
+Head of household,Minnesota,55000.0,,1,0.2587154604044744,filing_state_band,1680
+Head of household,Minnesota,55000.0,,2,0.1970713880040497,filing_state_band,1680
+Head of household,Minnesota,55000.0,,3+,0.07048917203743488,filing_state_band,1680
+Head of household,Mississippi,,25000.0,0,0.3912783577302152,filing_state_band,544
+Head of household,Mississippi,,25000.0,1,0.2637925001457981,filing_state_band,544
+Head of household,Mississippi,,25000.0,2,0.15039073890476468,filing_state_band,544
+Head of household,Mississippi,,25000.0,3+,0.19453840321922203,filing_state_band,544
+Head of household,Mississippi,25000.0,55000.0,0,0.48593427547338314,filing_state_band,738
+Head of household,Mississippi,25000.0,55000.0,1,0.2545226342911623,filing_state_band,738
+Head of household,Mississippi,25000.0,55000.0,2,0.18271563220332845,filing_state_band,738
+Head of household,Mississippi,25000.0,55000.0,3+,0.0768274580321261,filing_state_band,738
+Head of household,Mississippi,55000.0,,0,0.6491025582769119,filing_state_band,1006
+Head of household,Mississippi,55000.0,,1,0.18772208842640978,filing_state_band,1006
+Head of household,Mississippi,55000.0,,2,0.10875630481210524,filing_state_band,1006
+Head of household,Mississippi,55000.0,,3+,0.05441904848457309,filing_state_band,1006
+Head of household,Missouri,,25000.0,0,0.34372401047281687,filing_state_band,580
+Head of household,Missouri,,25000.0,1,0.3208378253503773,filing_state_band,580
+Head of household,Missouri,,25000.0,2,0.20315724626520867,filing_state_band,580
+Head of household,Missouri,,25000.0,3+,0.1322809179115971,filing_state_band,580
+Head of household,Missouri,25000.0,55000.0,0,0.4643721599856031,filing_state_band,1005
+Head of household,Missouri,25000.0,55000.0,1,0.26947406307643856,filing_state_band,1005
+Head of household,Missouri,25000.0,55000.0,2,0.1579070499842534,filing_state_band,1005
+Head of household,Missouri,25000.0,55000.0,3+,0.10824672695370495,filing_state_band,1005
+Head of household,Missouri,55000.0,,0,0.5474168291230989,filing_state_band,1982
+Head of household,Missouri,55000.0,,1,0.22713908542709002,filing_state_band,1982
+Head of household,Missouri,55000.0,,2,0.154817571651239,filing_state_band,1982
+Head of household,Missouri,55000.0,,3+,0.0706265137985722,filing_state_band,1982
+Head of household,Montana,,25000.0,0,0.40042255087290113,filing_state_band,86
+Head of household,Montana,,25000.0,1,0.24741465584343378,filing_state_band,86
+Head of household,Montana,,25000.0,2,0.23218058489936616,filing_state_band,86
+Head of household,Montana,,25000.0,3+,0.1199822083842989,filing_state_band,86
+Head of household,Montana,25000.0,55000.0,0,0.5284782779479927,filing_state_band,121
+Head of household,Montana,25000.0,55000.0,1,0.24793777987273155,filing_state_band,121
+Head of household,Montana,25000.0,55000.0,2,0.1582213842407102,filing_state_band,121
+Head of household,Montana,25000.0,55000.0,3+,0.06536255793856548,filing_state_band,121
+Head of household,Montana,55000.0,,0,0.5592233009708738,filing_state_band,265
+Head of household,Montana,55000.0,,1,0.20706917475728157,filing_state_band,265
+Head of household,Montana,55000.0,,2,0.1983009708737864,filing_state_band,265
+Head of household,Montana,55000.0,,3+,0.03540655339805825,filing_state_band,265
+Head of household,Nebraska,,25000.0,0,0.3214307626234738,filing_state_band,135
+Head of household,Nebraska,,25000.0,1,0.3256641511749187,filing_state_band,135
+Head of household,Nebraska,,25000.0,2,0.17332351678017055,filing_state_band,135
+Head of household,Nebraska,,25000.0,3+,0.1795815694214369,filing_state_band,135
+Head of household,Nebraska,25000.0,55000.0,0,0.39806305669447195,filing_state_band,240
+Head of household,Nebraska,25000.0,55000.0,1,0.27127809981620243,filing_state_band,240
+Head of household,Nebraska,25000.0,55000.0,2,0.16806871200339318,filing_state_band,240
+Head of household,Nebraska,25000.0,55000.0,3+,0.16259013148593243,filing_state_band,240
+Head of household,Nebraska,55000.0,,0,0.5083234244946492,filing_state_band,578
+Head of household,Nebraska,55000.0,,1,0.22084514771791822,filing_state_band,578
+Head of household,Nebraska,55000.0,,2,0.1724290374706546,filing_state_band,578
+Head of household,Nebraska,55000.0,,3+,0.09840239031677796,filing_state_band,578
+Head of household,Nevada,,25000.0,0,0.4138662424603964,filing_state_band,274
+Head of household,Nevada,,25000.0,1,0.2504474050507059,filing_state_band,274
+Head of household,Nevada,,25000.0,2,0.21405846092662556,filing_state_band,274
+Head of household,Nevada,,25000.0,3+,0.12162789156227216,filing_state_band,274
+Head of household,Nevada,25000.0,55000.0,0,0.5020628847113625,filing_state_band,519
+Head of household,Nevada,25000.0,55000.0,1,0.24378639161537183,filing_state_band,519
+Head of household,Nevada,25000.0,55000.0,2,0.16503077690900017,filing_state_band,519
+Head of household,Nevada,25000.0,55000.0,3+,0.08911994676426552,filing_state_band,519
+Head of household,Nevada,55000.0,,0,0.6016389904446726,filing_state_band,1485
+Head of household,Nevada,55000.0,,1,0.21221198307379383,filing_state_band,1485
+Head of household,Nevada,55000.0,,2,0.13074644046069628,filing_state_band,1485
+Head of household,Nevada,55000.0,,3+,0.05540258602083729,filing_state_band,1485
+Head of household,New Hampshire,,25000.0,0,0.4101022248947685,filing_state_band,59
+Head of household,New Hampshire,,25000.0,1,0.4216476247745039,filing_state_band,59
+Head of household,New Hampshire,,25000.0,2,0.08707155742633794,filing_state_band,59
+Head of household,New Hampshire,,25000.0,3+,0.08117859290438965,filing_state_band,59
+Head of household,New Hampshire,25000.0,55000.0,0,0.5347514005602241,filing_state_band,107
+Head of household,New Hampshire,25000.0,55000.0,1,0.3071603641456583,filing_state_band,107
+Head of household,New Hampshire,25000.0,55000.0,2,0.11519607843137254,filing_state_band,107
+Head of household,New Hampshire,25000.0,55000.0,3+,0.0428921568627451,filing_state_band,107
+Head of household,New Hampshire,55000.0,,0,0.5660843800556232,filing_state_band,476
+Head of household,New Hampshire,55000.0,,1,0.2545034809954011,filing_state_band,476
+Head of household,New Hampshire,55000.0,,2,0.13609510479341247,filing_state_band,476
+Head of household,New Hampshire,55000.0,,3+,0.04331703415556323,filing_state_band,476
+Head of household,New Jersey,,25000.0,0,0.3933643301157326,filing_state_band,610
+Head of household,New Jersey,,25000.0,1,0.31514378127053116,filing_state_band,610
+Head of household,New Jersey,,25000.0,2,0.18488148784555516,filing_state_band,610
+Head of household,New Jersey,,25000.0,3+,0.10661040076818112,filing_state_band,610
+Head of household,New Jersey,25000.0,55000.0,0,0.48391930925241483,filing_state_band,1003
+Head of household,New Jersey,25000.0,55000.0,1,0.24918470664968786,filing_state_band,1003
+Head of household,New Jersey,25000.0,55000.0,2,0.15610926483833898,filing_state_band,1003
+Head of household,New Jersey,25000.0,55000.0,3+,0.11078671925955834,filing_state_band,1003
+Head of household,New Jersey,55000.0,,0,0.6356655502078962,filing_state_band,3907
+Head of household,New Jersey,55000.0,,1,0.20872057438528893,filing_state_band,3907
+Head of household,New Jersey,55000.0,,2,0.10844932684989238,filing_state_band,3907
+Head of household,New Jersey,55000.0,,3+,0.04716454855692246,filing_state_band,3907
+Head of household,New Mexico,,25000.0,0,0.40767499374774224,filing_state_band,345
+Head of household,New Mexico,,25000.0,1,0.2898546697418512,filing_state_band,345
+Head of household,New Mexico,,25000.0,2,0.15044321560563537,filing_state_band,345
+Head of household,New Mexico,,25000.0,3+,0.15202712090477116,filing_state_band,345
+Head of household,New Mexico,25000.0,55000.0,0,0.45493184501448963,filing_state_band,440
+Head of household,New Mexico,25000.0,55000.0,1,0.25274229902329076,filing_state_band,440
+Head of household,New Mexico,25000.0,55000.0,2,0.1560373510786734,filing_state_band,440
+Head of household,New Mexico,25000.0,55000.0,3+,0.1362885048835462,filing_state_band,440
+Head of household,New Mexico,55000.0,,0,0.6024731135977707,filing_state_band,862
+Head of household,New Mexico,55000.0,,1,0.21026908172595463,filing_state_band,862
+Head of household,New Mexico,55000.0,,2,0.11663473679627291,filing_state_band,862
+Head of household,New Mexico,55000.0,,3+,0.07062306788000174,filing_state_band,862
+Head of household,New York,,25000.0,0,0.4634711648344573,filing_state_band,1877
+Head of household,New York,,25000.0,1,0.27322989264272723,filing_state_band,1877
+Head of household,New York,,25000.0,2,0.14032899290186548,filing_state_band,1877
+Head of household,New York,,25000.0,3+,0.12296994962094995,filing_state_band,1877
+Head of household,New York,25000.0,55000.0,0,0.5217503640005715,filing_state_band,2690
+Head of household,New York,25000.0,55000.0,1,0.260226212296684,filing_state_band,2690
+Head of household,New York,25000.0,55000.0,2,0.14870677208244804,filing_state_band,2690
+Head of household,New York,25000.0,55000.0,3+,0.06931665162029649,filing_state_band,2690
+Head of household,New York,55000.0,,0,0.6605939009275881,filing_state_band,8403
+Head of household,New York,55000.0,,1,0.1974556630670987,filing_state_band,8403
+Head of household,New York,55000.0,,2,0.10725230507589105,filing_state_band,8403
+Head of household,New York,55000.0,,3+,0.03469813092942216,filing_state_band,8403
+Head of household,North Carolina,,25000.0,0,0.3806951654534381,filing_state_band,1138
+Head of household,North Carolina,,25000.0,1,0.2719976218787158,filing_state_band,1138
+Head of household,North Carolina,,25000.0,2,0.19519445491720078,filing_state_band,1138
+Head of household,North Carolina,,25000.0,3+,0.15211275775064528,filing_state_band,1138
+Head of household,North Carolina,25000.0,55000.0,0,0.46231579493565794,filing_state_band,1919
+Head of household,North Carolina,25000.0,55000.0,1,0.2883933513214335,filing_state_band,1919
+Head of household,North Carolina,25000.0,55000.0,2,0.1742251279922513,filing_state_band,1919
+Head of household,North Carolina,25000.0,55000.0,3+,0.07506572575065726,filing_state_band,1919
+Head of household,North Carolina,55000.0,,0,0.571956076395516,filing_state_band,3601
+Head of household,North Carolina,55000.0,,1,0.26230229924546067,filing_state_band,3601
+Head of household,North Carolina,55000.0,,2,0.11069715361809876,filing_state_band,3601
+Head of household,North Carolina,55000.0,,3+,0.055044470740924535,filing_state_band,3601
+Head of household,North Dakota,,25000.0,0,0.4049429657794677,filing_state,337
+Head of household,North Dakota,,25000.0,1,0.3228482544071898,filing_state,337
+Head of household,North Dakota,,25000.0,2,0.1688558589699274,filing_state,337
+Head of household,North Dakota,,25000.0,3+,0.10335292084341514,filing_state,337
+Head of household,North Dakota,25000.0,55000.0,0,0.3300598261654814,filing_state_band,81
+Head of household,North Dakota,25000.0,55000.0,1,0.4952026188057343,filing_state_band,81
+Head of household,North Dakota,25000.0,55000.0,2,0.14222824246528953,filing_state_band,81
+Head of household,North Dakota,25000.0,55000.0,3+,0.03250931256349475,filing_state_band,81
+Head of household,North Dakota,55000.0,,0,0.4787242935963886,filing_state_band,213
+Head of household,North Dakota,55000.0,,1,0.3030429694031099,filing_state_band,213
+Head of household,North Dakota,55000.0,,2,0.1698712589867915,filing_state_band,213
+Head of household,North Dakota,55000.0,,3+,0.04836147801371008,filing_state_band,213
+Head of household,Ohio,,25000.0,0,0.3551987401143483,filing_state_band,1143
+Head of household,Ohio,,25000.0,1,0.2953815604779349,filing_state_band,1143
+Head of household,Ohio,,25000.0,2,0.19685713307542196,filing_state_band,1143
+Head of household,Ohio,,25000.0,3+,0.15256256633229484,filing_state_band,1143
+Head of household,Ohio,25000.0,55000.0,0,0.4538981089235309,filing_state_band,1922
+Head of household,Ohio,25000.0,55000.0,1,0.2643487249258986,filing_state_band,1922
+Head of household,Ohio,25000.0,55000.0,2,0.1709169136713211,filing_state_band,1922
+Head of household,Ohio,25000.0,55000.0,3+,0.1108362524792494,filing_state_band,1922
+Head of household,Ohio,55000.0,,0,0.5689793570310514,filing_state_band,4120
+Head of household,Ohio,55000.0,,1,0.21933321738665096,filing_state_band,4120
+Head of household,Ohio,55000.0,,2,0.1428017177946941,filing_state_band,4120
+Head of household,Ohio,55000.0,,3+,0.06888570778760351,filing_state_band,4120
+Head of household,Oklahoma,,25000.0,0,0.3434092281462011,filing_state_band,533
+Head of household,Oklahoma,,25000.0,1,0.32191951124214113,filing_state_band,533
+Head of household,Oklahoma,,25000.0,2,0.20239406102369198,filing_state_band,533
+Head of household,Oklahoma,,25000.0,3+,0.13227719958796577,filing_state_band,533
+Head of household,Oklahoma,25000.0,55000.0,0,0.4409049636803874,filing_state_band,834
+Head of household,Oklahoma,25000.0,55000.0,1,0.2834118817018333,filing_state_band,834
+Head of household,Oklahoma,25000.0,55000.0,2,0.15220728121757177,filing_state_band,834
+Head of household,Oklahoma,25000.0,55000.0,3+,0.12347587340020755,filing_state_band,834
+Head of household,Oklahoma,55000.0,,0,0.5519133651587947,filing_state_band,1169
+Head of household,Oklahoma,55000.0,,1,0.23084716103581132,filing_state_band,1169
+Head of household,Oklahoma,55000.0,,2,0.139384775968195,filing_state_band,1169
+Head of household,Oklahoma,55000.0,,3+,0.07785469783719895,filing_state_band,1169
+Head of household,Oregon,,25000.0,0,0.3807255744904587,filing_state_band,307
+Head of household,Oregon,,25000.0,1,0.306590789595769,filing_state_band,307
+Head of household,Oregon,,25000.0,2,0.22623944576748214,filing_state_band,307
+Head of household,Oregon,,25000.0,3+,0.08644419014629016,filing_state_band,307
+Head of household,Oregon,25000.0,55000.0,0,0.49237836709125077,filing_state_band,513
+Head of household,Oregon,25000.0,55000.0,1,0.27832880907635554,filing_state_band,513
+Head of household,Oregon,25000.0,55000.0,2,0.12768845270411358,filing_state_band,513
+Head of household,Oregon,25000.0,55000.0,3+,0.10160437112828008,filing_state_band,513
+Head of household,Oregon,55000.0,,0,0.5384860261038267,filing_state_band,1470
+Head of household,Oregon,55000.0,,1,0.2592603715560788,filing_state_band,1470
+Head of household,Oregon,55000.0,,2,0.1449885578026176,filing_state_band,1470
+Head of household,Oregon,55000.0,,3+,0.05726504453747695,filing_state_band,1470
+Head of household,Pennsylvania,,25000.0,0,0.3863667664562146,filing_state_band,1004
+Head of household,Pennsylvania,,25000.0,1,0.324253209333343,filing_state_band,1004
+Head of household,Pennsylvania,,25000.0,2,0.1795342026863443,filing_state_band,1004
+Head of household,Pennsylvania,,25000.0,3+,0.1098458215240981,filing_state_band,1004
+Head of household,Pennsylvania,25000.0,55000.0,0,0.4722921968406281,filing_state_band,1767
+Head of household,Pennsylvania,25000.0,55000.0,1,0.24208118581587068,filing_state_band,1767
+Head of household,Pennsylvania,25000.0,55000.0,2,0.1752803395402131,filing_state_band,1767
+Head of household,Pennsylvania,25000.0,55000.0,3+,0.11034627780328811,filing_state_band,1767
+Head of household,Pennsylvania,55000.0,,0,0.6034247384785913,filing_state_band,4343
+Head of household,Pennsylvania,55000.0,,1,0.21619578550150576,filing_state_band,4343
+Head of household,Pennsylvania,55000.0,,2,0.12947703868520036,filing_state_band,4343
+Head of household,Pennsylvania,55000.0,,3+,0.05090243733470258,filing_state_band,4343
+Head of household,Rhode Island,,25000.0,0,0.29129420909444226,filing_state_band,71
+Head of household,Rhode Island,,25000.0,1,0.4222697240575204,filing_state_band,71
+Head of household,Rhode Island,,25000.0,2,0.21336960746210648,filing_state_band,71
+Head of household,Rhode Island,,25000.0,3+,0.07306645938593082,filing_state_band,71
+Head of household,Rhode Island,25000.0,55000.0,0,0.36348577175649294,filing_state_band,106
+Head of household,Rhode Island,25000.0,55000.0,1,0.29604212270011243,filing_state_band,106
+Head of household,Rhode Island,25000.0,55000.0,2,0.19623735431580192,filing_state_band,106
+Head of household,Rhode Island,25000.0,55000.0,3+,0.14423475122759274,filing_state_band,106
+Head of household,Rhode Island,55000.0,,0,0.5786414452365521,filing_state_band,397
+Head of household,Rhode Island,55000.0,,1,0.22531189241736876,filing_state_band,397
+Head of household,Rhode Island,55000.0,,2,0.17435596241088788,filing_state_band,397
+Head of household,Rhode Island,55000.0,,3+,0.021690699935191186,filing_state_band,397
+Head of household,South Carolina,,25000.0,0,0.3364991425933254,filing_state_band,610
+Head of household,South Carolina,,25000.0,1,0.26678538451391637,filing_state_band,610
+Head of household,South Carolina,,25000.0,2,0.23423031262366442,filing_state_band,610
+Head of household,South Carolina,,25000.0,3+,0.1624851602690938,filing_state_band,610
+Head of household,South Carolina,25000.0,55000.0,0,0.47006356098454133,filing_state_band,949
+Head of household,South Carolina,25000.0,55000.0,1,0.25107024840225645,filing_state_band,949
+Head of household,South Carolina,25000.0,55000.0,2,0.1850505261873,filing_state_band,949
+Head of household,South Carolina,25000.0,55000.0,3+,0.0938156644259022,filing_state_band,949
+Head of household,South Carolina,55000.0,,0,0.6361160552634397,filing_state_band,1889
+Head of household,South Carolina,55000.0,,1,0.21257758352500777,filing_state_band,1889
+Head of household,South Carolina,55000.0,,2,0.10667639063846715,filing_state_band,1889
+Head of household,South Carolina,55000.0,,3+,0.04462997057308534,filing_state_band,1889
+Head of household,South Dakota,,25000.0,0,0.5067109450671095,filing_state_band,63
+Head of household,South Dakota,,25000.0,1,0.23758129237581294,filing_state_band,63
+Head of household,South Dakota,,25000.0,2,0.12384115123841151,filing_state_band,63
+Head of household,South Dakota,,25000.0,3+,0.13186661131866612,filing_state_band,63
+Head of household,South Dakota,25000.0,55000.0,0,0.3165924984106802,filing_state_band,113
+Head of household,South Dakota,25000.0,55000.0,1,0.33912552094370274,filing_state_band,113
+Head of household,South Dakota,25000.0,55000.0,2,0.25203079748534296,filing_state_band,113
+Head of household,South Dakota,25000.0,55000.0,3+,0.09225118316027407,filing_state_band,113
+Head of household,South Dakota,55000.0,,0,0.5361292150750921,filing_state_band,236
+Head of household,South Dakota,55000.0,,1,0.2567653726268065,filing_state_band,236
+Head of household,South Dakota,55000.0,,2,0.14515443468404648,filing_state_band,236
+Head of household,South Dakota,55000.0,,3+,0.06195097761405497,filing_state_band,236
+Head of household,Tennessee,,25000.0,0,0.4022445619204437,filing_state_band,757
+Head of household,Tennessee,,25000.0,1,0.28802322558280613,filing_state_band,757
+Head of household,Tennessee,,25000.0,2,0.16145246555160758,filing_state_band,757
+Head of household,Tennessee,,25000.0,3+,0.14827974694514257,filing_state_band,757
+Head of household,Tennessee,25000.0,55000.0,0,0.48065666278302616,filing_state_band,1258
+Head of household,Tennessee,25000.0,55000.0,1,0.2780288886705316,filing_state_band,1258
+Head of household,Tennessee,25000.0,55000.0,2,0.1342031752270526,filing_state_band,1258
+Head of household,Tennessee,25000.0,55000.0,3+,0.10711127331938966,filing_state_band,1258
+Head of household,Tennessee,55000.0,,0,0.6396378716629022,filing_state_band,2457
+Head of household,Tennessee,55000.0,,1,0.21914688784389233,filing_state_band,2457
+Head of household,Tennessee,55000.0,,2,0.10292146480542082,filing_state_band,2457
+Head of household,Tennessee,55000.0,,3+,0.03829377568778465,filing_state_band,2457
+Head of household,Texas,,25000.0,0,0.3814777090025856,filing_state_band,2929
+Head of household,Texas,,25000.0,1,0.2742432552430202,filing_state_band,2929
+Head of household,Texas,,25000.0,2,0.18321711196427173,filing_state_band,2929
+Head of household,Texas,,25000.0,3+,0.1610619237901225,filing_state_band,2929
+Head of household,Texas,25000.0,55000.0,0,0.4369532159271436,filing_state_band,4739
+Head of household,Texas,25000.0,55000.0,1,0.2616221083840932,filing_state_band,4739
+Head of household,Texas,25000.0,55000.0,2,0.17511192666785602,filing_state_band,4739
+Head of household,Texas,25000.0,55000.0,3+,0.12631274902090714,filing_state_band,4739
+Head of household,Texas,55000.0,,0,0.5927100535507814,filing_state_band,10256
+Head of household,Texas,55000.0,,1,0.21634380965935168,filing_state_band,10256
+Head of household,Texas,55000.0,,2,0.12500431589487238,filing_state_band,10256
+Head of household,Texas,55000.0,,3+,0.0659418208949945,filing_state_band,10256
+Head of household,Utah,,25000.0,0,0.41032579283472237,filing_state_band,149
+Head of household,Utah,,25000.0,1,0.15797164195259228,filing_state_band,149
+Head of household,Utah,,25000.0,2,0.13838077714038316,filing_state_band,149
+Head of household,Utah,,25000.0,3+,0.2933217880723022,filing_state_band,149
+Head of household,Utah,25000.0,55000.0,0,0.4692918670992281,filing_state_band,312
+Head of household,Utah,25000.0,55000.0,1,0.2914196218816422,filing_state_band,312
+Head of household,Utah,25000.0,55000.0,2,0.14126300481038148,filing_state_band,312
+Head of household,Utah,25000.0,55000.0,3+,0.09802550620874818,filing_state_band,312
+Head of household,Utah,55000.0,,0,0.6093022438544394,filing_state_band,1002
+Head of household,Utah,55000.0,,1,0.2102669079791253,filing_state_band,1002
+Head of household,Utah,55000.0,,2,0.10826553741807383,filing_state_band,1002
+Head of household,Utah,55000.0,,3+,0.07216531074836148,filing_state_band,1002
+Head of household,Vermont,,25000.0,0,0.47920554178062935,filing_state,352
+Head of household,Vermont,,25000.0,1,0.24079139081311826,filing_state,352
+Head of household,Vermont,,25000.0,2,0.2046215587536106,filing_state,352
+Head of household,Vermont,,25000.0,3+,0.0753815086526418,filing_state,352
+Head of household,Vermont,25000.0,55000.0,0,0.46742528448168064,filing_state_band,78
+Head of household,Vermont,25000.0,55000.0,1,0.1783168688258097,filing_state_band,78
+Head of household,Vermont,25000.0,55000.0,2,0.2539702388395648,filing_state_band,78
+Head of household,Vermont,25000.0,55000.0,3+,0.10028760785294485,filing_state_band,78
+Head of household,Vermont,55000.0,,0,0.47242395915725893,filing_state_band,239
+Head of household,Vermont,55000.0,,1,0.2568490688142662,filing_state_band,239
+Head of household,Vermont,55000.0,,2,0.1943625512331919,filing_state_band,239
+Head of household,Vermont,55000.0,,3+,0.07636442079528295,filing_state_band,239
+Head of household,Virginia,,25000.0,0,0.38487755466841445,filing_state_band,686
+Head of household,Virginia,,25000.0,1,0.28714770899124115,filing_state_band,686
+Head of household,Virginia,,25000.0,2,0.1890722755168921,filing_state_band,686
+Head of household,Virginia,,25000.0,3+,0.1389024608234523,filing_state_band,686
+Head of household,Virginia,25000.0,55000.0,0,0.4804875609093897,filing_state_band,1109
+Head of household,Virginia,25000.0,55000.0,1,0.25920607021905945,filing_state_band,1109
+Head of household,Virginia,25000.0,55000.0,2,0.1643660422114574,filing_state_band,1109
+Head of household,Virginia,25000.0,55000.0,3+,0.09594032666009346,filing_state_band,1109
+Head of household,Virginia,55000.0,,0,0.5908961552281711,filing_state_band,3142
+Head of household,Virginia,55000.0,,1,0.23127272727272727,filing_state_band,3142
+Head of household,Virginia,55000.0,,2,0.12972475745598275,filing_state_band,3142
+Head of household,Virginia,55000.0,,3+,0.04810636004311894,filing_state_band,3142
+Head of household,Washington,,25000.0,0,0.38379230725910907,filing_state_band,449
+Head of household,Washington,,25000.0,1,0.3378010549830114,filing_state_band,449
+Head of household,Washington,,25000.0,2,0.17245781006551408,filing_state_band,449
+Head of household,Washington,,25000.0,3+,0.10594882769236545,filing_state_band,449
+Head of household,Washington,25000.0,55000.0,0,0.42772090728677303,filing_state_band,789
+Head of household,Washington,25000.0,55000.0,1,0.29871396696902086,filing_state_band,789
+Head of household,Washington,25000.0,55000.0,2,0.169471571606364,filing_state_band,789
+Head of household,Washington,25000.0,55000.0,3+,0.1040935541378421,filing_state_band,789
+Head of household,Washington,55000.0,,0,0.5862976980994842,filing_state_band,2837
+Head of household,Washington,55000.0,,1,0.2253916194119311,filing_state_band,2837
+Head of household,Washington,55000.0,,2,0.13561884622119258,filing_state_band,2837
+Head of household,Washington,55000.0,,3+,0.05269183626739221,filing_state_band,2837
+Head of household,West Virginia,,25000.0,0,0.4225307107860541,filing_state_band,261
+Head of household,West Virginia,,25000.0,1,0.25040829368742457,filing_state_band,261
+Head of household,West Virginia,,25000.0,2,0.20254917276148549,filing_state_band,261
+Head of household,West Virginia,,25000.0,3+,0.12451182276503586,filing_state_band,261
+Head of household,West Virginia,25000.0,55000.0,0,0.4988853299167201,filing_state_band,348
+Head of household,West Virginia,25000.0,55000.0,1,0.2594234465086483,filing_state_band,348
+Head of household,West Virginia,25000.0,55000.0,2,0.1385009609224856,filing_state_band,348
+Head of household,West Virginia,25000.0,55000.0,3+,0.10319026265214606,filing_state_band,348
+Head of household,West Virginia,55000.0,,0,0.6064987415075415,filing_state_band,522
+Head of household,West Virginia,55000.0,,1,0.20383792888098257,filing_state_band,522
+Head of household,West Virginia,55000.0,,2,0.12683333017921689,filing_state_band,522
+Head of household,West Virginia,55000.0,,3+,0.06282999943225905,filing_state_band,522
+Head of household,Wisconsin,,25000.0,0,0.3049510767631573,filing_state_band,320
+Head of household,Wisconsin,,25000.0,1,0.27561973199557094,filing_state_band,320
+Head of household,Wisconsin,,25000.0,2,0.28328022958895444,filing_state_band,320
+Head of household,Wisconsin,,25000.0,3+,0.13614896165231735,filing_state_band,320
+Head of household,Wisconsin,25000.0,55000.0,0,0.44680784248045136,filing_state_band,659
+Head of household,Wisconsin,25000.0,55000.0,1,0.27959510525379194,filing_state_band,659
+Head of household,Wisconsin,25000.0,55000.0,2,0.1674639645769436,filing_state_band,659
+Head of household,Wisconsin,25000.0,55000.0,3+,0.10613308768881305,filing_state_band,659
+Head of household,Wisconsin,55000.0,,0,0.5345837490512085,filing_state_band,1769
+Head of household,Wisconsin,55000.0,,1,0.22101710450311968,filing_state_band,1769
+Head of household,Wisconsin,55000.0,,2,0.15904848742344027,filing_state_band,1769
+Head of household,Wisconsin,55000.0,,3+,0.08535065902223156,filing_state_band,1769
+Head of household,Wyoming,,25000.0,0,0.3840247640435799,filing_state,316
+Head of household,Wyoming,,25000.0,1,0.2879730508937513,filing_state,316
+Head of household,Wyoming,,25000.0,2,0.230888288671057,filing_state,316
+Head of household,Wyoming,,25000.0,3+,0.09711389639161179,filing_state,316
+Head of household,Wyoming,25000.0,55000.0,0,0.3259684930149609,filing_state_band,82
+Head of household,Wyoming,25000.0,55000.0,1,0.35589022094520956,filing_state_band,82
+Head of household,Wyoming,25000.0,55000.0,2,0.21074011691271177,filing_state_band,82
+Head of household,Wyoming,25000.0,55000.0,3+,0.10740116912711781,filing_state_band,82
+Head of household,Wyoming,55000.0,,0,0.49887298202863234,filing_state_band,186
+Head of household,Wyoming,55000.0,,1,0.1838562290587877,filing_state_band,186
+Head of household,Wyoming,55000.0,,2,0.21462077368260737,filing_state_band,186
+Head of household,Wyoming,55000.0,,3+,0.10265001522997258,filing_state_band,186
+Married filing jointly,Alabama,,25000.0,0,0.7834162003076854,filing_state_band,530
+Married filing jointly,Alabama,,25000.0,1,0.09513723216873649,filing_state_band,530
+Married filing jointly,Alabama,,25000.0,2,0.07444650063543734,filing_state_band,530
+Married filing jointly,Alabama,,25000.0,3+,0.047000066888140735,filing_state_band,530
+Married filing jointly,Alabama,25000.0,55000.0,0,0.767211062764499,filing_state_band,1672
+Married filing jointly,Alabama,25000.0,55000.0,1,0.08294838171305954,filing_state_band,1672
+Married filing jointly,Alabama,25000.0,55000.0,2,0.09751445431245157,filing_state_band,1672
+Married filing jointly,Alabama,25000.0,55000.0,3+,0.052326101209989866,filing_state_band,1672
+Married filing jointly,Alabama,55000.0,,0,0.6355057501306848,filing_state_band,8592
+Married filing jointly,Alabama,55000.0,,1,0.14972686879247254,filing_state_band,8592
+Married filing jointly,Alabama,55000.0,,2,0.14311813904861473,filing_state_band,8592
+Married filing jointly,Alabama,55000.0,,3+,0.07164924202822791,filing_state_band,8592
+Married filing jointly,Alaska,,25000.0,0,0.5983281658022143,filing_state,1138
+Married filing jointly,Alaska,,25000.0,1,0.13881834989101424,filing_state,1138
+Married filing jointly,Alaska,,25000.0,2,0.1596155644598551,filing_state,1138
+Married filing jointly,Alaska,,25000.0,3+,0.10323791984691638,filing_state,1138
+Married filing jointly,Alaska,25000.0,55000.0,0,0.7181965950894003,filing_state_band,148
+Married filing jointly,Alaska,25000.0,55000.0,1,0.1066814954230473,filing_state_band,148
+Married filing jointly,Alaska,25000.0,55000.0,2,0.10548378817691847,filing_state_band,148
+Married filing jointly,Alaska,25000.0,55000.0,3+,0.06963812131063393,filing_state_band,148
+Married filing jointly,Alaska,55000.0,,0,0.5841991464688591,filing_state_band,947
+Married filing jointly,Alaska,55000.0,,1,0.14259800626786626,filing_state_band,947
+Married filing jointly,Alaska,55000.0,,2,0.16702972782560108,filing_state_band,947
+Married filing jointly,Alaska,55000.0,,3+,0.1061731194376736,filing_state_band,947
+Married filing jointly,Arizona,,25000.0,0,0.7672978758438992,filing_state_band,688
+Married filing jointly,Arizona,,25000.0,1,0.06415280750864483,filing_state_band,688
+Married filing jointly,Arizona,,25000.0,2,0.09922608266095834,filing_state_band,688
+Married filing jointly,Arizona,,25000.0,3+,0.06932323398649762,filing_state_band,688
+Married filing jointly,Arizona,25000.0,55000.0,0,0.7266892398046325,filing_state_band,1722
+Married filing jointly,Arizona,25000.0,55000.0,1,0.09452551463758128,filing_state_band,1722
+Married filing jointly,Arizona,25000.0,55000.0,2,0.08499685374404459,filing_state_band,1722
+Married filing jointly,Arizona,25000.0,55000.0,3+,0.09378839181374164,filing_state_band,1722
+Married filing jointly,Arizona,55000.0,,0,0.6441645303061988,filing_state_band,12406
+Married filing jointly,Arizona,55000.0,,1,0.1383630100264797,filing_state_band,12406
+Married filing jointly,Arizona,55000.0,,2,0.13899380649092144,filing_state_band,12406
+Married filing jointly,Arizona,55000.0,,3+,0.07847865317640013,filing_state_band,12406
+Married filing jointly,Arkansas,,25000.0,0,0.7379665230840392,filing_state_band,395
+Married filing jointly,Arkansas,,25000.0,1,0.04394206585528027,filing_state_band,395
+Married filing jointly,Arkansas,,25000.0,2,0.11638865600878841,filing_state_band,395
+Married filing jointly,Arkansas,,25000.0,3+,0.10170275505189211,filing_state_band,395
+Married filing jointly,Arkansas,25000.0,55000.0,0,0.6978819896753028,filing_state_band,1217
+Married filing jointly,Arkansas,25000.0,55000.0,1,0.10651806822019588,filing_state_band,1217
+Married filing jointly,Arkansas,25000.0,55000.0,2,0.09869252665605249,filing_state_band,1217
+Married filing jointly,Arkansas,25000.0,55000.0,3+,0.09690741544844889,filing_state_band,1217
+Married filing jointly,Arkansas,55000.0,,0,0.6097603657645125,filing_state_band,4924
+Married filing jointly,Arkansas,55000.0,,1,0.16194250373251698,filing_state_band,4924
+Married filing jointly,Arkansas,55000.0,,2,0.15380406611760641,filing_state_band,4924
+Married filing jointly,Arkansas,55000.0,,3+,0.0744930643853641,filing_state_band,4924
+Married filing jointly,California,,25000.0,0,0.7085066946637114,filing_state_band,3137
+Married filing jointly,California,,25000.0,1,0.10859224118935594,filing_state_band,3137
+Married filing jointly,California,,25000.0,2,0.10710165778797423,filing_state_band,3137
+Married filing jointly,California,,25000.0,3+,0.0757994063589584,filing_state_band,3137
+Married filing jointly,California,25000.0,55000.0,0,0.633658548343844,filing_state_band,6843
+Married filing jointly,California,25000.0,55000.0,1,0.13515154436955193,filing_state_band,6843
+Married filing jointly,California,25000.0,55000.0,2,0.1356366550862804,filing_state_band,6843
+Married filing jointly,California,25000.0,55000.0,3+,0.09555325220032361,filing_state_band,6843
+Married filing jointly,California,55000.0,,0,0.5994152477974517,filing_state_band,61574
+Married filing jointly,California,55000.0,,1,0.16599646042981916,filing_state_band,61574
+Married filing jointly,California,55000.0,,2,0.16762126563530771,filing_state_band,61574
+Married filing jointly,California,55000.0,,3+,0.06696702613742139,filing_state_band,61574
+Married filing jointly,Colorado,,25000.0,0,0.7312643852593773,filing_state_band,440
+Married filing jointly,Colorado,,25000.0,1,0.12180995017325544,filing_state_band,440
+Married filing jointly,Colorado,,25000.0,2,0.06624174823582973,filing_state_band,440
+Married filing jointly,Colorado,,25000.0,3+,0.08068391633153754,filing_state_band,440
+Married filing jointly,Colorado,25000.0,55000.0,0,0.7102590370261964,filing_state_band,1134
+Married filing jointly,Colorado,25000.0,55000.0,1,0.08874579247768184,filing_state_band,1134
+Married filing jointly,Colorado,25000.0,55000.0,2,0.11086394458266256,filing_state_band,1134
+Married filing jointly,Colorado,25000.0,55000.0,3+,0.09013122591345919,filing_state_band,1134
+Married filing jointly,Colorado,55000.0,,0,0.6159456795323901,filing_state_band,11674
+Married filing jointly,Colorado,55000.0,,1,0.1540386000165079,filing_state_band,11674
+Married filing jointly,Colorado,55000.0,,2,0.15864373397239767,filing_state_band,11674
+Married filing jointly,Colorado,55000.0,,3+,0.07137198647870434,filing_state_band,11674
+Married filing jointly,Connecticut,,25000.0,0,0.7935700307520268,filing_state_band,177
+Married filing jointly,Connecticut,,25000.0,1,0.08347777467151245,filing_state_band,177
+Married filing jointly,Connecticut,,25000.0,2,0.05261392228124127,filing_state_band,177
+Married filing jointly,Connecticut,,25000.0,3+,0.07033827229521945,filing_state_band,177
+Married filing jointly,Connecticut,25000.0,55000.0,0,0.6950561882494909,filing_state_band,506
+Married filing jointly,Connecticut,25000.0,55000.0,1,0.13698242703069613,filing_state_band,506
+Married filing jointly,Connecticut,25000.0,55000.0,2,0.1133569650803228,filing_state_band,506
+Married filing jointly,Connecticut,25000.0,55000.0,3+,0.05460441963949016,filing_state_band,506
+Married filing jointly,Connecticut,55000.0,,0,0.6210475859345199,filing_state_band,6851
+Married filing jointly,Connecticut,55000.0,,1,0.1481199555770094,filing_state_band,6851
+Married filing jointly,Connecticut,55000.0,,2,0.17147409390264073,filing_state_band,6851
+Married filing jointly,Connecticut,55000.0,,3+,0.059358364585829874,filing_state_band,6851
+Married filing jointly,Delaware,,25000.0,0,0.7876078914919852,filing_state_band,69
+Married filing jointly,Delaware,,25000.0,1,0.015258939580764488,filing_state_band,69
+Married filing jointly,Delaware,,25000.0,2,0.18264488286066585,filing_state_band,69
+Married filing jointly,Delaware,,25000.0,3+,0.014488286066584463,filing_state_band,69
+Married filing jointly,Delaware,25000.0,55000.0,0,0.7163472130425204,filing_state_band,215
+Married filing jointly,Delaware,25000.0,55000.0,1,0.1152236175369024,filing_state_band,215
+Married filing jointly,Delaware,25000.0,55000.0,2,0.06824190350297422,filing_state_band,215
+Married filing jointly,Delaware,25000.0,55000.0,3+,0.10018726591760299,filing_state_band,215
+Married filing jointly,Delaware,55000.0,,0,0.6552378080253322,filing_state_band,1956
+Married filing jointly,Delaware,55000.0,,1,0.14900045815959032,filing_state_band,1956
+Married filing jointly,Delaware,55000.0,,2,0.13798143003787067,filing_state_band,1956
+Married filing jointly,Delaware,55000.0,,3+,0.05778030377720685,filing_state_band,1956
+Married filing jointly,District of Columbia,,25000.0,0,0.6207196119597481,filing_state,886
+Married filing jointly,District of Columbia,,25000.0,1,0.1468544125099544,filing_state,886
+Married filing jointly,District of Columbia,,25000.0,2,0.1751369482854316,filing_state,886
+Married filing jointly,District of Columbia,,25000.0,3+,0.057289027244865946,filing_state,886
+Married filing jointly,District of Columbia,25000.0,55000.0,0,0.6207196119597481,filing_state,886
+Married filing jointly,District of Columbia,25000.0,55000.0,1,0.1468544125099544,filing_state,886
+Married filing jointly,District of Columbia,25000.0,55000.0,2,0.1751369482854316,filing_state,886
+Married filing jointly,District of Columbia,25000.0,55000.0,3+,0.057289027244865946,filing_state,886
+Married filing jointly,District of Columbia,55000.0,,0,0.6127168390849983,filing_state_band,837
+Married filing jointly,District of Columbia,55000.0,,1,0.15948037589828634,filing_state_band,837
+Married filing jointly,District of Columbia,55000.0,,2,0.16966753533917714,filing_state_band,837
+Married filing jointly,District of Columbia,55000.0,,3+,0.058135249677538234,filing_state_band,837
+Married filing jointly,Florida,,25000.0,0,0.7670021845146325,filing_state_band,2130
+Married filing jointly,Florida,,25000.0,1,0.09734830665182377,filing_state_band,2130
+Married filing jointly,Florida,,25000.0,2,0.09414373081562975,filing_state_band,2130
+Married filing jointly,Florida,,25000.0,3+,0.04150577801791395,filing_state_band,2130
+Married filing jointly,Florida,25000.0,55000.0,0,0.7402540767377519,filing_state_band,5511
+Married filing jointly,Florida,25000.0,55000.0,1,0.1101166007763853,filing_state_band,5511
+Married filing jointly,Florida,25000.0,55000.0,2,0.09855660964118988,filing_state_band,5511
+Married filing jointly,Florida,25000.0,55000.0,3+,0.05107271284467289,filing_state_band,5511
+Married filing jointly,Florida,55000.0,,0,0.6643327136168004,filing_state_band,35767
+Married filing jointly,Florida,55000.0,,1,0.15056099832042896,filing_state_band,35767
+Married filing jointly,Florida,55000.0,,2,0.13005892279570863,filing_state_band,35767
+Married filing jointly,Florida,55000.0,,3+,0.055047365267062026,filing_state_band,35767
+Married filing jointly,Georgia,,25000.0,0,0.7494492245300597,filing_state_band,1042
+Married filing jointly,Georgia,,25000.0,1,0.12479859702964871,filing_state_band,1042
+Married filing jointly,Georgia,,25000.0,2,0.05626130322792788,filing_state_band,1042
+Married filing jointly,Georgia,,25000.0,3+,0.06949087521236368,filing_state_band,1042
+Married filing jointly,Georgia,25000.0,55000.0,0,0.6834339810089947,filing_state_band,2721
+Married filing jointly,Georgia,25000.0,55000.0,1,0.12254247934020009,filing_state_band,2721
+Married filing jointly,Georgia,25000.0,55000.0,2,0.11122833953914175,filing_state_band,2721
+Married filing jointly,Georgia,25000.0,55000.0,3+,0.0827952001116635,filing_state_band,2721
+Married filing jointly,Georgia,55000.0,,0,0.6024171894451632,filing_state_band,18727
+Married filing jointly,Georgia,55000.0,,1,0.16235140478922058,filing_state_band,18727
+Married filing jointly,Georgia,55000.0,,2,0.15626357800180632,filing_state_band,18727
+Married filing jointly,Georgia,55000.0,,3+,0.0789678277638099,filing_state_band,18727
+Married filing jointly,Hawaii,,25000.0,0,0.7685635709752485,filing_state_band,98
+Married filing jointly,Hawaii,,25000.0,1,0.07541781256610958,filing_state_band,98
+Married filing jointly,Hawaii,,25000.0,2,0.056272477258303366,filing_state_band,98
+Married filing jointly,Hawaii,,25000.0,3+,0.09974613920033848,filing_state_band,98
+Married filing jointly,Hawaii,25000.0,55000.0,0,0.6124731984711476,filing_state_band,216
+Married filing jointly,Hawaii,25000.0,55000.0,1,0.13037195860911718,filing_state_band,216
+Married filing jointly,Hawaii,25000.0,55000.0,2,0.13722382772443367,filing_state_band,216
+Married filing jointly,Hawaii,25000.0,55000.0,3+,0.11993101519530158,filing_state_band,216
+Married filing jointly,Hawaii,55000.0,,0,0.668909490585874,filing_state_band,2381
+Married filing jointly,Hawaii,55000.0,,1,0.1290786581286438,filing_state_band,2381
+Married filing jointly,Hawaii,55000.0,,2,0.13587403230431042,filing_state_band,2381
+Married filing jointly,Hawaii,55000.0,,3+,0.06613781898117174,filing_state_band,2381
+Married filing jointly,Idaho,,25000.0,0,0.6603954591483239,filing_state_band,198
+Married filing jointly,Idaho,,25000.0,1,0.14038266801684166,filing_state_band,198
+Married filing jointly,Idaho,,25000.0,2,0.1466716409955764,filing_state_band,198
+Married filing jointly,Idaho,,25000.0,3+,0.05255023183925812,filing_state_band,198
+Married filing jointly,Idaho,25000.0,55000.0,0,0.7039794655210078,filing_state_band,618
+Married filing jointly,Idaho,25000.0,55000.0,1,0.09706546275395034,filing_state_band,618
+Married filing jointly,Idaho,25000.0,55000.0,2,0.11801864122915605,filing_state_band,618
+Married filing jointly,Idaho,25000.0,55000.0,3+,0.08093643049588582,filing_state_band,618
+Married filing jointly,Idaho,55000.0,,0,0.5794883602850446,filing_state_band,3618
+Married filing jointly,Idaho,55000.0,,1,0.1320633852293995,filing_state_band,3618
+Married filing jointly,Idaho,55000.0,,2,0.15132515040412806,filing_state_band,3618
+Married filing jointly,Idaho,55000.0,,3+,0.13712310408142783,filing_state_band,3618
+Married filing jointly,Illinois,,25000.0,0,0.7306769782559964,filing_state_band,959
+Married filing jointly,Illinois,,25000.0,1,0.11638646043488007,filing_state_band,959
+Married filing jointly,Illinois,,25000.0,2,0.08175297018605694,filing_state_band,959
+Married filing jointly,Illinois,,25000.0,3+,0.07118359112306658,filing_state_band,959
+Married filing jointly,Illinois,25000.0,55000.0,0,0.7079031644988925,filing_state_band,2708
+Married filing jointly,Illinois,25000.0,55000.0,1,0.12170410209583062,filing_state_band,2708
+Married filing jointly,Illinois,25000.0,55000.0,2,0.10112153370936243,filing_state_band,2708
+Married filing jointly,Illinois,25000.0,55000.0,3+,0.06927119969591451,filing_state_band,2708
+Married filing jointly,Illinois,55000.0,,0,0.6142483533268057,filing_state_band,22278
+Married filing jointly,Illinois,55000.0,,1,0.15316766418079947,filing_state_band,22278
+Married filing jointly,Illinois,55000.0,,2,0.15683777772922458,filing_state_band,22278
+Married filing jointly,Illinois,55000.0,,3+,0.0757462047631702,filing_state_band,22278
+Married filing jointly,Indiana,,25000.0,0,0.7472025853362957,filing_state_band,561
+Married filing jointly,Indiana,,25000.0,1,0.07630781660270652,filing_state_band,561
+Married filing jointly,Indiana,,25000.0,2,0.0733185215108059,filing_state_band,561
+Married filing jointly,Indiana,,25000.0,3+,0.10317107655019188,filing_state_band,561
+Married filing jointly,Indiana,25000.0,55000.0,0,0.7335801401913067,filing_state_band,1884
+Married filing jointly,Indiana,25000.0,55000.0,1,0.09663678675010492,filing_state_band,1884
+Married filing jointly,Indiana,25000.0,55000.0,2,0.08337561623412826,filing_state_band,1884
+Married filing jointly,Indiana,25000.0,55000.0,3+,0.08640745682446019,filing_state_band,1884
+Married filing jointly,Indiana,55000.0,,0,0.6095015898873044,filing_state_band,11991
+Married filing jointly,Indiana,55000.0,,1,0.14285793171997735,filing_state_band,11991
+Married filing jointly,Indiana,55000.0,,2,0.15166098356732977,filing_state_band,11991
+Married filing jointly,Indiana,55000.0,,3+,0.09597949482538849,filing_state_band,11991
+Married filing jointly,Iowa,,25000.0,0,0.7014152394626192,filing_state_band,260
+Married filing jointly,Iowa,,25000.0,1,0.02579222643831402,filing_state_band,260
+Married filing jointly,Iowa,,25000.0,2,0.15295867090554816,filing_state_band,260
+Married filing jointly,Iowa,,25000.0,3+,0.11983386319351862,filing_state_band,260
+Married filing jointly,Iowa,25000.0,55000.0,0,0.7287457406648098,filing_state_band,924
+Married filing jointly,Iowa,25000.0,55000.0,1,0.08066226476451709,filing_state_band,924
+Married filing jointly,Iowa,25000.0,55000.0,2,0.11412897479039122,filing_state_band,924
+Married filing jointly,Iowa,25000.0,55000.0,3+,0.07646301978028193,filing_state_band,924
+Married filing jointly,Iowa,55000.0,,0,0.6142223406332517,filing_state_band,5992
+Married filing jointly,Iowa,55000.0,,1,0.1281193145217948,filing_state_band,5992
+Married filing jointly,Iowa,55000.0,,2,0.1587946649342971,filing_state_band,5992
+Married filing jointly,Iowa,55000.0,,3+,0.09886367991065645,filing_state_band,5992
+Married filing jointly,Kansas,,25000.0,0,0.7129224864058001,filing_state_band,218
+Married filing jointly,Kansas,,25000.0,1,0.11989551124853395,filing_state_band,218
+Married filing jointly,Kansas,,25000.0,2,0.06605181789103316,filing_state_band,218
+Married filing jointly,Kansas,,25000.0,3+,0.10113018445463269,filing_state_band,218
+Married filing jointly,Kansas,25000.0,55000.0,0,0.6885702175755863,filing_state_band,849
+Married filing jointly,Kansas,25000.0,55000.0,1,0.11397287369313365,filing_state_band,849
+Married filing jointly,Kansas,25000.0,55000.0,2,0.09625600452105114,filing_state_band,849
+Married filing jointly,Kansas,25000.0,55000.0,3+,0.10120090421022888,filing_state_band,849
+Married filing jointly,Kansas,55000.0,,0,0.591655816495475,filing_state_band,5438
+Married filing jointly,Kansas,55000.0,,1,0.15437784314671038,filing_state_band,5438
+Married filing jointly,Kansas,55000.0,,2,0.14895275755091544,filing_state_band,5438
+Married filing jointly,Kansas,55000.0,,3+,0.1050135828068991,filing_state_band,5438
+Married filing jointly,Kentucky,,25000.0,0,0.717502746246796,filing_state_band,532
+Married filing jointly,Kentucky,,25000.0,1,0.07170755523007445,filing_state_band,532
+Married filing jointly,Kentucky,,25000.0,2,0.14148256641848733,filing_state_band,532
+Married filing jointly,Kentucky,,25000.0,3+,0.06930713210464218,filing_state_band,532
+Married filing jointly,Kentucky,25000.0,55000.0,0,0.7560885299501181,filing_state_band,1638
+Married filing jointly,Kentucky,25000.0,55000.0,1,0.09667593511157065,filing_state_band,1638
+Married filing jointly,Kentucky,25000.0,55000.0,2,0.07332085120652797,filing_state_band,1638
+Married filing jointly,Kentucky,25000.0,55000.0,3+,0.07391468373178331,filing_state_band,1638
+Married filing jointly,Kentucky,55000.0,,0,0.5983177275805934,filing_state_band,7576
+Married filing jointly,Kentucky,55000.0,,1,0.16064468790474945,filing_state_band,7576
+Married filing jointly,Kentucky,55000.0,,2,0.15279477642976816,filing_state_band,7576
+Married filing jointly,Kentucky,55000.0,,3+,0.08824280808488896,filing_state_band,7576
+Married filing jointly,Louisiana,,25000.0,0,0.7500161196724483,filing_state_band,510
+Married filing jointly,Louisiana,,25000.0,1,0.07539708126464204,filing_state_band,510
+Married filing jointly,Louisiana,,25000.0,2,0.12523910847464914,filing_state_band,510
+Married filing jointly,Louisiana,,25000.0,3+,0.04934769058826058,filing_state_band,510
+Married filing jointly,Louisiana,25000.0,55000.0,0,0.7424043261231281,filing_state_band,1374
+Married filing jointly,Louisiana,25000.0,55000.0,1,0.099891846921797,filing_state_band,1374
+Married filing jointly,Louisiana,25000.0,55000.0,2,0.09836106489184693,filing_state_band,1374
+Married filing jointly,Louisiana,25000.0,55000.0,3+,0.05934276206322795,filing_state_band,1374
+Married filing jointly,Louisiana,55000.0,,0,0.6175656651447434,filing_state_band,6821
+Married filing jointly,Louisiana,55000.0,,1,0.15249870772258337,filing_state_band,6821
+Married filing jointly,Louisiana,55000.0,,2,0.14582207957769538,filing_state_band,6821
+Married filing jointly,Louisiana,55000.0,,3+,0.08411354755497788,filing_state_band,6821
+Married filing jointly,Maine,,25000.0,0,0.7742632754521219,filing_state_band,183
+Married filing jointly,Maine,,25000.0,1,0.11823618416312415,filing_state_band,183
+Married filing jointly,Maine,,25000.0,2,0.08408386771381224,filing_state_band,183
+Married filing jointly,Maine,,25000.0,3+,0.02341667267094171,filing_state_band,183
+Married filing jointly,Maine,25000.0,55000.0,0,0.8173055242390079,filing_state_band,491
+Married filing jointly,Maine,25000.0,55000.0,1,0.04754791431792559,filing_state_band,491
+Married filing jointly,Maine,25000.0,55000.0,2,0.10916009019165727,filing_state_band,491
+Married filing jointly,Maine,25000.0,55000.0,3+,0.025986471251409245,filing_state_band,491
+Married filing jointly,Maine,55000.0,,0,0.675,filing_state_band,2577
+Married filing jointly,Maine,55000.0,,1,0.1336288998357964,filing_state_band,2577
+Married filing jointly,Maine,55000.0,,2,0.1352463054187192,filing_state_band,2577
+Married filing jointly,Maine,55000.0,,3+,0.0561247947454844,filing_state_band,2577
+Married filing jointly,Maryland,,25000.0,0,0.7075520208426177,filing_state_band,320
+Married filing jointly,Maryland,,25000.0,1,0.1130232079805286,filing_state_band,320
+Married filing jointly,Maryland,,25000.0,2,0.10438449144698501,filing_state_band,320
+Married filing jointly,Maryland,,25000.0,3+,0.07504027972986871,filing_state_band,320
+Married filing jointly,Maryland,25000.0,55000.0,0,0.673493179963471,filing_state_band,831
+Married filing jointly,Maryland,25000.0,55000.0,1,0.14466508633531522,filing_state_band,831
+Married filing jointly,Maryland,25000.0,55000.0,2,0.12519592222697185,filing_state_band,831
+Married filing jointly,Maryland,25000.0,55000.0,3+,0.05664581147424189,filing_state_band,831
+Married filing jointly,Maryland,55000.0,,0,0.5949114300412773,filing_state_band,11471
+Married filing jointly,Maryland,55000.0,,1,0.1670200958410804,filing_state_band,11471
+Married filing jointly,Maryland,55000.0,,2,0.163945565830994,filing_state_band,11471
+Married filing jointly,Maryland,55000.0,,3+,0.07412290828664828,filing_state_band,11471
+Married filing jointly,Massachusetts,,25000.0,0,0.7734120962497291,filing_state_band,389
+Married filing jointly,Massachusetts,,25000.0,1,0.09405484500325167,filing_state_band,389
+Married filing jointly,Massachusetts,,25000.0,2,0.08749729026663776,filing_state_band,389
+Married filing jointly,Massachusetts,,25000.0,3+,0.04503576848038153,filing_state_band,389
+Married filing jointly,Massachusetts,25000.0,55000.0,0,0.712746895792948,filing_state_band,975
+Married filing jointly,Massachusetts,25000.0,55000.0,1,0.12801383140357311,filing_state_band,975
+Married filing jointly,Massachusetts,25000.0,55000.0,2,0.08787132603342589,filing_state_band,975
+Married filing jointly,Massachusetts,25000.0,55000.0,3+,0.07136794677005291,filing_state_band,975
+Married filing jointly,Massachusetts,55000.0,,0,0.6156674001053083,filing_state_band,12900
+Married filing jointly,Massachusetts,55000.0,,1,0.15797902202756847,filing_state_band,12900
+Married filing jointly,Massachusetts,55000.0,,2,0.16828842619875373,filing_state_band,12900
+Married filing jointly,Massachusetts,55000.0,,3+,0.0580651516683695,filing_state_band,12900
+Married filing jointly,Michigan,,25000.0,0,0.7344957993250197,filing_state_band,982
+Married filing jointly,Michigan,,25000.0,1,0.08987768974843821,filing_state_band,982
+Married filing jointly,Michigan,,25000.0,2,0.10148639268532038,filing_state_band,982
+Married filing jointly,Michigan,,25000.0,3+,0.07414011824122167,filing_state_band,982
+Married filing jointly,Michigan,25000.0,55000.0,0,0.7422214538714826,filing_state_band,3111
+Married filing jointly,Michigan,25000.0,55000.0,1,0.07556014779137134,filing_state_band,3111
+Married filing jointly,Michigan,25000.0,55000.0,2,0.10161661889043899,filing_state_band,3111
+Married filing jointly,Michigan,25000.0,55000.0,3+,0.08060177944670706,filing_state_band,3111
+Married filing jointly,Michigan,55000.0,,0,0.6335344225274395,filing_state_band,17488
+Married filing jointly,Michigan,55000.0,,1,0.1373362983664643,filing_state_band,17488
+Married filing jointly,Michigan,55000.0,,2,0.1487400099373741,filing_state_band,17488
+Married filing jointly,Michigan,55000.0,,3+,0.08038926916872205,filing_state_band,17488
+Married filing jointly,Minnesota,,25000.0,0,0.7886809008482012,filing_state_band,501
+Married filing jointly,Minnesota,,25000.0,1,0.06472652822462709,filing_state_band,501
+Married filing jointly,Minnesota,,25000.0,2,0.04767475870137467,filing_state_band,501
+Married filing jointly,Minnesota,,25000.0,3+,0.09891781222579701,filing_state_band,501
+Married filing jointly,Minnesota,25000.0,55000.0,0,0.7701835697949766,filing_state_band,1474
+Married filing jointly,Minnesota,25000.0,55000.0,1,0.08552085652411504,filing_state_band,1474
+Married filing jointly,Minnesota,25000.0,55000.0,2,0.06001942965856423,filing_state_band,1474
+Married filing jointly,Minnesota,25000.0,55000.0,3+,0.08427614402234411,filing_state_band,1474
+Married filing jointly,Minnesota,55000.0,,0,0.5953320284877011,filing_state_band,11583
+Married filing jointly,Minnesota,55000.0,,1,0.13950606416952577,filing_state_band,11583
+Married filing jointly,Minnesota,55000.0,,2,0.16591880352446783,filing_state_band,11583
+Married filing jointly,Minnesota,55000.0,,3+,0.09924310381830535,filing_state_band,11583
+Married filing jointly,Mississippi,,25000.0,0,0.775163102915111,filing_state_band,338
+Married filing jointly,Mississippi,,25000.0,1,0.06633480408794358,filing_state_band,338
+Married filing jointly,Mississippi,,25000.0,2,0.09303465701248256,filing_state_band,338
+Married filing jointly,Mississippi,,25000.0,3+,0.0654674359844628,filing_state_band,338
+Married filing jointly,Mississippi,25000.0,55000.0,0,0.7696058791881775,filing_state_band,1010
+Married filing jointly,Mississippi,25000.0,55000.0,1,0.08318547602422188,filing_state_band,1010
+Married filing jointly,Mississippi,25000.0,55000.0,2,0.07948808937831248,filing_state_band,1010
+Married filing jointly,Mississippi,25000.0,55000.0,3+,0.0677205554092881,filing_state_band,1010
+Married filing jointly,Mississippi,55000.0,,0,0.6100644370991664,filing_state_band,4333
+Married filing jointly,Mississippi,55000.0,,1,0.16033094246217547,filing_state_band,4333
+Married filing jointly,Mississippi,55000.0,,2,0.15263442955703924,filing_state_band,4333
+Married filing jointly,Mississippi,55000.0,,3+,0.07697019088161898,filing_state_band,4333
+Married filing jointly,Missouri,,25000.0,0,0.7695018323869357,filing_state_band,608
+Married filing jointly,Missouri,,25000.0,1,0.07387942491240787,filing_state_band,608
+Married filing jointly,Missouri,,25000.0,2,0.07718174862067577,filing_state_band,608
+Married filing jointly,Missouri,,25000.0,3+,0.07943699407998067,filing_state_band,608
+Married filing jointly,Missouri,25000.0,55000.0,0,0.7317556733884649,filing_state_band,1958
+Married filing jointly,Missouri,25000.0,55000.0,1,0.104878681631594,filing_state_band,1958
+Married filing jointly,Missouri,25000.0,55000.0,2,0.09981571051248445,filing_state_band,1958
+Married filing jointly,Missouri,25000.0,55000.0,3+,0.0635499344674566,filing_state_band,1958
+Married filing jointly,Missouri,55000.0,,0,0.6127678394227796,filing_state_band,10895
+Married filing jointly,Missouri,55000.0,,1,0.1352150220779574,filing_state_band,10895
+Married filing jointly,Missouri,55000.0,,2,0.16079079687171008,filing_state_band,10895
+Married filing jointly,Missouri,55000.0,,3+,0.09122634162755297,filing_state_band,10895
+Married filing jointly,Montana,,25000.0,0,0.7855061446851641,filing_state_band,116
+Married filing jointly,Montana,,25000.0,1,0.06360065881160522,filing_state_band,116
+Married filing jointly,Montana,,25000.0,2,0.06752818953503104,filing_state_band,116
+Married filing jointly,Montana,,25000.0,3+,0.08336500696819966,filing_state_band,116
+Married filing jointly,Montana,25000.0,55000.0,0,0.7935921823132297,filing_state_band,372
+Married filing jointly,Montana,25000.0,55000.0,1,0.07399947782626534,filing_state_band,372
+Married filing jointly,Montana,25000.0,55000.0,2,0.07101562791391593,filing_state_band,372
+Married filing jointly,Montana,25000.0,55000.0,3+,0.06139271194658909,filing_state_band,372
+Married filing jointly,Montana,55000.0,,0,0.6194869647798871,filing_state_band,2088
+Married filing jointly,Montana,55000.0,,1,0.12665556996538238,filing_state_band,2088
+Married filing jointly,Montana,55000.0,,2,0.16984590562357674,filing_state_band,2088
+Married filing jointly,Montana,55000.0,,3+,0.08401155963115382,filing_state_band,2088
+Married filing jointly,Nebraska,,25000.0,0,0.6820447198275862,filing_state_band,171
+Married filing jointly,Nebraska,,25000.0,1,0.06842672413793104,filing_state_band,171
+Married filing jointly,Nebraska,,25000.0,2,0.10338092672413793,filing_state_band,171
+Married filing jointly,Nebraska,,25000.0,3+,0.14614762931034483,filing_state_band,171
+Married filing jointly,Nebraska,25000.0,55000.0,0,0.6651589120255056,filing_state_band,577
+Married filing jointly,Nebraska,25000.0,55000.0,1,0.14050014944704592,filing_state_band,577
+Married filing jointly,Nebraska,25000.0,55000.0,2,0.09757895785593305,filing_state_band,577
+Married filing jointly,Nebraska,25000.0,55000.0,3+,0.0967619806715154,filing_state_band,577
+Married filing jointly,Nebraska,55000.0,,0,0.5627275960275216,filing_state_band,3697
+Married filing jointly,Nebraska,55000.0,,1,0.1489120946623129,filing_state_band,3697
+Married filing jointly,Nebraska,55000.0,,2,0.17003829638403367,filing_state_band,3697
+Married filing jointly,Nebraska,55000.0,,3+,0.11832201292613177,filing_state_band,3697
+Married filing jointly,Nevada,,25000.0,0,0.7808201288525161,filing_state_band,256
+Married filing jointly,Nevada,,25000.0,1,0.09533344941668118,filing_state_band,256
+Married filing jointly,Nevada,,25000.0,2,0.047623193452899185,filing_state_band,256
+Married filing jointly,Nevada,,25000.0,3+,0.07622322827790354,filing_state_band,256
+Married filing jointly,Nevada,25000.0,55000.0,0,0.6794303270624915,filing_state_band,684
+Married filing jointly,Nevada,25000.0,55000.0,1,0.1345178817368668,filing_state_band,684
+Married filing jointly,Nevada,25000.0,55000.0,2,0.1161291299017753,filing_state_band,684
+Married filing jointly,Nevada,25000.0,55000.0,3+,0.0699226612988664,filing_state_band,684
+Married filing jointly,Nevada,55000.0,,0,0.6308318456742427,filing_state_band,4971
+Married filing jointly,Nevada,55000.0,,1,0.14623244784311637,filing_state_band,4971
+Married filing jointly,Nevada,55000.0,,2,0.14557077260575702,filing_state_band,4971
+Married filing jointly,Nevada,55000.0,,3+,0.07736493387688399,filing_state_band,4971
+Married filing jointly,New Hampshire,,25000.0,0,0.8578056768558951,filing_state_band,86
+Married filing jointly,New Hampshire,,25000.0,1,0.10002729257641921,filing_state_band,86
+Married filing jointly,New Hampshire,,25000.0,2,0.03165938864628821,filing_state_band,86
+Married filing jointly,New Hampshire,,25000.0,3+,0.01050764192139738,filing_state_band,86
+Married filing jointly,New Hampshire,25000.0,55000.0,0,0.8447124703855265,filing_state_band,260
+Married filing jointly,New Hampshire,25000.0,55000.0,1,0.08297437001938401,filing_state_band,260
+Married filing jointly,New Hampshire,25000.0,55000.0,2,0.03392203316821021,filing_state_band,260
+Married filing jointly,New Hampshire,25000.0,55000.0,3+,0.038391126426879175,filing_state_band,260
+Married filing jointly,New Hampshire,55000.0,,0,0.6761297489784893,filing_state_band,2905
+Married filing jointly,New Hampshire,55000.0,,1,0.13765474840781294,filing_state_band,2905
+Married filing jointly,New Hampshire,55000.0,,2,0.12700973193428852,filing_state_band,2905
+Married filing jointly,New Hampshire,55000.0,,3+,0.059205770679409235,filing_state_band,2905
+Married filing jointly,New Jersey,,25000.0,0,0.752344717749071,filing_state_band,557
+Married filing jointly,New Jersey,,25000.0,1,0.10884799150592815,filing_state_band,557
+Married filing jointly,New Jersey,,25000.0,2,0.09718633870111484,filing_state_band,557
+Married filing jointly,New Jersey,,25000.0,3+,0.041620952043886036,filing_state_band,557
+Married filing jointly,New Jersey,25000.0,55000.0,0,0.692029958523558,filing_state_band,1347
+Married filing jointly,New Jersey,25000.0,55000.0,1,0.11875242443230985,filing_state_band,1347
+Married filing jointly,New Jersey,25000.0,55000.0,2,0.10296750514725629,filing_state_band,1347
+Married filing jointly,New Jersey,25000.0,55000.0,3+,0.08625011189687584,filing_state_band,1347
+Married filing jointly,New Jersey,55000.0,,0,0.5984603944069443,filing_state_band,17497
+Married filing jointly,New Jersey,55000.0,,1,0.16366538440479236,filing_state_band,17497
+Married filing jointly,New Jersey,55000.0,,2,0.16940818584775083,filing_state_band,17497
+Married filing jointly,New Jersey,55000.0,,3+,0.06846603534051247,filing_state_band,17497
+Married filing jointly,New Mexico,,25000.0,0,0.7567639560105027,filing_state_band,259
+Married filing jointly,New Mexico,,25000.0,1,0.10004185851820846,filing_state_band,259
+Married filing jointly,New Mexico,,25000.0,2,0.08444004718596598,filing_state_band,259
+Married filing jointly,New Mexico,,25000.0,3+,0.05875413828532288,filing_state_band,259
+Married filing jointly,New Mexico,25000.0,55000.0,0,0.7219707004606473,filing_state_band,550
+Married filing jointly,New Mexico,25000.0,55000.0,1,0.12366303552717424,filing_state_band,550
+Married filing jointly,New Mexico,25000.0,55000.0,2,0.07170676736323917,filing_state_band,550
+Married filing jointly,New Mexico,25000.0,55000.0,3+,0.08265949664893933,filing_state_band,550
+Married filing jointly,New Mexico,55000.0,,0,0.6557114522882539,filing_state_band,2845
+Married filing jointly,New Mexico,55000.0,,1,0.13377653713362228,filing_state_band,2845
+Married filing jointly,New Mexico,55000.0,,2,0.12499081760082274,filing_state_band,2845
+Married filing jointly,New Mexico,55000.0,,3+,0.08552119297730111,filing_state_band,2845
+Married filing jointly,New York,,25000.0,0,0.7409823333089448,filing_state_band,1643
+Married filing jointly,New York,,25000.0,1,0.08663376088339084,filing_state_band,1643
+Married filing jointly,New York,,25000.0,2,0.09104621255184912,filing_state_band,1643
+Married filing jointly,New York,,25000.0,3+,0.08133769325581526,filing_state_band,1643
+Married filing jointly,New York,25000.0,55000.0,0,0.6613996989775233,filing_state_band,4058
+Married filing jointly,New York,25000.0,55000.0,1,0.11996190010719066,filing_state_band,4058
+Married filing jointly,New York,25000.0,55000.0,2,0.11643793771833849,filing_state_band,4058
+Married filing jointly,New York,25000.0,55000.0,3+,0.10220046319694756,filing_state_band,4058
+Married filing jointly,New York,55000.0,,0,0.622929032497741,filing_state_band,32156
+Married filing jointly,New York,55000.0,,1,0.1553122280913318,filing_state_band,32156
+Married filing jointly,New York,55000.0,,2,0.15565823158705977,filing_state_band,32156
+Married filing jointly,New York,55000.0,,3+,0.06610050782386746,filing_state_band,32156
+Married filing jointly,North Carolina,,25000.0,0,0.7338637989723131,filing_state_band,1051
+Married filing jointly,North Carolina,,25000.0,1,0.09249181536326778,filing_state_band,1051
+Married filing jointly,North Carolina,,25000.0,2,0.09482253973072004,filing_state_band,1051
+Married filing jointly,North Carolina,,25000.0,3+,0.07882184593369902,filing_state_band,1051
+Married filing jointly,North Carolina,25000.0,55000.0,0,0.6798335778868314,filing_state_band,3079
+Married filing jointly,North Carolina,25000.0,55000.0,1,0.12256090890916567,filing_state_band,3079
+Married filing jointly,North Carolina,25000.0,55000.0,2,0.11747243586600228,filing_state_band,3079
+Married filing jointly,North Carolina,25000.0,55000.0,3+,0.0801330773380006,filing_state_band,3079
+Married filing jointly,North Carolina,55000.0,,0,0.6218854252875661,filing_state_band,19498
+Married filing jointly,North Carolina,55000.0,,1,0.16068054223900882,filing_state_band,19498
+Married filing jointly,North Carolina,55000.0,,2,0.15374256594471178,filing_state_band,19498
+Married filing jointly,North Carolina,55000.0,,3+,0.06369146652871327,filing_state_band,19498
+Married filing jointly,North Dakota,,25000.0,0,0.6593242087254063,filing_state_band,68
+Married filing jointly,North Dakota,,25000.0,1,0.12254063301967494,filing_state_band,68
+Married filing jointly,North Dakota,,25000.0,2,0.12788708297690335,filing_state_band,68
+Married filing jointly,North Dakota,,25000.0,3+,0.0902480752780154,filing_state_band,68
+Married filing jointly,North Dakota,25000.0,55000.0,0,0.7156191284320261,filing_state_band,232
+Married filing jointly,North Dakota,25000.0,55000.0,1,0.1061276440996424,filing_state_band,232
+Married filing jointly,North Dakota,25000.0,55000.0,2,0.09424813625068186,filing_state_band,232
+Married filing jointly,North Dakota,25000.0,55000.0,3+,0.08400509121764956,filing_state_band,232
+Married filing jointly,North Dakota,55000.0,,0,0.5754246481590692,filing_state_band,1552
+Married filing jointly,North Dakota,55000.0,,1,0.10257810395416057,filing_state_band,1552
+Married filing jointly,North Dakota,55000.0,,2,0.19768618628457432,filing_state_band,1552
+Married filing jointly,North Dakota,55000.0,,3+,0.12431106160219586,filing_state_band,1552
+Married filing jointly,Ohio,,25000.0,0,0.7250760737524506,filing_state_band,906
+Married filing jointly,Ohio,,25000.0,1,0.0863331849945275,filing_state_band,906
+Married filing jointly,Ohio,,25000.0,2,0.11266131845134286,filing_state_band,906
+Married filing jointly,Ohio,,25000.0,3+,0.07592942280167904,filing_state_band,906
+Married filing jointly,Ohio,25000.0,55000.0,0,0.7475732293777779,filing_state_band,3031
+Married filing jointly,Ohio,25000.0,55000.0,1,0.0791214412208061,filing_state_band,3031
+Married filing jointly,Ohio,25000.0,55000.0,2,0.08826276161652956,filing_state_band,3031
+Married filing jointly,Ohio,25000.0,55000.0,3+,0.0850425677848864,filing_state_band,3031
+Married filing jointly,Ohio,55000.0,,0,0.6244930782680687,filing_state_band,20829
+Married filing jointly,Ohio,55000.0,,1,0.14308290339758833,filing_state_band,20829
+Married filing jointly,Ohio,55000.0,,2,0.1464510627839139,filing_state_band,20829
+Married filing jointly,Ohio,55000.0,,3+,0.08597295555042915,filing_state_band,20829
+Married filing jointly,Oklahoma,,25000.0,0,0.6793196432275461,filing_state_band,448
+Married filing jointly,Oklahoma,,25000.0,1,0.13490458411118025,filing_state_band,448
+Married filing jointly,Oklahoma,,25000.0,2,0.07604750051856461,filing_state_band,448
+Married filing jointly,Oklahoma,,25000.0,3+,0.10972827214270899,filing_state_band,448
+Married filing jointly,Oklahoma,25000.0,55000.0,0,0.6666012246996681,filing_state_band,1259
+Married filing jointly,Oklahoma,25000.0,55000.0,1,0.11141027438881877,filing_state_band,1259
+Married filing jointly,Oklahoma,25000.0,55000.0,2,0.10781096620389848,filing_state_band,1259
+Married filing jointly,Oklahoma,25000.0,55000.0,3+,0.11417753470761464,filing_state_band,1259
+Married filing jointly,Oklahoma,55000.0,,0,0.6083589326337113,filing_state_band,5811
+Married filing jointly,Oklahoma,55000.0,,1,0.15160652906696778,filing_state_band,5811
+Married filing jointly,Oklahoma,55000.0,,2,0.14501436328313103,filing_state_band,5811
+Married filing jointly,Oklahoma,55000.0,,3+,0.09502017501618983,filing_state_band,5811
+Married filing jointly,Oregon,,25000.0,0,0.7833419823559937,filing_state_band,353
+Married filing jointly,Oregon,,25000.0,1,0.060262065386611316,filing_state_band,353
+Married filing jointly,Oregon,,25000.0,2,0.09999351323300468,filing_state_band,353
+Married filing jointly,Oregon,,25000.0,3+,0.056402439024390245,filing_state_band,353
+Married filing jointly,Oregon,25000.0,55000.0,0,0.7317891978751931,filing_state_band,1033
+Married filing jointly,Oregon,25000.0,55000.0,1,0.08287360674697809,filing_state_band,1033
+Married filing jointly,Oregon,25000.0,55000.0,2,0.08910678280093753,filing_state_band,1033
+Married filing jointly,Oregon,25000.0,55000.0,3+,0.09623041257689119,filing_state_band,1033
+Married filing jointly,Oregon,55000.0,,0,0.6370801144721554,filing_state_band,7655
+Married filing jointly,Oregon,55000.0,,1,0.14018756988676703,filing_state_band,7655
+Married filing jointly,Oregon,55000.0,,2,0.15059823801519395,filing_state_band,7655
+Married filing jointly,Oregon,55000.0,,3+,0.07213407762588366,filing_state_band,7655
+Married filing jointly,Pennsylvania,,25000.0,0,0.7691970665859943,filing_state_band,1081
+Married filing jointly,Pennsylvania,,25000.0,1,0.09807951095857544,filing_state_band,1081
+Married filing jointly,Pennsylvania,,25000.0,2,0.08502936543536996,filing_state_band,1081
+Married filing jointly,Pennsylvania,,25000.0,3+,0.0476940570200603,filing_state_band,1081
+Married filing jointly,Pennsylvania,25000.0,55000.0,0,0.7559879604900589,filing_state_band,3654
+Married filing jointly,Pennsylvania,25000.0,55000.0,1,0.09674000593496969,filing_state_band,3654
+Married filing jointly,Pennsylvania,25000.0,55000.0,2,0.07200390012293865,filing_state_band,3654
+Married filing jointly,Pennsylvania,25000.0,55000.0,3+,0.07526813345203273,filing_state_band,3654
+Married filing jointly,Pennsylvania,55000.0,,0,0.6339069236682408,filing_state_band,23482
+Married filing jointly,Pennsylvania,55000.0,,1,0.14521368786436276,filing_state_band,23482
+Married filing jointly,Pennsylvania,55000.0,,2,0.14919762606175485,filing_state_band,23482
+Married filing jointly,Pennsylvania,55000.0,,3+,0.07168176240564168,filing_state_band,23482
+Married filing jointly,Rhode Island,,25000.0,0,0.7248134328358209,filing_state_band,73
+Married filing jointly,Rhode Island,,25000.0,1,0.06369936034115138,filing_state_band,73
+Married filing jointly,Rhode Island,,25000.0,2,0.10607675906183368,filing_state_band,73
+Married filing jointly,Rhode Island,,25000.0,3+,0.10541044776119403,filing_state_band,73
+Married filing jointly,Rhode Island,25000.0,55000.0,0,0.7329851752021563,filing_state_band,195
+Married filing jointly,Rhode Island,25000.0,55000.0,1,0.07075471698113207,filing_state_band,195
+Married filing jointly,Rhode Island,25000.0,55000.0,2,0.08490566037735849,filing_state_band,195
+Married filing jointly,Rhode Island,25000.0,55000.0,3+,0.1113544474393531,filing_state_band,195
+Married filing jointly,Rhode Island,55000.0,,0,0.6533385975617051,filing_state_band,1755
+Married filing jointly,Rhode Island,55000.0,,1,0.14149408372515943,filing_state_band,1755
+Married filing jointly,Rhode Island,55000.0,,2,0.1612469042747927,filing_state_band,1755
+Married filing jointly,Rhode Island,55000.0,,3+,0.04392041443834273,filing_state_band,1755
+Married filing jointly,South Carolina,,25000.0,0,0.7475844685830882,filing_state_band,559
+Married filing jointly,South Carolina,,25000.0,1,0.097201384304547,filing_state_band,559
+Married filing jointly,South Carolina,,25000.0,2,0.07987757306607454,filing_state_band,559
+Married filing jointly,South Carolina,,25000.0,3+,0.07533657404629018,filing_state_band,559
+Married filing jointly,South Carolina,25000.0,55000.0,0,0.7561913954771098,filing_state_band,1667
+Married filing jointly,South Carolina,25000.0,55000.0,1,0.08592801985659128,filing_state_band,1667
+Married filing jointly,South Carolina,25000.0,55000.0,2,0.09382239382239382,filing_state_band,1667
+Married filing jointly,South Carolina,25000.0,55000.0,3+,0.06405819084390513,filing_state_band,1667
+Married filing jointly,South Carolina,55000.0,,0,0.6447761023401507,filing_state_band,9768
+Married filing jointly,South Carolina,55000.0,,1,0.14328764304413932,filing_state_band,9768
+Married filing jointly,South Carolina,55000.0,,2,0.13997233432030456,filing_state_band,9768
+Married filing jointly,South Carolina,55000.0,,3+,0.07196392029540544,filing_state_band,9768
+Married filing jointly,South Dakota,,25000.0,0,0.765153315902068,filing_state_band,82
+Married filing jointly,South Dakota,,25000.0,1,0.028642738293320657,filing_state_band,82
+Married filing jointly,South Dakota,,25000.0,2,0.05776087473258854,filing_state_band,82
+Married filing jointly,South Dakota,,25000.0,3+,0.14844307107202281,filing_state_band,82
+Married filing jointly,South Dakota,25000.0,55000.0,0,0.7532654530494703,filing_state_band,269
+Married filing jointly,South Dakota,25000.0,55000.0,1,0.08145634063560629,filing_state_band,269
+Married filing jointly,South Dakota,25000.0,55000.0,2,0.10485446878535432,filing_state_band,269
+Married filing jointly,South Dakota,25000.0,55000.0,3+,0.06042373752956906,filing_state_band,269
+Married filing jointly,South Dakota,55000.0,,0,0.5917034521081648,filing_state_band,1731
+Married filing jointly,South Dakota,55000.0,,1,0.14389091113428196,filing_state_band,1731
+Married filing jointly,South Dakota,55000.0,,2,0.13663580227643088,filing_state_band,1731
+Married filing jointly,South Dakota,55000.0,,3+,0.12776983448112236,filing_state_band,1731
+Married filing jointly,Tennessee,,25000.0,0,0.7314209132390951,filing_state_band,712
+Married filing jointly,Tennessee,,25000.0,1,0.11587797951434316,filing_state_band,712
+Married filing jointly,Tennessee,,25000.0,2,0.08685663231117777,filing_state_band,712
+Married filing jointly,Tennessee,,25000.0,3+,0.06584447493538402,filing_state_band,712
+Married filing jointly,Tennessee,25000.0,55000.0,0,0.6923118442074355,filing_state_band,2206
+Married filing jointly,Tennessee,25000.0,55000.0,1,0.09707349194697526,filing_state_band,2206
+Married filing jointly,Tennessee,25000.0,55000.0,2,0.10772809706809448,filing_state_band,2206
+Married filing jointly,Tennessee,25000.0,55000.0,3+,0.1028865667774947,filing_state_band,2206
+Married filing jointly,Tennessee,55000.0,,0,0.6293370119927985,filing_state_band,12651
+Married filing jointly,Tennessee,55000.0,,1,0.148963415232254,filing_state_band,12651
+Married filing jointly,Tennessee,55000.0,,2,0.15020737045699972,filing_state_band,12651
+Married filing jointly,Tennessee,55000.0,,3+,0.07149220231794783,filing_state_band,12651
+Married filing jointly,Texas,,25000.0,0,0.6648331525893794,filing_state_band,2896
+Married filing jointly,Texas,,25000.0,1,0.135764191363402,filing_state_band,2896
+Married filing jointly,Texas,,25000.0,2,0.11316467848317303,filing_state_band,2896
+Married filing jointly,Texas,,25000.0,3+,0.08623797756404558,filing_state_band,2896
+Married filing jointly,Texas,25000.0,55000.0,0,0.6216267046833118,filing_state_band,7217
+Married filing jointly,Texas,25000.0,55000.0,1,0.1252711629102259,filing_state_band,7217
+Married filing jointly,Texas,25000.0,55000.0,2,0.14551560075057032,filing_state_band,7217
+Married filing jointly,Texas,25000.0,55000.0,3+,0.10758653165589194,filing_state_band,7217
+Married filing jointly,Texas,55000.0,,0,0.5644252295590388,filing_state_band,48125
+Married filing jointly,Texas,55000.0,,1,0.1730983198352314,filing_state_band,48125
+Married filing jointly,Texas,55000.0,,2,0.17551749970542876,filing_state_band,48125
+Married filing jointly,Texas,55000.0,,3+,0.08695895090030101,filing_state_band,48125
+Married filing jointly,Utah,,25000.0,0,0.6689761715275502,filing_state_band,226
+Married filing jointly,Utah,,25000.0,1,0.1245260053368288,filing_state_band,226
+Married filing jointly,Utah,,25000.0,2,0.09390946116754834,filing_state_band,226
+Married filing jointly,Utah,,25000.0,3+,0.11258836196807266,filing_state_band,226
+Married filing jointly,Utah,25000.0,55000.0,0,0.6599630143319464,filing_state_band,649
+Married filing jointly,Utah,25000.0,55000.0,1,0.14074113588676695,filing_state_band,649
+Married filing jointly,Utah,25000.0,55000.0,2,0.09979017746008037,filing_state_band,649
+Married filing jointly,Utah,25000.0,55000.0,3+,0.0995056723212063,filing_state_band,649
+Married filing jointly,Utah,55000.0,,0,0.5206004714445226,filing_state_band,6699
+Married filing jointly,Utah,55000.0,,1,0.15083578015797527,filing_state_band,6699
+Married filing jointly,Utah,55000.0,,2,0.15517637814813284,filing_state_band,6699
+Married filing jointly,Utah,55000.0,,3+,0.17338737024936934,filing_state_band,6699
+Married filing jointly,Vermont,,25000.0,0,0.9132497458488648,filing_state_band,51
+Married filing jointly,Vermont,,25000.0,1,0.030837004405286344,filing_state_band,51
+Married filing jointly,Vermont,,25000.0,2,0.0,filing_state_band,51
+Married filing jointly,Vermont,,25000.0,3+,0.05591324974584887,filing_state_band,51
+Married filing jointly,Vermont,25000.0,55000.0,0,0.8268482490272373,filing_state_band,180
+Married filing jointly,Vermont,25000.0,55000.0,1,0.0314526588845655,filing_state_band,180
+Married filing jointly,Vermont,25000.0,55000.0,2,0.04101815823605707,filing_state_band,180
+Married filing jointly,Vermont,25000.0,55000.0,3+,0.10068093385214008,filing_state_band,180
+Married filing jointly,Vermont,55000.0,,0,0.65773662696455,filing_state_band,1264
+Married filing jointly,Vermont,55000.0,,1,0.12234829797730637,filing_state_band,1264
+Married filing jointly,Vermont,55000.0,,2,0.14388787088589752,filing_state_band,1264
+Married filing jointly,Vermont,55000.0,,3+,0.07602720417224611,filing_state_band,1264
+Married filing jointly,Virginia,,25000.0,0,0.7116940335807771,filing_state_band,567
+Married filing jointly,Virginia,,25000.0,1,0.10052018734149096,filing_state_band,567
+Married filing jointly,Virginia,,25000.0,2,0.09524426590644032,filing_state_band,567
+Married filing jointly,Virginia,,25000.0,3+,0.09254151317129158,filing_state_band,567
+Married filing jointly,Virginia,25000.0,55000.0,0,0.6922461723513567,filing_state_band,1700
+Married filing jointly,Virginia,25000.0,55000.0,1,0.0968668624477757,filing_state_band,1700
+Married filing jointly,Virginia,25000.0,55000.0,2,0.11896581508282308,filing_state_band,1700
+Married filing jointly,Virginia,25000.0,55000.0,3+,0.0919211501180445,filing_state_band,1700
+Married filing jointly,Virginia,55000.0,,0,0.5951342101860538,filing_state_band,16083
+Married filing jointly,Virginia,55000.0,,1,0.15980118130273427,filing_state_band,16083
+Married filing jointly,Virginia,55000.0,,2,0.16626547124185345,filing_state_band,16083
+Married filing jointly,Virginia,55000.0,,3+,0.07879913726935849,filing_state_band,16083
+Married filing jointly,Washington,,25000.0,0,0.7700250014313796,filing_state_band,553
+Married filing jointly,Washington,,25000.0,1,0.08771494551214765,filing_state_band,553
+Married filing jointly,Washington,,25000.0,2,0.08225661774529076,filing_state_band,553
+Married filing jointly,Washington,,25000.0,3+,0.060003435311181935,filing_state_band,553
+Married filing jointly,Washington,25000.0,55000.0,0,0.6633742721765163,filing_state_band,1423
+Married filing jointly,Washington,25000.0,55000.0,1,0.117874008942112,filing_state_band,1423
+Married filing jointly,Washington,25000.0,55000.0,2,0.09906257121079969,filing_state_band,1423
+Married filing jointly,Washington,25000.0,55000.0,3+,0.11968914767057197,filing_state_band,1423
+Married filing jointly,Washington,55000.0,,0,0.604074688894383,filing_state_band,15112
+Married filing jointly,Washington,55000.0,,1,0.16429437596392704,filing_state_band,15112
+Married filing jointly,Washington,55000.0,,2,0.1599655340891699,filing_state_band,15112
+Married filing jointly,Washington,55000.0,,3+,0.07166540105252005,filing_state_band,15112
+Married filing jointly,West Virginia,,25000.0,0,0.8237318762638214,filing_state_band,257
+Married filing jointly,West Virginia,,25000.0,1,0.05377963257755023,filing_state_band,257
+Married filing jointly,West Virginia,,25000.0,2,0.07129028094480058,filing_state_band,257
+Married filing jointly,West Virginia,,25000.0,3+,0.05119821021382782,filing_state_band,257
+Married filing jointly,West Virginia,25000.0,55000.0,0,0.7312619519046893,filing_state_band,702
+Married filing jointly,West Virginia,25000.0,55000.0,1,0.11768289587246789,filing_state_band,702
+Married filing jointly,West Virginia,25000.0,55000.0,2,0.08564756054221455,filing_state_band,702
+Married filing jointly,West Virginia,25000.0,55000.0,3+,0.06540759168062818,filing_state_band,702
+Married filing jointly,West Virginia,55000.0,,0,0.6431340944373055,filing_state_band,2856
+Married filing jointly,West Virginia,55000.0,,1,0.154275824673733,filing_state_band,2856
+Married filing jointly,West Virginia,55000.0,,2,0.1301762621723403,filing_state_band,2856
+Married filing jointly,West Virginia,55000.0,,3+,0.07241381871662124,filing_state_band,2856
+Married filing jointly,Wisconsin,,25000.0,0,0.773863955656594,filing_state_band,547
+Married filing jointly,Wisconsin,,25000.0,1,0.08337377710797211,filing_state_band,547
+Married filing jointly,Wisconsin,,25000.0,2,0.05019285294643541,filing_state_band,547
+Married filing jointly,Wisconsin,,25000.0,3+,0.09256941428899844,filing_state_band,547
+Married filing jointly,Wisconsin,25000.0,55000.0,0,0.8028064646968893,filing_state_band,1741
+Married filing jointly,Wisconsin,25000.0,55000.0,1,0.0689760069888615,filing_state_band,1741
+Married filing jointly,Wisconsin,25000.0,55000.0,2,0.07033321893232661,filing_state_band,1741
+Married filing jointly,Wisconsin,25000.0,55000.0,3+,0.05788430938192256,filing_state_band,1741
+Married filing jointly,Wisconsin,55000.0,,0,0.6369500060419848,filing_state_band,11881
+Married filing jointly,Wisconsin,55000.0,,1,0.12405680654356865,filing_state_band,11881
+Married filing jointly,Wisconsin,55000.0,,2,0.15444501892825094,filing_state_band,11881
+Married filing jointly,Wisconsin,55000.0,,3+,0.08454816848619555,filing_state_band,11881
+Married filing jointly,Wyoming,,25000.0,0,0.8375308641975309,filing_state_band,50
+Married filing jointly,Wyoming,,25000.0,1,0.041728395061728395,filing_state_band,50
+Married filing jointly,Wyoming,,25000.0,2,0.09481481481481481,filing_state_band,50
+Married filing jointly,Wyoming,,25000.0,3+,0.025925925925925925,filing_state_band,50
+Married filing jointly,Wyoming,25000.0,55000.0,0,0.6842301943198804,filing_state_band,172
+Married filing jointly,Wyoming,25000.0,55000.0,1,0.13303437967115098,filing_state_band,172
+Married filing jointly,Wyoming,25000.0,55000.0,2,0.16006477329347285,filing_state_band,172
+Married filing jointly,Wyoming,25000.0,55000.0,3+,0.022670652715495766,filing_state_band,172
+Married filing jointly,Wyoming,55000.0,,0,0.6164862098432702,filing_state_band,1126
+Married filing jointly,Wyoming,55000.0,,1,0.13720665984280067,filing_state_band,1126
+Married filing jointly,Wyoming,55000.0,,2,0.13950736695808957,filing_state_band,1126
+Married filing jointly,Wyoming,55000.0,,3+,0.10679976335583957,filing_state_band,1126

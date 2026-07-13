@@ -12,9 +12,16 @@ env/
 *.egg-info/
 .ipynb_checkpoints/
 
-# Intermediate build artifacts (regenerable)
+# Intermediate build artifacts (regenerable) — EXCEPT the five runtime artifacts the model
+# loads at import (committed so a bare clone / Streamlit Cloud deploy works without the
+# PolicyEngine bake or the ACS PUMS download; regenerate via scripts/bootstrap.sh)
 data/interim/*.parquet
 data/interim/*.csv
+!data/interim/benefit_lookup.parquet
+!data/interim/benefit_lookup_meta.parquet
+!data/interim/noc_distribution.csv
+!data/interim/ui_params.parquet
+!data/interim/worker_deltas_by_occ_state.parquet
 
 # Large external source extracts kept outside the repo (ACS PUMS, etc.)
 data/external/
