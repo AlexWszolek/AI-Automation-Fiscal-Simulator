@@ -16,8 +16,8 @@ from __future__ import annotations
 
 import math
 import sys
-from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))   # project root -> import fiscal_model
 
@@ -92,12 +92,12 @@ LABELS = {
 }
 
 
-def ts_chart(df: pd.DataFrame, cols: list, y_title: str, kind: str = "line",
-             stack: bool | str | None = None, height: int = 260) -> alt.Chart:
+def ts_chart(df: pd.DataFrame, cols: list[str], y_title: str, kind: str = "line",
+             stack: bool | None = None, height: int = 260) -> alt.Chart:
     """A static time-series chart: rows = periods, one colored series per column in `cols`."""
     labels = [LABELS.get(c, c) for c in cols]
     long = df[["period"] + cols].melt("period", var_name="series", value_name="value")
-    long["series"] = long["series"].map({c: LABELS.get(c, c) for c in cols})
+    long["series"] = long["series"].map(lambda c: LABELS.get(c, c))
     mark = {"line": alt.Chart(long).mark_line(strokeWidth=2.5),
             "area": alt.Chart(long).mark_area(opacity=0.85),
             "bar": alt.Chart(long).mark_bar()}[kind]
@@ -117,7 +117,7 @@ def ts_chart(df: pd.DataFrame, cols: list, y_title: str, kind: str = "line",
 
 
 def show_chart(chart: alt.Chart, caption: str) -> None:
-    st.altair_chart(chart, use_container_width=True, theme=None)   # theme=None: our palette, static
+    st.altair_chart(chart, width='stretch', theme=None)   # theme=None: our palette, static
     st.caption(caption)
 
 
@@ -138,6 +138,7 @@ if _err is not None:
     st.error("**Build artifacts are missing — the model can't load.**\n\n"
              f"```\n{_err}\n```\n\nBuild them first (README → *Setup*):\n\n```bash\nbash scripts/bootstrap.sh\n```")
     st.stop()
+assert _backend is not None   # st.stop() above is terminal; load_backend returns a tuple when _err is None
 data, deltas, rung1_ok = _backend
 
 st.title("Fiscal Consequences of AI Automation")
@@ -207,7 +208,7 @@ if is_v2:
         sb.warning("Both robot taxes set the same lever — using Costinot-Werning, dropping GRT.")
         overlay_keys.remove("grt-robot-tax")
 
-d = preset_widget_defaults(_preset) if _preset is not None else _CUSTOM_DEFAULTS
+d: dict[str, Any] = preset_widget_defaults(_preset) if _preset is not None else _CUSTOM_DEFAULTS
 st.caption("Set the levers; the accounting is the point. Watch the tax base migrate from **labor** to "
            "**capital**, revenue fall faster than employment, and — unlike Washington — **states must "
            "balance**, so they hike rates until they can't, then cut. "
@@ -219,6 +220,17 @@ st.caption("Set the levers; the accounting is the point. Watch the tax base migr
 # identity hashes label/min/max/value/step/help, not the container. v2-only widgets are gated on
 # is_v2 INSIDE their group so v1 mode shows only the shared levers.
 rung = (1 if rung1_ok else 0)
+
+# v2-only levers, bound up-front from the defaults dict so static analysis sees them defined on the
+# v1 path too (v1 st.stop()s before the v2 param dict reads them; the v2 widgets below overwrite
+# each of these). Keeps the "possibly unbound" analysis honest without a static key= on any widget.
+retained, price, auto_cost, compute_rate = d["retained"], d["price"], d["auto_cost"], d["compute_rate"]
+survivor_unbounded, ceiling, elasticity, spillover = d["unbounded"], d["ceiling"], d["elasticity"], d["spillover"]
+lfp_exit, attrition, price_pt, prod_pt = d["lfp"], d["attrition"], d["price_pt"], d["prod_pt"]
+growth, demand, state_resp = d["growth"], d["demand"], d["state_resp"]
+state_cut_share, rate_cap, automation_tax = d["state_cut"], d["rate_cap"], d["atax"]
+ubi_recapture, income_mult, corp_mult, cons_mult = d["ubi_recapture"], d["income_mult"], d["corp_mult"], d["cons_mult"]
+denominator = "absolute"
 
 with sb.expander("Automation & adoption", expanded=True):
     cog = st.slider("Cognitive feasibility (AI capability)", 0.0, 1.0, d["cog"], 0.05,
@@ -478,7 +490,7 @@ if not is_v2:
         show_chart(ts_chart(res, ["state_gap_B"], "$ billions / year"),
                    "The shortfall states must close each year — they cannot run deficits.")
     with st.expander("Per-year detail"):
-        st.dataframe(res.style.format("{:,.1f}"), use_container_width=True)
+        st.dataframe(res.style.format("{:,.1f}"), width='stretch')
     st.stop()
 
 # -------------------------------------------------- v2 path (multi-actor) ----------------------------
@@ -487,7 +499,7 @@ import dataclasses as _dc
 import datetime as _dt
 import json as _json
 
-ui = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
+ui: dict[str, Any] = dict(mapping=mapping, cog=cog, phys=phys, robotics_lag=float(robotics_lag),
           adoption_path=adoption_path, n_periods=n_periods,
           retained_profit_share=retained, price_reduction_share=price, auto_cost=auto_cost,
           offshore_share=0.0, compute_effective_rate=compute_rate, survivor_unbounded=survivor_unbounded,
@@ -562,7 +574,7 @@ if _preset is not None:
     _ui_p = build_v2_params(ui)
 
     def _differs(a, b):
-        if isinstance(a, list) and isinstance(b, list):
+        if isinstance(a, list) or isinstance(b, list):
             return not np.allclose(np.asarray(a, float), np.asarray(b, float), atol=1e-9)
         if isinstance(a, float) or isinstance(b, float):
             return not math.isclose(float(a), float(b), abs_tol=1e-6)
@@ -631,7 +643,7 @@ st.markdown(
     "which is why the closure feeds the demand channel above.")
 s_left, s_right = st.columns(2)
 with s_left:
-    gaps = res[["period", "state_gap_B"]].copy()
+    gaps = pd.DataFrame({"period": res["period"], "state_gap_B": res["state_gap_B"]})
     gaps["state_gap_cum_B"] = gaps["state_gap_B"].cumsum()
     show_chart(ts_chart(gaps, ["state_gap_B", "state_gap_cum_B"], "$ billions"),
                "The combined shortfall states must close each year, BEFORE that year's rate hikes "
@@ -653,14 +665,14 @@ st.markdown(f"**Hardest-hit states (final year)** — "
             f"{int(final['n_states_capped'])} of 51 hit the rate-hike cap.")
 st.dataframe(_stbl_disp.head(15).style.format({c: "{:,.1f}" for c in _stbl_disp.columns
                                                if c not in ("State", "Hit rate cap")}),
-             use_container_width=True, hide_index=True)
+             width='stretch', hide_index=True)
 st.caption("A state 'hits the cap' when the rate increase needed exceeds the feasibility ceiling "
            "— the remainder becomes forced spending cuts. Negative net positions are states whose "
            "survivor-wage gains outweigh their losses.")
 with st.expander("All 51 states"):
     st.dataframe(_stbl_disp.style.format({c: "{:,.1f}" for c in _stbl_disp.columns
                                           if c not in ("State", "Hit rate cap")}),
-                 use_container_width=True, hide_index=True)
+                 width='stretch', hide_index=True)
 
 # -------------------------------------------------- Fiscal summary table ----------------------------
 st.subheader("Fiscal summary")
@@ -684,13 +696,14 @@ st.caption("Revenue lines are signed revenue **changes** (negative = lost revenu
 _year_cols = [c for c in fs_df.columns if c.startswith("Year ")] + ["Total"]
 _disp = fs_df.drop(columns="kind").set_index(["group", "label"])
 _emph = fs_df["kind"].isin(["subtotal", "net"]).to_numpy()
-styler = (_disp.style.format("{:,.1f}")
+styler = (_disp.style
           .apply(lambda s: np.where(_emph, "font-weight: bold; background-color: rgba(128,128,128,0.15)",
                                     ""), axis=0)
           .map(lambda v: "color: #e4572e" if isinstance(v, float) and v < -0.05 else
                          ("color: #3fa34d" if isinstance(v, float) and v > 0.05 else ""),
-               subset=_year_cols))
-st.dataframe(styler, use_container_width=True)
+               subset=_year_cols)
+          .format("{:,.1f}"))
+st.dataframe(styler, width='stretch')
 st.download_button("⬇ Summary CSV", summary_mod.to_csv_bytes(fs_df), "fiscal-summary.csv", "text/csv")
 
 # -------------------------------------------------- Uncertainty (Monte Carlo) -----------------------
@@ -741,7 +754,7 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
         mcol = METRICS[m_label]
         st.altair_chart(charts_mod.fan_chart(r.percentiles, r.base_run, mcol, y_title=m_label,
                                              height=320).properties(width="container"),
-                        use_container_width=True, theme=None)
+                        width='stretch', theme=None)
         st.caption("Shaded bands: where 80% (light) and 50% (dark) of the perturbed runs land; "
                    "solid line = median; dashed = your exact configuration.")
 
@@ -750,13 +763,13 @@ with st.expander("Uncertainty (Monte Carlo) — bands + which levers matter"):
                   else "final_employment_drop_pct")
         st.altair_chart(charts_mod.tornado_chart(r.tornado, target, pos_color=NEG, neg_color=POS)
                         .properties(width="container"),
-                        use_container_width=True, theme=None)
+                        width='stretch', theme=None)
         st.caption("Which assumptions drive the outcome: rank correlation of each perturbed lever "
                    "with the final-year value. Red bars worsen it as the lever rises; green "
                    "improve it.")
 
 with st.expander("Per-year detail (v2 columns)"):
-    st.dataframe(res.style.format("{:,.2f}"), use_container_width=True)
+    st.dataframe(res.style.format("{:,.2f}"), width='stretch')
     st.download_button("⬇ Full detail CSV", res.to_csv(index=False).encode("utf-8"),
                        "run-detail.csv", "text/csv")
 with st.expander("Method — what v2 adds over v1"):
