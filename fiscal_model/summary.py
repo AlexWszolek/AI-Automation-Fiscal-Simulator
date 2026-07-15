@@ -129,22 +129,47 @@ def _channel_rows(res: pd.DataFrame) -> list:
 
 
 def build_fiscal_summary(res: pd.DataFrame, ledger: RevenueLedger,
-                         grouping: str = "tax", units: str = "busd") -> pd.DataFrame:
-    """The summary table: columns [group, label, kind, Year 0..N, Total]. See the module docstring for
-    the sign convention. `units="pct_baseline"` re-expresses flows/levels as % of the real 2024 baseline
-    revenue (federal rows / fed_revenue0, state / state_revenue0, combined / their sum); %-GDP rows pass
-    through untouched."""
-    assert grouping in ("tax", "channel") and units in ("busd", "pct_baseline")
+                         grouping: str = "tax", units: str = "busd",
+                         start_year: int | None = None, cbo=None) -> pd.DataFrame:
+    """The summary table: columns [group, label, kind, <year columns>, Total]. See the module
+    docstring for the sign convention.
+
+    Year columns: legacy "Year {t}" labels when `start_year` is None (the report pipeline's
+    contract); calendar-year strings ("2026", "2027", …) when a start year is given.
+
+    `units="pct_cbo_revenue"` re-expresses every non-%-GDP row as a percent of THAT calendar
+    year's projected total federal revenue (CBO Feb-2026 baseline; one common yardstick for
+    federal, state, and combined rows so they stay comparable — CBO does not project state
+    revenues). Requires `start_year`. Years past FY2036 use the baseline's terminal-growth
+    extrapolation (grounding.CBOBaseline). The "Total" column under % units is the CUMULATIVE
+    flow divided by the CUMULATIVE projected revenue over the horizon — never a sum of per-year
+    percentages. Deliberate conservatism: model flows sit on a 2024 nominal base while CBO
+    revenues grow nominally, so late-horizon percentages are understated."""
+    assert grouping in ("tax", "channel") and units in ("busd", "pct_cbo_revenue")
     rows = _tax_rows(res) if grouping == "tax" else _channel_rows(res)
-    denom = {"fed": ledger.fed_revenue0, "state": ledger.state_revenue0,
-             "combined": ledger.fed_revenue0 + ledger.state_revenue0, "passthrough": None}
-    years = [f"Year {int(t)}" for t in res["period"]]
+    periods = [int(t) for t in res["period"]]
+    if start_year is None:
+        years = [f"Year {t}" for t in periods]
+    else:
+        years = [str(start_year + t) for t in periods]
+    pct = units == "pct_cbo_revenue"
+    if pct:
+        assert start_year is not None, "pct_cbo_revenue needs start_year to map periods to years"
+        if cbo is None:
+            from .grounding import load_cbo_baseline
+            cbo = load_cbo_baseline()
+        rev = np.array([cbo.revenue(start_year + t) for t in periods])
     out = []
     for group, label, series, scope, kind in rows:
         vals = np.asarray(series, float)
-        if units == "pct_baseline" and denom[scope] is not None:
-            vals = vals / denom[scope] * 100.0
-        total = float(vals.sum()) if kind in ("flow", "subtotal", "net", "memo") else float(vals[-1])
+        if pct and scope != "passthrough":
+            total = (float(vals.sum() / rev.sum() * 100.0)
+                     if kind in ("flow", "subtotal", "net", "memo")
+                     else float(vals[-1] / rev[-1] * 100.0))
+            vals = vals / rev * 100.0
+        else:
+            total = (float(vals.sum()) if kind in ("flow", "subtotal", "net", "memo")
+                     else float(vals[-1]))
         out.append({"group": group, "label": label, "kind": kind,
                     **dict(zip(years, vals)), "Total": total})
     return pd.DataFrame(out)

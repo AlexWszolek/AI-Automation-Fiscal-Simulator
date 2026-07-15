@@ -615,6 +615,7 @@ class DynamicModelV2:
             "rate_hike_B": close.recovered / 1e9,
             "spending_cut_B": close.spending_cut / 1e9,
             "implied_rate_hike_pct": 100.0 * close.recovered / base,
+            "taxable_base_B": self._last_taxable_base / 1e9,
             "at_cap": close.capped,
         })
 

@@ -49,3 +49,30 @@ def test_print_theme_registers_white_background():
     assert alt.theme.active == "fiscal_report"
     cfg = charts.fan_chart(*_fake_mc()[:2], "fed_deficit_B").to_dict()["config"]
     assert cfg["background"] == "white"
+
+
+def test_state_fips_dict():
+    from fiscal_model.charts import US_STATE_FIPS
+    assert len(US_STATE_FIPS) == 51
+    assert US_STATE_FIPS["District of Columbia"] == 11
+    assert len(set(US_STATE_FIPS.values())) == 51            # ids unique
+    assert all(1 <= v <= 56 for v in US_STATE_FIPS.values())
+
+
+def test_state_choropleth_spec():
+    import pandas as pd
+    from fiscal_model import charts
+    df = pd.DataFrame({"state": list(charts.US_STATE_FIPS), "net_B": range(51),
+                       "shortfall_B": range(51)})
+    ch = charts.state_choropleth(df, "net_B", "Net ($B)",
+                                 tooltip=[("net_B", "Net", ",.1f"), ("shortfall_B", "Short", ",.1f")],
+                                 neg_color="#4e937a", pos_color="#b3554d")
+    spec = ch.to_dict()
+    assert spec["projection"]["type"] == "albersUsa"
+    lookup = [t for t in spec["transform"] if "lookup" in t][0]
+    assert lookup["lookup"] == "id" and lookup["from"]["key"] == "fips"
+    assert set(lookup["from"]["fields"]) >= {"state", "net_B", "shortfall_B"}
+    assert any("isValid" in str(t.get("filter", "")) for t in spec["transform"])
+    dom = spec["encoding"]["color"]["scale"]["domain"]
+    assert len(dom) == 3 and dom[0] == -dom[2] and dom[1] == 0   # symmetric diverging
+    assert len(spec["encoding"]["tooltip"]) == 3                  # state + 2 fields

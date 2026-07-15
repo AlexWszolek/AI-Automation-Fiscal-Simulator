@@ -177,7 +177,8 @@ def test_state_table(data, deltas, rung):
     tbl = m.state_table
     assert len(tbl) == 51 and list(tbl.columns) == [
         "state", "net_B", "shortfall_B", "rate_hike_B", "spending_cut_B",
-        "implied_rate_hike_pct", "at_cap"]
+        "implied_rate_hike_pct", "taxable_base_B", "at_cap"]
+    assert (tbl["taxable_base_B"] > 0).all()
     # the table's shortfall total is the final-year state_gap_B column (same close object)
     assert np.isclose(tbl["shortfall_B"].sum(), res["state_gap_B"].iloc[-1], rtol=1e-9)
     assert (tbl["shortfall_B"] >= 0).all()
