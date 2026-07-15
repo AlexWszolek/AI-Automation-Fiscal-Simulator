@@ -77,6 +77,50 @@ def overlay_recovery_bars(matrix: pd.DataFrame, width: int = 620) -> alt.Chart:
     ).properties(width=width, height=70)
 
 
+# Full state names (the model's `uniq_states` spelling, incl. DC) -> census FIPS ids — the join
+# key into the us-10m TopoJSON's `states` geometries.
+US_STATE_FIPS = {
+    "Alabama": 1, "Alaska": 2, "Arizona": 4, "Arkansas": 5, "California": 6, "Colorado": 8,
+    "Connecticut": 9, "Delaware": 10, "District of Columbia": 11, "Florida": 12, "Georgia": 13,
+    "Hawaii": 15, "Idaho": 16, "Illinois": 17, "Indiana": 18, "Iowa": 19, "Kansas": 20,
+    "Kentucky": 21, "Louisiana": 22, "Maine": 23, "Maryland": 24, "Massachusetts": 25,
+    "Michigan": 26, "Minnesota": 27, "Mississippi": 28, "Missouri": 29, "Montana": 30,
+    "Nebraska": 31, "Nevada": 32, "New Hampshire": 33, "New Jersey": 34, "New Mexico": 35,
+    "New York": 36, "North Carolina": 37, "North Dakota": 38, "Ohio": 39, "Oklahoma": 40,
+    "Oregon": 41, "Pennsylvania": 42, "Rhode Island": 44, "South Carolina": 45,
+    "South Dakota": 46, "Tennessee": 47, "Texas": 48, "Utah": 49, "Vermont": 50, "Virginia": 51,
+    "Washington": 53, "West Virginia": 54, "Wisconsin": 55, "Wyoming": 56,
+}
+_US_10M = "https://cdn.jsdelivr.net/npm/vega-datasets@v3.2.1/data/us-10m.json"
+
+
+def state_choropleth(df: pd.DataFrame, value_col: str, value_title: str,
+                     tooltip: list, neg_color: str, pos_color: str,
+                     height: int = 420) -> alt.Chart:
+    """US state map colored by a SIGNED per-state column (symmetric diverging scale around 0).
+
+    `df` needs a full-name `state` column plus `value_col` and every `(column, title, format)`
+    triple in `tooltip`. Shapes are fetched client-side from the pinned jsDelivr TopoJSON; the
+    isValid filter drops geometries with no data row (Puerto Rico 72, Virgin Islands 78)."""
+    src = df.assign(fips=df["state"].map(US_STATE_FIPS))
+    assert not src["fips"].isna().any(), "state name missing from US_STATE_FIPS"
+    fields = ["state", value_col] + [c for c, _t, _f in tooltip if c not in ("state", value_col)]
+    vmax = float(src[value_col].abs().max()) or 1.0
+    states = alt.topo_feature(_US_10M, "states")
+    return (alt.Chart(states).mark_geoshape(stroke="white", strokeWidth=0.6)
+            .transform_lookup(lookup="id", from_=alt.LookupData(src, key="fips", fields=fields))
+            .transform_filter(f"isValid(datum['{value_col}'])")
+            .encode(
+                color=alt.Color(f"{value_col}:Q", title=value_title,
+                                scale=alt.Scale(domain=[-vmax, 0, vmax],
+                                                range=[neg_color, "#f2f2f0", pos_color]),
+                                legend=alt.Legend(orient="bottom", gradientLength=280)),
+                tooltip=[alt.Tooltip("state:N", title="State")]
+                        + [alt.Tooltip(f"{c}:Q", title=t, format=f) for c, t, f in tooltip])
+            .project("albersUsa")
+            .properties(height=height))
+
+
 def regime_scatter(df: pd.DataFrame, x: str, y: str, x_title: str, y_title: str,
                    regime_field: str = "regime", order: list | None = None,
                    colors: list | None = None, width: int = 620, height: int = 380) -> alt.Chart:

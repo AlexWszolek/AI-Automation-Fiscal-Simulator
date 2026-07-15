@@ -87,7 +87,7 @@ fiscal_delta(worker) =
 - [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
 - [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
 - [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
-- [x] **Website** — `app/streamlit_app.py`: light report-style theme, static labeled charts with captions, collapsible lever groups with per-lever help, two headline rows (jobs lost, cumulative income-tax loss, GDP effect, …), a state section (shortfall-before-response + hardest-hit table), and tax-regime dials (income/capital/consumption ×)
+- [x] **Website** — `app/streamlit_app.py`, built for AI-safety policy audiences: every headline metric carries a real-world grounding line (CBO baseline, defense budget, Great-Recession jobs — `fiscal_model/grounding.py`); an always-on sensitivity tornado (presets precomputed in `data/app_precomputed/`, modified settings auto-recompute with a debounce); a state choropleth with a selectable budget response; live policy-response readouts ("recovers $X of the gap"); fiscal summary in $B or % of CBO-projected revenue; shareable URLs; and a copy-ready memo paragraph
 - [x] **Scenario presets** — `fiscal_model/presets.py`: 7 literature-anchored world states (Acemoglu → AI-2027) + 4 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
 - [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 7 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.9)
 
@@ -114,6 +114,12 @@ params), one idempotent command rebuilds everything (downloads ~251 MB of ACS PU
 ```bash
 bash scripts/bootstrap.sh
 ```
+
+Two more committed data artifacts the app reads: `data/raw/cbo_baseline_2026.csv` (CBO Feb-2026
+baseline, extracted by `scripts/extract_cbo_baseline.py` from the published workbook) and
+`data/app_precomputed/mc_tornado.json` (the presets' sensitivity tornados, N=200 seed 0 —
+regenerate with `scripts/precompute_app_mc.py` after ANY preset/lever change; a freshness test
+fails the suite if it goes stale).
 
 **Deploy (Streamlit Community Cloud):** point the app at `app/streamlit_app.py`, set Python
 to 3.12 in the advanced settings, done — the runtime artifacts and `requirements.txt` are all

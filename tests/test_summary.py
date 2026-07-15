@@ -31,7 +31,8 @@ def run(data):
 
 
 def _years(df):
-    return [c for c in df.columns if c.startswith("Year ")]
+    import re
+    return [c for c in df.columns if c.startswith("Year ") or re.fullmatch(r"\d{4}", str(c))]
 
 
 def test_tax_view_reconciles_and_totals(run):
@@ -65,23 +66,42 @@ def test_channel_view_reconciles(run):
     assert (df["kind"] == "memo").sum() >= 2
 
 
-def test_pct_baseline_units(run):
+def test_pct_cbo_revenue_units(run):
+    from fiscal_model.grounding import load_cbo_baseline
     res, ledger = run
-    busd = summary.build_fiscal_summary(res, ledger, "tax", "busd")
-    pct = summary.build_fiscal_summary(res, ledger, "tax", "pct_baseline")
+    cbo = load_cbo_baseline()
+    busd = summary.build_fiscal_summary(res, ledger, "tax", "busd", start_year=2026)
+    pct = summary.build_fiscal_summary(res, ledger, "tax", "pct_cbo_revenue", start_year=2026)
     y = _years(busd)
-    # a federal flow row: pct == busd / fed_revenue0 × 100
-    row_b = busd[busd["label"] == "Income tax"][y].iloc[0].to_numpy()
-    row_p = pct[pct["label"] == "Income tax"][y].iloc[0].to_numpy()
-    assert np.allclose(row_p, row_b / ledger.fed_revenue0 * 100.0)
-    # a state row divides by the state baseline
-    srow_b = busd[busd["label"] == "State income tax"][y].iloc[0].to_numpy()
-    srow_p = pct[pct["label"] == "State income tax"][y].iloc[0].to_numpy()
-    assert np.allclose(srow_p, srow_b / ledger.state_revenue0 * 100.0)
+    assert y and y[0] == "2026"                                # calendar columns
+    rev = np.array([cbo.revenue(int(c)) for c in y])
+    # EVERY non-passthrough row divides by that calendar year's projected federal revenue
+    for label in ("Income tax", "State income tax"):
+        row_b = busd[busd["label"] == label][y].iloc[0].to_numpy()
+        row_p = pct[pct["label"] == label][y].iloc[0].to_numpy()
+        assert np.allclose(row_p, row_b / rev * 100.0), label
     # %-GDP passthrough rows are untouched
     g_b = busd[busd["label"] == "Deficit (% of GDP)"][y].iloc[0].to_numpy()
     g_p = pct[pct["label"] == "Deficit (% of GDP)"][y].iloc[0].to_numpy()
     assert np.array_equal(g_b, g_p)
+    # Total under % = cumulative flow / cumulative projected revenue (never a sum of percents)
+    row_b = busd[busd["label"] == "Income tax"][y].iloc[0].to_numpy()
+    tot_p = float(pct[pct["label"] == "Income tax"]["Total"].iloc[0])
+    assert np.isclose(tot_p, row_b.sum() / rev.sum() * 100.0)
+
+
+def test_pct_cbo_extrapolates_past_2036(run):
+    res, ledger = run
+    pct = summary.build_fiscal_summary(res, ledger, "tax", "pct_cbo_revenue", start_year=2030)
+    y = _years(pct)
+    assert y[-1] == str(2030 + len(y) - 1) and int(y[-1]) > 2036   # horizon crosses the CBO window
+    assert np.isfinite(pct[pct["kind"] == "flow"][y].to_numpy(float)).all()
+
+
+def test_legacy_year_labels_default(run):
+    res, ledger = run
+    df = summary.build_fiscal_summary(res, ledger, "tax", "busd")     # no start_year
+    assert [c for c in df.columns if c.startswith("Year ")]           # report pipeline contract
 
 
 def test_sign_convention(run):
@@ -95,6 +115,6 @@ def test_sign_convention(run):
 
 def test_csv_roundtrip(run):
     res, ledger = run
-    df = summary.build_fiscal_summary(res, ledger, "channel", "pct_baseline")
+    df = summary.build_fiscal_summary(res, ledger, "channel", "pct_cbo_revenue", start_year=2026)
     back = pd.read_csv(pd.io.common.BytesIO(summary.to_csv_bytes(df)))
     assert back.shape == df.shape and list(back.columns) == list(df.columns)

@@ -182,3 +182,11 @@ def test_overlays_run_clean_on_a_preset(preset_runs):
     assert_all_invariants(res, v2p, baseline_M)
     assert (res["automation_tax_B"] > 0).any()
     assert (res["ubi_outlay_B"] > 0).any() and (res["ubi_recapture_B"] > 0).any()
+
+
+def test_start_year():
+    for p in ALL:
+        assert 2026 <= p.start_year <= 2030, p.key
+    assert presets.PRESETS["ai2040-plan-a"].start_year == 2027
+    assert presets.PRESETS["ai2040-plan-d"].start_year == 2027
+    assert presets.PRESETS["acemoglu-modest"].start_year == 2026

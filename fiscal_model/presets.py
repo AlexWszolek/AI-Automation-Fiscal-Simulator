@@ -36,6 +36,9 @@ class Preset:
     # would silently flat-extend/truncate — dynamics._adoption clamps indices without error):
     # linear start→end over years 0..reach, flat at end after. None = linear over the whole horizon.
     adoption_reach_year: Optional[int] = None
+    # Calendar year of period 0 — maps model years onto real years for the app's summary
+    # columns, chart axes, and CBO-projection denominators. Most presets start "now".
+    start_year: int = 2026
 
 
 def build_adoption_path(preset: Preset, n_periods: int) -> list:
@@ -302,7 +305,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
         blurb="AI Futures' managed transition: US-China consortium slows the takeoff; 95% of tasks "
               "automatable by 2035-36; employment 62%→12% over 2032-2040. World state only — their "
               "permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
-        adoption_start=0.05, adoption_end=1.0, n_periods=14, adoption_reach_year=9,
+        adoption_start=0.05, adoption_end=1.0, n_periods=14, adoption_reach_year=9, start_year=2027,
         overrides=dict(cognitive_feasibility=0.95, physical_feasibility=0.95, robotics_lag=9.0,
                        reabsorption_rate=0.15, reemployment_haircut=0.30, lfp_exit_rate=0.05,
                        retained_profit_share=0.55, price_reduction_share=0.30, auto_cost=0.30,
@@ -350,7 +353,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
         blurb="AI Futures' no-deal branch: full AI R&D automation 2030, superintelligence early "
               "2031, integration 'as fast as markets allow' — their AI 2027 Race ending on a 2030 "
               "fuse. 10 years (2027-2036).",
-        adoption_start=0.05, adoption_end=1.0, n_periods=10, adoption_reach_year=7,
+        adoption_start=0.05, adoption_end=1.0, n_periods=10, adoption_reach_year=7, start_year=2027,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.95, robotics_lag=6.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
                        retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.30,

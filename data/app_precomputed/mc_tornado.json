@@ -1,0 +1,1191 @@
+{
+ "n": 200,
+ "spread": 0.15,
+ "seed": 0,
+ "entries": [
+  {
+   "key": "custom",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.7, physical_feasibility=0.2, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.1), np.float64(0.15555555555555556), np.float64(0.2111111111111111), np.float64(0.26666666666666666), np.float64(0.3222222222222222), np.float64(0.37777777777777777), np.float64(0.43333333333333335), np.float64(0.4888888888888888), np.float64(0.5444444444444444), np.float64(0.6)], robotics_cognitive_coupling=0.0, robotics_lag=4.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.6, price_reduction_share=0.2, survivor_gains_share=0.2, auto_cost=0.1, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.0, reabsorption_rung=1, reemployment_haircut=0.3, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.03, survivor_elasticity=-0.15, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.5, price_passthrough=0.3, productivity_passthrough=0.3, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.04, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.6407
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": 0.625
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.2158
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.1645
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.1451
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.1377
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.1278
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.126
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.1165
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.1132
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": -0.1009
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": 0.0969
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": -0.0779
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.0731
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.0567
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": -0.0565
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.0499
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": 0.0379
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0318
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.0289
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.0224
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": -0.0184
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": -0.0166
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.0061
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.0046
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": -0.0034
+    }
+   ],
+   "p10": 518.7,
+   "p50": 635.9,
+   "p90": 796.8,
+   "base_final": 664.3
+  },
+  {
+   "key": "acemoglu-modest",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.2, physical_feasibility=0.05, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.02), np.float64(0.043333333333333335), np.float64(0.06666666666666667), np.float64(0.09000000000000001), np.float64(0.11333333333333334), np.float64(0.13666666666666666), np.float64(0.16), np.float64(0.18333333333333332), np.float64(0.20666666666666667), np.float64(0.23)], robotics_cognitive_coupling=0.0, robotics_lag=8.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.6, price_reduction_share=0.35, survivor_gains_share=0.050000000000000044, auto_cost=0.05, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.5, reabsorption_rung=1, reemployment_haircut=0.13, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.03, survivor_elasticity=0.0, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.3, price_passthrough=0.3, productivity_passthrough=0.15, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.04, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.6563
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.587
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.5568
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.206
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.2001
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": -0.1556
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1465
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.1409
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": -0.1353
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.1244
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": 0.1076
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": -0.1071
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.1038
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": 0.0981
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.0893
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.0736
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.0535
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.0505
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": -0.0493
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": -0.0487
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": 0.0386
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.0237
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.021
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.0059
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": -0.0048
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": 0.0033
+    }
+   ],
+   "p10": -17.1,
+   "p50": -9.9,
+   "p90": -3.0,
+   "base_final": -11.5
+  },
+  {
+   "key": "brynjolfsson-augment",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.3, physical_feasibility=0.1, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.02), np.float64(0.05111111111111111), np.float64(0.08222222222222221), np.float64(0.11333333333333333), np.float64(0.14444444444444443), np.float64(0.17555555555555552), np.float64(0.20666666666666664), np.float64(0.23777777777777773), np.float64(0.26888888888888884), np.float64(0.3)], robotics_cognitive_coupling=0.0, robotics_lag=6.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.55, price_reduction_share=0.25, survivor_gains_share=0.19999999999999996, auto_cost=0.1, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.6, reabsorption_rung=1, reemployment_haircut=0.1, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.02, survivor_elasticity=0.1, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.3, price_passthrough=0.3, productivity_passthrough=0.5, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.045, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "adoption_end",
+     "spearman": -0.6499
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": -0.4729
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3418
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.286
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.2348
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1865
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.181
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": -0.1717
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": -0.1421
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.1389
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": -0.1253
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": 0.1053
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.1
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": -0.0888
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.0767
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": 0.0641
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.0607
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.0598
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.0526
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": -0.048
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": 0.0389
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0384
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": -0.0372
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": -0.0358
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.0289
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0239
+    },
+    {
+     "lever": "mpc",
+     "spearman": -0.0147
+    }
+   ],
+   "p10": -91.1,
+   "p50": -67.5,
+   "p90": -53.4,
+   "base_final": -72.2
+  },
+  {
+   "key": "windfall-medium",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.55, physical_feasibility=0.2, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.05), np.float64(0.1), np.float64(0.15000000000000002), np.float64(0.2), np.float64(0.25), np.float64(0.3), np.float64(0.35000000000000003), np.float64(0.4), np.float64(0.45), np.float64(0.5)], robotics_cognitive_coupling=0.0, robotics_lag=5.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.5, price_reduction_share=0.5, survivor_gains_share=0.0, auto_cost=0.1, offshore_share=0.0, compute_effective_rate=0.27, ui_weeks=26, reabsorption_rate=0.3, reabsorption_rung=1, reemployment_haircut=0.3, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.03, survivor_elasticity=-0.15, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.5, price_passthrough=0.5, productivity_passthrough=0.3, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.04, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "adoption_end",
+     "spearman": 0.5019
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.4213
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.3927
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.3927
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3652
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.3421
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": -0.2544
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.1933
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.1617
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.133
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": 0.1205
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.1051
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1009
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0679
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": 0.0487
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.0419
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": -0.0413
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0371
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": -0.0365
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.0345
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": -0.031
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.0255
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": -0.0255
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0173
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.0155
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": -0.0122
+    }
+   ],
+   "p10": 137.0,
+   "p50": 193.1,
+   "p90": 286.1,
+   "base_final": 208.0
+  },
+  {
+   "key": "china-shock",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.3, physical_feasibility=0.2, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.05), np.float64(0.07500000000000001), np.float64(0.1), np.float64(0.125), np.float64(0.15000000000000002), np.float64(0.175), np.float64(0.2), np.float64(0.22500000000000003), np.float64(0.25), np.float64(0.275), np.float64(0.3), np.float64(0.325), np.float64(0.35000000000000003), np.float64(0.375), np.float64(0.4)], robotics_cognitive_coupling=0.0, robotics_lag=4.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.7, price_reduction_share=0.2, survivor_gains_share=0.10000000000000003, auto_cost=0.1, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.075, reabsorption_rung=1, reemployment_haircut=0.25, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.1, survivor_elasticity=-0.3, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.5, price_passthrough=0.3, productivity_passthrough=0.2, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.04, ssdi_annual=18000.0, baseline_growth_rate=0.035, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=15)",
+   "tornado": [
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.4584
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": 0.4118
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.3621
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.3509
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.3204
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.2103
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": 0.1546
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.1064
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1063
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.1013
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.0944
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": 0.0894
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": 0.0838
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0723
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": 0.0719
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.0687
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.0516
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.0451
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.0444
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.0434
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.0387
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0317
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0294
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": -0.0263
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.0175
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.0116
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": -0.003
+    }
+   ],
+   "p10": 388.8,
+   "p50": 527.2,
+   "p90": 793.7,
+   "base_final": 624.4
+  },
+  {
+   "key": "agi-20y",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.05), np.float64(0.1), np.float64(0.15), np.float64(0.2), np.float64(0.25), np.float64(0.3), np.float64(0.35), np.float64(0.39999999999999997), np.float64(0.44999999999999996), np.float64(0.49999999999999994), np.float64(0.5499999999999999), np.float64(0.6), np.float64(0.65), np.float64(0.7), np.float64(0.75), np.float64(0.7999999999999999), np.float64(0.85), np.float64(0.9), np.float64(0.95), np.float64(1.0)], robotics_cognitive_coupling=0.0, robotics_lag=10.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.8, price_reduction_share=0.15, survivor_gains_share=0.04999999999999996, auto_cost=0.15, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.05, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.05, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.0, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.06, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.5, state_rate_hike_cap=0.5, interest_rate=0.04, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=20)",
+   "tornado": [
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.4372
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.4238
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.4045
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.4035
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3389
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.268
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.1929
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.1473
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.1457
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.1456
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.1433
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.1175
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.1119
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.1103
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.1062
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": 0.0585
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": 0.0536
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.04
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0362
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.034
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": -0.0254
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0234
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.0231
+    },
+    {
+     "lever": "state_cut_share",
+     "spearman": -0.0219
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": -0.0217
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": -0.0122
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0116
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": 0.0104
+    }
+   ],
+   "p10": 1677.6,
+   "p50": 1973.0,
+   "p90": 2295.7,
+   "base_final": 1989.7
+  },
+  {
+   "key": "agi-5y",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.2), np.float64(0.36), np.float64(0.52), np.float64(0.6799999999999999), np.float64(0.8400000000000001), np.float64(1.0), 1.0, 1.0, 1.0, 1.0], robotics_cognitive_coupling=0.0, robotics_lag=2.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.8, price_reduction_share=0.15, survivor_gains_share=0.04999999999999996, auto_cost=0.2, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.05, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.1, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.5, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.5, state_rate_hike_cap=0.5, interest_rate=0.04, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.6155
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.4897
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3529
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.3368
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.2992
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": -0.209
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.15
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.1416
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.1346
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.1283
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.0994
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0857
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.0851
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.0766
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.0677
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.0672
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.0628
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0625
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": 0.0565
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": 0.0551
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": -0.0483
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": 0.0477
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": -0.0374
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.0192
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": 0.0164
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": 0.015
+    },
+    {
+     "lever": "state_cut_share",
+     "spearman": 0.0145
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0068
+    }
+   ],
+   "p10": 2483.9,
+   "p50": 2759.3,
+   "p90": 3128.1,
+   "base_final": 2750.7
+  },
+  {
+   "key": "ai-2027",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=0.9, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.1), np.float64(0.2285714285714286), np.float64(0.3571428571428572), np.float64(0.48571428571428577), np.float64(0.6142857142857143), np.float64(0.7428571428571429), np.float64(0.8714285714285716), np.float64(1.0)], robotics_cognitive_coupling=0.0, robotics_lag=3.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.7, price_reduction_share=0.2, survivor_gains_share=0.10000000000000003, auto_cost=0.3, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.1, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.05, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.2, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.04, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=8)",
+   "tornado": [
+    {
+     "lever": "adoption_end",
+     "spearman": 0.3229
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3158
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.2962
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.2896
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.2772
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.2513
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.2486
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.2165
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.2111
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.2073
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.2016
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.1955
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.1546
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1465
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": 0.1277
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.1194
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": 0.1048
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": 0.0854
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0732
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": 0.0715
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": 0.0534
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.0502
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.048
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": 0.0336
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.017
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0076
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": 0.0059
+    }
+   ],
+   "p10": 1852.5,
+   "p50": 2101.6,
+   "p90": 2313.2,
+   "base_final": 2226.3
+  },
+  {
+   "key": "ai2040-plan-a",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.95, physical_feasibility=0.95, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.05), np.float64(0.15555555555555556), np.float64(0.2611111111111111), np.float64(0.36666666666666664), np.float64(0.4722222222222222), np.float64(0.5777777777777778), np.float64(0.6833333333333333), np.float64(0.788888888888889), np.float64(0.8944444444444445), np.float64(1.0), 1.0, 1.0, 1.0, 1.0], robotics_cognitive_coupling=0.0, robotics_lag=9.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.55, price_reduction_share=0.3, survivor_gains_share=0.14999999999999997, auto_cost=0.3, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.15, reabsorption_rung=1, reemployment_haircut=0.3, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.05, survivor_elasticity=0.1, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.0, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.5, state_rate_hike_cap=0.5, interest_rate=0.04, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=14)",
+   "tornado": [
+    {
+     "lever": "adoption_end",
+     "spearman": 0.4654
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3964
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.3503
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.3313
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.2655
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.2501
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.23
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.2283
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.228
+    },
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.2087
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.2023
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.1857
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.1673
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.1373
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.0926
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.0734
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": -0.0711
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": -0.069
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.0652
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": -0.0488
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.0442
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0336
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": -0.0325
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": -0.0317
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": -0.0309
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": 0.0267
+    },
+    {
+     "lever": "state_cut_share",
+     "spearman": 0.0252
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0103
+    }
+   ],
+   "p10": 697.9,
+   "p50": 1066.4,
+   "p90": 1591.2,
+   "base_final": 1464.0
+  },
+  {
+   "key": "ai2040-plan-d",
+   "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=0.95, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.05), np.float64(0.18571428571428572), np.float64(0.3214285714285714), np.float64(0.45714285714285713), np.float64(0.5928571428571429), np.float64(0.7285714285714285), np.float64(0.8642857142857143), np.float64(1.0), 1.0, 1.0], robotics_cognitive_coupling=0.0, robotics_lag=6.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.8, price_reduction_share=0.15, survivor_gains_share=0.04999999999999996, auto_cost=0.3, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.05, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, lfp_exit_rate=0.1, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.5, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.25, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.5, state_rate_hike_cap=0.5, interest_rate=0.04, ubi_annual=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+   "tornado": [
+    {
+     "lever": "ssdi_annual",
+     "spearman": 0.5535
+    },
+    {
+     "lever": "lfp_exit_rate",
+     "spearman": 0.4477
+    },
+    {
+     "lever": "demand_multiplier",
+     "spearman": 0.4002
+    },
+    {
+     "lever": "mpc",
+     "spearman": 0.3705
+    },
+    {
+     "lever": "reabsorption_rate",
+     "spearman": -0.3334
+    },
+    {
+     "lever": "consumption_stickiness",
+     "spearman": 0.1896
+    },
+    {
+     "lever": "auto_cost",
+     "spearman": 0.1812
+    },
+    {
+     "lever": "cognitive_feasibility",
+     "spearman": 0.1356
+    },
+    {
+     "lever": "state_rate_hike_cap",
+     "spearman": 0.1329
+    },
+    {
+     "lever": "attrition_rate",
+     "spearman": -0.1319
+    },
+    {
+     "lever": "physical_feasibility",
+     "spearman": 0.1131
+    },
+    {
+     "lever": "baseline_growth_rate",
+     "spearman": -0.1005
+    },
+    {
+     "lever": "survivor_spillover_to_profit",
+     "spearman": 0.0869
+    },
+    {
+     "lever": "retained_profit_share",
+     "spearman": -0.0763
+    },
+    {
+     "lever": "adoption_end",
+     "spearman": -0.0739
+    },
+    {
+     "lever": "price_reduction_share",
+     "spearman": 0.0735
+    },
+    {
+     "lever": "survivor_gains_share",
+     "spearman": 0.05
+    },
+    {
+     "lever": "price_passthrough",
+     "spearman": -0.0499
+    },
+    {
+     "lever": "robotics_lag",
+     "spearman": 0.0478
+    },
+    {
+     "lever": "ubi_recapture_rate",
+     "spearman": -0.044
+    },
+    {
+     "lever": "reemployment_haircut",
+     "spearman": 0.0404
+    },
+    {
+     "lever": "survivor_raise_ceiling",
+     "spearman": 0.0338
+    },
+    {
+     "lever": "survivor_elasticity",
+     "spearman": 0.0287
+    },
+    {
+     "lever": "ui_weeks",
+     "spearman": -0.0194
+    },
+    {
+     "lever": "state_cut_share",
+     "spearman": -0.0107
+    },
+    {
+     "lever": "interest_rate",
+     "spearman": -0.0074
+    },
+    {
+     "lever": "productivity_passthrough",
+     "spearman": 0.0039
+    },
+    {
+     "lever": "compute_effective_rate",
+     "spearman": 0.0004
+    }
+   ],
+   "p10": 2578.0,
+   "p50": 2878.1,
+   "p90": 3188.8,
+   "base_final": 2880.4
+  }
+ ]
+}
