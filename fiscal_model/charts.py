@@ -96,7 +96,8 @@ _US_10M = "https://cdn.jsdelivr.net/npm/vega-datasets@v3.2.1/data/us-10m.json"
 
 def state_choropleth(df: pd.DataFrame, value_col: str, value_title: str,
                      tooltip: list, neg_color: str, pos_color: str,
-                     height: int = 420, scale: alt.Scale | None = None) -> alt.Chart:
+                     height: int = 420, scale: alt.Scale | None = None,
+                     gain_color: str | None = None) -> alt.Chart:
     """US state map colored by a per-state column. Default: a symmetric diverging scale around 0
     for a SIGNED column; pass `scale` (e.g. a binned threshold scale) to override.
 
@@ -110,14 +111,19 @@ def state_choropleth(df: pd.DataFrame, value_col: str, value_title: str,
         vmax = float(src[value_col].abs().max()) or 1.0
         scale = alt.Scale(domain=[-vmax, 0, vmax], range=[neg_color, "#f2f2f0", pos_color])
     states = alt.topo_feature(_US_10M, "states")
+    color_enc = alt.Color(f"{value_col}:Q", title=value_title, scale=scale,
+                          # labelLimit=0: never truncate the legend title/labels
+                          legend=alt.Legend(orient="bottom", gradientLength=280,
+                                            labelLimit=0, titleLimit=0))
+    if gain_color is not None:
+        # winner states (value < 0) take a flat gain color OUTSIDE the loss gradient — a
+        # continuous/log scale over losses cannot also represent gains
+        color_enc = alt.condition(f"datum['{value_col}'] < 0", alt.value(gain_color), color_enc)
     return (alt.Chart(states).mark_geoshape(stroke="white", strokeWidth=0.6)
             .transform_lookup(lookup="id", from_=alt.LookupData(src, key="fips", fields=fields))
             .transform_filter(f"isValid(datum['{value_col}'])")
             .encode(
-                color=alt.Color(f"{value_col}:Q", title=value_title, scale=scale,
-                                # labelLimit=0: never truncate the legend title/labels
-                                legend=alt.Legend(orient="bottom", gradientLength=280,
-                                                  labelLimit=0, titleLimit=0)),
+                color=color_enc,
                 tooltip=[alt.Tooltip("state:N", title="State")]
                         + [alt.Tooltip(f"{c}:Q", title=t, format=f) for c, t, f in tooltip])
             .project("albersUsa")

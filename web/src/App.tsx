@@ -1,16 +1,23 @@
-// The page: lever rail (presets, responses, groups) + the content column (intro, metrics,
-// charts, tornado). Section order, chart set, and copy are the Streamlit app's; layout and
-// type are DESIGN.md. States/summary/share/about land in Phase 4.
+// The page: lever rail (presets, responses, groups, share, about) + the content column
+// (intro, metrics, charts, states, fiscal summary, tornado). Section order, chart set, and
+// copy are the Streamlit app's; layout and type are DESIGN.md. The address bar always encodes
+// the current configuration through the golden-pinned codec — old shared links resolve
+// identically, with the API down.
+import { useEffect, useMemo } from 'react'
 import copy from './content/copy.json'
 import { timeSeries } from './charts/timeSeries'
+import { AboutSection, ShareBox } from './components/AboutModal'
 import { ChartPanel } from './components/ChartPanel'
 import { LeverPanel } from './components/LeverPanel'
 import { MetricGrid } from './components/MetricGrid'
 import { OverlayPicker, PresetPicker } from './components/Pickers'
+import { StatesSection } from './components/StatesSection'
+import { SummaryTable } from './components/SummaryTable'
 import { TornadoSection } from './components/TornadoSection'
+import { configFromLocation, queryStringFor } from './lib/codec'
 import { effectiveLevers } from './lib/config'
 import { thousands } from './lib/format'
-import { useScenario } from './state/useScenario'
+import { INITIAL, useScenario } from './state/useScenario'
 import { useScenarioData } from './state/useScenarioData'
 
 const CAPTIONS = copy.captions as string[]
@@ -21,13 +28,28 @@ const WAGE_CAPTION =
   'up; labor-market slack (substitution) pulls it down.'
 const WAGE_CAPTION_REAB = ' The re-employed line is the Baumol-vs-crowding tug of war on service wages.'
 
+function initialConfig() {
+  const parsed = configFromLocation(location.search)
+  // a bare URL opens on the default scenario; any param wins
+  if (!location.search || (parsed.preset === null && parsed.overlays.length === 0
+      && Object.keys(parsed.levers).length === 0 && !location.search.includes('preset')))
+    return location.search.length > 1 ? parsed : INITIAL
+  return parsed
+}
+
 export default function App() {
-  const [cfg, dispatch] = useScenario()
+  const [cfg, dispatch] = useScenario(initialConfig())
   const { payload, loading, apiDown } = useScenarioData(cfg)
   const levers = effectiveLevers(cfg)
   const reabDynamics = Number(levers.reab_baumol) > 0 || Number(levers.reab_crowd) > 0
   const startYear = payload?.config.start_year ?? 2026
   const rows = payload?.rows ?? []
+  const qs = useMemo(() => queryStringFor(cfg), [cfg])
+
+  // the address bar always encodes the current configuration (replaceState never reloads)
+  useEffect(() => {
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname)
+  }, [qs])
 
   return (
     <div className="shell">
@@ -35,6 +57,8 @@ export default function App() {
         <PresetPicker cfg={cfg} dispatch={dispatch} />
         <OverlayPicker cfg={cfg} payload={payload} dispatch={dispatch} />
         <LeverPanel cfg={cfg} dispatch={dispatch} />
+        <ShareBox queryString={qs} />
+        <AboutSection />
       </aside>
 
       <main className="content">
@@ -107,6 +131,8 @@ export default function App() {
           </div>
         )}
 
+        {payload && <StatesSection cfg={cfg} payload={payload} dispatch={dispatch} />}
+        {payload && <SummaryTable payload={payload} />}
         {payload && <TornadoSection cfg={cfg} />}
         {loading && !payload && <p className="caption col">Loading the scenario…</p>}
       </main>

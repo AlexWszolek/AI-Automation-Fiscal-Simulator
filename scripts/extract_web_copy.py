@@ -124,27 +124,40 @@ def extract() -> dict:
             if t:
                 captions.append(t)
 
-    # module-level prose constants: intro markdown, About body, Learn-more markdown
+    # module-level prose constants: intro markdown, About body, Learn-more markdown, and the
+    # section prose captured by stable prefixes (all byte-for-byte from the app source)
+    PROSE_PREFIXES = {
+        "intro": "How to use this:",
+        "about": "A bottom-up accounting model",
+        "states_intro": "Unlike the federal government",
+        "map_caption": "Final-year loss as a share",
+        "table_caption": "A state 'hits the cap'",
+        "summary_signs": "Revenue lines are signed revenue",
+        "detail_caption": "Every column the model produces",
+        "view_help": "The two summary views group",
+        "units_cbo_help": "The CBO view divides each year",
+        "share_caption": "Anyone opening this link sees",
+    }
+    prose: dict[str, str] = {}
     intro = about = learn_more = None
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign) and len(node.targets) == 1 \
                 and isinstance(node.targets[0], ast.Name) \
                 and node.targets[0].id == "_LEARN_MORE_MD":
             learn_more = const_str(node.value)
-        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                and node.func.attr == "markdown" and node.args):
-            t = const_str(node.args[0])
-            if t and t.startswith("How to use this:"):
-                intro = t
-            if t and t.startswith("A bottom-up accounting model"):
-                about = t
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            for key, prefix in PROSE_PREFIXES.items():
+                if node.value.startswith(prefix) and key not in prose:
+                    prose[key] = node.value
+    intro = prose.get("intro")
+    about = prose.get("about")
 
     missing = set(UI_GRID) - set(levers)
     # widgets rendered in the main area (state response trio) are still in VARMAP; anything
     # truly missing means the app changed shape — fail loud
     assert not missing, f"levers missing from the extraction: {sorted(missing)}"
     return {"levers": levers, "groups": groups, "metrics": metrics,
-            "subheaders": subheaders, "captions": captions,
+            "subheaders": subheaders, "captions": captions, "prose": prose,
             "intro": intro, "about": about, "learn_more": learn_more}
 
 

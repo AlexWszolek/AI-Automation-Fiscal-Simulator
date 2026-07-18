@@ -782,12 +782,14 @@ with states_rest:
     _sv1, _sv2 = st.columns([1, 3])
     state_view = _sv1.radio("View", ["Map", "Table"], horizontal=True, label_visibility="collapsed")
     if state_view == "Map":
-        # binned threshold scale on the state's OWN revenue at stake — a small state losing
-        # 8% of its receipts reads dark even though its $B loss is a rounding error next to
-        # California's. Below 0 (a net gain) is the single green bin.
-        _loss_scale = alt.Scale(type="threshold", domain=[0.0, 1.0, 2.5, 5.0, 10.0],
-                                range=["#5b7c99", "#fbe6df", "#f2b8a4", "#e08165",
-                                       "#c65540", "#8c2f28"])
+        # CONTINUOUS symlog gradient on the state's OWN revenue at stake — a small state
+        # losing 8% reads dark even though its $B loss is a rounding error next to
+        # California's, and the log-like ramp keeps 20% vs 50% vs 100% distinguishable
+        # instead of saturating (a linear or binned scale flattens everything past its top
+        # bin). Winner states (net gain) take the flat slate-blue via gain_color.
+        _dmax = max(float(_stbl["revenue_loss_pct"].max()), 1.0)
+        _loss_scale = alt.Scale(type="symlog", constant=2, domain=[0.0, _dmax],
+                                range=["#fbe6df", "#8c2f28"], clamp=True)
         st.altair_chart(charts_mod.state_choropleth(
             _stbl, "revenue_loss_pct", "Revenue lost (% of the state's own tax receipts)",
             tooltip=[("revenue_loss_pct", "Revenue lost (% of state receipts)", ",.1f"),
@@ -796,13 +798,13 @@ with states_rest:
                      ("rate_hike_B", "Closed by rate hikes ($B)", ",.1f"),
                      ("spending_cut_B", "Closed by spending cuts ($B)", ",.1f"),
                      ("implied_rate_hike_pct", "Implied rate hike (%)", ",.1f")],
-            neg_color=POS, pos_color=NEG, scale=_loss_scale),
+            neg_color=POS, pos_color=NEG, scale=_loss_scale, gain_color=POS),
             width='stretch', theme=None)
         st.caption("Final-year loss as a share of each state's own tax revenue — the "
                    "measure of how hard the shock hits that state's budget, not how big "
                    "the state is. Hover any state for the dollar figures: its net "
                    "position, the shortfall, how the chosen response closes it, and the "
-                   "implied rate hike on its remaining workers. Green states come out "
+                   "implied rate hike on its remaining workers. Blue states come out "
                    "ahead. (Map shapes load from a CDN, so if the map is blank, switch to "
                    "Table. DC is on the map but easier to find in the Table.)")
     else:
