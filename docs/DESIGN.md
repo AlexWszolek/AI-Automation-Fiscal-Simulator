@@ -2,7 +2,8 @@
 
 The final site will not be Streamlit. This file records the agreed design direction so the
 migration implements it rather than rediscovering it. The Streamlit app applies the cheap subset
-(cream background, serif, red/blue semantic colors); everything else waits for the real front end.
+(near-white surfaces, TNR serif, red/blue semantic colors); everything else waits for the real
+front end.
 
 ## Layout
 
@@ -20,16 +21,17 @@ Semantic rule: **red = fiscally bad, blue = good.** No green.
 - Bad / losses / deficits: **deep brick / oxblood** (≈ `#8c2f28`)
 - Good / gains / recoveries: **muted slate blue** (≈ `#5b7c99`)
 
-Ink scale on cream:
+Ink scale on warm near-white:
 
 | Role | Value (approx) |
 |---|---|
 | Near-black ink — body text, headers | `#1a1a18` |
 | Dark gray — secondary headers, strong emphasis | `#3d3d3a` |
 | Mid gray — captions, labels, the "≈ X×" anchor lines, axis labels | `#6e6e68` |
-| Light gray — borders, dividers, inactive tab outlines | `#d9d6cd` |
-| Cream — page background | `#faf8f3` |
-| Darker cream / warm off-white — panel fills, hover states, sidebar backdrop | `#f1ede3` |
+| Light gray — borders, dividers, inactive tab outlines | `#e2dfd7` |
+| Warm near-white — page background (closer to white than cream, per review) | `#fcfbf8` |
+| White-ish panel — the lever rail / panels read WHITE | `#fefdfb` |
+| Warm off-white — input wells, hover states, table stripes | `#f4f2ec` |
 
 Charts converge on the same rule: distress/loss series in the oxblood family, recovery/good
 series in slate blue (e.g. the re-employed workforce band is blue), neutral series in the ink
@@ -37,7 +39,9 @@ grays. The categorical 7-color palette is transitional and shrinks as charts ado
 
 ## Typography
 
-- **Serif body** (policy-document register, not dashboard).
+- **Serif body close to Times New Roman** — the stack is
+  `'Times New Roman', Times, 'Liberation Serif', Tinos, serif` (Tinos is the vendored
+  metric-compatible fallback). No decorative serifs; policy-document register.
 - **Monospace with `font-variant-numeric: tabular-nums` for all data** — metric values, table
   cells, axis labels — so numbers never jitter as scenarios change.
 - True minus sign (U+2212 −) in all signed figures, never the ASCII hyphen.

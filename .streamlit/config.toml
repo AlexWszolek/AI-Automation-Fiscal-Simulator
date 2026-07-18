@@ -1,12 +1,14 @@
-# Light, report-style theme — warm cream page, serif body (the site reads like a policy
-# document, not a dashboard); red is reserved for fiscal damage.
+# Light, report-style theme — near-white warm surfaces, Times-New-Roman serif (the site reads
+# like a policy document, not a dashboard); red is reserved for fiscal damage.
 [theme]
 base = "light"
 primaryColor = "#2c5f8a"                 # deep blue: buttons, sliders, focus states
-backgroundColor = "#faf8f3"              # warm cream, not dashboard white
-secondaryBackgroundColor = "#f1ede3"     # sidebar + widget wells, a step deeper
-textColor = "#1a1f2b"
-font = "serif"
+backgroundColor = "#fcfbf8"              # warm near-white page (was cream)
+secondaryBackgroundColor = "#f4f2ec"     # widget wells, one quiet step down
+textColor = "#1a1a18"
+font = "'Times New Roman', Times, 'Liberation Serif', Tinos, serif"
+headingFont = "'Times New Roman', Times, 'Liberation Serif', Tinos, serif"
+showSidebarBorder = true                 # both surfaces are near-white; the border is the boundary
 # categorical series palette (colorblind-aware, professional); charts also set colors explicitly
 chartCategoricalColors = [
   "#3b6ea5",  # blue
@@ -17,3 +19,7 @@ chartCategoricalColors = [
   "#6b7b8c",  # slate
   "#a98467",  # brown
 ]
+
+[theme.sidebar]
+backgroundColor = "#fefdfb"              # the lever panel reads white
+secondaryBackgroundColor = "#f4f2ec"
