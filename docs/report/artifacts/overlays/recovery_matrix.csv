@@ -1,29 +1,37 @@
 preset,preset_key,overlay,overlay_key,final_recovery_B,cum_recovery_B,pct_of_cum_gap,cum_instrument_B
-① Acemoglu — Modest AI,acemoglu-modest,Robot tax — optimal (Costinot-Werning),cw-robot-tax,0.5,2.5,,3.1
-① Acemoglu — Modest AI,acemoglu-modest,Robot tax — transitional (GRT),grt-robot-tax,0.9,4.7,,5.9
-① Acemoglu — Modest AI,acemoglu-modest,UBI $12k + 30% recapture,ubi,-1291.2,-12920.6,,-12932.1
-① Acemoglu — Modest AI,acemoglu-modest,Compute-pool parity taxation,compute-parity,3.8,19.8,,19.8
-② Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — optimal (Costinot-Werning),cw-robot-tax,1.9,9.9,,12.6
-② Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — transitional (GRT),grt-robot-tax,3.6,18.7,,23.8
-② Brynjolfsson — Augmentation,brynjolfsson-augment,UBI $12k + 30% recapture,ubi,-1293.0,-12929.1,,-12932.1
-② Brynjolfsson — Augmentation,brynjolfsson-augment,Compute-pool parity taxation,compute-parity,15.2,79.3,,79.3
-③ Windfall Trust — Medium,windfall-medium,Robot tax — optimal (Costinot-Werning),cw-robot-tax,5.7,31.0,1.9,39.6
-③ Windfall Trust — Medium,windfall-medium,Robot tax — transitional (GRT),grt-robot-tax,10.9,58.6,3.6,74.8
-③ Windfall Trust — Medium,windfall-medium,UBI $12k + 30% recapture,ubi,-1230.0,-12614.6,-771.1,-12932.1
-③ Windfall Trust — Medium,windfall-medium,Compute-pool parity taxation,compute-parity,0.0,-0.0,-0.0,0.0
-④ China-Shock Grind,china-shock,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.9,24.2,0.5,30.8
-④ China-Shock Grind,china-shock,Robot tax — transitional (GRT),grt-robot-tax,5.5,45.6,1.0,58.3
-④ China-Shock Grind,china-shock,UBI $12k + 30% recapture,ubi,-887.5,-16890.0,-380.8,-19398.2
-④ China-Shock Grind,china-shock,Compute-pool parity taxation,compute-parity,23.4,194.2,4.4,194.2
-⑤ Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,31.3,356.8,1.3,456.0
-⑤ Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — transitional (GRT),grt-robot-tax,59.2,674.0,2.5,861.4
-⑤ Korinek-Suh — AGI in 20 years,agi-20y,UBI $12k + 30% recapture,ubi,-1118.5,-20684.2,-75.5,-25864.2
-⑤ Korinek-Suh — AGI in 20 years,agi-20y,Compute-pool parity taxation,compute-parity,326.2,3715.9,13.6,3715.9
-⑥ Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,42.8,333.1,1.6,425.5
-⑥ Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — transitional (GRT),grt-robot-tax,80.8,629.3,2.9,803.7
-⑥ Korinek-Suh — AGI in 5 years,agi-5y,UBI $12k + 30% recapture,ubi,-1165.4,-11229.7,-52.6,-12932.1
-⑥ Korinek-Suh — AGI in 5 years,agi-5y,Compute-pool parity taxation,compute-parity,445.3,3467.1,16.2,3467.1
-⑦ AI 2027 — Fast takeoff,ai-2027,Robot tax — optimal (Costinot-Werning),cw-robot-tax,66.5,297.1,2.6,379.6
-⑦ AI 2027 — Fast takeoff,ai-2027,Robot tax — transitional (GRT),grt-robot-tax,125.5,561.1,4.9,717.0
-⑦ AI 2027 — Fast takeoff,ai-2027,UBI $12k + 30% recapture,ubi,-1078.4,-8853.0,-77.5,-10345.7
-⑦ AI 2027 — Fast takeoff,ai-2027,Compute-pool parity taxation,compute-parity,691.8,3092.9,27.1,3092.9
+Acemoglu — Modest AI,acemoglu-modest,Robot tax — optimal (Costinot-Werning),cw-robot-tax,0.5,2.5,,3.1
+Acemoglu — Modest AI,acemoglu-modest,Robot tax — transitional (GRT),grt-robot-tax,0.9,4.7,,5.9
+Acemoglu — Modest AI,acemoglu-modest,UBI $12k + 30% recapture,ubi,-1291.1,-12920.5,,-12932.1
+Acemoglu — Modest AI,acemoglu-modest,Compute-pool parity taxation,compute-parity,3.8,19.8,,19.8
+Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — optimal (Costinot-Werning),cw-robot-tax,1.9,9.9,,12.6
+Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — transitional (GRT),grt-robot-tax,3.6,18.7,,23.8
+Brynjolfsson — Augmentation,brynjolfsson-augment,UBI $12k + 30% recapture,ubi,-1293.0,-12929.0,,-12932.1
+Brynjolfsson — Augmentation,brynjolfsson-augment,Compute-pool parity taxation,compute-parity,15.2,79.3,,79.3
+Windfall Trust — Medium,windfall-medium,Robot tax — optimal (Costinot-Werning),cw-robot-tax,5.7,31.0,1.8,39.6
+Windfall Trust — Medium,windfall-medium,Robot tax — transitional (GRT),grt-robot-tax,10.9,58.6,3.5,74.8
+Windfall Trust — Medium,windfall-medium,UBI $12k + 30% recapture,ubi,-1228.3,-12609.0,-746.1,-12932.1
+Windfall Trust — Medium,windfall-medium,Compute-pool parity taxation,compute-parity,0.0,-0.0,-0.0,0.0
+China-Shock Grind,china-shock,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.9,24.2,0.5,30.8
+China-Shock Grind,china-shock,Robot tax — transitional (GRT),grt-robot-tax,5.5,45.6,1.0,58.3
+China-Shock Grind,china-shock,UBI $12k + 30% recapture,ubi,-884.1,-16875.4,-377.6,-19398.2
+China-Shock Grind,china-shock,Compute-pool parity taxation,compute-parity,23.4,194.2,4.3,194.2
+Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,31.6,357.6,1.2,457.0
+Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — transitional (GRT),grt-robot-tax,59.7,675.5,2.3,863.2
+Korinek-Suh — AGI in 20 years,agi-20y,UBI $12k + 30% recapture,ubi,-1106.3,-20683.2,-70.6,-25864.2
+Korinek-Suh — AGI in 20 years,agi-20y,Compute-pool parity taxation,compute-parity,329.2,3723.8,12.7,3723.8
+Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,42.8,333.0,1.5,425.3
+Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — transitional (GRT),grt-robot-tax,80.8,629.0,2.8,803.4
+Korinek-Suh — AGI in 5 years,agi-5y,UBI $12k + 30% recapture,ubi,-1175.5,-11212.8,-49.2,-12932.1
+Korinek-Suh — AGI in 5 years,agi-5y,Compute-pool parity taxation,compute-parity,445.0,3465.5,15.2,3465.5
+AI 2027 — Fast takeoff,ai-2027,Robot tax — optimal (Costinot-Werning),cw-robot-tax,66.5,297.1,2.5,379.6
+AI 2027 — Fast takeoff,ai-2027,Robot tax — transitional (GRT),grt-robot-tax,125.6,561.2,4.6,717.0
+AI 2027 — Fast takeoff,ai-2027,UBI $12k + 30% recapture,ubi,-1076.6,-8835.2,-73.1,-10345.7
+AI 2027 — Fast takeoff,ai-2027,Compute-pool parity taxation,compute-parity,691.9,3093.0,25.6,3093.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — optimal (Costinot-Werning),cw-robot-tax,68.3,603.7,3.4,771.4
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — transitional (GRT),grt-robot-tax,129.1,1140.3,6.4,1457.1
+AI 2040 — Plan A (The Deal),ai2040-plan-a,UBI $12k + 30% recapture,ubi,-643.0,-14068.1,-79.6,-18105.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Compute-pool parity taxation,compute-parity,711.9,6285.7,35.5,6285.7
+AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — optimal (Costinot-Werning),cw-robot-tax,62.8,397.4,2.0,507.4
+AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — transitional (GRT),grt-robot-tax,118.7,750.6,3.8,958.5
+AI 2040 — Plan D (The Race),ai2040-plan-d,UBI $12k + 30% recapture,ubi,-1158.0,-10807.6,-55.4,-12932.1
+AI 2040 — Plan D (The Race),ai2040-plan-d,Compute-pool parity taxation,compute-parity,653.5,4134.6,21.2,4134.6

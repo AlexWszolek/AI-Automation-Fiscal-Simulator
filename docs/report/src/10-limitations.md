@@ -23,6 +23,8 @@ true gap is likely smaller than modeled; "understates" means larger.
 | Fixed baseline economy (no counterfactual growth in the wage base beyond a denominator trend) | understates losses at long horizons in level terms |
 | AGI presets run a wage-economy accounting frame through a post-wage transition | the frame itself strains; treat ⑤⑥ as transition stories, not steady states |
 | Monte Carlo perturbs levers locally and independently (no correlated shocks, no Latin-hypercube global exploration) | bands are local credibility intervals, not full uncertainty |
+| Reabsorption is rationed by refuge capacity (inflow), but already-reabsorbed workers are never re-displaced (no outflow churn) | understates AGI scenarios modestly — the inflow choke already carries most of the effect |
+| Reabsorbed wage dynamics (Baumol pull, crowding pressure) ship at zero in every preset | direction depends on which force dominates; both are exposed as levers |
 
 Two of these deserve emphasis because they cut *against* the model's thesis: the corporate
 steelman and the robotics floor both make the modeled fiscal gap smaller than the mechanism

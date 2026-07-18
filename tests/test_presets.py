@@ -47,6 +47,7 @@ _GRID = {
     "cognitive_feasibility": (0.0, 1.0, 0.05), "physical_feasibility": (0.0, 1.0, 0.05),
     "robotics_lag": (0, 15, 1), "robotics_base": (1.0, 2.0, 0.05),
     "reabsorption_rate": (0.0, 1.0, 0.025), "reemployment_haircut": (0.0, 1.0, 0.01),
+    "reab_wage_baumol": (0.0, 1.0, 0.05), "reab_wage_crowding": (0.0, 1.0, 0.05),
     "lfp_exit_rate": (0.0, 0.2, 0.01), "attrition_rate": (0.0, 0.1, 0.005),
     "retained_profit_share": (0.0, 1.0, 0.05), "price_reduction_share": (0.0, 1.0, 0.05),
     "auto_cost": (0.0, 1.0, 0.05), "compute_effective_rate": (0.0, 0.4, 0.01),

@@ -80,6 +80,15 @@ class DynamicModelV2:
             from .transfers import TransferLookup
             self._reab_eng = reabsorption.ReabsorptionEngine(
                 data, deltas, TransferLookup(), params.kernel_params(), params.reabsorption_floor_pctile)
+            # FINITE REFUGE (rung-1 semantics, not a lever): the reabsorbed move into low-exposure
+            # service work — the same occupation set the service floor prices. As automation reaches
+            # THOSE cells the refuge shrinks, so the effective reabsorption rate scales by the
+            # un-automated share of refuge employment (capacity → 0 under AGI configs: nowhere left
+            # to be reabsorbed INTO). Rung 0 (the C8 anchor) is untouched.
+            _low = reabsorption.low_exposure_socs(data)
+            self._refuge_mask = self._v1.d["soc_code"].isin(_low).to_numpy()
+            self._refuge_emp0 = float(self._v1.emp0[self._refuge_mask].sum())
+            assert self._refuge_emp0 > 0, "refuge (low-exposure) employment is empty"
         elif params.reabsorption_rung != 0:
             raise NotImplementedError("reabsorption Rung 2 (cross-cell routing) is post-Phase-4")
 
@@ -179,6 +188,10 @@ class DynamicModelV2:
             raise ValueError("robotics_lag must be ≥ 0 (years of capacity build-out)")
         if not 1.0 <= params.robotics_base <= 5.0:
             raise ValueError("robotics_base must be in [1, 5] (1 = linear ramp, >1 = exponential)")
+        for _n, _v in (("reab_wage_baumol", params.reab_wage_baumol),
+                       ("reab_wage_crowding", params.reab_wage_crowding)):
+            if not 0.0 <= _v <= 1.0:
+                raise ValueError(f"{_n}={_v} is out of its documented [0, 1] domain")
         assert (params.reabsorption_rung, params.reabsorption_floor_pctile, params.consumption_scale,
                 params.exposure_mapping, params.logistic_midpoint,
                 params.logistic_steepness) == self._built_structural, \
@@ -273,6 +286,7 @@ class DynamicModelV2:
         baseline_emp = v1.emp0.sum()
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
+        Y_prev = 1.0                                      # t−1 real-output index (J.1, for W_reab); 1 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
         induced_flow_pending = np.zeros(len(v1.wage))     # SIGNED level-controller flow for t+1; 0 at t=0
         auto_disp = np.zeros(len(v1.wage))                # cumulative automation-displaced stock (fix 1)
@@ -300,6 +314,31 @@ class DynamicModelV2:
             flow = workers.displacement_flow(g_cell_t, adopt, v1.emp0, auto_disp, st.employed)
             auto_disp = auto_disp + flow
             new = st.displace(flow)
+            # finite refuge capacity (rung 1): the un-automated share of low-exposure employment.
+            # Predetermined within the period (auto_disp is final for t here) — it scales this
+            # period's reabsorption transition AND is reported as a column.
+            if v2p.reabsorption_rung == 1:
+                refuge_capacity = 1.0 - float(auto_disp[self._refuge_mask].sum()) / self._refuge_emp0
+                refuge_capacity = min(max(refuge_capacity, 0.0), 1.0)
+            else:
+                refuge_capacity = 1.0
+            # reabsorbed wage dynamics (rung 1, gated): W_reab = 1 + baumol·(Y_{t−1}−1) − crowding·slack_{t−1}
+            # — Baumol pull vs crowding pressure, both on PREDETERMINED t−1 macro state (J.1). Off ⇒ the
+            # bind-time delta is reused verbatim (bit-identical fast path); on ⇒ the engine re-prices the
+            # 6 channels at the scaled destination wage (the transfer cliffs re-fire at the new income).
+            _reab_dyn = (v2p.reabsorption_rung == 1
+                         and (v2p.reab_wage_baumol != 0.0 or v2p.reab_wage_crowding != 0.0))
+            if _reab_dyn:
+                W_reab = max(0.25, 1.0 + v2p.reab_wage_baumol * (Y_prev - 1.0)
+                             - v2p.reab_wage_crowding * slack_prev)
+                if W_reab != 1.0:
+                    reab1_t = self._reab_eng.delta(v2p.reemployment_haircut, v2p.mpc,
+                                                   v2p.consumption_stickiness, wage_index=W_reab)
+                else:
+                    reab1_t = self._reab1
+            else:
+                W_reab = 1.0
+                reab1_t = self._reab1
             # decision I (level-targeting): last period's SIGNED controller flow lands NOW as a
             # C1-guarded employment movement — layoffs when the induced stock is below target,
             # RELEASES (re-hiring) when the standing withdrawal fell. 0 at t=0.
@@ -323,7 +362,7 @@ class DynamicModelV2:
                     if c in ("inc_fed", "inc_state", "payroll_fed", "cons_state"):
                         cc = cc + st.reabsorbed * reab_factor * v1.arr["after"][c]
                 else:                                          # Rung 1: full re-eval at w_d, all channels
-                    cc = cc + st.reabsorbed * self._reab1[c]
+                    cc = cc + st.reabsorbed * reab1_t[c]
                 ch[c] = cc
             # tax-regime mults on the displaced channels — ONE site covers the during-UI blend, the
             # after-phase, and BOTH reabsorption rungs (everything flows through ch). Fresh arrays,
@@ -422,7 +461,7 @@ class DynamicModelV2:
             # they pay taxes, so the close can tax them — ~12% of the base was invisible before)
             taxable_base = np.bincount(v1.state_of_cell,
                                        weights=employed_post * v1.wage * W_surv
-                                       + st.reabsorbed * self._reab_wage,
+                                       + st.reabsorbed * self._reab_wage * W_reab,
                                        minlength=len(v1.uniq_states))
             close = government.close_state_gaps(state_net, taxable_base, v2p)
             state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
@@ -447,7 +486,7 @@ class DynamicModelV2:
             # rung-1 reabsorbed earn w_d). At reduction (W=1, rung 0, recapture 0) == v1's ubi_rate exactly.
             # rung-gated reabsorbed term: ubi_required_rate is a C8 column, and at reduction (rung 0) the
             # base must collapse to v1's wage_bill exactly (W_surv=1, no reabsorbed earnings term).
-            ubi_base = wage_bill * W_surv + ((st.reabsorbed * self._reab_wage).sum()
+            ubi_base = wage_bill * W_surv + ((st.reabsorbed * self._reab_wage * W_reab).sum()
                                              if v2p.reabsorption_rung == 1 else 0.0)
             ubi_rate = ((p.ubi_annual * baseline_emp * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
                         if (p.ubi_annual > 0 and ubi_base > 0) else 0.0)
@@ -465,7 +504,8 @@ class DynamicModelV2:
                 (st.on_ui * self._net_ui_pw
                  + (st.exhausted + st.induced) * self._net_after_pw
                  + st.exited * (self._net_after_pw - v2p.ssdi_annual)
-                 + st.reabsorbed * self._reab_scar_pw).sum())
+                 + st.reabsorbed * (reab1_t["net_takehome_loss"] if v2p.reabsorption_rung == 1
+                                    else self._reab_scar_pw)).sum())
             hh_withdrawal -= wage_bill * (W_surv - 1.0)                 # survivor raises inject; cuts withdraw
             hh_withdrawal -= ubi_outlay - ubi_recapture                 # net UBI injects
             k = (p.demand_multiplier * p.kernel_params.mpc
@@ -551,6 +591,8 @@ class DynamicModelV2:
                 "survivor_overflow_corp_tax_B": overflow_corp_tax / 1e9,
                 "survivor_market_frac": market_frac, "survivor_slack_prev": slack_prev,
                 "W_survivor": W_surv, "W_survivor_mech": W_mech,
+                # reabsorbed wage dynamics + finite refuge (rung 1; 1.0 when off/rung 0)
+                "W_reab": W_reab, "refuge_capacity": refuge_capacity,
                 # C6 federal reconciliation components (net_fed = Σ these; see test_c6)
                 "inc_fed_loss_B": ch["inc_fed"].sum() / 1e9,
                 "payroll_fed_loss_B": ch["payroll_fed"].sum() / 1e9,
@@ -598,8 +640,12 @@ class DynamicModelV2:
             # (market_frac) is elasticity-gated → C8-safe.
             lf = baseline_emp - st.retired.sum()
             slack_prev = 1.0 - (employed_post.sum() + st.reabsorbed.sum()) / lf if lf > 0 else 0.0
-            # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition ---
-            st.age_and_transition(p.reabsorption_rate, v2p.lfp_exit_rate, v2p.attrition_rate)
+            Y_prev = Y
+            # --- period end: age on-UI into exhausted, split {exited, reabsorbed, stay}, then attrition.
+            #     The reabsorption rate is scaled by the refuge capacity (rung 1): quantity rationing —
+            #     fewer service jobs left to move into. (The PRICE margin is W_reab above.) ---
+            st.age_and_transition(p.reabsorption_rate * refuge_capacity,
+                                  v2p.lfp_exit_rate, v2p.attrition_rate)
 
         # retain the FINAL period's state close for the per-state table (fresh arrays each call —
         # verified safe to keep). An attribute, not output columns, so C8 (a column comparison) and

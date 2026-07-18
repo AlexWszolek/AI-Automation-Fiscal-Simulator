@@ -46,6 +46,7 @@ def test_ui_grid_agrees_with_preset_grid():
         "cognitive_feasibility": "cog", "physical_feasibility": "phys",
         "robotics_lag": "robotics_lag", "robotics_base": "rob_base", "reabsorption_rate": "reab",
         "reemployment_haircut": "haircut", "lfp_exit_rate": "lfp", "attrition_rate": "attrition",
+        "reab_wage_baumol": "reab_baumol", "reab_wage_crowding": "reab_crowd",
         "retained_profit_share": "retained", "price_reduction_share": "price",
         "auto_cost": "auto_cost", "compute_effective_rate": "compute_rate",
         "survivor_elasticity": "elasticity", "productivity_passthrough": "prod_pt",

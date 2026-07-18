@@ -62,6 +62,7 @@ LABELS = {
     "state_spending_cut_B": "Closed by spending cuts",
     "state_gap_B": "Shortfall that year", "state_gap_cum_B": "Accumulated shortfall",
     "W_survivor": "Wage index of the still-employed (1.0 = baseline)",
+    "W_reab": "Wage index of the re-employed (1.0 = baseline)",
     "survivor_gain_fed_B": "Extra federal tax from raises",
     "survivor_wage_cost_B": "What the raises cost firms",
     "employment_drop_pct": "Employment decline", "revenue_lost_pct": "Labor-tax revenue decline",
@@ -319,13 +320,28 @@ with sb.expander("Labor market", expanded=False):
                      help="The annual rate at which long-term displaced workers find new, "
                           "lower-wage work. The evidence runs 0.6-0.75 in normal labor "
                           "markets (Farber) and 0.05-0.10 in the China-shock adjustment; 0"
-                          " makes displacement permanent.")
+                          " makes displacement permanent. The refuge is FINITE: this rate "
+                          "scales down as automation reaches the low-exposure service work"
+                          " the re-employed move into, and stops entirely once it is gone.")
     haircut = st.slider("Re-employment wage cut (haircut)", 0.0, 1.0, d["haircut"], 0.01,
                         help="The re-employed earn (1 − haircut) × their old wage, floored"
                              " at a state service wage. The evidence is ~0.13 typically, "
                              "and 0.25 for high-tenure mass layoffs. A bigger cut can drop"
                              " the household into EITC/SNAP/Medicaid eligibility, which is"
                              " taken into account.")
+    reab_baumol = st.slider("Re-employed wage — Baumol pull", 0.0, 1.0, d["reab_baumol"], 0.05,
+                            help="How strongly re-employment wages ride the economy's "
+                                 "productivity gains: the work humans still do gets "
+                                 "expensive as everything else gets cheap (Baumol's cost "
+                                 "disease, working in labor's favor). At 1.0, a +20% "
+                                 "productivity economy pays re-employed workers +20%. This"
+                                 " is how wages can RISE despite mass displacement.")
+    reab_crowd = st.slider("Re-employed wage — crowding pressure", 0.0, 1.0, d["reab_crowd"], 0.05,
+                           help="How strongly displaced workers flooding into service "
+                                "work bid its wage down: the wage falls with last year's "
+                                "labor-market slack. The China-shock evidence supports a "
+                                "meaningful value; it competes directly with the Baumol "
+                                "pull above.")
     ui_weeks = st.slider("UI duration (weeks)", 0, 52, d["ui_weeks"],
                          help="The unemployment-insurance window. During it, displaced "
                               "workers draw benefits (45% replacement, capped) and are "
@@ -538,6 +554,7 @@ ui: dict[str, Any] = dict(mapping="percentile", cog=cog, phys=phys,
           offshore_share=0.0, compute_effective_rate=compute_rate, survivor_unbounded=survivor_unbounded,
           survivor_raise_ceiling=ceiling, survivor_elasticity=elasticity,
           survivor_spillover_to_profit=spillover, reabsorption_rung=rung, reab=reab, haircut=haircut,
+          reab_wage_baumol=reab_baumol, reab_wage_crowding=reab_crowd,
           lfp_exit_rate=lfp_exit, attrition_rate=attrition, ui_weeks=ui_weeks, price_passthrough=price_pt,
           productivity_passthrough=prod_pt, demand=demand, state_resp=state_resp,
           state_cut_share=state_cut_share, state_rate_hike_cap=rate_cap, automation_tax_rate=automation_tax,
@@ -576,7 +593,8 @@ final = res.iloc[-1]
 _pristine = preset_widget_defaults(_preset) if _preset is not None else dict(CUSTOM_DEFAULTS)
 _wvals = dict(cog=cog, phys=phys, robotics_lag=robotics_lag, rob_base=rob_base,
               adopt0=adopt0, adopt1=adopt1,
-              n_periods=n_periods, reab=reab, haircut=haircut, ui_weeks=ui_weeks,
+              n_periods=n_periods, reab=reab, haircut=haircut,
+              reab_baumol=reab_baumol, reab_crowd=reab_crowd, ui_weeks=ui_weeks,
               lfp=lfp_exit, attrition=attrition, retained=retained, price=price,
               auto_cost=auto_cost, compute_rate=compute_rate, unbounded=survivor_unbounded,
               ceiling=ceiling, elasticity=elasticity, spillover=spillover,
@@ -740,9 +758,13 @@ with main_top:
                    "The stock tracks the standing income withdrawal — stimulus (UBI, raises) visibly "
                    "re-employs these workers.")
         st.subheader("Wages of the still-employed")
-        show_chart(ts_chart(res, ["W_survivor"], "wage index (1.0 = baseline)", y_zero=False),
+        _wage_cols = ["W_survivor"] + (["W_reab"] if v2p.reab_wage_baumol or v2p.reab_wage_crowding
+                                       else [])
+        show_chart(ts_chart(res, _wage_cols, "wage index (1.0 = baseline)", y_zero=False),
                    "The wage index of workers who keep their jobs: raises funded from the survivor "
-                   "share push it up; labor-market slack (substitution) pulls it down.")
+                   "share push it up; labor-market slack (substitution) pulls it down."
+                   + (" The re-employed line is the Baumol-vs-crowding tug of war on service wages."
+                      if len(_wage_cols) > 1 else ""))
         show_chart(ts_chart(res, ["survivor_gain_fed_B", "survivor_wage_cost_B"], "$ billions / year"),
                    "The same channel in dollars: what the raises cost firms vs the extra federal tax "
                    "they generate — the one mechanism that rebuilds the labor tax base.")
@@ -904,6 +926,8 @@ TORNADO_LABELS = {
     "ui_weeks": "UI benefit duration",
     "reabsorption_rate": "Re-employment rate",
     "reemployment_haircut": "Re-employment wage cut",
+    "reab_wage_baumol": "Re-employed wage: Baumol pull",
+    "reab_wage_crowding": "Re-employed wage: crowding",
     "lfp_exit_rate": "Labor-force exit (SSDI)",
     "attrition_rate": "Natural attrition",
     "survivor_elasticity": "Wage response to slack",

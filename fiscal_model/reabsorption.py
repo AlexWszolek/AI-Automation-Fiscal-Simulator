@@ -57,11 +57,18 @@ def _weighted_percentile(values, weights, q: float) -> float:
     return float(np.interp(q, cum, v))
 
 
-def service_floor_by_state(data: loaders.FiscalData, pctile: float = 0.30):
-    """Return ({state: w_d}, national_w_d) — the Rung-1 destination wage per state (see module doc)."""
+def low_exposure_socs(data: loaders.FiscalData) -> set:
+    """The refuge occupations: SOC codes at/below the national EXPOSURE_PCTILE AI-PCA cut. This is
+    the work the service floor prices AND the destination the reabsorbed implicitly move into, so
+    it is also the base for the finite-refuge capacity check in dynamics_v2."""
     exp = data.exposure_occ[["soc_code", "ai_pca_score"]].dropna()
     cut = exp["ai_pca_score"].quantile(EXPOSURE_PCTILE)
-    low = set(exp.loc[exp["ai_pca_score"] <= cut, "soc_code"])
+    return set(exp.loc[exp["ai_pca_score"] <= cut, "soc_code"])
+
+
+def service_floor_by_state(data: loaders.FiscalData, pctile: float = 0.30):
+    """Return ({state: w_d}, national_w_d) — the Rung-1 destination wage per state (see module doc)."""
+    low = low_exposure_socs(data)
 
     o = data.oews.copy()
     wage = o["annual_mean_usd"].where(o["annual_mean_usd"].notna(), o["hourly_mean_usd"] * 2080)
@@ -124,9 +131,18 @@ class ReabsorptionEngine:
             self._pk[f] = np.array([self._ci._noc.get((f, self.state[i], int(band[i])), np.full(4, 0.25))
                                     for i in range(n)])
 
-    def delta(self, haircut: float, mpc: float, stickiness: float) -> dict:
-        """Per-worker reabsorbed fiscal loss (6 channels), losses POSITIVE. haircut=0 → all zero."""
+    def delta(self, haircut: float, mpc: float, stickiness: float,
+              wage_index: float = 1.0) -> dict:
+        """Per-worker reabsorbed fiscal loss (6 channels), losses POSITIVE. haircut=0 → all zero.
+
+        `wage_index` scales the destination wage (the reabsorbed wage dynamics: Baumol pull /
+        crowding pressure, computed per period in dynamics_v2). 1.0 is the exact legacy path;
+        an index > 1 can push w_d above the origin wage — the signed wage_removed handles that
+        as a fiscal gain, and the transfer interp re-fires the means-tested cliffs at the new
+        household income either way."""
         w_d = np.maximum(self.worker_wage * (1.0 - haircut), self.service_floor)
+        if wage_index != 1.0:
+            w_d = w_d * wage_index
         wage_removed = self.worker_wage - w_d                        # SIGNED (w_d>origin ⇒ a small gain)
         n = len(self.worker_wage)
         inc_fed = np.zeros(n); inc_state = np.zeros(n); payroll = np.zeros(n); emp_fica = np.zeros(n)

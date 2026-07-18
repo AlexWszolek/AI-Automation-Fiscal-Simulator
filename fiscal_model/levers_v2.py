@@ -61,6 +61,13 @@ class V2Params:
     reabsorption_rung: int = 0                  # 0 flat-haircut (v1 anchor) | 1 service-floor | 2 routed
     reemployment_haircut: float = 0.30          # Rung 0
     reabsorption_floor_pctile: float = 0.30     # Rung 1 service-floor wage = P(this) of low-exposure work
+    reab_wage_baumol: float = 0.0               # LIVE (rung 1): Baumol pull on the re-employed wage — the
+    #   work humans still do gets expensive as the rest gets cheap, so w_d rides last period's real-output
+    #   index: W_reab += baumol·(Y_{t−1} − 1). 0 = off.
+    reab_wage_crowding: float = 0.0             # LIVE (rung 1): crowding pressure — displaced supply
+    #   flooding refuge work bids its wage down with last period's slack: W_reab −= crowding·slack_{t−1}.
+    #   0 = off. Baumol can dominate crowding: re-employed wages can RISE amid mass displacement when
+    #   the productivity dividend outruns the supply shock.
     lfp_exit_rate: float = 0.0                  # share of exhausted who exit the labor force (SSDI)
     survivor_elasticity: float = 0.0            # ΔW_market slider: substitution(−) vs complementarity(+);
     #                                             0 = off. The market component is truncated at the ceiling.
@@ -206,6 +213,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         # Overhaul: new gated policy levers (0 at reduction). (ssdi_annual is NOT listed: it is inert at
         # reduction via lfp_exit_rate=0, and the same default ships in both configs.)
         "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate",
-        "robotics_lag", "robotics_base",
+        "robotics_lag", "robotics_base", "reab_wage_baumol", "reab_wage_crowding",
         # tax-regime multipliers: 1.0 = current law (their off value)
         "income_tax_mult", "corp_tax_mult", "cons_tax_mult"))

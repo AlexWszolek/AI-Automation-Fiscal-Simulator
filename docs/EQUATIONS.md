@@ -169,14 +169,23 @@ cons_state is excluded from net_pw (it is keyed to the same take-home drop — d
 ### Step 10 · Period end — worker transitions  (`workers.age_and_transition`)
 ```
 pool = exhausted + on_ui                                  # the bit-identical v1-anchor arithmetic
-reabsorbed += pool · reabsorption_rate ;  exited += pool · lfp_exit_rate
-exhausted   = pool − pool·(reabsorption_rate + lfp_exit_rate)
+rate_eff    = reabsorption_rate · refuge_capacity_t       # FINITE REFUGE (rung 1; rung 0: capacity ≡ 1)
+refuge_capacity_t = 1 − Σ_refuge auto_disp_t / Σ_refuge emp0   # refuge = low-exposure SOCs (the same
+                                                          # occupation set the service floor prices)
+reabsorbed += pool · rate_eff ;  exited += pool · lfp_exit_rate
+exhausted   = pool − pool·(rate_eff + lfp_exit_rate)
 induced: the SAME split in parallel (reabsorption + lfp_exit apply; demand-displaced find jobs too)
 retired    += (exhausted + induced) · attrition_rate      # DELTA-NEUTRAL retirement (baseline twin too)
 slack_prev  = 1 − (Σ employed + Σ reabsorbed)/(baseline − Σ retired)   # reabsorbed work; retirees left
 ```
 **Reabsorbed destination wage** (rung 1, live engine `reabsorption.ReabsorptionEngine`):
-`w_d = max(wage·(1 − reemployment_haircut), service_floor)`,  `wage_removed = wage − w_d`. The 6-channel
+`w_d = max(wage·(1 − reemployment_haircut), service_floor) · W_reab_t`,  `wage_removed = wage − w_d`, with
+the WAGE DYNAMICS index (both levers 0 ⇒ W_reab ≡ 1, the exact legacy path reusing the bind-time delta):
+```
+W_reab_t = max(0.25, 1 + reab_wage_baumol·(Y_{t−1} − 1) − reab_wage_crowding·slack_{t−1})
+```
+Baumol pull (service work rides economy-wide productivity) vs crowding pressure (displaced supply bids
+refuge wages down) — Baumol can dominate, so re-employed wages can RISE amid mass displacement. The 6-channel
 `reab_delta` is `T(hh)−T(hh−wage_removed)`, `FICA(wage)−FICA(w_d)`, consumption on the take-home drop, and
 `interp(hh−wage_removed) − interp(hh)` for transfers. **`haircut=0 ⇒ wage_removed=0 ⇒ all channels 0`
 (reabsorbed fiscally whole).**
@@ -211,9 +220,11 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `productivity_passthrough` | `Y = 1 + pt·(saved_bill/COMP_TOTAL)` | real-GDP dividend → shrinks deficit/GDP |
 | `price_passthrough` | `P = 1 − pp·(price_red/real_GDP)` | deflation → real/%-GDP columns only (nominal invariant) |
 | `automation_tax_rate` | `automation_tax = rate·saved_bill`; deducted in `disp_factor` | robot tax PAID from retained profit (net recovery = tax·(1−corp_rate)) |
-| `reabsorption_rate` | `reabsorbed += pool·rate` | more re-employed (at `w_d`) |
+| `reabsorption_rate` | `reabsorbed += pool·rate·refuge_capacity` | more re-employed (at `w_d`); the refuge is FINITE — capacity falls as automation reaches low-exposure work |
 | `reabsorption_rung` | 0 = flat haircut / 1 = live engine | which reabsorption model |
 | `reemployment_haircut` | `w_d = max(wage·(1−haircut), floor)` | reabsorbed wage cut; **0 ⇒ whole** |
+| `reab_wage_baumol` | `W_reab += baumol·(Y_{t−1}−1)` | Baumol pull: re-employed wages ride productivity (deficit ↓) |
+| `reab_wage_crowding` | `W_reab −= crowding·slack_{t−1}` | crowding: slack bids refuge wages down (deficit ↑) |
 | `reabsorption_floor_pctile` | `service_floor` (p-th low-exposure wage) | the floor `w_d` can't drop below |
 | `lfp_exit_rate` | `exited += pool·rate` | permanent LFP/SSDI exit |
 | `attrition_rate` | `retired += (exhausted+induced)·rate` | DELTA-NEUTRAL retirement — the standing loss decays (deficit ↓) |

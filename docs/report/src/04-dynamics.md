@@ -37,6 +37,19 @@ Displaced workers draw UI for the statutory window, then exhaust; the exhausted 
 the permanent scar the displacement literature measures — or exit the labor force at
 `lfp_exit_rate` onto SSDI at $18,000 per year.
 
+The refuge is **finite**. The re-employed move into low-exposure service work — the same
+occupation set the service floor prices — and that work is itself automatable: the effective
+reabsorption rate scales by the un-automated share of low-exposure employment, so under AGI-grade
+scenarios the refuge shrinks and reabsorption chokes off (capacity falls toward the share of
+care and dexterity work that even full-feasibility robotics cannot reach). And the refuge wage is
+**contested**: two optional forces move the re-employed wage index each year — a Baumol pull
+(`reab_wage_baumol`), under which the work humans still do gets expensive as everything else gets
+cheap, and a crowding pressure (`reab_wage_crowding`), under which displaced supply flooding into
+service work bids its wage down with last year's slack. When the Baumol pull dominates,
+re-employed wages rise even amid mass displacement — abundance reaching labor through the price
+of human service work. Both ship at zero (the presets are calibrated without them); the fiscal
+side re-prices all six channels at the shifted wage, cliffs included.
+
 ## 4.2 Firms: the disposition router
 
 The **firm side is keyed to the cumulative automated stock**, not to worker states — a job stays
