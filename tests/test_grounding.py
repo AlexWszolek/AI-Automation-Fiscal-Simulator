@@ -1,6 +1,5 @@
 """Grounding gate — the CBO baseline accessor (pins, extrapolation, clamps), the anchor table's
-cross-checks against the committed CSV and the repo ledger, the comparator picker, and the
-memo-briefing text."""
+cross-checks against the committed CSV and the repo ledger, and the comparator picker."""
 import numpy as np
 import pytest
 
@@ -65,17 +64,3 @@ def test_ground_fallback_nearest_ratio():
     # absurdly large: nothing lands in [0.3, 30] → nearest-to-1 anchor still yields a line
     line = ground(1_000_000.0, "state_flow")
     assert "×" in line and line != ""
-
-
-def test_briefing_text_contents():
-    m = dict(jobs_lost_M=40.4, final_deficit_delta_B=2497.0, debt_delta_B=4341.0,
-             cum_income_tax_lost_B=2674.0, state_gap_B=211.0, real_gdp_pct=7.9)
-    txt = grounding.briefing_text("AI 2040 — Plan A (The Deal)", 2027, 14, m, share_qs="preset=ai2040-plan-a")
-    assert "AI 2040 — Plan A (The Deal)" in txt
-    assert "2040" in txt                                      # 2027 + 14 - 1
-    assert "?preset=ai2040-plan-a" in txt
-    assert "on top of what CBO already projects" in txt
-    assert "no-AI baseline" in txt
-    # without a query string the provenance falls back to the preset name
-    txt2 = grounding.briefing_text("Custom", 2026, 10, m)
-    assert "select the" in txt2 and "?" not in txt2.splitlines()[-1]

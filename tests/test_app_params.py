@@ -44,7 +44,7 @@ def test_ui_grid_agrees_with_preset_grid():
     from tests.test_presets import _GRID
     mapping = {  # V2Params field -> ui key
         "cognitive_feasibility": "cog", "physical_feasibility": "phys",
-        "robotics_lag": "robotics_lag", "reabsorption_rate": "reab",
+        "robotics_lag": "robotics_lag", "robotics_base": "rob_base", "reabsorption_rate": "reab",
         "reemployment_haircut": "haircut", "lfp_exit_rate": "lfp", "attrition_rate": "attrition",
         "retained_profit_share": "retained", "price_reduction_share": "price",
         "auto_cost": "auto_cost", "compute_effective_rate": "compute_rate",

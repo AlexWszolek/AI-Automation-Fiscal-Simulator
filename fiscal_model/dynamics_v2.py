@@ -177,6 +177,8 @@ class DynamicModelV2:
             raise ValueError("ssdi_annual must be ≥ 0")
         if params.robotics_lag < 0.0:
             raise ValueError("robotics_lag must be ≥ 0 (years of capacity build-out)")
+        if not 1.0 <= params.robotics_base <= 5.0:
+            raise ValueError("robotics_base must be in [1, 5] (1 = linear ramp, >1 = exponential)")
         assert (params.reabsorption_rung, params.reabsorption_floor_pctile, params.consumption_scale,
                 params.exposure_mapping, params.logistic_midpoint,
                 params.logistic_steepness) == self._built_structural, \
@@ -282,7 +284,14 @@ class DynamicModelV2:
             #     lag==0 uses v1.g_cell verbatim (the bit-identical C8 fast path). ---
             adopt = v1._adoption(t)
             if v2p.robotics_lag > 0:
-                ramp_t = min(1.0, t / v2p.robotics_lag)
+                # ramp shape: linear at base 1 (the exact original form — keep the branch literal
+                # so base=1 stays bit-identical); exponential (b^t−1)/(b^lag−1) above it — robots
+                # building robots back-loads the capacity curve toward the end of the lag.
+                _b, _L = v2p.robotics_base, v2p.robotics_lag
+                if _b == 1.0:
+                    ramp_t = min(1.0, t / _L)
+                else:
+                    ramp_t = min(1.0, (_b ** min(t, _L) - 1.0) / (_b ** _L - 1.0))
                 g_cell_t = levers.combine_channels(self._cog_cell, self._rob_cell,
                                                    v2p.cognitive_feasibility,
                                                    v2p.physical_feasibility * ramp_t)
@@ -608,9 +617,16 @@ class DynamicModelV2:
         (which returns just the DataFrame)."""
         close = self._last_close
         base = np.where(self._last_taxable_base > 0, self._last_taxable_base, np.nan)
+        # per-state baseline tax revenue (modeled lines): the surcharge allocation shares over the
+        # 2024 state income / corporate / consumption receipts — the map's normalizer, so a small
+        # state's loss reads as large when it is large FOR THAT STATE
+        state_rev0_B = (self._surch_inc_share * (self._st_inc_base / 1e9)
+                        + self._surch_corp_share * (self._st_corp_base / 1e9)
+                        + self._surch_cons_share * (self._st_cons_base / 1e9))
         return pd.DataFrame({
             "state": self._v1.uniq_states,
             "net_B": self._last_state_net / 1e9,
+            "revenue_loss_pct": 100.0 * (self._last_state_net / 1e9) / state_rev0_B,
             "shortfall_B": close.gap / 1e9,
             "rate_hike_B": close.recovered / 1e9,
             "spending_cut_B": close.spending_cut / 1e9,

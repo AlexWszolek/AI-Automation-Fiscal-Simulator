@@ -36,8 +36,11 @@ class V2Params:
     # ---------------- diffusion (NEW v2 levers; off = v1) ----------------
     robotics_cognitive_coupling: float = 0.0   # 0 = physical_feasibility used directly (v1)
     robotics_lag: float = 0.0                  # LIVE (coherence C6): years for robotic capacity to build —
-    #   physical automation requires AI-driven industrial capacity, so the robot channel ramps linearly:
-    #   g_cell(t) = 1 − (1 − cog·cf)·(1 − robot·pf·min(1, t/lag)). 0 = full capacity from t=0 (v1).
+    #   physical automation requires AI-driven industrial capacity, so the robot channel ramps in over
+    #   the lag: g_cell(t) = 1 − (1 − cog·cf)·(1 − robot·pf·ramp(t)). 0 = full capacity from t=0 (v1).
+    robotics_base: float = 1.0                 # shape of that ramp. 1.0 = linear ramp(t) = t/lag (the
+    #   original form, exact). >1 = EXPONENTIAL build-out ramp(t) = (b^t − 1)/(b^lag − 1): robots build
+    #   the factories that build robots, so capacity is back-loaded — slow start, explosive finish.
     sector_adoption_mult: float = 1.0          # per-sector multiplier (scalar stand-in; table seam later)
     sector_adoption_ceiling: float = 1.0       # saturation ceiling (1 = none)
     task_job_passthrough: float = 1.0          # 1 = task automation -> full headcount cut (v1)
@@ -203,6 +206,6 @@ def is_v1_reduction(p: V2Params) -> bool:
         # Overhaul: new gated policy levers (0 at reduction). (ssdi_annual is NOT listed: it is inert at
         # reduction via lfp_exit_rate=0, and the same default ships in both configs.)
         "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate",
-        "robotics_lag",
+        "robotics_lag", "robotics_base",
         # tax-regime multipliers: 1.0 = current law (their off value)
         "income_tax_mult", "corp_tax_mult", "cons_tax_mult"))

@@ -96,8 +96,9 @@ _US_10M = "https://cdn.jsdelivr.net/npm/vega-datasets@v3.2.1/data/us-10m.json"
 
 def state_choropleth(df: pd.DataFrame, value_col: str, value_title: str,
                      tooltip: list, neg_color: str, pos_color: str,
-                     height: int = 420) -> alt.Chart:
-    """US state map colored by a SIGNED per-state column (symmetric diverging scale around 0).
+                     height: int = 420, scale: alt.Scale | None = None) -> alt.Chart:
+    """US state map colored by a per-state column. Default: a symmetric diverging scale around 0
+    for a SIGNED column; pass `scale` (e.g. a binned threshold scale) to override.
 
     `df` needs a full-name `state` column plus `value_col` and every `(column, title, format)`
     triple in `tooltip`. Shapes are fetched client-side from the pinned jsDelivr TopoJSON; the
@@ -105,16 +106,18 @@ def state_choropleth(df: pd.DataFrame, value_col: str, value_title: str,
     src = df.assign(fips=df["state"].map(US_STATE_FIPS))
     assert not src["fips"].isna().any(), "state name missing from US_STATE_FIPS"
     fields = ["state", value_col] + [c for c, _t, _f in tooltip if c not in ("state", value_col)]
-    vmax = float(src[value_col].abs().max()) or 1.0
+    if scale is None:
+        vmax = float(src[value_col].abs().max()) or 1.0
+        scale = alt.Scale(domain=[-vmax, 0, vmax], range=[neg_color, "#f2f2f0", pos_color])
     states = alt.topo_feature(_US_10M, "states")
     return (alt.Chart(states).mark_geoshape(stroke="white", strokeWidth=0.6)
             .transform_lookup(lookup="id", from_=alt.LookupData(src, key="fips", fields=fields))
             .transform_filter(f"isValid(datum['{value_col}'])")
             .encode(
-                color=alt.Color(f"{value_col}:Q", title=value_title,
-                                scale=alt.Scale(domain=[-vmax, 0, vmax],
-                                                range=[neg_color, "#f2f2f0", pos_color]),
-                                legend=alt.Legend(orient="bottom", gradientLength=280)),
+                color=alt.Color(f"{value_col}:Q", title=value_title, scale=scale,
+                                # labelLimit=0: never truncate the legend title/labels
+                                legend=alt.Legend(orient="bottom", gradientLength=280,
+                                                  labelLimit=0, titleLimit=0)),
                 tooltip=[alt.Tooltip("state:N", title="State")]
                         + [alt.Tooltip(f"{c}:Q", title=t, format=f) for c, t, f in tooltip])
             .project("albersUsa")

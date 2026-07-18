@@ -30,7 +30,8 @@ from . import presets as presets_mod
 from .levers_v2 import V2Params
 
 # ---------------------------------------------------------------------------- defaults
-CUSTOM_DEFAULTS = dict(cog=0.70, phys=0.20, robotics_lag=4, adopt0=0.10, adopt1=0.60, n_periods=10,
+CUSTOM_DEFAULTS = dict(cog=0.70, phys=0.20, robotics_lag=4, rob_base=1.0, adopt0=0.10,
+                       adopt1=0.60, n_periods=10,
                        reab=0.0, haircut=0.30, ui_weeks=26, interest=0.03, ubi=0,
                        retained=0.6, price=0.2, auto_cost=0.10, compute_rate=0.10,
                        unbounded=False, ceiling=1.5, elasticity=-0.15, spillover=0.5,
@@ -44,7 +45,8 @@ def preset_widget_defaults(preset) -> dict:
     """Widget defaults derived from to_params(preset) — presets.py stays the single source of truth."""
     p = presets_mod.to_params(preset)
     return dict(cog=p.cognitive_feasibility, phys=p.physical_feasibility,
-                robotics_lag=int(p.robotics_lag), adopt0=preset.adoption_start,
+                robotics_lag=int(p.robotics_lag), rob_base=p.robotics_base,
+                adopt0=preset.adoption_start,
                 adopt1=preset.adoption_end, n_periods=p.n_periods,
                 reab=p.reabsorption_rate, haircut=p.reemployment_haircut, ui_weeks=p.ui_weeks,
                 interest=p.interest_rate, ubi=int(p.ubi_annual),
@@ -70,7 +72,7 @@ def build_v2_params(ui: dict) -> V2Params:
     ceiling = float("inf") if ui["survivor_unbounded"] else ui["survivor_raise_ceiling"]
     return V2Params(
         exposure_mapping=ui["mapping"], cognitive_feasibility=ui["cog"], physical_feasibility=ui["phys"],
-        robotics_lag=ui["robotics_lag"],
+        robotics_lag=ui["robotics_lag"], robotics_base=ui["robotics_base"],
         adoption=1.0, adoption_path=ui["adoption_path"], n_periods=ui["n_periods"],
         retained_profit_share=ui["retained_profit_share"], price_reduction_share=ui["price_reduction_share"],
         survivor_gains_share=survivor_share, auto_cost=ui["auto_cost"], offshore_share=ui["offshore_share"],
@@ -104,6 +106,7 @@ def ui_from_defaults(d: dict, *, rung: int, preset=None, mapping: str = "percent
     else:
         adoption_path = list(np.linspace(d["adopt0"], d["adopt1"], n))
     return dict(mapping=mapping, cog=d["cog"], phys=d["phys"], robotics_lag=float(d["robotics_lag"]),
+                robotics_base=float(d["rob_base"]),
                 adoption_path=adoption_path, n_periods=n,
                 retained_profit_share=retained, price_reduction_share=price, auto_cost=d["auto_cost"],
                 offshore_share=0.0, compute_effective_rate=d["compute_rate"],
@@ -137,7 +140,7 @@ def cfg_key(v2p: V2Params) -> str:
 # tests/test_presets.py::_GRID (cross-pinned in tests/test_app_params.py).
 UI_GRID: dict[str, tuple] = {
     "cog": (0.0, 1.0, 0.05, float), "phys": (0.0, 1.0, 0.05, float),
-    "robotics_lag": (0, 15, 1, int),
+    "robotics_lag": (0, 15, 1, int), "rob_base": (1.0, 2.0, 0.05, float),
     "adopt0": (0.0, 1.0, 0.01, float), "adopt1": (0.0, 1.0, 0.01, float),
     "n_periods": (3, 30, 1, int),
     "reab": (0.0, 1.0, 0.025, float), "haircut": (0.0, 1.0, 0.01, float),
@@ -194,13 +197,11 @@ def parse_query_config(qp: dict) -> dict:
             v = _snap(str(qp[key]), spec)
             if v is not None:
                 levers[key] = v
-    if "mapping" in qp and qp["mapping"] in ("percentile", "logistic"):
-        levers["mapping"] = qp["mapping"]
     return {"preset": preset, "overlays": overlays, "levers": levers}
 
 
 def encode_query_config(preset_key: Optional[str], overlays: list, current: dict,
-                        pristine: dict, mapping: str = "percentile") -> dict:
+                        pristine: dict) -> dict:
     """The write-back dict: preset + overlays + only the levers that differ from the pristine
     preset defaults (grid-tolerant compare absorbs JS-double slider echoes)."""
     out: dict[str, str] = {}
@@ -208,8 +209,6 @@ def encode_query_config(preset_key: Optional[str], overlays: list, current: dict
         out["preset"] = preset_key
     if overlays:
         out["ov"] = ",".join(overlays)
-    if mapping != "percentile":
-        out["mapping"] = mapping
     for key, spec in UI_GRID.items():
         if key not in current or key not in pristine:
             continue

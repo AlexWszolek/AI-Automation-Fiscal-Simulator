@@ -1,11 +1,12 @@
-# Light, report-style theme — matches the technical report's print figures.
+# Light, report-style theme — warm cream page, serif body (the site reads like a policy
+# document, not a dashboard); red is reserved for fiscal damage.
 [theme]
 base = "light"
 primaryColor = "#2c5f8a"                 # deep blue: buttons, sliders, focus states
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f4f6f8"     # sidebar + widget wells
+backgroundColor = "#faf8f3"              # warm cream, not dashboard white
+secondaryBackgroundColor = "#f1ede3"     # sidebar + widget wells, a step deeper
 textColor = "#1a1f2b"
-font = "sans serif"
+font = "serif"
 # categorical series palette (colorblind-aware, professional); charts also set colors explicitly
 chartCategoricalColors = [
   "#3b6ea5",  # blue

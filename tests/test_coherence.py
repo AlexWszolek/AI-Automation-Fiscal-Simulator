@@ -240,3 +240,19 @@ def test_robotics_lag_ramp_is_monotone(data, deltas):
 def test_robotics_lag_in_reduction_guard():
     from fiscal_model import levers_v2
     assert not levers_v2.is_v1_reduction(replace(R, robotics_lag=4.0))
+
+
+def test_robotics_base_exponential_ramp(data, deltas):
+    """base=1 must be BIT-IDENTICAL to the historical linear ramp; base>1 back-loads the physical
+    channel (less early displacement, same endpoint once the lag elapses)."""
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+    cfg = replace(R, cognitive_feasibility=0.0, physical_feasibility=0.8, robotics_lag=6.0,
+                  adoption_path=[1.0] * 8)
+    lin = DynamicModelV2(data, deltas, replace(cfg, robotics_base=1.0)).run()
+    exp = DynamicModelV2(data, deltas, replace(cfg, robotics_base=1.8)).run()
+    d_lin, d_exp = lin["employment_drop_pct"], exp["employment_drop_pct"]
+    assert (d_exp.iloc[1:5] < d_lin.iloc[1:5] - 1e-9).all()   # back-loaded: less early displacement
+    assert abs(d_exp.iloc[-1] - d_lin.iloc[-1]) < 1e-6        # same endpoint after the lag
+    import pytest
+    with pytest.raises(ValueError):
+        DynamicModelV2(data, deltas, replace(cfg, robotics_base=0.5))

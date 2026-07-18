@@ -45,7 +45,7 @@ def test_shipped_robot_tax_moved_to_overlays():
 # different number than documented — this test makes future preset edits fail loudly instead.
 _GRID = {
     "cognitive_feasibility": (0.0, 1.0, 0.05), "physical_feasibility": (0.0, 1.0, 0.05),
-    "robotics_lag": (0, 15, 1),
+    "robotics_lag": (0, 15, 1), "robotics_base": (1.0, 2.0, 0.05),
     "reabsorption_rate": (0.0, 1.0, 0.025), "reemployment_haircut": (0.0, 1.0, 0.01),
     "lfp_exit_rate": (0.0, 0.2, 0.01), "attrition_rate": (0.0, 0.1, 0.005),
     "retained_profit_share": (0.0, 1.0, 0.05), "price_reduction_share": (0.0, 1.0, 0.05),

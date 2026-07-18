@@ -177,5 +177,5 @@ def build_fiscal_summary(res: pd.DataFrame, ledger: RevenueLedger,
 
 def to_csv_bytes(df: pd.DataFrame) -> bytes:
     buf = io.StringIO()
-    df.to_csv(buf, index=False)
+    df.round(4).to_csv(buf, index=False)     # 4 decimals: full float repr is noise in an export
     return buf.getvalue().encode("utf-8")

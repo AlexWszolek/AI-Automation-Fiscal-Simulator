@@ -36,7 +36,8 @@ Per-occupation exposure→displacement fraction. The ROBOT channel ramps over `r
 (physical automation needs AI-built industrial capacity; ramp=1 when lag=0):
 ```
 cog(o)   = percentile-rank(PCA)   or   1/(1+exp(−logistic_steepness·(PCA − logistic_midpoint)))
-ramp_t   = min(1, t/robotics_lag)                         # 1 if robotics_lag == 0
+ramp_t   = min(1, t/robotics_lag)                         # 1 if robotics_lag == 0; at robotics_base b>1
+         = min(1, (b^t − 1)/(b^robotics_lag − 1))         #   exponential build-out (robots building robots)
 g_cell_t = 1 − (1 − cog·cognitive_feasibility)·(1 − robot·physical_feasibility·ramp_t)
 ```
 Cumulative diffusion **ceiling**, tracking a per-cell automated stock `auto_disp` (`workers.displacement_flow`):
@@ -197,6 +198,7 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `exposure_mapping` / `logistic_steepness` / `logistic_midpoint` | `cog(o)` map | shape of exposure→share (percentile vs S-curve) |
 | `adoption` / `adoption_path[t]` | `target = g_cell·adoption(t)·emp0` | **cumulative ceiling**: share of feasible work automated by t |
 | `robotics_lag` | `ramp_t = min(1, t/lag)` on the robot channel | physical automation waits for AI-built industrial capacity |
+| `robotics_base` | ramp shape: 1 = linear (exact legacy form), b>1 = `(b^t−1)/(b^lag−1)` | exponential capacity build-out — robots build the factories that build robots |
 | `auto_cost` | `automation_spend = auto_cost·saved_bill`; shrinks `corp_offset` via `(1−auto_cost)` | shifts saved bill to the compute pool; less corp recovery |
 | `retained_profit_share` | `corp_offset ∝ share`; `retained_profit` | corp recovery ↑ |
 | `price_reduction_share` | `price_reduction → P` | deflation (real/%-GDP only) |
