@@ -1,0 +1,19 @@
+# systemd unit for the compute service (generic; adapt paths/user).
+#   sudo cp fiscal-api.service.example /etc/systemd/system/fiscal-api.service
+#   sudo systemctl enable --now fiscal-api
+# The service loads the model once at startup (~5s) and binds to localhost only —
+# nginx/caddy fronts it. Memory: ~1.5GB resident (the per-cell template arrays).
+
+[Unit]
+Description=AI Automation Fiscal Simulator compute service
+After=network.target
+
+[Service]
+User=fiscal                              # <- a non-root user that owns the checkout
+WorkingDirectory=/srv/fiscal-simulator
+ExecStart=/srv/fiscal-simulator/.venv/bin/uvicorn api.main:app --host 127.0.0.1 --port 8000 --log-level warning
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

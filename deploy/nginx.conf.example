@@ -1,0 +1,36 @@
+# AI Automation Fiscal Simulator — nginx site config (generic; adapt server_name/paths).
+# Static site from web/dist; /api proxied to the compute service on 127.0.0.1:8000.
+# The site is fully browsable with the API down (presets + tornado entries are static files).
+
+server {
+    listen 80;
+    server_name example.org;            # <- your domain
+
+    root /srv/fiscal-simulator/web/dist;
+    index index.html;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+
+    # the SPA: any path serves index.html (query params carry the configuration)
+    location / {
+        try_files $uri /index.html;
+    }
+
+    # committed data bundles + fonts: long cache, immutable-ish (redeploys replace them)
+    location /data/ {
+        expires 1h;
+        add_header Cache-Control "public";
+    }
+    location /fonts/ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # the compute service (custom slider values + modified-config tornados)
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_read_timeout 120s;        # tornado job submits return fast; polling is cheap
+    }
+}

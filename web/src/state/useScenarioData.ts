@@ -10,6 +10,7 @@ export interface ScenarioData {
   payload: ScenarioPayload | null
   loading: boolean
   apiDown: boolean
+  failed: boolean                     // even the static bundle failed (bad deploy / no network)
 }
 
 const bundleCache = new Map<string, ScenarioPayload>()
@@ -18,6 +19,7 @@ export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
   const [payload, setPayload] = useState<ScenarioPayload | null>(null)
   const [loading, setLoading] = useState(true)
   const [apiDown, setApiDown] = useState(false)
+  const [failed, setFailed] = useState(false)
   const seq = useRef(0)
 
   useEffect(() => {
@@ -25,8 +27,8 @@ export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
     const cancelled = () => seq.current !== mySeq
     setLoading(true)
 
-    async function fetchStatic() {
-      const slug = slugFor(cfg)
+    async function fetchStatic(c: ScenarioConfig = cfg) {
+      const slug = slugFor(c)
       const cached = bundleCache.get(slug)
       if (cached) return cached
       const r = await fetch(`/data/scenarios/${slug}.json`)
@@ -52,11 +54,24 @@ export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
         if (!cancelled()) {
           setPayload(p)
           setApiDown(false)
+          setFailed(false)
           setLoading(false)
         }
       } catch {
-        if (!cancelled()) {
-          setApiDown(!isPristine(cfg))
+        if (cancelled()) return
+        if (!isPristine(cfg)) {
+          // the compute service is down: make the banner's promise true — show the
+          // closest static bundle (same preset + overlays, lever diffs dropped)
+          try {
+            const fallback = await fetchStatic({ ...cfg, levers: {} })
+            if (!cancelled()) setPayload(fallback)
+          } catch { /* not even the bundle — the failed state below covers it */ }
+          if (!cancelled()) {
+            setApiDown(true)
+            setLoading(false)
+          }
+        } else {
+          setFailed(true)
           setLoading(false)
         }
       }
@@ -71,5 +86,5 @@ export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
     return () => clearTimeout(t)
   }, [cfg])
 
-  return { payload, loading, apiDown }
+  return { payload, loading, apiDown, failed }
 }

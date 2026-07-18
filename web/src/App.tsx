@@ -29,17 +29,14 @@ const WAGE_CAPTION =
 const WAGE_CAPTION_REAB = ' The re-employed line is the Baumol-vs-crowding tug of war on service wages.'
 
 function initialConfig() {
-  const parsed = configFromLocation(location.search)
-  // a bare URL opens on the default scenario; any param wins
-  if (!location.search || (parsed.preset === null && parsed.overlays.length === 0
-      && Object.keys(parsed.levers).length === 0 && !location.search.includes('preset')))
-    return location.search.length > 1 ? parsed : INITIAL
-  return parsed
+  // a bare URL opens on the default scenario; ANY query param means the link decides
+  if (!location.search || location.search === '?') return INITIAL
+  return configFromLocation(location.search)
 }
 
 export default function App() {
   const [cfg, dispatch] = useScenario(initialConfig())
-  const { payload, loading, apiDown } = useScenarioData(cfg)
+  const { payload, loading, apiDown, failed } = useScenarioData(cfg)
   const levers = effectiveLevers(cfg)
   const reabDynamics = Number(levers.reab_baumol) > 0 || Number(levers.reab_crowd) > 0
   const startYear = payload?.config.start_year ?? 2026
@@ -135,6 +132,13 @@ export default function App() {
         {payload && <SummaryTable payload={payload} />}
         {payload && <TornadoSection cfg={cfg} />}
         {loading && !payload && <p className="caption col">Loading the scenario…</p>}
+        {failed && !payload && (
+          <p className="panel caption col warning">
+            The scenario data could not be loaded — the site's data files are missing or
+            unreachable. If this is a fresh deployment, the static bundles under /data were
+            not copied.
+          </p>
+        )}
       </main>
     </div>
   )

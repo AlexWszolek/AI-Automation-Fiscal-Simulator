@@ -92,10 +92,25 @@ fiscal_delta(worker) =
 - [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 7 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.9)
 
 ### Complete: model backend + website
-`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (66 tests).
+`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (320 pytest + 213 vitest).
 
-**Run the app:**  `.venv/bin/streamlit run app/streamlit_app.py`
+**Run the Streamlit prototype:**  `.venv/bin/streamlit run app/streamlit_app.py`
 **Headline scenario (CLI):**  `.venv/bin/python -m fiscal_model.dynamics`
+
+### The website (`web/` + `api/`)
+The production site is a React/Vite/TS static front end plus a small FastAPI compute service —
+display-grade for policy briefings, replacing the Streamlit prototype at cutover. Presets and
+their policy-response combinations are **precomputed and committed** (`web/public/data/`), so
+the site browses fully offline; the API serves custom slider values and modified-config
+sensitivity tornados. Everything the TS side knows about the model is **generated** from
+`fiscal_model/app_params.py` (`scripts/gen_web_bundle.py`: widget grid, URL-codec golden
+vectors, scenario bundles) and all user-facing copy is extracted byte-for-byte from the app
+(`scripts/extract_web_copy.py`) — freshness tests fail if either drifts. One Python function
+(`fiscal_model/webpayload.py`) produces both the static bundles and every API response, so
+static ≡ live by construction (pinned in `tests/test_api.py`).
+
+**Dev:**  `cd web && npm install && npm run dev`  +  `.venv/bin/uvicorn api.main:app --port 8000`
+**Deploy:** see `deploy/` (nginx/Caddy + systemd examples).
 
 ## Setup (fresh clone)
 The five runtime artifacts the model loads (NOC distribution, PolicyEngine benefit lookup +
