@@ -1,0 +1,311 @@
+{
+ "about": "A bottom-up accounting model of what AI automation does to US public finances, built for policy research and for briefing people who do not read code.\n\n**How it works.** It prices every displaced worker's taxes and benefits at the occupation-by-state level — 33,000 cells against BLS, BEA, and Census data — then follows the wages firms stop paying to where they actually go: profit, lower prices, raises for the remaining staff, and compute. Each destination is taxed at its real rate, which is the whole story: wages are taxed at roughly 25-30% and their replacements far less. All 51 states must balance their budgets every year, and the lost paychecks and state austerity feed back as further layoffs.\n\n**What it is not.** A forecast. It is a scenario calculator: the presets translate published forecasts (Acemoglu, Korinek, AI 2027, AI 2040) into the model's levers, with citations, and every number is a *change* against a no-AI baseline — the deficits CBO already projects come first, and this adds to them.\n\n**Why trust the arithmetic.** The code is open source and machine-checked: 300+ automated tests, including conservation identities re-verified on every run, so workers and dollars cannot multiply or vanish. Claude Fable 5 and Opus 4.8 wrote the code in this project under those checks.\n\n[Source code](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator) · [Technical report](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator/blob/main/docs/report/report.docx) · [Preset evidence](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator/blob/main/docs/PRESET_EVIDENCE.md)",
+ "captions": [
+  "Every worker in the 163M baseline is in exactly one band each year (conservation identity C1) — displacement moves people down the stack, reabsorption and attrition move them out of limbo.",
+  "Federal revenue and the absolute deficit. Revenue falls faster than employment because the displaced skew high-wage and the tax schedule is progressive — the budget loses its best taxpayers first.",
+  "The disposition of the compensation firms stop paying — every dollar goes to exactly one destination (identity C2), each taxed at a different rate: profit ~18%, prices ~2% (state sales tax only), raises at full labor rates, compute at the capital rate.",
+  "Jobs lost because displaced households stopped spending and states cut budgets. The stock tracks the standing income withdrawal — stimulus (UBI, raises) visibly re-employs these workers.",
+  "The same channel in dollars: what the raises cost firms vs the extra federal tax they generate — the one mechanism that rebuilds the labor tax base.",
+  "The shortfall BEFORE any response — the deficit states would run if they could borrow like Washington. This is what the first year or two actually look like while legislatures catch up; the cumulative line is what a decade of it adds up to.",
+  "The consequence of the response you chose above: revenue recovered by rate hikes vs spending cuts (including cuts FORCED where the cap binds). Try 'Raise taxes' vs 'Cut spending' — the federal picture changes too, because both withdraw demand differently."
+ ],
+ "groups": [
+  {
+   "expanded": true,
+   "keys": [
+    "cog",
+    "phys",
+    "robotics_lag",
+    "rob_base",
+    "adopt0",
+    "adopt1",
+    "n_periods"
+   ],
+   "title": "Automation & adoption"
+  },
+  {
+   "expanded": false,
+   "keys": [
+    "reab",
+    "haircut",
+    "reab_baumol",
+    "reab_crowd",
+    "ui_weeks",
+    "lfp",
+    "attrition"
+   ],
+   "title": "Labor market"
+  },
+  {
+   "expanded": false,
+   "keys": [
+    "retained",
+    "price",
+    "auto_cost",
+    "compute_rate"
+   ],
+   "title": "Firms & compute"
+  },
+  {
+   "expanded": false,
+   "keys": [
+    "unbounded",
+    "ceiling",
+    "elasticity",
+    "spillover"
+   ],
+   "title": "Survivor wages"
+  },
+  {
+   "expanded": false,
+   "keys": [
+    "price_pt",
+    "prod_pt",
+    "growth",
+    "demand"
+   ],
+   "title": "Macro & demand"
+  },
+  {
+   "expanded": false,
+   "keys": [
+    "income_mult",
+    "corp_mult",
+    "cons_mult",
+    "atax",
+    "ubi",
+    "ubi_recapture",
+    "interest"
+   ],
+   "title": "Government policy"
+  }
+ ],
+ "intro": "How to use this: pick a scenario in the sidebar. Each one is a published AI forecast (Acemoglu, Korinek, AI 2027/2040, …) translated into this model's levers, with citations, and you can add policy responses on top to see how much they recover. Every number on this page is a change against a no-AI baseline: the deficits Washington already projects come first, and this is added to them. The story the accounting keeps telling is simple: the tax base migrates from wages, taxed at roughly 25-30%, to profits, prices, and compute, taxed far less, so revenue falls faster than employment — and states, which must balance their budgets every year, must either cut benefits or raise tax rates.",
+ "learn_more": "#### The data\n\nThe model is anchored to the 2024 US economy as the statistical agencies measured it. Every input file carries control totals that are re-asserted on every run — 163.2 million workers, \\$15.0 trillion in total compensation, \\$29.3 trillion GDP, \\$4,983 billion in federal receipts — and a load that fails to reconcile stops before a single scenario is computed.\n\n| Source | What it contributes |\n|---|---|\n| BLS OEWS 2024 | employment and wages for 833 occupations, 71 industries, all 51 jurisdictions |\n| BEA 2024 NIPA | capital income, corporate profits, and government receipts by stream |\n| Yale Budget Lab AI exposure | how cognitively automatable each occupation is |\n| Webb robot exposure | how physically automatable each occupation is, from robot patents |\n| ACS PUMS 2024 | who workers live with — filing status, household income, children |\n| PolicyEngine-US, baked offline | means-tested benefit entitlements by state, family shape, and income |\n| 2025 tax schedules | the brackets and FICA parameters behind the hand-rolled tax engine |\n\n#### How a displaced worker is priced\n\nFor each of roughly 33,000 occupation-by-state cells, the model answers one question exactly: if this worker loses this wage, what happens to every level of government? Five channels add up to the answer.\n\n- **Income tax** — the bracket schedules re-evaluated at household income with and without the wage. No elasticities, no average rates; the lost dollars come off the top brackets first.\n- **Payroll (FICA)** — the exact schedule with the Social Security cap, which kinks precisely in the wage range where AI exposure peaks.\n- **Transfers** — new benefit claims looked up in the offline PolicyEngine tables, in two phases: during unemployment insurance, and after it runs out. The Medicaid and SNAP step-ups mostly arrive at UI exhaustion, not at the layoff.\n- **Corporate recapture** — the wage the firm stops paying becomes taxable profit, deliberately booked at the most generous plausible rate.\n- **Consumption** — state consumption taxes on the resulting drop in spending.\n\nOne design choice matters most: the model integrates over the full wage distribution inside each cell rather than pricing the average worker. Safety-net programs are humps and cliffs — the EITC rises then falls, SNAP phases out, Medicaid eligibility is a cliff — and the average-wage shortcut steps right over them, understating transfer costs by up to a factor of eight in cells that straddle a threshold.\n\n#### The dynamic model\n\nThe simulation then runs the economy forward one year at a time:\n\n1. An **adoption ceiling** sets how much feasible work is automated by that year — cumulative, so \"60 percent by year ten\" means exactly that. Physical automation ramps in later than cognitive.\n2. **Firms route the saved wage bill** four ways: compute spending, retained profit, price cuts for consumers, and raises for surviving workers. Every dollar goes to exactly one destination.\n3. **Survivor raises are funded** — paid out of the routed gains, never out of thin air, and taxed back through the same bracket schedules.\n4. A **macro block** applies the price cuts and a productivity dividend to real output — reporting effects only; deflation is never fed into nominal tax math.\n5. The **federal government** books the net loss and borrows.\n6. **All 51 states must balance** their budgets every year: rate hikes up to a feasibility cap, forced spending cuts for whatever remains.\n7. Lost take-home pay plus state austerity **withdraw demand**, which returns one year later as induced layoffs — a feedback loop mathematically guaranteed to converge rather than spiral, and checked at every run.\n\n#### Why trust it\n\n- **Conservation, enforced.** Eight accounting identities are re-verified on every period of every run: every worker sits in exactly one of seven states that sum to baseline employment; every saved dollar lands in exactly one place; the federal deficit reconciles to its labeled components; every state gap closes to zero. A new fiscal flow that skips the ledger breaks the build.\n- **A hand-checkable anchor.** With every behavioral mechanism switched off, the full system reproduces the simple static calculation bit-for-bit.\n- **~300 automated tests** cover the identities, each channel's numbers, and behavioral pins from the displacement literature.\n- **Honest framing.** Every result is a *delta* against a no-AI baseline — what automation changes, not a forecast of the whole economy. The always-on sensitivity tornado shows exactly which assumptions move the answer, and by how much.\n\n#### What it deliberately leaves out\n\n- No Federal Reserve response to the demand shock — **overstates** damage in crisis scenarios.\n- Corporate recapture booked at full conversion of saved wages to taxable profit — **understates** the gap (a deliberate steelman).\n- No within-job augmentation (workers made more productive but kept) — overstates where augmentation dominates.\n- Benefits are entitlement values, not take-up-adjusted spending — overstates transfer outlays.\n- Robot exposure anchored to today's patent stock — understates the physical channel in AGI scenarios.\n- No counterfactual growth in the wage base — understates losses at long horizons.\n\nThe two bolded items cut *against* the model's own thesis; the headline findings survive both.\n\n#### Validation\n\nThree independent external models triangulate the result. Replicating the Windfall Trust's scenario grid reproduces their sign and ordering everywhere — worse with more displacement, worse with less value capture — at roughly half their magnitudes, a wedge fully explained by their average-OECD tax base versus the actual US system. Replicating RAND's 10-point unemployment shock lands in their order of magnitude once their deflation mechanism (which this model deliberately excludes from tax math) is applied. And the Acemoglu preset's GDP gain sits inside his published ~1.1 percent bound. None of the presets are tuned to hit these targets.",
+ "levers": {
+  "adopt0": {
+   "help": "Where the cumulative adoption ceiling starts. Early payroll evidence (Brynjolfsson's 'Canaries') puts the realized start near 0.02.",
+   "label": "Automated by year 1 — % of feasible work",
+   "widget": "slider"
+  },
+  "adopt1": {
+   "help": "A cumulative diffusion ceiling: the automated stock reaches feasibility × this share by the horizon, so 0.6 means 60% of the feasibly-automatable jobs are automated by the end.",
+   "label": "Automated by the final year — % of feasible work",
+   "widget": "slider"
+  },
+  "atax": {
+   "help": "A federal levy on the automated jobs' saved compensation, paid from retained profit and corporate-deductible. It ships at 0, as the literature-anchored rates live in the policy overlays: Costinot-Werning is roughly 0.3-1%, not 7%.",
+   "label": "Automation (robot) tax — share of the automated comp bill",
+   "widget": "slider"
+  },
+  "attrition": {
+   "help": "Retirement, mortality, and discouragement. Fiscally neutral, as the baseline counterfactual retires too; its role is to stop the exhausted pool from persisting forever.",
+   "label": "Natural attrition of long-term unemployed / yr",
+   "widget": "slider"
+  },
+  "auto_cost": {
+   "help": "What firms spend on compute and automation inputs per dollar of compensation saved; it flows to the compute-capital pool below. The evidence is 0.3-0.5 in build-out years and ~0.05-0.10 in steady state.",
+   "label": "Cost of automation (fraction of saved comp → compute)",
+   "widget": "slider"
+  },
+  "ceiling": {
+   "help": "The cap on the still-employed wage index. Raises beyond it spill to profit or prices (spillover below); raises themselves are funded from the routed survivor share and re-taxed at full marginal rates.",
+   "label": "Raise ceiling (× baseline wage)",
+   "widget": "slider"
+  },
+  "cog": {
+   "help": "Of the work cognitively exposed to AI (the Yale exposure index), the share that is technically automatable. Literature anchors run from ~0.15 (bare LLMs, Eloundou) to ~0.55 (LLMs plus the software they can build); 1.0 is AGI.",
+   "label": "Cognitive feasibility (AI capability)",
+   "widget": "slider"
+  },
+  "compute_rate": {
+   "help": "The effective tax on the compute-capital pool. ~0.05 is the post-TCJA rate on equipment and software capital; 0.27 is parity with domestic capital (the compute-parity overlay).",
+   "label": "Compute pool — effective tax rate",
+   "widget": "slider"
+  },
+  "cons_mult": {
+   "help": "A surcharge on the $874B state sales-and-excise and $102B federal excise baselines, plus scaling of the state consumption-tax channel. This is the classic 'tax the spending, not the wage' response; note how small these bases are next to income taxes, as the US has no VAT to fall back on.",
+   "label": "Consumption taxes multiplier",
+   "widget": "slider"
+  },
+  "corp_mult": {
+   "help": "A surcharge on the $492B federal and $172B state baseline corporate receipts, plus scaling of the capital-recapture bundle: the corporate offset including dividend and pass-through tax, and the overflow corporate tax. The compute-pool and robot taxes keep their own rates.",
+   "label": "Capital taxes multiplier",
+   "widget": "slider"
+  },
+  "demand": {
+   "help": "An Okun-style level multiplier: the induced-layoff stock tracks the standing net income withdrawal, so UBI and raises re-employ while austerity deepens the spiral. 0.5 approximates an active Fed offsetting half the shock; 1.8 is Chodorow-Reich's no-offset estimate.",
+   "label": "Second-round demand multiplier",
+   "widget": "slider"
+  },
+  "elasticity": {
+   "help": "How survivors' market wages respond to labor-market slack: negative means AI substitutes for labor and slack pushes wages down, positive means complementarity pulls them up (the augmentation scenario). Applied to last year's slack.",
+   "label": "Market wage response to slack (− substitute / + complement)",
+   "widget": "slider"
+  },
+  "growth": {
+   "help": "≈2% real + 2% inflation. Grows the GDP denominator so that debt-to-GDP is more accurate at long horizons; nominal dollar columns are unchanged.",
+   "label": "Baseline trend growth (nominal, %-GDP denominators)",
+   "widget": "slider"
+  },
+  "haircut": {
+   "help": "The re-employed earn (1 − haircut) × their old wage, floored at a state service wage. The evidence is ~0.13 typically, and 0.25 for high-tenure mass layoffs. A bigger cut can drop the household into EITC/SNAP/Medicaid eligibility, which is taken into account.",
+   "label": "Re-employment wage cut (haircut)",
+   "widget": "slider"
+  },
+  "income_mult": {
+   "help": "A surcharge on the $2,403B federal and $536B state baseline individual-income receipts, plus scaling of every income-tax dollar the shock moves: displaced losses, the raises' recapture, and the tax on UI. Payroll (FICA) is statutorily separate and not covered. Displacement sets up two opposing effects, as the surcharge collects more but each displaced worker also loses more — the surcharge dominates until the wage base collapses.",
+   "label": "Income tax multiplier",
+   "widget": "slider"
+  },
+  "interest": {
+   "help": "New deficits accumulate into debt at this rate. ~0.04 matches the discount-rate anchor used in the AGI presets.",
+   "label": "Interest rate on federal debt",
+   "widget": "slider"
+  },
+  "lfp": {
+   "help": "The share of benefit-exhausted workers who leave the labor force each year onto disability insurance, an $18k/yr outlay. This is the dominant adjustment margin in the China-shock evidence.",
+   "label": "LFP exit / SSDI rate (of exhausted)",
+   "widget": "slider"
+  },
+  "n_periods": {
+   "help": "Simulation length. Presets carry their native horizon.",
+   "label": "Horizon (years)",
+   "widget": "slider"
+  },
+  "phys": {
+   "help": "The same idea for physical work (Webb's robot-patent exposure). Anchored to current robot technology, as dexterity and care work score near zero even at 1.0.",
+   "label": "Robotics feasibility (physical work)",
+   "widget": "slider"
+  },
+  "price": {
+   "help": "The share competed away into lower consumer prices: a real gain to households, but taxed only through ~2% state consumption taxes, which makes it the biggest leak in the base-migration story.",
+   "label": "Saved wages → lower prices (share)",
+   "widget": "slider"
+  },
+  "price_pt": {
+   "help": "The share of the firms' price cuts that actually deflates the price level. By design it moves only the real and %-of-GDP views, as nominal tax dollars are never deflated.",
+   "label": "Price pass-through (deflation → real/%-GDP views)",
+   "widget": "slider"
+  },
+  "prod_pt": {
+   "help": "The output-weighted real-GDP gain: automating the entire compensation bill raises GDP by this fraction. Acemoglu's \"The Simple Macroeconomics of AI\" implies ~0.15; the micro and AGI evidence implies 0.5-1.0. It cushions the %-of-GDP views.",
+   "label": "Productivity dividend (full automation → +this share of GDP)",
+   "widget": "slider"
+  },
+  "rate_cap": {
+   "help": "The political and economic ceiling on rate increases. Once a state hits it, the remainder becomes forced spending cuts: the cap is where 'just raise taxes' is not longer a option.",
+   "label": "Max feasible rate hike (× base)",
+   "widget": "slider"
+  },
+  "reab": {
+   "help": "The annual rate at which long-term displaced workers find new, lower-wage work. The evidence runs 0.6-0.75 in normal labor markets (Farber) and 0.05-0.10 in the China-shock adjustment; 0 makes displacement permanent. The refuge is FINITE: this rate scales down as automation reaches the low-exposure service work the re-employed move into, and stops entirely once it is gone.",
+   "label": "Reabsorption rate / yr (0 = displacement is permanent)",
+   "widget": "slider"
+  },
+  "reab_baumol": {
+   "help": "How strongly re-employment wages ride the economy's productivity gains: the work humans still do gets expensive as everything else gets cheap (Baumol's cost disease, working in labor's favor). At 1.0, a +20% productivity economy pays re-employed workers +20%. This is how wages can RISE despite mass displacement.",
+   "label": "Re-employed wage — Baumol pull",
+   "widget": "slider"
+  },
+  "reab_crowd": {
+   "help": "How strongly displaced workers flooding into service work bid its wage down: the wage falls with last year's labor-market slack. The China-shock evidence supports a meaningful value; it competes directly with the Baumol pull above.",
+   "label": "Re-employed wage — crowding pressure",
+   "widget": "slider"
+  },
+  "retained": {
+   "help": "Of the wage bill firms stop paying (net of automation costs), the share kept as profit, taxed at effective corporate rates of roughly 17-18%, which is significantly below the labor-tax wedge it replaces.",
+   "label": "Saved wages → retained profit (share)",
+   "widget": "slider"
+  },
+  "rob_base": {
+   "help": "The shape of that build-out. 1.0 is a straight linear ramp; higher values make capacity compound — robots building the factories that build robots — so the ramp starts slow and finishes explosively. At 1.5, half of all capacity arrives in the last fifth of the lag.",
+   "label": "Robot build-out growth (exponential base)",
+   "widget": "slider"
+  },
+  "robotics_lag": {
+   "help": "Physical automation needs AI-driven industrial capacity first: the robot channel ramps in over this many years (0 = the capacity exists from day one).",
+   "label": "Robotics capacity build-out lag (years)",
+   "widget": "slider"
+  },
+  "spillover": {
+   "help": "Where raises above the ceiling go instead: 1.0 sends all of it to profit, which is corporate-taxed, and 0.0 sends all of it to prices, which are nearly untaxed. This drives the federal/state split of the overflow.",
+   "label": "Un-absorbable raise → profit (vs prices)",
+   "widget": "slider"
+  },
+  "state_cut": {
+   "help": "Under 'mix of both', this share comes out of spending and the rest is sought from rate hikes, subject to the cap.",
+   "label": "Share of the gap closed by spending cuts (mix)",
+   "widget": "slider"
+  },
+  "state_resp": {
+   "help": "The closure rule for every state, every year: 'raise taxes' raises rates on the remaining wage base up to the cap, 'cut spending' takes the whole gap out of budgets, and 'mix' splits it by the slider.",
+   "label": "What do states do?",
+   "widget": "selectbox"
+  },
+  "ubi": {
+   "help": "A universal payment per baseline worker, booked as a federal outlay.",
+   "label": "UBI per worker / yr ($)",
+   "widget": "slider"
+  },
+  "ubi_recapture": {
+   "help": "The share of the UBI outlay the government gets back: the income-tax clawback plus the means-tested benefits the UBI displaces, ~20-30% in practice.",
+   "label": "UBI recapture",
+   "widget": "slider"
+  },
+  "ui_weeks": {
+   "help": "The unemployment-insurance window. During it, displaced workers draw benefits (45% replacement, capped) and are taxed on them; most means-tested benefits step up at exhaustion, not at displacement.",
+   "label": "UI duration (weeks)",
+   "widget": "slider"
+  },
+  "unbounded": {
+   "help": "Removes the raise ceiling entirely, so survivors absorb whatever the routed share funds.",
+   "label": "Unbounded raise (optimistic)",
+   "widget": "checkbox"
+  }
+ },
+ "metrics": [
+  {
+   "help": "Workers not employed in the final year who would be employed under the baseline: on unemployment insurance, exhausted, exited to SSDI, or laid off by the demand shortfall. The re-employed and natural retirements are excluded.",
+   "label": "Jobs lost (final yr)"
+  },
+  {
+   "help": "The decline in workers still employed at their original wage, against the 163M baseline; the re-employed at lower wages count as not employed here.",
+   "label": "Employment"
+  },
+  {
+   "help": "Total federal individual income-tax revenue lost to displacement, summed over the whole horizon. This is the single largest fiscal channel.",
+   "label": "Federal income tax lost (cumulative)"
+  },
+  {
+   "help": "The absolute federal deficit at the final year: the $1,833B baseline plus the shock's net effect. The line below restates it as a share of productivity-and-trend-adjusted GDP.",
+   "label": "Federal deficit (final yr)"
+  },
+  {
+   "help": "Every deficit the shock produces, accumulated with interest: the new debt relative to the baseline path. A negative value means the shock pays debt down, as capital recoveries outgrew the losses.",
+   "label": "Federal debt (Δ cumulative)"
+  },
+  {
+   "help": "The signed change in the federal balance in the final year, where negative is worse. It reconciles exactly to the fiscal summary table below.",
+   "label": "Net fiscal impact (final yr)"
+  },
+  {
+   "help": "What states must close that year, before any rate hikes and cuts; the state section below shows what closing it means.",
+   "label": "State shortfall (final yr)"
+  },
+  {
+   "help": "The productivity dividend: real output against the baseline. In severe scenarios this is large and positive while the fiscal picture collapses, as the abundance arrives as profit and lower prices, not as taxed wages.",
+   "label": "Real GDP effect"
+  }
+ ],
+ "subheaders": [
+  "The states — where the shock has no shock absorber",
+  "Fiscal summary",
+  "Which assumptions drive this number?",
+  "Where the workforce goes",
+  "Federal budget — absolute levels",
+  "What firms do with the saved wages",
+  "Demand feedback — induced layoffs",
+  "Wages of the still-employed"
+ ]
+}

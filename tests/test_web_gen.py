@@ -43,3 +43,15 @@ def test_grid_covers_every_ui_key(genmod):
     from fiscal_model.app_params import UI_GRID
     grid = _committed("grid.json")["grid"]
     assert set(grid) == set(UI_GRID)
+
+
+def test_copy_json_fresh():
+    """The mechanically-ported copy must track the app — editing app copy without re-running
+    scripts/extract_web_copy.py goes red here."""
+    spec = importlib.util.spec_from_file_location("extract_web_copy",
+                                                  ROOT / "scripts" / "extract_web_copy.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    committed = json.loads((ROOT / "web" / "src" / "content" / "copy.json").read_text())
+    assert json.loads(json.dumps(mod.extract(), sort_keys=True, ensure_ascii=False)) == committed, \
+        "web/src/content/copy.json is stale — re-run scripts/extract_web_copy.py"

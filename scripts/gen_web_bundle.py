@@ -175,7 +175,7 @@ def emit_scenarios() -> None:
     out = {}
     for preset in configs:
         cfg = {"preset": preset, "overlays": [], "levers": {}}
-        rep = webpayload.cfg_repr_for(data, deltas, cfg)
+        rep = webpayload.cfg_repr_for(cfg)
         e = by_repr.get(rep)
         assert e is not None, f"precomputed tornado missing for {preset or 'custom'} — " \
                               "re-run scripts/precompute_app_mc.py"
