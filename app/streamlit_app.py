@@ -986,7 +986,7 @@ def _render_tornado(entry: dict, n_draws: int, stale: bool = False) -> None:
         st.caption("**Settings changed — updating the sensitivity analysis in a few "
                    "seconds…** (showing the previous configuration meanwhile)")
     st.altair_chart(chart, width='stretch', theme=None)
-    st.caption(f"Each bar shows how strongly one assumption drives the final-year deficit, across {n_draws} model runs that jitter every live assumption ±15% around your settings; red means raising it worsens the deficit, green means it improves it. Across those runs the final-year deficit increase stays between \\${entry['p10']:,.0f}B and \\${entry['p90']:,.0f}B (P10-P90). That band measures robustness to mis-calibrated assumptions within this scenario — the honest uncertainty about the future is the spread across the scenario presets themselves.")
+    st.caption(f"Each bar shows how strongly one assumption drives the final-year deficit, across {n_draws} model runs that jitter every live assumption ±15% around your settings; red means raising it worsens the deficit, blue means it improves it. Across those runs the final-year deficit increase stays between \\${entry['p10']:,.0f}B and \\${entry['p90']:,.0f}B (P10-P90). That band measures robustness to mis-calibrated assumptions within this scenario — the honest uncertainty about the future is the spread across the scenario presets themselves.")
 
 
 _mc_base = canon(v2p)
