@@ -15,6 +15,12 @@
         "false"
       ],
       "port": 8501
+    },
+    {
+      "name": "fiscal-web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "web", "--", "--port", "5173", "--strictPort"],
+      "port": 5173
     }
   ]
 }

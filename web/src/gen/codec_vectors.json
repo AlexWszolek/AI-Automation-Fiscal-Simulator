@@ -1,0 +1,4568 @@
+{
+ "encode": [
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.2,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "acemoglu-modest"
+   },
+   "overlays": [],
+   "preset": "acemoglu-modest",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.2,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "cog": "0.3",
+    "ov": "ubi",
+    "preset": "acemoglu-modest"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "acemoglu-modest",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.2,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.20000000000100002,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "acemoglu-modest"
+   },
+   "overlays": [],
+   "preset": "acemoglu-modest",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.2,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "brynjolfsson-augment"
+   },
+   "overlays": [],
+   "preset": "brynjolfsson-augment",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.4,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "cog": "0.4",
+    "ov": "ubi",
+    "preset": "brynjolfsson-augment"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "brynjolfsson-augment",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.30000000000099997,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "brynjolfsson-augment"
+   },
+   "overlays": [],
+   "preset": "brynjolfsson-augment",
+   "pristine": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "windfall-medium"
+   },
+   "overlays": [],
+   "preset": "windfall-medium",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.65,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "cog": "0.65",
+    "ov": "ubi",
+    "preset": "windfall-medium"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "windfall-medium",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.550000000001,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "windfall-medium"
+   },
+   "overlays": [],
+   "preset": "windfall-medium",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "china-shock"
+   },
+   "overlays": [],
+   "preset": "china-shock",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.4,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "cog": "0.4",
+    "ov": "ubi",
+    "preset": "china-shock"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "china-shock",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.30000000000099997,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "china-shock"
+   },
+   "overlays": [],
+   "preset": "china-shock",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "agi-20y"
+   },
+   "overlays": [],
+   "preset": "agi-20y",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "ov": "ubi",
+    "preset": "agi-20y"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "agi-20y",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.000000000001,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "agi-20y"
+   },
+   "overlays": [],
+   "preset": "agi-20y",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "agi-5y"
+   },
+   "overlays": [],
+   "preset": "agi-5y",
+   "pristine": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "ov": "ubi",
+    "preset": "agi-5y"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "agi-5y",
+   "pristine": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.000000000001,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "agi-5y"
+   },
+   "overlays": [],
+   "preset": "agi-5y",
+   "pristine": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai-2027"
+   },
+   "overlays": [],
+   "preset": "ai-2027",
+   "pristine": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "ov": "ubi",
+    "preset": "ai-2027"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "ai-2027",
+   "pristine": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.000000000001,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai-2027"
+   },
+   "overlays": [],
+   "preset": "ai-2027",
+   "pristine": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.95,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai2040-plan-a"
+   },
+   "overlays": [],
+   "preset": "ai2040-plan-a",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.95,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "cog": "1",
+    "ov": "ubi",
+    "preset": "ai2040-plan-a"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "ai2040-plan-a",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.95,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.9500000000009999,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai2040-plan-a"
+   },
+   "overlays": [],
+   "preset": "ai2040-plan-a",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.95,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai2040-plan-d"
+   },
+   "overlays": [],
+   "preset": "ai2040-plan-d",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "ov": "ubi",
+    "preset": "ai2040-plan-d"
+   },
+   "overlays": [
+    "ubi"
+   ],
+   "preset": "ai2040-plan-d",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.000000000001,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "preset": "ai2040-plan-d"
+   },
+   "overlays": [],
+   "preset": "ai2040-plan-d",
+   "pristine": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.1,
+    "adopt1": 0.6,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.7,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.0,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 12000,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": true
+   },
+   "expect": {
+    "demand": "1",
+    "ubi": "12000",
+    "unbounded": "1"
+   },
+   "overlays": [],
+   "preset": null,
+   "pristine": {
+    "adopt0": 0.1,
+    "adopt1": 0.6,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.7,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.0,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  },
+  {
+   "current": {
+    "adopt0": 0.1,
+    "adopt1": 0.6,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.7,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.0,
+    "reab_baumol": 0.4,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.5,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "expect": {
+    "ov": "cw-robot-tax",
+    "reab_baumol": "0.4",
+    "rob_base": "1.5"
+   },
+   "overlays": [
+    "cw-robot-tax"
+   ],
+   "preset": null,
+   "pristine": {
+    "adopt0": 0.1,
+    "adopt1": 0.6,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.7,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.0,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   }
+  }
+ ],
+ "parse": [
+  {
+   "expect": {
+    "levers": {
+     "cog": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cog": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cog": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cog": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "phys": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "phys": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "phys": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "phys": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "phys": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "phys": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "phys": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "phys": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "phys": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "robotics_lag": 8
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "robotics_lag": "8"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "robotics_lag": 8
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "robotics_lag": "8.37"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "robotics_lag": 0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "robotics_lag": "-16"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "robotics_lag": 15
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "robotics_lag": "31"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "robotics_lag": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rob_base": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rob_base": "1.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rob_base": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rob_base": "1.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rob_base": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rob_base": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rob_base": 2.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rob_base": "5.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rob_base": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt0": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt0": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt0": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt0": "0.5037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt0": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt0": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt0": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt0": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt0": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt1": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt1": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt1": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt1": "0.5037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt1": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt1": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "adopt1": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt1": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "adopt1": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "n_periods": 17
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "n_periods": "17"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "n_periods": 17
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "n_periods": "17.37"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "n_periods": 3
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "n_periods": "-28"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "n_periods": 30
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "n_periods": "61"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "n_periods": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab": "0.50925"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "haircut": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "haircut": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "haircut": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "haircut": "0.5037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "haircut": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "haircut": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "haircut": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "haircut": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "haircut": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_baumol": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_baumol": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_baumol": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_baumol": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_baumol": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_baumol": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_baumol": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_baumol": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_baumol": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_crowd": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_crowd": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_crowd": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_crowd": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_crowd": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_crowd": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "reab_crowd": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_crowd": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "reab_crowd": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ui_weeks": 26
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ui_weeks": "26"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ui_weeks": 26
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ui_weeks": "26.37"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ui_weeks": 0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ui_weeks": "-53"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ui_weeks": 52
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ui_weeks": "105"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ui_weeks": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "lfp": 0.1
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "lfp": "0.1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "lfp": 0.1
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "lfp": "0.1037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "lfp": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "lfp": "-1.2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "lfp": 0.2
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "lfp": "1.4"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "lfp": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "attrition": 0.05
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "attrition": "0.05"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "attrition": 0.05
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "attrition": "0.05185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "attrition": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "attrition": "-1.1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "attrition": 0.1
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "attrition": "1.2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "attrition": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "retained": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "retained": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "retained": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "retained": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "retained": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "retained": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "retained": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "retained": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "retained": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "auto_cost": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "auto_cost": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "auto_cost": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "auto_cost": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "auto_cost": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "auto_cost": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "auto_cost": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "auto_cost": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "auto_cost": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "compute_rate": 0.2
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "compute_rate": "0.2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "compute_rate": 0.2
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "compute_rate": "0.2037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "compute_rate": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "compute_rate": "-1.4"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "compute_rate": 0.4
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "compute_rate": "1.8"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "compute_rate": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "unbounded": true
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "unbounded": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "unbounded": false
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "unbounded": "0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "unbounded": true
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "unbounded": "true"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "unbounded": false
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "unbounded": "banana"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ceiling": 2.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ceiling": "2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ceiling": 2.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ceiling": "2.037"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ceiling": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ceiling": "-3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ceiling": 3.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ceiling": "7.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ceiling": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "elasticity": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "elasticity": "0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "elasticity": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "elasticity": "0.0185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "elasticity": -0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "elasticity": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "elasticity": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "elasticity": "2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "elasticity": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "spillover": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "spillover": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "spillover": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "spillover": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "spillover": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "spillover": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "spillover": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "spillover": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "spillover": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price_pt": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price_pt": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price_pt": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price_pt": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price_pt": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price_pt": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "price_pt": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price_pt": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "price_pt": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "prod_pt": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "prod_pt": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "prod_pt": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "prod_pt": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "prod_pt": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "prod_pt": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "prod_pt": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "prod_pt": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "prod_pt": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "growth": 0.04
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "growth": "0.04"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "growth": 0.04
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "growth": "0.04185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "growth": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "growth": "-1.08"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "growth": 0.08
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "growth": "1.16"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "growth": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "demand": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "demand": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "demand": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "demand": "1.0185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "demand": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "demand": "-3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "demand": 2.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "demand": "5.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "demand": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "state_resp": "mix"
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_resp": "mix"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_resp": "not-a-value"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "state_cut": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_cut": "0.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "state_cut": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_cut": "0.5185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "state_cut": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_cut": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "state_cut": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_cut": "3.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "state_cut": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rate_cap": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rate_cap": "1.5"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rate_cap": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rate_cap": "1.537"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rate_cap": 0.1
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rate_cap": "-3.9"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "rate_cap": 3.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rate_cap": "7.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "rate_cap": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "atax": 0.15
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "atax": "0.15"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "atax": 0.15
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "atax": "0.1537"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "atax": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "atax": "-1.3"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "atax": 0.3
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "atax": "1.6"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "atax": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi": 15000
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi": "15000"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi": 15000
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi": "15370"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi": 0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi": "-30001"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi": 30000
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi": "60001"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi_recapture": 0.3
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi_recapture": "0.3"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi_recapture": 0.3
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi_recapture": "0.3185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi_recapture": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi_recapture": "-1.6"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "ubi_recapture": 0.6
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi_recapture": "2.2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "ubi_recapture": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "interest": 0.05
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "interest": "0.05"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "interest": 0.05
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "interest": "0.05185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "interest": 0.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "interest": "-1.1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "interest": 0.1
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "interest": "1.2"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "interest": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "income_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "income_mult": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "income_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "income_mult": "1.0185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "income_mult": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "income_mult": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "income_mult": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "income_mult": "4.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "income_mult": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "corp_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "corp_mult": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "corp_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "corp_mult": "1.0185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "corp_mult": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "corp_mult": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "corp_mult": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "corp_mult": "4.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "corp_mult": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cons_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cons_mult": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cons_mult": 1.0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cons_mult": "1.0185"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cons_mult": 0.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cons_mult": "-2.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cons_mult": 1.5
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cons_mult": "4.0"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cons_mult": "garbage"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cog": 0.9
+    },
+    "overlays": [
+     "ubi",
+     "compute-parity"
+    ],
+    "preset": "agi-5y"
+   },
+   "qp": {
+    "cog": "0.9",
+    "ov": "ubi,compute-parity",
+    "preset": "agi-5y"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [
+     "ubi",
+     "cw-robot-tax"
+    ],
+    "preset": null
+   },
+   "qp": {
+    "cog": "banana",
+    "ov": "ubi,bogus,cw-robot-tax,grt-robot-tax",
+    "preset": "nope",
+    "unknown_key": "1"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [],
+    "preset": "ai2040-plan-a"
+   },
+   "qp": {
+    "preset": "ai2040-plan-a"
+   }
+  },
+  {
+   "expect": {
+    "levers": {},
+    "overlays": [
+     "grt-robot-tax"
+    ],
+    "preset": null
+   },
+   "qp": {
+    "ov": "grt-robot-tax"
+   }
+  },
+  {
+   "expect": {
+    "levers": {
+     "cog": 0.85,
+     "demand": 2.0,
+     "rate_cap": 0.1,
+     "state_resp": "raise_rates",
+     "ubi": 0
+    },
+    "overlays": [],
+    "preset": null
+   },
+   "qp": {
+    "cog": "0.837",
+    "demand": "99",
+    "rate_cap": "0.1499",
+    "state_resp": "raise_rates",
+    "ubi": "-5"
+   }
+  }
+ ]
+}

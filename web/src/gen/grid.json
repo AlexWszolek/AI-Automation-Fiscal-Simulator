@@ -1,0 +1,1540 @@
+{
+ "custom_defaults": {
+  "adopt0": 0.1,
+  "adopt1": 0.6,
+  "atax": 0.0,
+  "attrition": 0.025,
+  "auto_cost": 0.1,
+  "ceiling": 1.5,
+  "cog": 0.7,
+  "compute_rate": 0.1,
+  "cons_mult": 1.0,
+  "corp_mult": 1.0,
+  "demand": 0.5,
+  "elasticity": -0.15,
+  "growth": 0.04,
+  "haircut": 0.3,
+  "income_mult": 1.0,
+  "interest": 0.03,
+  "lfp": 0.03,
+  "n_periods": 10,
+  "phys": 0.2,
+  "price": 0.2,
+  "price_pt": 0.3,
+  "prod_pt": 0.3,
+  "rate_cap": 1.0,
+  "reab": 0.0,
+  "reab_baumol": 0.0,
+  "reab_crowd": 0.0,
+  "retained": 0.6,
+  "rob_base": 1.0,
+  "robotics_lag": 4,
+  "spillover": 0.5,
+  "state_cut": 0.0,
+  "state_resp": "mix",
+  "ubi": 0,
+  "ubi_recapture": 0.25,
+  "ui_weeks": 26,
+  "unbounded": false
+ },
+ "grid": {
+  "adopt0": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "adopt1": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "atax": {
+   "hi": 0.3,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "attrition": {
+   "hi": 0.1,
+   "lo": 0.0,
+   "step": 0.005,
+   "type": "float"
+  },
+  "auto_cost": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "ceiling": {
+   "hi": 3.0,
+   "lo": 1.0,
+   "step": 0.1,
+   "type": "float"
+  },
+  "cog": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "compute_rate": {
+   "hi": 0.4,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "cons_mult": {
+   "hi": 1.5,
+   "lo": 0.5,
+   "step": 0.05,
+   "type": "float"
+  },
+  "corp_mult": {
+   "hi": 1.5,
+   "lo": 0.5,
+   "step": 0.05,
+   "type": "float"
+  },
+  "demand": {
+   "hi": 2.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "elasticity": {
+   "hi": 0.5,
+   "lo": -0.5,
+   "step": 0.05,
+   "type": "float"
+  },
+  "growth": {
+   "hi": 0.08,
+   "lo": 0.0,
+   "step": 0.005,
+   "type": "float"
+  },
+  "haircut": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "income_mult": {
+   "hi": 1.5,
+   "lo": 0.5,
+   "step": 0.05,
+   "type": "float"
+  },
+  "interest": {
+   "hi": 0.1,
+   "lo": 0.0,
+   "step": 0.005,
+   "type": "float"
+  },
+  "lfp": {
+   "hi": 0.2,
+   "lo": 0.0,
+   "step": 0.01,
+   "type": "float"
+  },
+  "n_periods": {
+   "hi": 30,
+   "lo": 3,
+   "step": 1,
+   "type": "int"
+  },
+  "phys": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "price": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "price_pt": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "prod_pt": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "rate_cap": {
+   "hi": 3.0,
+   "lo": 0.1,
+   "step": 0.1,
+   "type": "float"
+  },
+  "reab": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.025,
+   "type": "float"
+  },
+  "reab_baumol": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "reab_crowd": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "retained": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "rob_base": {
+   "hi": 2.0,
+   "lo": 1.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "robotics_lag": {
+   "hi": 15,
+   "lo": 0,
+   "step": 1,
+   "type": "int"
+  },
+  "spillover": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "state_cut": {
+   "hi": 1.0,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "state_resp": {
+   "type": "enum",
+   "values": [
+    "mix",
+    "raise_rates",
+    "cut_spending"
+   ]
+  },
+  "ubi": {
+   "hi": 30000,
+   "lo": 0,
+   "step": 1000,
+   "type": "int"
+  },
+  "ubi_recapture": {
+   "hi": 0.6,
+   "lo": 0.0,
+   "step": 0.05,
+   "type": "float"
+  },
+  "ui_weeks": {
+   "hi": 52,
+   "lo": 0,
+   "step": 1,
+   "type": "int"
+  },
+  "unbounded": {
+   "type": "bool"
+  }
+ },
+ "overlays": [
+  {
+   "blurb": "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic, central).",
+   "key": "cw-robot-tax",
+   "name": "Robot tax \u2014 optimal (Costinot-Werning)"
+  },
+  {
+   "blurb": "5.1% ad-valorem, their decade-1 Mirrleesian rate (steady state: zero).",
+   "key": "grt-robot-tax",
+   "name": "Robot tax \u2014 transitional (GRT)"
+  },
+  {
+   "blurb": "A worker-based UBI financed with a pure tax clawback.",
+   "key": "ubi",
+   "name": "UBI $12k + 30% recapture"
+  },
+  {
+   "blurb": "Tax the compute-capital pool like domestic capital (ETR 0.27) instead of 0.05.",
+   "key": "compute-parity",
+   "name": "Compute-pool parity taxation"
+  }
+ ],
+ "presets": [
+  {
+   "adoption_end": 0.23,
+   "adoption_reach_year": null,
+   "adoption_start": 0.02,
+   "blurb": "His 10-year upper bounds at face value: small exposed share, modest productivity, normal labor market, no wage response.",
+   "defaults": {
+    "adopt0": 0.02,
+    "adopt1": 0.23,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.05,
+    "ceiling": 1.5,
+    "cog": 0.2,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.35,
+    "price_pt": 0.3,
+    "prod_pt": 0.15,
+    "rate_cap": 1.0,
+    "reab": 0.5,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.6,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "acemoglu-modest",
+   "n_periods": 10,
+   "name": "Acemoglu \u2014 Modest AI",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "23% of exposed tasks profitably automatable within 10y (Svanberg et al. extrapolation) \u2192 end 0.23; start 0.02 per Canaries realized pace (\u00a71)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "steady-state compute share, low (\u00a71)",
+     "value": "0.05"
+    },
+    "baseline_growth_rate": {
+     "text": "~2% real + 2% inflation (\u00a71)",
+     "value": "0.04"
+    },
+    "cognitive_feasibility": {
+     "text": "Acemoglu 2024: 19.9% of the US wage bill exposed to AI (\u00a71)",
+     "value": "0.2"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default (\u00a71)",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "active-Fed reading; Chodorow-Reich 1.8 is the no-offset pole (\u00a71)",
+     "value": "0.3"
+    },
+    "lfp_exit_rate": {
+     "text": "Farber: ~10% of losers NILF \u2192 0.03-0.05/yr (\u00a71)",
+     "value": "0.03"
+    },
+    "physical_feasibility": {
+     "text": "his frame is cognitive-only; token robot share (\u00a71)",
+     "value": "0.05"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "remainder toward prices, 0.60/0.35/0.05 split (\u00a71)",
+     "value": "0.35"
+    },
+    "productivity_passthrough": {
+     "text": "TFP \u22640.66%/10y, GDP ~1.1% incl. capital deepening \u2192 0.12-0.155 (\u00a71)",
+     "value": "0.15"
+    },
+    "reabsorption_rate": {
+     "text": "Farber: 0.60-0.75/yr normal markets; 0.50 mild-slack (\u00a71)",
+     "value": "0.5"
+    },
+    "reemployment_haircut": {
+     "text": "Farber 2015 central 0.13 (survivor-selected; band 0.10-0.18) (\u00a71)",
+     "value": "0.13"
+    },
+    "retained_profit_share": {
+     "text": "capital share +0.38pp, 'no sizable wage rises' \u2192 survivor 0.05 (\u00a71)",
+     "value": "0.6"
+    },
+    "robotics_lag": {
+     "text": "Productivity J-Curve adoption\u2192output lag 8-12y (\u00a71)",
+     "value": "8"
+    },
+    "survivor_elasticity": {
+     "text": "no sizable wage response measured (\u00a71)",
+     "value": "0"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 0.3,
+   "adoption_reach_year": null,
+   "adoption_start": 0.02,
+   "blurb": "AI complements more than it substitutes: slow realized adoption, gains shared with survivors, strong productivity, mild scarring.",
+   "defaults": {
+    "adopt0": 0.02,
+    "adopt1": 0.3,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.1,
+    "growth": 0.045,
+    "haircut": 0.1,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.02,
+    "n_periods": 10,
+    "phys": 0.1,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.5,
+    "rate_cap": 1.0,
+    "reab": 0.6,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "brynjolfsson-augment",
+   "n_periods": 10,
+   "name": "Brynjolfsson \u2014 Augmentation",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "Canaries: cumulative ~0.01-0.03 at year 3 \u2192 start 0.02; moderate end (\u00a71)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "shipped default (\u00a71)",
+     "value": "0.1"
+    },
+    "baseline_growth_rate": {
+     "text": "J-Curve real anchors 2.2-2.7% + 2% inflation (\u00a71)",
+     "value": "0.045"
+    },
+    "cognitive_feasibility": {
+     "text": "Eloundou \u03b2 central ~0.30 of task content (\u00a71)",
+     "value": "0.3"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default (\u00a71)",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "active-Fed reading (\u00a71)",
+     "value": "0.3"
+    },
+    "lfp_exit_rate": {
+     "text": "augmentation world: below Farber's 0.03 (\u00a71)",
+     "value": "0.02"
+    },
+    "physical_feasibility": {
+     "text": "low near-term robotics (\u00a71)",
+     "value": "0.1"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "0.55/0.25/0.20 split (\u00a71)",
+     "value": "0.25"
+    },
+    "productivity_passthrough": {
+     "text": "GenAI at Work +15% avg / +30% novices \u2192 0.5 for the cognitive channel (\u00a71)",
+     "value": "0.5"
+    },
+    "reabsorption_rate": {
+     "text": "Farber normal-market 0.60-0.75/yr (\u00a71)",
+     "value": "0.6"
+    },
+    "reemployment_haircut": {
+     "text": "mild scarring; DvW expansion-displacement ~0.10 (\u00a71)",
+     "value": "0.1"
+    },
+    "retained_profit_share": {
+     "text": "GenAI-at-Work gains partly shared \u2192 survivor 0.20 (\u00a71)",
+     "value": "0.55"
+    },
+    "robotics_lag": {
+     "text": "J-Curve intangible build-out, lower band (\u00a71)",
+     "value": "6"
+    },
+    "survivor_elasticity": {
+     "text": "complementarity at low depth: novices +30% (GenAI at Work) \u2192 +0.10 (\u00a71)",
+     "value": "0.1"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 0.5,
+   "adoption_reach_year": null,
+   "adoption_start": 0.05,
+   "blurb": "Their Medium scenario translated: 60% exposed, half automated in 10y, heavy scarring, high value capture, capital taxed at their ETR. Direct comparator (10y target -2.8%).",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 0.5,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.27,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": -0.15,
+    "growth": 0.04,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.5,
+    "price_pt": 0.5,
+    "prod_pt": 0.3,
+    "rate_cap": 1.0,
+    "reab": 0.3,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.5,
+    "rob_base": 1.0,
+    "robotics_lag": 5,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "windfall-medium",
+   "n_periods": 10,
+   "name": "Windfall Trust \u2014 Medium",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "their Medium: 50% of exposed displaced over the decade (\u00a72\u2462)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "their 10% residual (\u00a72\u2462)",
+     "value": "0.1"
+    },
+    "baseline_growth_rate": {
+     "text": "shipped default",
+     "value": "0.04"
+    },
+    "cognitive_feasibility": {
+     "text": "Windfall: exposed sectors = 60% of jobs; 0.55 cog + 0.20 phys \u2248 their combined share (\u00a71)",
+     "value": "0.55"
+    },
+    "compute_effective_rate": {
+     "text": "their capital ETR 26.7%; ui grid \u2192 0.27 (source 0.267) (\u00a71)",
+     "value": "0.27"
+    },
+    "demand_multiplier": {
+     "text": "shipped default",
+     "value": "0.5"
+    },
+    "lfp_exit_rate": {
+     "text": "their 20%-of-displaced-over-6y \u21d2 ~0.033/yr; ui grid \u2192 0.03 (source 0.033) (\u00a72\u2462)",
+     "value": "0.03"
+    },
+    "physical_feasibility": {
+     "text": "component of the 0.6 combined exposure (\u00a72\u2462)",
+     "value": "0.2"
+    },
+    "price_passthrough": {
+     "text": "their consumer share reaches prices (\u00a72\u2462)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "see retained (their consumer share) (\u00a72\u2462)",
+     "value": "0.5"
+    },
+    "productivity_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "reabsorption_rate": {
+     "text": "DvW slack-market band 0.15-0.35 (\u00a71)",
+     "value": "0.3"
+    },
+    "reemployment_haircut": {
+     "text": "their Medium scarring: re-employment at 70% of prior wage (\u00a72\u2462)",
+     "value": "0.3"
+    },
+    "retained_profit_share": {
+     "text": "their high-capture: firms 45% / consumers 45% of displaced wages \u2192 0.50/0.50 of net saving (\u00a72\u2462)",
+     "value": "0.5"
+    },
+    "robotics_lag": {
+     "text": "mid-range build-out (\u00a71)",
+     "value": "5"
+    },
+    "survivor_elasticity": {
+     "text": "shipped default (mild substitution)",
+     "value": "-0.15"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 0.4,
+   "adoption_reach_year": null,
+   "adoption_start": 0.05,
+   "blurb": "A moderate shock met by the labor market ADH actually measured: decade-scale adjustment, LFP exit dominant, deep scarring, full demand amplification. 15 years.",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 0.4,
+    "atax": 0.0,
+    "attrition": 0.04,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.3,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.3,
+    "growth": 0.035,
+    "haircut": 0.25,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.1,
+    "n_periods": 15,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.2,
+    "rate_cap": 1.0,
+    "reab": 0.075,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 4,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "china-shock",
+   "n_periods": 15,
+   "name": "China-Shock Grind",
+   "override_fields": [
+    "adoption_path",
+    "attrition_rate",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "moderate shock spread over 15y (\u00a72\u2463)",
+     "value": "1"
+    },
+    "attrition_rate": {
+     "text": "ADH grind band 0.03-0.05 (\u00a71)",
+     "value": "0.04"
+    },
+    "auto_cost": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "baseline_growth_rate": {
+     "text": "depressed-trend reading (\u00a72\u2463)",
+     "value": "0.035"
+    },
+    "cognitive_feasibility": {
+     "text": "moderate exposure; the mechanism, not the size, is the story (\u00a72\u2463)",
+     "value": "0.3"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "ADH \u22652\u00d7 amplification; Chodorow-Reich 1.8 no-offset (\u00a71)",
+     "value": "1.5"
+    },
+    "lfp_exit_rate": {
+     "text": "ADH: NILF +0.55pp vs unemployment +0.22pp \u2014 LFP exit dominates \u2192 0.08-0.15 (\u00a71)",
+     "value": "0.1"
+    },
+    "physical_feasibility": {
+     "text": "includes the manufacturing channel ADH measured (\u00a72\u2463)",
+     "value": "0.2"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "0.70/0.20/0.10 split (\u00a72\u2463)",
+     "value": "0.2"
+    },
+    "productivity_passthrough": {
+     "text": "below shipped: gains real but local demand collapses (\u00a72\u2463)",
+     "value": "0.2"
+    },
+    "reabsorption_rate": {
+     "text": "ADH: employment-to-population falls ~1:1 for a decade \u2192 0.05-0.10/yr (\u00a71)",
+     "value": "0.075"
+    },
+    "reemployment_haircut": {
+     "text": "JLS-severity 0.25 for high-attachment cohorts (\u00a71)",
+     "value": "0.25"
+    },
+    "retained_profit_share": {
+     "text": "capital keeps most of the gains (\u00a72\u2463)",
+     "value": "0.7"
+    },
+    "robotics_lag": {
+     "text": "shipped default",
+     "value": "4"
+    },
+    "survivor_elasticity": {
+     "text": "Webb annualized wage drag, deep-slack end (\u00a71)",
+     "value": "-0.3"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 1.0,
+   "adoption_reach_year": null,
+   "adoption_start": 0.05,
+   "blurb": "Full automation over 20 years; wages collapse before the end; capital keeps the gains; states lean on spending cuts.",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": -0.5,
+    "growth": 0.06,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 20,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "agi-20y",
+   "n_periods": 20,
+   "name": "Korinek-Suh \u2014 AGI in 20 years",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "interest_rate",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "state_cut_share",
+    "state_rate_hike_cap",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "linear to full automation over the 20y horizon (\u00a72\u2464)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "sustained compute build-out (\u00a71)",
+     "value": "0.15"
+    },
+    "baseline_growth_rate": {
+     "text": "upper band that keeps %-GDP denominators interpretable (\u00a71)",
+     "value": "0.06"
+    },
+    "cognitive_feasibility": {
+     "text": "Korinek-Suh baseline AGI: all tasks automatable within 20y (\u00a71)",
+     "value": "1"
+    },
+    "compute_effective_rate": {
+     "text": "GRT post-TCJA effective rate: capital undertaxed (\u00a71)",
+     "value": "0.05"
+    },
+    "demand_multiplier": {
+     "text": "no-offset regime (\u00a71)",
+     "value": "1"
+    },
+    "interest_rate": {
+     "text": "Korinek-Lockwood discount-rate anchor ~4% (\u00a71)",
+     "value": "0.04"
+    },
+    "lfp_exit_rate": {
+     "text": "elevated permanent exit (\u00a72\u2464)",
+     "value": "0.05"
+    },
+    "physical_feasibility": {
+     "text": "AGI includes physical work, behind the capacity ramp (\u00a72\u2464)",
+     "value": "1"
+    },
+    "price_passthrough": {
+     "text": "strong deflation channel (\u00a72\u2464)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "0.80/0.15/0.05 split (\u00a72\u2464)",
+     "value": "0.15"
+    },
+    "productivity_passthrough": {
+     "text": "near lever ceiling in AGI scenarios (\u00a71)",
+     "value": "0.9"
+    },
+    "reabsorption_rate": {
+     "text": "no recovery in their AGI scenarios: wages stay collapsed (\u00a71)",
+     "value": "0.05"
+    },
+    "reemployment_haircut": {
+     "text": "wage-collapse mapped onto re-employment (\u00a72\u2464)",
+     "value": "0.4"
+    },
+    "retained_profit_share": {
+     "text": "capital share \u2192 1 as labor share collapses (Korinek-Lockwood) (\u00a71)",
+     "value": "0.8"
+    },
+    "robotics_lag": {
+     "text": "physical capacity trails cognition by ~a decade (\u00a72\u2464)",
+     "value": "10"
+    },
+    "state_cut_share": {
+     "text": "labor-base rate hikes cannot close AGI-stage gaps (Korinek-Lockwood) (\u00a71)",
+     "value": "0.5"
+    },
+    "state_rate_hike_cap": {
+     "text": "see state_cut_share (\u00a71)",
+     "value": "0.5"
+    },
+    "survivor_elasticity": {
+     "text": "wage collapse ~3y before full automation \u2192 slider max -0.50 (\u00a71)",
+     "value": "-0.5"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 1.0,
+   "adoption_reach_year": 5,
+   "adoption_start": 0.2,
+   "blurb": "The aggressive transition: full automation at year 5 (kinked path), viewed over a 10-year fiscal window. The stress case.",
+   "defaults": {
+    "adopt0": 0.2,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.2,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 1.0,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 2,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "agi-5y",
+   "n_periods": 10,
+   "name": "Korinek-Suh \u2014 AGI in 5 years",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "interest_rate",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "state_cut_share",
+    "state_rate_hike_cap",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "kinked: linear to 1.0 at year 5, flat after \u2014 their wage collapse hits ~year 3 (\u00a71)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "peak build-out compute share (\u00a71)",
+     "value": "0.2"
+    },
+    "baseline_growth_rate": {
+     "text": "MacAskill-Moorhouse explosion band 0.06-0.08 (\u00a71)",
+     "value": "0.08"
+    },
+    "cognitive_feasibility": {
+     "text": "Korinek-Suh aggressive AGI: 5 years to full automation (\u00a71)",
+     "value": "1"
+    },
+    "compute_effective_rate": {
+     "text": "capital undertaxed status quo (\u00a71)",
+     "value": "0.05"
+    },
+    "demand_multiplier": {
+     "text": "no-offset crisis regime (\u00a71)",
+     "value": "1.5"
+    },
+    "interest_rate": {
+     "text": "Korinek-Lockwood ~4% (\u00a71)",
+     "value": "0.04"
+    },
+    "lfp_exit_rate": {
+     "text": "mass permanent exit (\u00a72\u2465)",
+     "value": "0.1"
+    },
+    "physical_feasibility": {
+     "text": "compressed physical ramp (\u00a72\u2465)",
+     "value": "1"
+    },
+    "price_passthrough": {
+     "text": "strong deflation (\u00a72\u2465)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "0.80/0.15/0.05 split (\u00a72\u2465)",
+     "value": "0.15"
+    },
+    "productivity_passthrough": {
+     "text": "near ceiling (\u00a71)",
+     "value": "0.9"
+    },
+    "reabsorption_rate": {
+     "text": "no recovery (\u00a71)",
+     "value": "0.05"
+    },
+    "reemployment_haircut": {
+     "text": "wage collapse (\u00a72\u2465)",
+     "value": "0.4"
+    },
+    "retained_profit_share": {
+     "text": "capital keeps the gains (\u00a71)",
+     "value": "0.8"
+    },
+    "robotics_lag": {
+     "text": "AI-2027-style crash build-out (\u00a71)",
+     "value": "2"
+    },
+    "state_cut_share": {
+     "text": "AGI-stage gaps close by cuts (\u00a71)",
+     "value": "0.5"
+    },
+    "state_rate_hike_cap": {
+     "text": "see state_cut_share (\u00a71)",
+     "value": "0.5"
+    },
+    "survivor_elasticity": {
+     "text": "collapse: slider max -0.50 (\u00a71)",
+     "value": "-0.5"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 1.0,
+   "adoption_reach_year": null,
+   "adoption_start": 0.1,
+   "blurb": "The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 years, heavy compute investment, 8-year horizon.",
+   "defaults": {
+    "adopt0": 0.1,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.2,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 8,
+    "phys": 0.9,
+    "price": 0.2,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 1.0,
+    "reab": 0.1,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.7,
+    "rob_base": 1.0,
+    "robotics_lag": 3,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "ai-2027",
+   "n_periods": 8,
+   "name": "AI 2027 \u2014 Fast takeoff",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "interest_rate",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "Davidson: 20%\u2192100% capability median ~3y; deployment trails <1y (\u00a71)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "$1T/yr global AI capex; 0.3-0.5 early, declining (\u00a71)",
+     "value": "0.3"
+    },
+    "baseline_growth_rate": {
+     "text": "explosion band upper end (\u00a71)",
+     "value": "0.08"
+    },
+    "cognitive_feasibility": {
+     "text": "superhuman coder \u2192 ASI within ~1y of scenario start (\u00a71)",
+     "value": "1"
+    },
+    "compute_effective_rate": {
+     "text": "capital undertaxed status quo (\u00a71)",
+     "value": "0.05"
+    },
+    "demand_multiplier": {
+     "text": "crisis regime, partial offset (\u00a71)",
+     "value": "1.2"
+    },
+    "interest_rate": {
+     "text": "Korinek-Lockwood ~4% (\u00a71)",
+     "value": "0.04"
+    },
+    "lfp_exit_rate": {
+     "text": "elevated exit (\u00a72\u2466)",
+     "value": "0.05"
+    },
+    "physical_feasibility": {
+     "text": "robot economy: ~1M robots/mo by end-2028 (\u00a71)",
+     "value": "0.9"
+    },
+    "price_passthrough": {
+     "text": "strong deflation (\u00a72\u2466)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "see retained (\u00a72\u2466)",
+     "value": "0.2"
+    },
+    "productivity_passthrough": {
+     "text": "MacAskill-Moorhouse \u226510\u00d7 acceleration \u2192 near ceiling (\u00a71)",
+     "value": "0.9"
+    },
+    "reabsorption_rate": {
+     "text": "little re-employment during takeoff (\u00a72\u2466)",
+     "value": "0.1"
+    },
+    "reemployment_haircut": {
+     "text": "displaced land at the service floor (\u00a72\u2466)",
+     "value": "0.4"
+    },
+    "retained_profit_share": {
+     "text": "0.70/0.20/0.10 split (\u00a72\u2466)",
+     "value": "0.7"
+    },
+    "robotics_lag": {
+     "text": "special-economic-zone build-out: 3-4y (\u00a71)",
+     "value": "3"
+    },
+    "survivor_elasticity": {
+     "text": "slider max -0.50 (\u00a71)",
+     "value": "-0.5"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 1.0,
+   "adoption_reach_year": 9,
+   "adoption_start": 0.05,
+   "blurb": "AI Futures' managed transition: US-China consortium slows the takeoff; 95% of tasks automatable by 2035-36; employment 62%\u219212% over 2032-2040. World state only \u2014 their permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 0.95,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.0,
+    "elasticity": 0.1,
+    "growth": 0.08,
+    "haircut": 0.3,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.05,
+    "n_periods": 14,
+    "phys": 0.95,
+    "price": 0.3,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.15,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 9,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "ai2040-plan-a",
+   "n_periods": 14,
+   "name": "AI 2040 \u2014 Plan A (The Deal)",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "interest_rate",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "state_cut_share",
+    "state_rate_hike_cap",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "kinked: reach 1.0 at year 9 (2036: 'pretty much everything'); value-weighted AI/robot labor share 20% (2032) \u2192 85% (2035). Our linear kink front-loads the mid-path drop vs their flat-to-2032 employment \u2014 their early stability comes from new-job creation the model maps onto reabsorption (\u00a72\u2467)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "'corporations reinvesting nearly all their revenue into datacenters, factories, robots' \u2192 slider-max capex share 0.30 (\u00a72\u2467)",
+     "value": "0.3"
+    },
+    "baseline_growth_rate": {
+     "text": "slider max 0.08; their ~100%/yr is unrepresentable (\u00a72\u2467)",
+     "value": "0.08"
+    },
+    "cognitive_feasibility": {
+     "text": "AI 2040 App.X n1: AI automates 50% of cognitive tasks by 2032, 95% by 2035 (would be 100% but for bans) \u2192 terminal 0.95 (\u00a72\u2467)",
+     "value": "0.95"
+    },
+    "compute_effective_rate": {
+     "text": "status quo 0.05; their permit fees (10\u00d7 federal revenue by 2032) are the policy question, not the world state (\u00a72\u2467)",
+     "value": "0.05"
+    },
+    "demand_multiplier": {
+     "text": "managed transition; in-world dividends cushion demand but are policy \u2014 moderate 1.0 under current law (\u00a72\u2467)",
+     "value": "1"
+    },
+    "interest_rate": {
+     "text": "their ~100% real rates unrepresentable; Korinek-Lockwood ~4% for cross-preset comparability (\u00a72\u2467)",
+     "value": "0.04"
+    },
+    "lfp_exit_rate": {
+     "text": "orderly exit; their voluntary dividend-living maps to NILF under current law (employment rate 62%\u219212%) (\u00a72\u2467)",
+     "value": "0.05"
+    },
+    "physical_feasibility": {
+     "text": "robots 35% of physical tasks 2032, 95% by 2036 (App.X n1) (\u00a72\u2467)",
+     "value": "0.95"
+    },
+    "price_passthrough": {
+     "text": "relative-price shift to cheap goods/services (\u00a72\u2467)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "'goods and services generally falling in price' (App.X #4) (\u00a72\u2467)",
+     "value": "0.3"
+    },
+    "productivity_passthrough": {
+     "text": "GDP growth ~100%/yr 2032-2037 \u2014 far beyond the lever ceiling; 0.90 = near max, magnitude unrepresentable (documented) (\u00a72\u2467)",
+     "value": "0.9"
+    },
+    "reabsorption_rate": {
+     "text": "2032-34: displaced white-collar 'get new jobs doing things AIs can't do' \u2014 positions explicitly temporary; low-moderate 0.15 (\u00a72\u2467)",
+     "value": "0.15"
+    },
+    "reemployment_haircut": {
+     "text": "refuge jobs are physical/service work (\u00a72\u2467)",
+     "value": "0.3"
+    },
+    "retained_profit_share": {
+     "text": "firms reinvest nearly all revenue (capex expensing zeroes taxable income \u2014 their fn42); 0.55/0.30/0.15 split (\u00a72\u2467)",
+     "value": "0.55"
+    },
+    "robotics_lag": {
+     "text": "robot channel full at 2036 = year 9 from the 2027 start (\u00a72\u2467)",
+     "value": "9"
+    },
+    "state_cut_share": {
+     "text": "AGI-class gaps close by cuts (\u00a71)",
+     "value": "0.5"
+    },
+    "state_rate_hike_cap": {
+     "text": "see state_cut_share (\u00a71)",
+     "value": "0.5"
+    },
+    "survivor_elasticity": {
+     "text": "human-bottlenecked work rises in price; remaining 5% of tasks pay ~$120K/worker (fn48) \u2192 mild complementarity +0.10 (\u00a72\u2467)",
+     "value": "0.1"
+    }
+   },
+   "start_year": 2027
+  },
+  {
+   "adoption_end": 1.0,
+   "adoption_reach_year": 7,
+   "adoption_start": 0.05,
+   "blurb": "AI Futures' no-deal branch: full AI R&D automation 2030, superintelligence early 2031, integration 'as fast as markets allow' \u2014 their AI 2027 Race ending on a 2030 fuse. 10 years (2027-2036).",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 1.0,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.3,
+    "ceiling": 1.5,
+    "cog": 1.0,
+    "compute_rate": 0.05,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 1.5,
+    "elasticity": -0.5,
+    "growth": 0.08,
+    "haircut": 0.4,
+    "income_mult": 1.0,
+    "interest": 0.04,
+    "lfp": 0.1,
+    "n_periods": 10,
+    "phys": 0.95,
+    "price": 0.15,
+    "price_pt": 0.5,
+    "prod_pt": 0.9,
+    "rate_cap": 0.5,
+    "reab": 0.05,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.8,
+    "rob_base": 1.0,
+    "robotics_lag": 6,
+    "spillover": 0.5,
+    "state_cut": 0.5,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "ai2040-plan-d",
+   "n_periods": 10,
+   "name": "AI 2040 \u2014 Plan D (The Race)",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "interest_rate",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "state_cut_share",
+    "state_rate_hike_cap",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "kinked: reach 1.0 at year 7 (2034) \u2014 takeoff 2030-31 then 'integrated into everything approximately as fast as the markets and laws allow'; their no-regulation counterfactual is >1000\u00d7 growth by 2033 (App.X) (\u00a72\u2468)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "race-peak capex share, slider max (\u00a72\u2468)",
+     "value": "0.3"
+    },
+    "baseline_growth_rate": {
+     "text": "slider max (\u00a72\u2468)",
+     "value": "0.08"
+    },
+    "cognitive_feasibility": {
+     "text": "'ASI early 2031, 10,000\u00d7 AI R&D speedup' \u2014 no pause, no bans; full cognitive feasibility (\u00a72\u2468)",
+     "value": "1"
+    },
+    "compute_effective_rate": {
+     "text": "light-touch regulation: capital undertaxed status quo (\u00a72\u2468)",
+     "value": "0.05"
+    },
+    "demand_multiplier": {
+     "text": "no-offset crisis regime (WW3-risk world, no dividend) (\u00a72\u2468)",
+     "value": "1.5"
+    },
+    "interest_rate": {
+     "text": "comparability anchor ~4% (\u00a72\u2468)",
+     "value": "0.04"
+    },
+    "lfp_exit_rate": {
+     "text": "mass exit in the crash regime (\u00a72\u2468)",
+     "value": "0.1"
+    },
+    "physical_feasibility": {
+     "text": "unregulated robot explosion post-ASI; 0.95 terminal (\u00a72\u2468)",
+     "value": "0.95"
+    },
+    "price_passthrough": {
+     "text": "strong deflation (\u00a72\u2468)",
+     "value": "0.5"
+    },
+    "price_reduction_share": {
+     "text": "see retained (\u00a72\u2468)",
+     "value": "0.15"
+    },
+    "productivity_passthrough": {
+     "text": "near ceiling; their magnitude unrepresentable (\u00a72\u2468)",
+     "value": "0.9"
+    },
+    "reabsorption_rate": {
+     "text": "no managed transition, no dividend, no time \u2014 AI-2027-race value (\u00a72\u2468)",
+     "value": "0.05"
+    },
+    "reemployment_haircut": {
+     "text": "service-floor landings (\u00a72\u2468)",
+     "value": "0.4"
+    },
+    "retained_profit_share": {
+     "text": "no deal, no permits, no sharing: capital keeps it; 0.80/0.15/0.05 (\u00a72\u2468)",
+     "value": "0.8"
+    },
+    "robotics_lag": {
+     "text": "robot capacity full ~2033 = year 6 from 2027 (takeoff+2) (\u00a72\u2468)",
+     "value": "6"
+    },
+    "state_cut_share": {
+     "text": "AGI-class gaps close by cuts (\u00a71)",
+     "value": "0.5"
+    },
+    "state_rate_hike_cap": {
+     "text": "see state_cut_share (\u00a71)",
+     "value": "0.5"
+    },
+    "survivor_elasticity": {
+     "text": "crisis substitution, slider max -0.50 (\u00a72\u2468)",
+     "value": "-0.5"
+    }
+   },
+   "start_year": 2027
+  }
+ ],
+ "start_year_custom": 2026
+}

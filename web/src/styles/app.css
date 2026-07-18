@@ -1,0 +1,102 @@
+/* Base layout + primitives. Hand-rolled on the tokens — no framework. */
+@import './tokens.css';
+
+/* Tinos: metric-compatible Times New Roman fallback for machines without Times
+   (files vendored from @fontsource/tinos into /fonts). */
+@font-face {
+  font-family: 'Tinos';
+  src: url('/fonts/tinos-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tinos';
+  src: url('/fonts/tinos-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg-page);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+h1, h2, h3 { color: var(--ink); line-height: 1.15; margin: 0 0 0.4rem; }
+h1 { font-size: 2.1rem; }
+h2 { font-size: 1.45rem; margin-top: 2.6rem; }
+h3 { font-size: 1.15rem; color: var(--ink-2); }
+
+a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+/* every number on the site is mono + tabular so nothing jitters between scenarios */
+.num, td.num, .metric-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.caption { color: var(--ink-3); font-size: 0.85rem; line-height: 1.4; }
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
+
+/* ---- the two-column shell: fixed lever rail + scrolling content ---- */
+.shell { display: flex; min-height: 100vh; }
+
+.rail {
+  width: 320px;
+  flex: none;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--line);
+  padding: 1.1rem 1.1rem 3rem;
+  overflow-y: auto;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.content { flex: 1; min-width: 0; padding: 2.2rem 2rem 5rem; }
+
+/* prose/metrics sit in a 720px column; charts/tables may break out to 960px */
+.col  { max-width: var(--col); margin-left: auto; margin-right: auto; }
+.col-wide { max-width: var(--col-wide); margin-left: auto; margin-right: auto; }
+
+/* ---- primitives ---- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+}
+
+details.group { border-top: 1px solid var(--line); padding: 0.35rem 0; }
+details.group > summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 700;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  padding: 0.35rem 0;
+}
+details.group > summary::-webkit-details-marker { display: none; }
+details.group > summary::before { content: '▸ '; color: var(--ink-3); }
+details.group[open] > summary::before { content: '▾ '; }
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg-panel);
+  color: var(--ink);
+  max-width: min(760px, 92vw);
+  max-height: 86vh;
+  padding: 1.6rem 2rem;
+}
+dialog::backdrop { background: rgba(26, 26, 24, 0.45); }

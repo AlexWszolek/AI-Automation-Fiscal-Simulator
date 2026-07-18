@@ -1,0 +1,28 @@
+/* Design tokens — the single source of visual truth (docs/DESIGN.md).
+   Red = fiscally bad, blue = good. No green anywhere. */
+:root {
+  /* surfaces (warm near-white — closer to white than cream, per review) */
+  --bg-page: #fcfbf8;
+  --bg-panel: #fefdfb;        /* the lever rail / panels read WHITE */
+  --bg-well: #f4f2ec;         /* input wells, hover states, table stripes */
+  --bg-well-deep: #efece4;    /* pressed / selected */
+
+  /* ink scale */
+  --ink: #1a1a18;             /* body text, headers, hero figures */
+  --ink-2: #3d3d3a;           /* secondary headers, strong emphasis */
+  --ink-3: #6e6e68;           /* captions, grounding lines, axis labels */
+  --line: #e2dfd7;            /* borders, dividers, inactive outlines */
+
+  /* semantics */
+  --bad: #8c2f28;             /* oxblood — losses, deficits */
+  --good: #5b7c99;            /* muted slate — gains, recoveries */
+  --accent: #2c5f8a;          /* interactive only: focus, links, slider thumb */
+
+  /* type */
+  --font-serif: 'Times New Roman', Times, 'Liberation Serif', Tinos, serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* layout */
+  --col: 720px;               /* prose + metric column */
+  --col-wide: 960px;          /* chart / map / table breakout */
+}
