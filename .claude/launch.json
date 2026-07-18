@@ -19,8 +19,29 @@
     {
       "name": "fiscal-web",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "web", "--", "--port", "5173", "--strictPort"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "web",
+        "--",
+        "--port",
+        "5173",
+        "--strictPort"
+      ],
       "port": 5173
+    },
+    {
+      "name": "fiscal-api",
+      "runtimeExecutable": ".venv/bin/uvicorn",
+      "runtimeArgs": [
+        "api.main:app",
+        "--port",
+        "8000",
+        "--log-level",
+        "warning"
+      ],
+      "port": 8000
     }
   ]
 }
