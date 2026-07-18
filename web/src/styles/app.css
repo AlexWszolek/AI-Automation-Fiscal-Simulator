@@ -204,3 +204,23 @@ button.dl:hover { background: var(--bg-well-deep); }
 .about-body { font-size: 0.9rem; }
 .dialog-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
 dialog h4 { margin: 1.1rem 0 0.35rem; }
+
+/* ---- vega tooltip (the map's hover card): design-system type, not vega's default Arial ---- */
+#vg-tooltip-element {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(26, 26, 24, 0.12);
+}
+#vg-tooltip-element table tr td.key {
+  font-family: var(--font-serif);
+  color: var(--ink-3);
+}
+#vg-tooltip-element table tr td.value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
