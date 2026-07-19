@@ -59,7 +59,7 @@ export default function App() {
       </aside>
 
       <main className="content">
-        <div className="col">
+        <div className="col-wide">
           <h1>Fiscal Consequences of AI Automation</h1>
           <p>{copy.intro}</p>
           {apiDown && (
@@ -131,9 +131,9 @@ export default function App() {
         {payload && <StatesSection cfg={cfg} payload={payload} dispatch={dispatch} />}
         {payload && <SummaryTable payload={payload} />}
         {payload && <TornadoSection cfg={cfg} />}
-        {loading && !payload && <p className="caption col">Loading the scenario…</p>}
+        {loading && !payload && <p className="caption col-wide">Loading the scenario…</p>}
         {failed && !payload && (
-          <p className="panel caption col warning">
+          <p className="panel caption col-wide warning">
             The scenario data could not be loaded — the site's data files are missing or
             unreachable. If this is a fresh deployment, the static bundles under /data were
             not copied.

@@ -64,9 +64,9 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
 
 .content { flex: 1; min-width: 0; padding: 2.2rem 2rem 5rem; overflow-y: auto; height: 100%; }
 
-/* prose/metrics sit in a 720px column; charts/tables may break out to 960px */
-.col  { max-width: var(--col); margin-left: auto; margin-right: auto; }
-.col-wide { max-width: var(--col-wide); margin-left: auto; margin-right: auto; }
+/* ONE content width: text, metrics, charts, and tables all align at 960px (user review:
+   a narrower prose column above wider charts read as a mismatch) */
+.col, .col-wide { max-width: var(--col-wide); margin-left: auto; margin-right: auto; }
 
 /* ---- primitives ---- */
 .panel {

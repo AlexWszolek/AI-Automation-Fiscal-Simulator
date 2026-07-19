@@ -30,7 +30,7 @@ export function StatesSection({ cfg, payload, dispatch }: {
 
   return (
     <section>
-      <div className="col">
+      <div className="col-wide">
         <h2>The states — where the shock has no shock absorber</h2>
         <p>{PROSE.states_intro}</p>
         <div className="panel state-controls">

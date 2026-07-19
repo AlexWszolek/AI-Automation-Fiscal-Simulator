@@ -7,8 +7,9 @@ front end.
 
 ## Layout
 
-- **720px fixed content column** for prose, metrics, and tables; charts and the map may break out
-  to ~960px. No full-bleed dashboard layout.
+- **One 960px content column** for prose, metrics, charts, tables, and the map — text and
+  charts align (superseded the earlier 720px prose column per review: a narrower text column
+  above wider charts read as a mismatch). No full-bleed dashboard layout.
 - Spacing pass: consistent vertical rhythm between sections; generous margins; panels only where
   a boundary means something.
 - Help affordances recede: no bold ⓘ icons next to every control — quiet hover targets or
