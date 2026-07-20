@@ -9,7 +9,9 @@ Description=AI Automation Fiscal Simulator compute service
 After=network.target
 
 [Service]
-User=fiscal                              # <- a non-root user that owns the checkout
+# User must be a real account that owns the checkout (systemd forbids inline comments,
+# so this note lives on its own line). Replace or delete the User line to run as root.
+User=fiscal
 WorkingDirectory=/srv/fiscal-simulator
 ExecStart=/srv/fiscal-simulator/.venv/bin/uvicorn api.main:app --host 127.0.0.1 --port 8000 --log-level warning
 Restart=on-failure
