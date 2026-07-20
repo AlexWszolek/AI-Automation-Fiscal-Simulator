@@ -34,22 +34,20 @@ export function MetricGrid({ p }: { p: ScenarioPayload }) {
     <>
       <div className="metric-row heroes">
         <Metric hero label="Employment" value={pct(-f.employment_drop_pct)}
-                ground="share of the 163.2M baseline workforce" />
+                ground="share of the 154.0M modeled workforce" />
         <Metric hero label="Federal income tax lost (cumulative)"
                 value={dollarsHero(f.inc_tax_lost_cum_B)} ground={g.revenue_flow} />
       </div>
-      <div className="metric-row">
+      <div className="metric-tier">
         <Metric label="Jobs lost (final yr)" value={`${thousands(f.jobs_lost_M, 1)}M`} ground={g.jobs} />
         <Metric label="Federal deficit (final yr)" value={dollarsB(f.fed_deficit_abs_B)}
                 ground={`= ${thousands(f.fed_deficit_abs_pct_gdp, 1)}% of GDP`} />
         <Metric label="Federal debt (Δ cumulative)" value={dollarsB(f.fed_debt_B)} ground={g.debt_stock} />
-      </div>
-      <div className="metric-row">
         <Metric label="Net fiscal impact (final yr)" value={`${signed(-f.fed_deficit_B)}B`}
                 ground={g.fed_deficit_flow} />
         <Metric label="State shortfall (final yr)" value={dollarsB(f.state_gap_B)} ground={g.state_flow} />
         <Metric label="Real GDP effect" value={signed(100 * (f.productivity_index - 1), 1) + '%'}
-                ground="real output vs the no-AI baseline" />
+                ground={g.real_gdp} />
       </div>
     </>
   )

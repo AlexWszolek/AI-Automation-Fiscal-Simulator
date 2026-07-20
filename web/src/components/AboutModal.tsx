@@ -45,9 +45,12 @@ export function AboutSection() {
       <dialog ref={dlg}>
         <div className="dialog-head">
           <h3>How the model works</h3>
-          <button className="dl" onClick={() => dlg.current?.close()}>Close</button>
+          <button className="dialog-x" aria-label="Close"
+                  onClick={() => dlg.current?.close()}>×</button>
         </div>
-        <Markdown text={(copy.learn_more as string).replace(/\\\$/g, '$')} />
+        <div className="dialog-body">
+          <Markdown text={(copy.learn_more as string).replace(/\\\$/g, '$')} />
+        </div>
       </dialog>
     </details>
   )

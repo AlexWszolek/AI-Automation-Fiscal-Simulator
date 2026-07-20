@@ -55,3 +55,16 @@ def test_copy_json_fresh():
     committed = json.loads((ROOT / "web" / "src" / "content" / "copy.json").read_text())
     assert json.loads(json.dumps(mod.extract(), sort_keys=True, ensure_ascii=False)) == committed, \
         "web/src/content/copy.json is stale — re-run scripts/extract_web_copy.py"
+
+
+def test_web_pages_fresh():
+    """report.html / evidence.html must track the docspec + evidence markdown — regenerate via
+    scripts/gen_web_pages.py after report or evidence changes."""
+    spec = importlib.util.spec_from_file_location("gen_web_pages",
+                                                  ROOT / "scripts" / "gen_web_pages.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert mod.build_report() == (ROOT / "web" / "public" / "report.html").read_text(), \
+        "web/public/report.html is stale — re-run scripts/gen_web_pages.py"
+    assert mod.build_evidence() == (ROOT / "web" / "public" / "evidence.html").read_text(), \
+        "web/public/evidence.html is stale — re-run scripts/gen_web_pages.py"

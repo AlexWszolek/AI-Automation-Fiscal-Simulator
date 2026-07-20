@@ -81,9 +81,9 @@ details.group > summary {
   cursor: pointer;
   list-style: none;
   font-weight: 700;
-  color: var(--ink-2);
-  font-size: 0.95rem;
-  padding: 0.35rem 0;
+  color: var(--ink);
+  font-size: 1.15rem;              /* same rank as 'Scenario preset' / 'Policy responses' */
+  padding: 0.4rem 0;
 }
 details.group > summary::-webkit-details-marker { display: none; }
 details.group > summary::before { content: '▸ '; color: var(--ink-3); }
@@ -96,9 +96,33 @@ dialog {
   color: var(--ink);
   max-width: min(760px, 92vw);
   max-height: 86vh;
-  padding: 1.6rem 2rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
+dialog:not([open]) { display: none; }
 dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
+.dialog-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.6rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-panel);
+  flex: none;
+}
+.dialog-head h3 { margin: 0; }
+.dialog-x {
+  border: 0;
+  background: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink-3);
+  cursor: pointer;
+  padding: 0 0.2rem;
+}
+.dialog-x:hover { color: var(--ink); }
+.dialog-body { overflow-y: auto; padding: 1rem 2rem 1.6rem; }
 
 /* ---- lever rail controls ---- */
 .picker { margin-bottom: 1.1rem; }
@@ -107,29 +131,38 @@ dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
   font-family: var(--font-serif);
   font-size: 0.95rem;
   color: var(--ink);
-  background: var(--bg-page);
   border: 1px solid var(--line);
   border-radius: 3px;
-  padding: 0.35rem 0.4rem;
+  padding: 0.4rem 1.6rem 0.4rem 0.5rem;
+  appearance: none;                /* the site's own control, not the OS menu chrome */
+  -webkit-appearance: none;
+  background: var(--bg-page)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236e6e68' stroke-width='1.4'/%3E%3C/svg%3E")
+    no-repeat right 0.55rem center;
 }
+.picker select:focus, .lever select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .overlay-row { display: block; font-size: 0.95rem; padding: 0.15rem 0; }
 
 .lever { margin: 0.55rem 0 0.75rem; }
 .lever.disabled { opacity: 0.45; }
 .lever-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
 .lever-label { font-size: 0.88rem; color: var(--ink-2); }
-.lever-label.has-help { border-bottom: 1px dotted var(--ink-3); cursor: help; position: relative; }
+.lever-label.has-help { border-bottom: 1px dotted var(--ink-3); cursor: help; }
+.lever, .lever-checkbox, .picker, .overlay-row, .metric, .view-toggle label { position: relative; }
 .help-pop {
   position: absolute;
   left: 0;
-  top: 1.4rem;
+  right: 0;                        /* span the container — never widens the rail */
+  top: calc(100% + 0.2rem);
   z-index: 30;
-  width: 260px;
+  max-width: 300px;
   background: var(--bg-page);
   border: 1px solid var(--line);
   border-radius: 4px;
   box-shadow: 0 4px 14px rgba(26, 26, 24, 0.12);
   padding: 0.5rem 0.6rem;
+  font-family: var(--font-serif);
+  font-weight: 400;
 }
 .lever-value { font-size: 0.85rem; color: var(--ink-3); }
 .lever input[type='range'] {
@@ -141,8 +174,8 @@ dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
 .lever-checkbox input { accent-color: var(--accent); }
 
 /* ---- metrics ---- */
-.metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin: 1.1rem 0; }
-.metric-row.heroes { grid-template-columns: repeat(2, 1fr); margin-top: 1.6rem; }
+.metric-row.heroes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.6rem 0 1.1rem; }
+.metric-tier { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin: 1.1rem 0; }
 .metric-label { min-height: 1.2rem; }
 .metric-value { font-size: 1.55rem; font-weight: 600; letter-spacing: -0.01em; }
 .metric.hero .metric-value { font-size: 2.6rem; }
@@ -156,7 +189,7 @@ dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
 
 @media (max-width: 1100px) {
   .chart-grid { grid-template-columns: 1fr; }
-  .metric-row, .metric-row.heroes { grid-template-columns: 1fr 1fr; }
+  .metric-tier { grid-template-columns: 1fr 1fr; }   /* 3×2 -> 2×3, never a ragged wrap */
 }
 
 /* ---- tables ---- */
@@ -202,25 +235,47 @@ button.dl:hover { background: var(--bg-well-deep); }
 .share-row { display: flex; gap: 0.4rem; margin: 0.4rem 0; }
 .share-url { flex: 1; font-size: 0.78rem; padding: 0.3rem 0.4rem; border: 1px solid var(--line); border-radius: 3px; background: var(--bg-page); color: var(--ink-2); min-width: 0; }
 .about-body { font-size: 0.9rem; }
-.dialog-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; }
 dialog h4 { margin: 1.1rem 0 0.35rem; }
 
-/* ---- vega tooltip (the map's hover card): design-system type, not vega's default Arial ---- */
-#vg-tooltip-element {
+/* ---- the site tooltip card (map + chart crosshair; custom handler in charts/vega.ts) ---- */
+.site-tooltip {
+  position: absolute;
+  z-index: 60;
+  pointer-events: none;
+  max-width: 380px;
   font-family: var(--font-serif);
   font-size: 13px;
   color: var(--ink);
   background: var(--bg-panel);
   border: 1px solid var(--line);
   border-radius: 4px;
-  box-shadow: 0 4px 14px rgba(26, 26, 24, 0.12);
+  box-shadow: 0 4px 14px rgba(26, 26, 24, 0.14);
+  padding: 0.45rem 0.65rem;
 }
-#vg-tooltip-element table tr td.key {
-  font-family: var(--font-serif);
-  color: var(--ink-3);
+.site-tooltip-head {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 0.25rem;
 }
-#vg-tooltip-element table tr td.value {
+.site-tooltip table { border-collapse: collapse; }
+.site-tooltip td { padding: 0.06rem 0; vertical-align: baseline; }
+.site-tooltip td.k { color: var(--ink-3); white-space: nowrap; padding-right: 0.9rem; }
+.site-tooltip td.v {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   text-align: right;
+  white-space: nowrap;
 }
+
+/* ---- summary group divider rows + footer ---- */
+.data-table tr.group-row td {
+  font-weight: 700;
+  color: var(--ink-2);
+  background: var(--bg-well);
+  border-top: 1px solid var(--line);
+  padding-top: 0.45rem;
+}
+.data-table td.row-label { white-space: nowrap; }
+a.dl { display: inline-block; text-decoration: none; margin-left: 0.5rem; }
+.site-footer { margin-top: 3.5rem; border-top: 1px solid var(--line); padding-top: 0.9rem; }
+.state-controls { padding: 0.6rem 1rem 0.2rem; }

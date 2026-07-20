@@ -67,7 +67,7 @@ export interface ScenarioPayload {
     ubi_required_rate: number
     n_states_capped: number
   }
-  grounding: Record<'jobs' | 'revenue_flow' | 'debt_stock' | 'fed_deficit_flow' | 'state_flow', string>
+  grounding: Record<'jobs' | 'revenue_flow' | 'debt_stock' | 'fed_deficit_flow' | 'state_flow' | 'real_gdp', string>
   states: StateRow[]
   state_calc: { tax_base_B: number; implied_pct: number }
   summary: Record<'tax_busd' | 'tax_pct' | 'channel_busd' | 'channel_pct', SummaryView>

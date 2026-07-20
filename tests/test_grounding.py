@@ -64,3 +64,11 @@ def test_ground_fallback_nearest_ratio():
     # absurdly large: nothing lands in [0.3, 30] → nearest-to-1 anchor still yields a line
     line = ground(1_000_000.0, "state_flow")
     assert "×" in line and line != ""
+
+
+def test_gdp_years_line():
+    # +7.9% at 2%/yr: ln(1.079)/ln(1.02) ≈ 3.84 years
+    line = grounding.gdp_years_line(7.9)
+    assert "3.8 years" in line and "2%/yr" in line
+    assert grounding.gdp_years_line(62.7).startswith("≈ 24.")   # compounding, not 31.4
+    assert grounding.gdp_years_line(0.0) == ""

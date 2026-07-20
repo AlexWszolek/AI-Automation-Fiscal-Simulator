@@ -34,6 +34,7 @@
   "debt_stock": "\u2248 15 extra years of the FY2025 federal deficit \u2014 on top of what CBO already projects",
   "fed_deficit_flow": "\u2248 1.7\u00d7 the entire FY2024 defense budget, every year \u2014 on top of what CBO already projects",
   "jobs": "\u2248 1.1\u00d7 the jobs lost in the Great Recession",
+  "real_gdp": "\u2248 0.9 years of normal (~2%/yr) real growth, arriving all at once",
   "revenue_flow": "\u2248 0.4 full years of federal individual income-tax receipts",
   "state_flow": "\u2248 1.3\u00d7 the annual NIH budget, every year"
  },
@@ -1937,7 +1938,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Labour taxes lost (displaced)",
      "total": -2352.7252,
@@ -1960,7 +1961,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Labour taxes gained (survivors)",
      "total": -307.7532,
@@ -1983,7 +1984,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Capital-side recoveries",
      "total": 1915.8431,
@@ -2006,7 +2007,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "subtotal",
      "label": "Channel 1 net",
      "total": -744.6353,
@@ -2029,7 +2030,7 @@
      ]
     },
     {
-     "group": "\u2461 Resident \u2192 non-resident",
+     "group": "Resident \u2192 non-resident",
      "kind": "memo",
      "label": "Offshore leakage (untaxed, memo)",
      "total": 0.0,
@@ -2052,7 +2053,7 @@
      ]
     },
     {
-     "group": "\u2462 Taxable \u2192 consumer surplus",
+     "group": "Taxable \u2192 consumer surplus",
      "kind": "memo",
      "label": "Consumer price gains (untaxed, memo)",
      "total": 2056.618,
@@ -2075,7 +2076,7 @@
      ]
     },
     {
-     "group": "\u2462 Taxable \u2192 consumer surplus",
+     "group": "Taxable \u2192 consumer surplus",
      "kind": "flow",
      "label": "Consumption tax change",
      "total": -97.2082,
@@ -2098,7 +2099,7 @@
      ]
     },
     {
-     "group": "\u2463 Government spending",
+     "group": "Government spending",
      "kind": "flow",
      "label": "Net new spending (transfers+UI+SSDI+UBI)",
      "total": 20808.3089,
@@ -2188,7 +2189,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Labour taxes lost (displaced)",
      "total": -2.09,
@@ -2211,7 +2212,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Labour taxes gained (survivors)",
      "total": -0.2734,
@@ -2234,7 +2235,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "flow",
      "label": "Capital-side recoveries",
      "total": 1.7019,
@@ -2257,7 +2258,7 @@
      ]
     },
     {
-     "group": "\u2460 Labour \u2192 capital",
+     "group": "Labour \u2192 capital",
      "kind": "subtotal",
      "label": "Channel 1 net",
      "total": -0.6615,
@@ -2280,7 +2281,7 @@
      ]
     },
     {
-     "group": "\u2461 Resident \u2192 non-resident",
+     "group": "Resident \u2192 non-resident",
      "kind": "memo",
      "label": "Offshore leakage (untaxed, memo)",
      "total": 0.0,
@@ -2303,7 +2304,7 @@
      ]
     },
     {
-     "group": "\u2462 Taxable \u2192 consumer surplus",
+     "group": "Taxable \u2192 consumer surplus",
      "kind": "memo",
      "label": "Consumer price gains (untaxed, memo)",
      "total": 1.8269,
@@ -2326,7 +2327,7 @@
      ]
     },
     {
-     "group": "\u2462 Taxable \u2192 consumer surplus",
+     "group": "Taxable \u2192 consumer surplus",
      "kind": "flow",
      "label": "Consumption tax change",
      "total": -0.0864,
@@ -2349,7 +2350,7 @@
      ]
     },
     {
-     "group": "\u2463 Government spending",
+     "group": "Government spending",
      "kind": "flow",
      "label": "Net new spending (transfers+UI+SSDI+UBI)",
      "total": 18.4845,

@@ -1,0 +1,80 @@
+column,meaning,units
+period,Simulation year index (0 = the scenario's start year),integer
+adoption,Cumulative adoption ceiling in force that year (share of feasible work),0-1
+employed_M,Still employed at their original job and wage,millions
+on_ui_M,"Displaced, drawing unemployment insurance",millions
+exhausted_M,"Displaced, UI exhausted, no benefits",millions
+reabsorbed_M,Re-employed at the lower service wage,millions
+exited_M,Left the labor force onto SSDI,millions
+induced_M,Laid off by the demand shortfall (second round),millions
+retired_M,Retired via natural attrition (fiscally neutral),millions
+population_M,Sum of the seven worker states = the 154.0M modeled baseline,millions
+max_cell_resid_M,Largest per-cell conservation residual (should be ~0),millions
+employment_drop_pct,Decline in original-wage employment vs the modeled baseline,%
+revenue_lost_B,"Labor-tax revenue lost (income + payroll, fed + state)",$B/yr
+revenue_lost_pct,"Same, as a share of baseline labor-tax revenue",%
+transfers_added_B,New transfer outlays incl. UI (fed + state),$B/yr
+inc_fed_loss_B,Federal individual income tax lost,$B/yr
+payroll_fed_loss_B,Federal payroll (FICA) tax lost,$B/yr
+inc_state_loss_B,State income tax lost,$B/yr
+cons_state_loss_B,State consumption tax lost,$B/yr
+transfer_fed_B,Federal means-tested transfer outlays added,$B/yr
+transfer_state_B,State means-tested transfer outlays added,$B/yr
+ui_outlay_fed_B,Unemployment-insurance benefits paid,$B/yr
+ui_tax_fed_B,Income tax collected on those UI benefits,$B/yr
+ssdi_outlay_B,SSDI outlays on labor-force leavers,$B/yr
+ubi_outlay_B,Gross UBI outlay,$B/yr
+ubi_recapture_B,UBI recaptured (income-tax clawback + benefit crowd-out),$B/yr
+ubi_required_rate,Average tax rate on the eroded base a self-funding UBI would need,fraction
+automation_tax_B,Robot-tax revenue on the automated compensation bill,$B/yr
+saved_bill_B,Compensation bill of all automated jobs (cumulative stock),$B/yr
+automation_spend_B,"Of that, spent on compute & automation inputs",$B/yr
+net_saving_B,Saved bill net of automation spend,$B/yr
+retained_profit_B,Net saving kept as corporate profit,$B/yr
+price_reduction_B,Net saving passed to consumers as lower prices,$B/yr
+survivor_gains_B,Net saving routed to raises for remaining staff,$B/yr
+corp_offset_B,Corporate/capital tax recovered on retained profit,$B/yr
+compute_pool_tax_B,Tax collected on the compute-capital pool,$B/yr
+offshore_leak_B,Compute spending leaked offshore untaxed (0 at shipped),$B/yr
+W_survivor,Wage index of the still-employed (1.0 = baseline),index
+W_survivor_mech,Its mechanical (funded-raise) component,index
+W_reab,Wage index of the re-employed (Baumol vs crowding; 1.0 = baseline),index
+refuge_capacity,Un-automated share of the low-exposure refuge (scales re-employment),0-1
+survivor_gain_fed_B,Extra federal tax from survivor raises,$B/yr
+survivor_gain_state_B,Extra state tax from survivor raises,$B/yr
+survivor_wage_cost_B,What the standing raises cost firms,$B/yr
+survivor_overflow_profit_B,Raises above the ceiling spilled to profit,$B/yr
+survivor_overflow_price_B,Raises above the ceiling spilled to prices,$B/yr
+survivor_overflow_corp_tax_B,Corporate tax recovered on the profit spill,$B/yr
+survivor_market_frac,Market wage response applied this year (elasticity x slack),fraction
+survivor_slack_prev,Last year's labor-market slack (the market response input),fraction
+income_surcharge_fed_B,Baseline revenue from the income-tax multiplier (federal),$B/yr
+income_surcharge_state_B,Baseline revenue from the income-tax multiplier (state),$B/yr
+corp_surcharge_fed_B,Baseline revenue from the capital-tax multiplier (federal),$B/yr
+corp_surcharge_state_B,Baseline revenue from the capital-tax multiplier (state),$B/yr
+excise_surcharge_fed_B,Baseline revenue from the consumption-tax multiplier (federal),$B/yr
+cons_surcharge_state_B,Baseline revenue from the consumption-tax multiplier (state),$B/yr
+fed_deficit_B,Change in the federal deficit (positive = worse),$B/yr
+fed_debt_B,Accumulated new federal debt incl. interest,"$B, cumulative"
+fed_deficit_real_B,Deficit change deflated by the price level,"$B/yr, real"
+fed_debt_real_B,Debt change deflated by the price level,"$B, real"
+fed_deficit_pct_gdp,Deficit change as a share of GDP,%
+fed_debt_pct_gdp,Debt change as a share of GDP,%
+headline_deficit,The deficit change in the app's chosen display unit,$B or %
+fed_revenue_B,ABSOLUTE federal revenue (baseline + all changes),"$B/yr, level"
+fed_deficit_abs_B,ABSOLUTE federal deficit (baseline + shock),"$B/yr, level"
+fed_deficit_abs_pct_gdp,Absolute deficit as a share of trend-grown GDP,%
+price_level,Price index (1.0 = baseline; price cuts deflate it),index
+productivity_index,Real output index (1.0 = baseline),index
+state_net_total_B,Combined state revenue loss net of gains (positive = loss),$B/yr
+state_gap_B,"Shortfall states must close that year, pre-response",$B/yr
+state_gap_cum_B,That shortfall accumulated over the run,"$B, cumulative"
+state_gap_pct_gdp,The shortfall as a share of GDP,%
+state_rate_hike_B,Closed by state tax-rate increases,$B/yr
+state_spending_cut_B,Closed by state spending cuts (incl. forced at the cap),$B/yr
+state_close_residual_B,Unclosed remainder (should be ~0),$B/yr
+n_states_capped,States that hit the rate-hike cap,count
+state_balanced,All 51 states balanced within tolerance,bool
+state_fiscal_position_B,ABSOLUTE state+local revenue position,"$B/yr, level"
+induced_pending_M,Demand-driven employment flow queued for next year (signed),millions
+standing_withdrawal_B,The standing demand withdrawal the induced stock tracks,"$B, level"

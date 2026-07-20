@@ -29,7 +29,11 @@ ${{n:baselines.fed_revenue0_B|,.1f}} billion; state and local receipts
 ${{n:baselines.state_revenue0_B|,.1f}} billion; Medicaid outlays $938.2 billion; corporate profits
 before tax $3,722 billion. The baseline federal deficit is anchored at
 ${{n:baselines.fed_deficit0_B|,.0f}} billion. These are the denominators for every percentage in
-this report.
+this report. The dynamic model itself runs on the 33,369 occupation × state cells with complete
+data — wages, exposure scores, household archetypes, and state tax rules all present — covering
+154.0 million of the 163.2 million measured workers (94 percent); the remainder sit in
+suppressed or unmatched cells and are excluded rather than imputed. Every modeled percentage
+uses the 154.0 million baseline.
 
 ## 2.3 Validation gates
 

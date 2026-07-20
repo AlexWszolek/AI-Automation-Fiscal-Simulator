@@ -3,6 +3,7 @@
 // Copy and semantics are the app's; data comes precomputed in the payload.
 import { useState } from 'react'
 import copy from '../content/copy.json'
+import { LABELS } from '../charts/labels'
 import { Markdown } from '../content/md'
 import { toCsv, download } from '../lib/csv'
 import { thousands, trueMinus } from '../lib/format'
@@ -13,38 +14,46 @@ const PROSE = copy.prose as Record<string, string>
 type ViewKey = 'tax' | 'channel' | 'detail'
 
 function SummaryGrid({ v }: { v: SummaryView }) {
+  // groups render as full-width divider rows, not a repeated left column
+  const out: React.ReactNode[] = []
+  let lastGroup = ''
+  v.rows.forEach((r, i) => {
+    if (r.group !== lastGroup) {
+      lastGroup = r.group
+      out.push(
+        <tr key={`g${i}`} className="group-row">
+          <td colSpan={v.years.length + 2}>{r.group}</td>
+        </tr>,
+      )
+    }
+    const emph = r.kind === 'subtotal' || r.kind === 'net'
+    const cell = (x: number | null, key: string | number) => (
+      <td key={key} className="num"
+          style={x != null && x < -0.05 ? { color: 'var(--bad)' }
+            : x != null && x > 0.05 ? { color: 'var(--good)' } : undefined}>
+        {x == null ? '' : trueMinus(x.toLocaleString('en-US', {
+          minimumFractionDigits: 1, maximumFractionDigits: 1 }))}
+      </td>
+    )
+    out.push(
+      <tr key={i} className={emph ? 'emph' : undefined}>
+        <td className="row-label">{r.label}</td>
+        {r.values.map((x, j) => cell(x, j))}
+        {cell(r.total, 'total')}
+      </tr>,
+    )
+  })
   return (
     <div className="table-scroll">
       <table className="data-table summary-table">
         <thead>
           <tr>
-            <th>group</th>
-            <th>label</th>
+            <th>Line</th>
             {v.years.map((y) => <th key={y} className="num">{y}</th>)}
             <th className="num">Total</th>
           </tr>
         </thead>
-        <tbody>
-          {v.rows.map((r, i) => {
-            const emph = r.kind === 'subtotal' || r.kind === 'net'
-            const cell = (x: number | null, key: string | number) => (
-              <td key={key} className="num"
-                  style={x != null && x < -0.05 ? { color: 'var(--bad)' }
-                    : x != null && x > 0.05 ? { color: 'var(--good)' } : undefined}>
-                {x == null ? '' : trueMinus(x.toLocaleString('en-US', {
-                  minimumFractionDigits: 1, maximumFractionDigits: 1 }))}
-              </td>
-            )
-            return (
-              <tr key={i} className={emph ? 'emph' : undefined}>
-                <td>{r.group}</td>
-                <td>{r.label}</td>
-                {r.values.map((x, j) => cell(x, j))}
-                {cell(r.total, 'total')}
-              </tr>
-            )
-          })}
-        </tbody>
+        <tbody>{out}</tbody>
       </table>
     </div>
   )
@@ -55,6 +64,9 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
   const [pct, setPct] = useState(false)
   const sc = payload.scale_check
   const key = `${view === 'channel' ? 'channel' : 'tax'}_${pct ? 'pct' : 'busd'}` as const
+  const cfgP = payload.config
+  const csvStem = `fiscal-simulator-${cfgP.preset ?? 'custom'}-${cfgP.start_year}-${cfgP.start_year + cfgP.n_periods - 1}`
+  const detailCols = Object.keys(payload.rows[0])
 
   return (
     <section className="col-wide">
@@ -87,15 +99,19 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
           <div className="table-scroll detail-scroll">
             <table className="data-table">
               <thead>
-                <tr>{Object.keys(payload.rows[0]).map((c) => <th key={c}>{c}</th>)}</tr>
+                <tr>
+                  <th>Year</th>
+                  {detailCols.map((c) => <th key={c} title={c}>{LABELS[c] ?? c}</th>)}
+                </tr>
               </thead>
               <tbody>
                 {payload.rows.map((r, i) => (
                   <tr key={i}>
-                    {Object.values(r).map((x, j) => (
-                      <td key={j} className="num">
-                        {typeof x === 'number' ? trueMinus(x.toLocaleString('en-US', {
-                          maximumFractionDigits: 2 })) : String(x)}
+                    <td className="num">{payload.config.start_year + (r.period as number)}</td>
+                    {detailCols.map((c) => (
+                      <td key={c} className="num">
+                        {typeof r[c] === 'number' ? trueMinus(r[c].toLocaleString('en-US', {
+                          maximumFractionDigits: 2 })) : String(r[c])}
                       </td>
                     ))}
                   </tr>
@@ -104,9 +120,13 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
             </table>
           </div>
           <p className="caption">{PROSE.detail_caption}</p>
-          <button className="dl" onClick={() => download('run-detail.csv', toCsv(payload.rows))}>
+          <button className="dl" onClick={() => download(`${csvStem}-detail.csv`,
+            toCsv(payload.rows.map((r) => ({
+              year: payload.config.start_year + (r.period as number), ...r,
+            }))))}>
             Download full detail CSV
           </button>
+          <a className="dl" href="/data/column-guide.csv" download>Download the column guide</a>
         </>
       ) : (
         <>
@@ -135,7 +155,7 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
           )}
           <button className="dl" onClick={() => {
             const v = payload.summary[key]
-            download('fiscal-summary.csv', toCsv(v.rows.map((r) => ({
+            download(`${csvStem}-summary.csv`, toCsv(v.rows.map((r) => ({
               group: r.group, label: r.label, kind: r.kind,
               ...Object.fromEntries(r.values.map((x, i) => [v.years[i], x])),
               Total: r.total,

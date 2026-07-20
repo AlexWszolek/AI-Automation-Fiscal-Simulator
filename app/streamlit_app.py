@@ -71,7 +71,7 @@ LABELS = {
 
 _LEARN_MORE_MD = """#### The data
 
-The model is anchored to the 2024 US economy as the statistical agencies measured it. Every input file carries control totals that are re-asserted on every run — 163.2 million workers, \\$15.0 trillion in total compensation, \\$29.3 trillion GDP, \\$4,983 billion in federal receipts — and a load that fails to reconcile stops before a single scenario is computed.
+The model is anchored to the 2024 US economy as the statistical agencies measured it. Every input file carries control totals that are re-asserted on every run — 163.2 million workers, \\$15.0 trillion in total compensation, \\$29.3 trillion GDP, \\$4,983 billion in federal receipts — and a load that fails to reconcile stops before a single scenario is computed. The model itself runs on the 33,369 occupation-by-state cells with complete data — wages, exposure scores, household archetypes, and state tax rules all present — covering 154.0 million of those workers (94%); the rest sit in suppressed or unmatched cells and are excluded rather than imputed.
 
 | Source | What it contributes |
 |---|---|
@@ -528,7 +528,7 @@ with st.container(border=True):
                                        " gap out of budgets, and 'mix' splits it by the "
                                        "slider.")
     with sc2:
-        state_cut_share = st.slider("Share of the gap closed by spending cuts (mix)", 0.0, 1.0,
+        state_cut_share = st.slider("Share of the gap closed by spending cuts", 0.0, 1.0,
                                     d["state_cut"], 0.05,
                                     help="Under 'mix of both', this share comes out of "
                                          "spending and the rest is sought from rate hikes,"
@@ -647,9 +647,12 @@ with sb.expander("About this model"):
         "automated tests, including conservation identities re-verified on every run, so "
         "workers and dollars cannot multiply or vanish. Claude Fable 5 and Opus 4.8 wrote "
         "the code in this project under those checks.\n\n"
+        "**Acknowledgements.** Thanks to Princeton's Summer Social Impact Internship for "
+        "funding my internship at Constellation Institute. Thanks to Jeff Alstott for "
+        "mentoring and guiding me on this project.\n\n"
         "[Source code](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator) · "
-        "[Technical report](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator/blob/main/docs/report/report.docx)"
-        " · [Preset evidence](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator/blob/main/docs/PRESET_EVIDENCE.md)")
+        "[Technical report](https://aifiscalimpacts.alexwszolek.com/report.html)"
+        " · [Preset evidence](https://aifiscalimpacts.alexwszolek.com/evidence.html)")
     if st.button("Learn more — the model in 900 words"):
         _learn_more()
 
@@ -667,9 +670,9 @@ with main_top:
     c[0].caption(grounding_mod.ground(_jobs_lost_M, "jobs"))
     c[1].metric("Employment", f"−{final['employment_drop_pct']:.0f}%",
                 help="The decline in workers still employed at their original wage, "
-                     "against the 163M baseline; the re-employed at lower wages count as "
+                     "against the 154.0M modeled baseline; the re-employed at lower wages count as "
                      "not employed here.")
-    c[1].caption("share of the 163.2M baseline workforce")
+    c[1].caption("share of the 154.0M modeled workforce")
     c[2].metric("Federal income tax lost (cumulative)", f"${_inc_tax_lost_cum:,.0f}B",
                 help="Total federal individual income-tax revenue lost to displacement, "
                      "summed over the whole horizon. This is the single largest fiscal "
@@ -736,7 +739,7 @@ with main_top:
                                   "exited_M", "induced_M", "retired_M"],
                             "millions of workers", kind="area", stack=True, height=300,
                             colors=_wf_colors),
-                   "Every worker in the 163M baseline is in exactly one band each year (conservation "
+                   "Every worker in the 154.0M modeled baseline is in exactly one band each year (conservation "
                    "identity C1) — displacement moves people down the stack, reabsorption and "
                    "attrition move them out of limbo.")
         st.subheader("Federal budget — absolute levels")

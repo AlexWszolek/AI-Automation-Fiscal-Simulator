@@ -150,3 +150,13 @@ def ground(value: float, kind: str) -> str:
         line = "an improvement of " + line
     return line
 
+
+def gdp_years_line(pct_effect: float, normal_rate: float = 0.02) -> str:
+    """The real-GDP comparator: how many years of normal growth the effect equals (compounded).
+    years = ln(1 + effect) / ln(1 + normal). Empty below noise."""
+    if pct_effect < 0.05:
+        return ""
+    import math as _math
+    years = _math.log1p(pct_effect / 100.0) / _math.log1p(normal_rate)
+    return (f"≈ {years:,.1f} years of normal (~{normal_rate:.0%}/yr) real growth, "
+            "arriving all at once")

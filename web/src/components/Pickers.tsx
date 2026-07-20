@@ -4,6 +4,7 @@ import { OVERLAYS, PRESETS, presetMeta } from '../lib/config'
 import { thousands } from '../lib/format'
 import type { ScenarioConfig, ScenarioPayload } from '../lib/types'
 import type { ScenarioAction } from '../state/useScenario'
+import { HelpTip } from './controls'
 
 export function PresetPicker({ cfg, dispatch }: {
   cfg: ScenarioConfig
@@ -42,7 +43,7 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
             checked={cfg.overlays.includes(o.key)}
             onChange={() => dispatch({ type: 'toggleOverlay', key: o.key })}
           />{' '}
-          {o.name}
+          <HelpTip label={o.name} help={o.blurb} />
         </label>
       ))}
       {payload?.config.overlay_notes.map((n) => (

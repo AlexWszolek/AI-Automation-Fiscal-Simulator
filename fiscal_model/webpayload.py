@@ -85,7 +85,7 @@ def _summary_json(res, ledger, grouping: str, units: str, start_year: int, cbo) 
     df = summary_mod.build_fiscal_summary(res, ledger, grouping=grouping, units=units,
                                           start_year=start_year, cbo=cbo)
     year_cols = [c for c in df.columns if str(c)[:2] == "20" and str(c).isdigit()]
-    rows = [{"group": r["group"], "label": r["label"], "kind": r["kind"],
+    rows = [{"group": r["group"].lstrip("①②③④ "), "label": r["label"], "kind": r["kind"],
              "values": [None if (isinstance(r[c], float) and math.isnan(r[c])) else round(float(r[c]), 4)
                         for c in year_cols],
              "total": None if (isinstance(r["Total"], float) and math.isnan(r["Total"]))
@@ -180,6 +180,8 @@ def build_scenario_payload(data, deltas, cfg: dict, ctx_cache: dict | None = Non
             "debt_stock": grounding.ground(float(final["fed_debt_B"]), "debt_stock"),
             "fed_deficit_flow": grounding.ground(float(final["fed_deficit_B"]), "fed_deficit_flow"),
             "state_flow": grounding.ground(gap_B, "state_flow"),
+            "real_gdp": grounding.gdp_years_line(
+                100.0 * (float(final["productivity_index"]) - 1.0)),
         },
         "states": stbl.round(4).to_dict("records"),
         "state_calc": {

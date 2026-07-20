@@ -95,7 +95,8 @@ export default function App() {
               title="Where the workforce goes"
               spec={timeSeries(rows, ['employed_M', 'on_ui_M', 'exhausted_M', 'reabsorbed_M',
                 'exited_M', 'induced_M', 'retired_M'], 'millions of workers', startYear,
-                { kind: 'area', stack: true, height: 300, colors: WF_COLORS })}
+                { kind: 'area', stack: true, height: 300, colors: WF_COLORS,
+                  totalLabel: 'All workers (modeled)' })}
               caption={CAPTIONS[0]}
             />
             <ChartPanel
@@ -111,7 +112,7 @@ export default function App() {
             <ChartPanel
               title="Wages of the still-employed"
               spec={timeSeries(rows, reabDynamics ? ['W_survivor', 'W_reab'] : ['W_survivor'],
-                'wage index (1.0 = baseline)', startYear, { yZero: false })}
+                'wage index (1.0 = baseline)', startYear, { yZero: false, tooltipFormat: ',.4f' })}
               caption={WAGE_CAPTION + (reabDynamics ? WAGE_CAPTION_REAB : '')}
             />
             <ChartPanel
@@ -121,6 +122,7 @@ export default function App() {
               caption={CAPTIONS[2]}
             />
             <ChartPanel
+              title="The raises in dollars"
               spec={timeSeries(rows, ['survivor_gain_fed_B', 'survivor_wage_cost_B'],
                 '$ billions / year', startYear)}
               caption={CAPTIONS[4]}
@@ -132,6 +134,11 @@ export default function App() {
         {payload && <SummaryTable payload={payload} />}
         {payload && <TornadoSection cfg={cfg} />}
         {loading && !payload && <p className="caption col-wide">Loading the scenario…</p>}
+        <footer className="col-wide caption site-footer">
+          Thanks to Princeton's Summer Social Impact Internship for funding my internship at
+          Constellation Institute. Thanks to Jeff Alstott for mentoring and guiding me on this
+          project.
+        </footer>
         {failed && !payload && (
           <p className="panel caption col-wide warning">
             The scenario data could not be loaded — the site's data files are missing or
