@@ -30,7 +30,7 @@ import pandas as pd
 from . import loaders
 from .integrate import INTERIM, CellIntegrator
 from .kernel import KernelParams
-from .rates import build_engines
+from .rates import build_engines, state_slot_matrices, state_slot_tax
 from .transfers import TransferLookup
 
 REAB_CHANNELS = ["inc_fed", "inc_state", "payroll_fed", "cons_state", "transfer_fed", "transfer_state"]
@@ -131,6 +131,42 @@ class ReabsorptionEngine:
             self._pk[f] = np.array([self._ci._noc.get((f, self.state[i], int(band[i])), np.full(4, 0.25))
                                     for i in range(n)])
 
+        # ---- vectorized fast path: the draw-INDEPENDENT sides, computed once ----------------
+        # Every "before" term in delta()'s pairs is a constant of the engine (household mean,
+        # origin wage): federal/state income tax at the mean, FICA at the origin wage, and the
+        # transfer interp AT the mean. Hoisting them is bit-safe (same calls, same inputs); the
+        # state side additionally moves to the shared padded slot matrices (bit-parity argument
+        # in rates.state_slot_matrices). _delta_loop below is the retained reference.
+        self._idx = {s: np.where(self._state_mask[s])[0] for s in self._states}
+        self._state_slots = state_slot_matrices(self.income, self.state, self._state_mask)
+        self._fed_at_mean = {f: np.asarray(self.income.federal_tax(self.hh_mean[f], f), float)
+                             for f, _, _ in _FILINGS}
+        self._fica_at_wage = {f: np.asarray(self.fica.fica(self.worker_wage, f), float)
+                              for f, _, _ in _FILINGS}
+        self._efica_at_wage = {f: np.asarray(self.fica.employee_fica(self.worker_wage, f), float)
+                               for f, _, _ in _FILINGS}
+        self._state_at_mean = {f: state_slot_tax(self._state_slots, self.hh_mean[f], f)
+                               for f, _, _ in _FILINGS}
+        # per-(filing, state) hoists for the transfer loop: masked weights and the (idx, 4)
+        # children-probability block (views per k are then free); value-identical to the
+        # reference's per-call fancy indexing
+        self._wt_by_state = {(f, s): self.weight[f][self._idx[s]]
+                             for f, _, _ in _FILINGS for s in self._states}
+        self._pk_by_state = {(f, s): self._pk[f][self._idx[s]]
+                             for f, _, _ in _FILINGS for s in self._states}
+        self._tr = {}                       # (filing, state, k) -> (xs, [(ys, fed_share, interp@mean)])
+        for f, _, _ in _FILINGS:
+            for s in self._states:
+                idx = self._idx[s]
+                if idx.size == 0:
+                    continue
+                h = self.hh_mean[f][idx]
+                for k in ([0] if f == "Single" else [0, 1, 2, 3]):
+                    xs, progs = self._ci.lookup.program_arrays(s, f, k)
+                    self._tr[(f, s, k)] = (xs, [(ys, self._ci.lookup.fed_share.get(prog, 1.0),
+                                                 np.interp(h, xs, ys))
+                                                for prog, ys in progs.items()])
+
     def delta(self, haircut: float, mpc: float, stickiness: float,
               wage_index: float = 1.0) -> dict:
         """Per-worker reabsorbed fiscal loss (6 channels), losses POSITIVE. haircut=0 → all zero.
@@ -139,7 +175,55 @@ class ReabsorptionEngine:
         crowding pressure, computed per period in dynamics_v2). 1.0 is the exact legacy path;
         an index > 1 can push w_d above the origin wage — the signed wage_removed handles that
         as a fiscal gain, and the transfer interp re-fires the means-tested cliffs at the new
-        household income either way."""
+        household income either way.
+
+        Vectorized fast path (bind-time hot spot: ~98ms → ~30ms/draw): all "before" sides come
+        from the constants hoisted at construction, state income tax runs on the shared slot
+        matrices, and only the after-side transfer interp remains per call — bit-identical to
+        `_delta_loop` (the retained reference), pinned in tests/test_reemployment."""
+        w_d = np.maximum(self.worker_wage * (1.0 - haircut), self.service_floor)
+        if wage_index != 1.0:
+            w_d = w_d * wage_index
+        wage_removed = self.worker_wage - w_d                        # SIGNED (w_d>origin ⇒ a small gain)
+        n = len(self.worker_wage)
+        inc_fed = np.zeros(n); inc_state = np.zeros(n); payroll = np.zeros(n); emp_fica = np.zeros(n)
+        tr_fed = np.zeros(n); tr_state = np.zeros(n)
+        for f, _, _ in _FILINGS:
+            wt, mean = self.weight[f], self.hh_mean[f]
+            lo = np.maximum(mean - wage_removed, 0.0)                # income after removing wage_removed
+            inc_fed += wt * (self._fed_at_mean[f]
+                             - np.asarray(self.income.federal_tax(lo, f), float))
+            payroll += wt * (self._fica_at_wage[f]
+                             - np.asarray(self.fica.fica(w_d, f), float))
+            emp_fica += wt * (self._efica_at_wage[f]
+                              - np.asarray(self.fica.employee_fica(w_d, f), float))
+            inc_state += wt * (self._state_at_mean[f] - state_slot_tax(self._state_slots, lo, f))
+            ks = [0] if f == "Single" else [0, 1, 2, 3]
+            for s in self._states:
+                idx = self._idx[s]
+                if idx.size == 0:
+                    continue
+                h_after = lo[idx]                                    # == max(mean[idx]−wr[idx], 0)
+                wt_s, pk_s = self._wt_by_state[(f, s)], self._pk_by_state[(f, s)]
+                for k in ks:
+                    xs, progs = self._tr[(f, s, k)]
+                    dfed = np.zeros(idx.size); dstate = np.zeros(idx.size)
+                    for ys, fs, at_mean in progs:
+                        dprog = np.interp(h_after, xs, ys) - at_mean
+                        dfed += dprog * fs; dstate += dprog * (1.0 - fs)
+                    pkk = pk_s[:, k]
+                    tr_fed[idx] += wt_s * pkk * dfed
+                    tr_state[idx] += wt_s * pkk * dstate
+        disp_loss = wage_removed - (inc_fed + inc_state) - emp_fica
+        cons = self.cons_rate * self.mult * mpc * stickiness * disp_loss
+        return {"inc_fed": inc_fed, "inc_state": inc_state, "payroll_fed": payroll,
+                "cons_state": cons, "transfer_fed": tr_fed, "transfer_state": tr_state,
+                "net_takehome_loss": disp_loss - (tr_fed + tr_state)}
+
+    def _delta_loop(self, haircut: float, mpc: float, stickiness: float,
+                    wage_index: float = 1.0) -> dict:
+        """The original per-state/per-program reference — kept as the parity anchor for delta()
+        (the same role mc.run_mc and survivor._delta_loop play). Tests compare bit-for-bit."""
         w_d = np.maximum(self.worker_wage * (1.0 - haircut), self.service_floor)
         if wage_index != 1.0:
             w_d = w_d * wage_index

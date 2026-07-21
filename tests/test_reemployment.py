@@ -139,3 +139,20 @@ def test_invariants_battery_with_everything_on(data, deltas):
              demand_multiplier=0.8, lfp_exit_rate=0.05, attrition_rate=0.025)
     res = DynamicModelV2(data, deltas, p).run()
     assert_all_invariants(res, p, deltas["employed"].sum() / 1e6)
+
+
+def test_reab_delta_vectorized_parity(data, deltas):
+    """The vectorized ReabsorptionEngine.delta (hoisted before-sides + shared slot matrices +
+    hoisted at-mean transfer interp) must equal the per-state/per-program reference _delta_loop
+    BIT-FOR-BIT on all 7 outputs — the anchor that lets the bind-time fast path exist (the
+    survivor._delta_loop / mc_pool discipline)."""
+    from fiscal_model.kernel import KernelParams
+    from fiscal_model.transfers import TransferLookup
+    eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(), KernelParams())
+    keys = ("inc_fed", "inc_state", "payroll_fed", "cons_state",
+            "transfer_fed", "transfer_state", "net_takehome_loss")
+    for hc, wi in ((0.0, 1.0), (0.05, 1.0), (0.25, 0.7), (0.6, 1.3), (1.0, 1.0)):
+        new = eng.delta(hc, 0.6, 0.5, wage_index=wi)
+        ref = eng._delta_loop(hc, 0.6, 0.5, wage_index=wi)
+        for k in keys:
+            assert np.array_equal(new[k], ref[k], equal_nan=True), (hc, wi, k)

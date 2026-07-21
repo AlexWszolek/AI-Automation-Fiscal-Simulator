@@ -146,6 +146,55 @@ def build_engines(data: loaders.FiscalData):
             PayrollFICA(data.payroll_params))
 
 
+def state_slot_matrices(income: IncomeTax, state_arr: np.ndarray, state_masks: dict) -> dict:
+    """Per-cell padded state-bracket matrices for vectorized state_tax over ALL cells at once.
+
+    Each cell's (state, effective-filing) schedule expands into K fixed slots of (lo, hi, rate)
+    plus a std-deduction column; no-wage-tax states / missing filing blocks are all-zero rows and
+    short schedules get zero-rate padding — a zero-rate slot contributes an exact ±0.0, so the
+    slot-ordered accumulation in `state_slot_tax` reproduces `_bracket_tax` BIT-FOR-BIT (the
+    parity anchors in tests/test_v2_phase4 and tests/test_reemployment pin it). HoH maps to
+    Single (this module's convention) → callers index the result by effective filing.
+    Returns {eff_filing: (lo, hi, rate, rate*lo, std)}; rate*lo is the per-slot constant the
+    reference recomputes each call (same operands → same bits)."""
+    n = len(state_arr)
+    K = max((len(sch.floors) for sch in income._state.values()), default=1)
+    out = {}
+    for eff in ("Married filing jointly", "Single"):
+        lo = np.zeros((n, K)); hi = np.zeros((n, K)); rt = np.zeros((n, K))
+        std = np.zeros(n)
+        for s, mask in state_masks.items():
+            if s in income.no_wage_tax:
+                continue                                    # all-zero row → tax ≡ 0.0 exactly
+            sch = income._state.get((s, eff))
+            if sch is None:
+                continue
+            b = len(sch.floors)
+            lo[mask, :b] = sch.floors
+            hi[mask, :b] = np.append(sch.floors[1:], np.inf)
+            rt[mask, :b] = sch.rates
+            std[mask] = sch.std_deduction
+        out[eff] = (lo, hi, rt, rt * lo, std)
+    return out
+
+
+def state_slot_tax(slots: dict, gross, filing: str) -> np.ndarray:
+    """State income tax for every cell at once via `state_slot_matrices` — bit-identical to
+    per-state `IncomeTax.state_tax` calls (identical slot-ordered accumulation; the out=
+    buffers change allocation, never values)."""
+    eff = "Single" if filing == "Head of household" else filing
+    lo, hi, rt, rlo, std = slots[eff]
+    t = np.maximum(np.asarray(gross, float) - std, 0.0)     # the same taxable transform
+    tax = np.zeros(t.shape, dtype=float)
+    tmp = np.empty_like(tax)
+    for k in range(lo.shape[1]):                            # the _bracket_tax loop, per slot
+        np.clip(t, lo[:, k], hi[:, k], out=tmp)
+        np.multiply(tmp, rt[:, k], out=tmp)
+        tax += tmp
+        tax -= rlo[:, k]
+    return tax
+
+
 def verify_against_baked(data: loaders.FiscalData, tol: float = 1.0) -> dict:
     """Reproduce the file's baked income & FICA schedules from params. Returns max abs
     diffs (USD). Raises if any cell differs by more than `tol` dollars (rounding)."""

@@ -30,7 +30,7 @@ import numpy as np
 import pandas as pd
 
 from . import loaders
-from .rates import build_engines
+from .rates import build_engines, state_slot_matrices, state_slot_tax
 
 # (filing label, filing-share column, household-mean column) — order fixes the W/M column layout.
 _FILINGS = [("Married filing jointly", "p_mfj", "inc_married_usd"),
@@ -68,34 +68,9 @@ class SurvivorEngine:
         self._states = sorted(set(self.state))
         self._state_mask = {s: (self.state == s) for s in self._states}
 
-        # ---- per-cell padded state-bracket matrices (the vectorized fast path) -------------
-        # Each cell's (state, effective-filing) schedule is expanded into K fixed slots of
-        # (lo, hi, rate) plus a std-deduction column; no-wage-tax states / missing filing
-        # blocks get all-zero rows, and schedules shorter than K get zero-rate padding — a
-        # zero-rate slot contributes an exact +0.0/−0.0, so the slot-ordered accumulation in
-        # delta() reproduces rates._bracket_tax bit-for-bit (pinned in tests/test_v2_phase4).
-        # HoH maps to Single for state schedules (rates.py convention) → 2 distinct matrices.
-        K = max((len(sch.floors) for sch in self.income._state.values()), default=1)
-        self._state_slots = {}
-        for eff in ("Married filing jointly", "Single"):
-            lo = np.zeros((n, K)); hi = np.zeros((n, K)); rt = np.zeros((n, K))
-            std = np.zeros(n)
-            for s in self._states:
-                if s in self.income.no_wage_tax:
-                    continue                                    # all-zero row → tax ≡ 0.0 exactly
-                sch = self.income._state.get((s, eff))
-                if sch is None:
-                    continue
-                mask = self._state_mask[s]
-                b = len(sch.floors)
-                uppers = np.append(sch.floors[1:], np.inf)      # rates._bracket_tax's band tops
-                lo[mask, :b] = sch.floors
-                hi[mask, :b] = uppers
-                rt[mask, :b] = sch.rates
-                std[mask] = sch.std_deduction
-            # rt·lo is a per-slot CONSTANT — precomputing it reproduces the same bits the
-            # reference computes fresh each call (same operands, deterministic multiply)
-            self._state_slots[eff] = (lo, hi, rt, rt * lo, std)
+        # per-cell padded state-bracket matrices (the vectorized fast path; see
+        # rates.state_slot_matrices for the bit-parity argument)
+        self._state_slots = state_slot_matrices(self.income, self.state, self._state_mask)
         # the W-independent base side, computed ONCE (identical calls to the ones delta() made
         # per period — same functions, same inputs, same bits)
         self._fed_base = {f: np.asarray(self.income.federal_tax(self.hh_mean[f], f), float)
@@ -105,20 +80,7 @@ class SurvivorEngine:
         self._state_base = {f: self._state_tax_all(self.hh_mean[f], f) for f, _, _ in _FILINGS}
 
     def _state_tax_all(self, gross, filing: str) -> np.ndarray:
-        """State income tax for every cell at once via the padded slot matrices — bit-identical
-        to per-state rates.IncomeTax.state_tax calls (same slot-ordered accumulation; the out=
-        buffers change allocation, never values)."""
-        eff = "Single" if filing == "Head of household" else filing
-        lo, hi, rt, rlo, std = self._state_slots[eff]
-        t = np.maximum(np.asarray(gross, float) - std, 0.0)     # rates.py's taxable transform
-        tax = np.zeros(t.shape, dtype=float)
-        tmp = np.empty_like(tax)
-        for k in range(lo.shape[1]):                            # the _bracket_tax loop, per slot
-            np.clip(t, lo[:, k], hi[:, k], out=tmp)
-            np.multiply(tmp, rt[:, k], out=tmp)
-            tax += tmp
-            tax -= rlo[:, k]
-        return tax
+        return state_slot_tax(self._state_slots, gross, filing)
 
     def delta(self, W_cell) -> dict:
         """Per-WORKER income+payroll tax increment for a per-cell wage multiplier W_cell (GAINS +).
