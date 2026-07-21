@@ -275,18 +275,19 @@ def emit_scenarios() -> None:
             n += 1
     print(f"{n} scenario bundles")
 
-    # tornado: re-key the committed precompute by slug (pristine configs only)
+    # tornado: re-key the committed precompute by slug (every pristine preset × overlay cart)
     src = json.loads((ROOT / "data" / "app_precomputed" / "mc_tornado.json").read_text())
     by_repr = {e["cfg_repr"]: e for e in src["entries"]}
     out = {}
     for preset in configs:
-        cfg = {"preset": preset, "overlays": [], "levers": {}}
-        rep = webpayload.cfg_repr_for(cfg)
-        e = by_repr.get(rep)
-        assert e is not None, f"precomputed tornado missing for {preset or 'custom'} — " \
-                              "re-run scripts/precompute_app_mc.py"
-        out[webpayload.slug(cfg)] = {"tornado": e["tornado"], "p10": e["p10"], "p50": e["p50"],
-                                     "p90": e["p90"], "n": src["n"]}
+        for ovs in subsets:
+            cfg = {"preset": preset, "overlays": ovs, "levers": {}}
+            rep = webpayload.cfg_repr_for(cfg)
+            e = by_repr.get(rep)
+            assert e is not None, f"precomputed tornado missing for {webpayload.slug(cfg)} — " \
+                                  "re-run scripts/precompute_app_mc.py"
+            out[webpayload.slug(cfg)] = {"tornado": e["tornado"], "p10": e["p10"], "p50": e["p50"],
+                                         "p90": e["p90"], "n": src["n"]}
     _dump(out, WEB_DATA / "tornado.json")
 
 

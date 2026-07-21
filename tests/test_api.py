@@ -82,6 +82,15 @@ def test_tornado_precomputed_is_instant(client):
     assert r["result"]["p10"] <= r["result"]["p50"] <= r["result"]["p90"]
 
 
+def test_tornado_overlay_cart_is_instant(client):
+    """Ticking a policy response must NOT trigger a live job — the precompute covers every
+    pristine preset × overlay cart (the most common interaction on the site)."""
+    for body in ({"preset": "agi-5y", "overlays": ["ubi"]},
+                 {"preset": "acemoglu-modest", "overlays": ["cw-robot-tax", "compute-parity"]}):
+        r = client.post("/api/tornado", json=body).json()
+        assert r["status"] == "done" and r["result"]["n"] == 200, body
+
+
 def test_tornado_job_lifecycle(client):
     """A modified config runs through the worker (tiny N to keep the suite fast)."""
     body = {"preset": "acemoglu-modest", "levers": {"cog": 0.5}, "n": 6}
