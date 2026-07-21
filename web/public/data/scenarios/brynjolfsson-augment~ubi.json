@@ -1485,7 +1485,7 @@
   "channel_busd": {
    "rows": [
     {
-     "group": "\u24ea Tax-regime surcharges",
+     "group": "Tax-regime surcharges",
      "kind": "flow",
      "label": "Baseline surcharges (income+capital+consumption dials)",
      "total": 0.0,
@@ -1681,7 +1681,7 @@
   "channel_pct": {
    "rows": [
     {
-     "group": "\u24ea Tax-regime surcharges",
+     "group": "Tax-regime surcharges",
      "kind": "flow",
      "label": "Baseline surcharges (income+capital+consumption dials)",
      "total": 0.0,

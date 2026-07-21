@@ -70,7 +70,7 @@ export default function App() {
           )}
           {payload && <MetricGrid p={payload} />}
           {payload && payload.config.modified_fields.length > 0 && (
-            <p className="caption">
+            <p className="panel caption modified-note">
               ⚠️ sliders modified from the preset: {payload.config.modified_fields.join(', ')}
             </p>
           )}

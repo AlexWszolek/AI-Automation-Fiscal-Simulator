@@ -35,10 +35,14 @@ GH = "https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator/blob/main"
 KEEP_H1 = ("1.", "7.", "9.", "10.", "11.", "Appendix")
 
 PAGE_CSS = """
+@font-face { font-family:'Charis SIL'; font-weight:400; font-display:swap;
+             src:url('/fonts/charis-400.woff2') format('woff2'); }
+@font-face { font-family:'Charis SIL'; font-weight:700; font-display:swap;
+             src:url('/fonts/charis-700.woff2') format('woff2'); }
 :root {
   --bg-page:#fcfbf8; --bg-panel:#fefdfb; --bg-well:#f4f2ec; --ink:#1a1a18; --ink-2:#3d3d3a;
   --ink-3:#6e6e68; --line:#e2dfd7; --bad:#8c2f28; --good:#5b7c99; --accent:#2c5f8a;
-  --serif:'Times New Roman', Times, 'Liberation Serif', Tinos, serif;
+  --serif:Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', serif;
   --mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;
 }
 * { box-sizing: border-box; }

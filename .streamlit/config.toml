@@ -1,4 +1,4 @@
-# Light, report-style theme — near-white warm surfaces, Times-New-Roman serif (the site reads
+# Light, report-style theme — near-white warm surfaces, Charter serif (the site reads
 # like a policy document, not a dashboard); red is reserved for fiscal damage.
 [theme]
 base = "light"
@@ -6,8 +6,8 @@ primaryColor = "#2c5f8a"                 # deep blue: buttons, sliders, focus st
 backgroundColor = "#fcfbf8"              # warm near-white page (was cream)
 secondaryBackgroundColor = "#f4f2ec"     # widget wells, one quiet step down
 textColor = "#1a1a18"
-font = "'Times New Roman', Times, 'Liberation Serif', Tinos, serif"
-headingFont = "'Times New Roman', Times, 'Liberation Serif', Tinos, serif"
+font = "Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', Cambria, serif"
+headingFont = "Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', Cambria, serif"
 showSidebarBorder = true                 # both surfaces are near-white; the border is the boundary
 # categorical series palette (colorblind-aware, professional); charts also set colors explicitly
 chartCategoricalColors = [

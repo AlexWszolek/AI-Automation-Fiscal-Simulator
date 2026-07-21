@@ -18,9 +18,10 @@
   --good: #5b7c99;            /* muted slate — gains, recoveries */
   --accent: #2c5f8a;          /* interactive only: focus, links, slider thumb */
 
-  /* type */
-  --font-serif: 'Times New Roman', Times, 'Liberation Serif', Tinos, serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  /* type: Charter (system on Apple; Charis SIL is the vendored webfont sibling) +
+     Source Code Pro for every number */
+  --font-serif: Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', serif;
+  --font-mono: 'Source Code Pro', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* layout */
   --col: 720px;               /* prose + metric column */

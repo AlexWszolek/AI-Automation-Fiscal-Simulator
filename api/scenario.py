@@ -41,6 +41,7 @@ class ScenarioService:
         self.data, self.deltas = data, deltas
         self.lock = threading.Lock()
         self.ctx_cache: dict = {}                       # overlay-readout contexts (shared)
+        self.pool: OrderedDict = OrderedDict()          # main-run template pool (LRU 4)
         self.payloads: OrderedDict[str, dict] = OrderedDict()     # cfg_repr -> payload (LRU 16)
 
     def run(self, body: dict) -> dict:
@@ -52,11 +53,13 @@ class ScenarioService:
                 self.payloads.move_to_end(rep)
                 return hit
         payload = webpayload.build_scenario_payload(self.data, self.deltas, cfg,
-                                                    ctx_cache=self.ctx_cache)
+                                                    ctx_cache=self.ctx_cache, pool=self.pool)
         with self.lock:
             self.payloads[rep] = payload
             while len(self.payloads) > 16:
                 self.payloads.popitem(last=False)
+            while len(self.pool) > 4:                   # template pool: one per structural shape
+                self.pool.popitem(last=False)
             while len(self.ctx_cache) > 4:              # bound the readout contexts too
                 self.ctx_cache.pop(next(iter(self.ctx_cache)))
         return payload

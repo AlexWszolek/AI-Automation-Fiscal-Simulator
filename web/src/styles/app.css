@@ -1,19 +1,33 @@
 /* Base layout + primitives. Hand-rolled on the tokens — no framework. */
 @import './tokens.css';
 
-/* Tinos: metric-compatible Times New Roman fallback for machines without Times
-   (files vendored from @fontsource/tinos into /fonts). */
+/* Charis SIL: the Bitstream Charter sibling, vendored so every platform gets the Charter
+   look (Apple systems use their shipped Charter first). Source Code Pro carries the numbers. */
 @font-face {
-  font-family: 'Tinos';
-  src: url('/fonts/tinos-400.woff2') format('woff2');
+  font-family: 'Charis SIL';
+  src: url('/fonts/charis-400.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Tinos';
-  src: url('/fonts/tinos-700.woff2') format('woff2');
+  font-family: 'Charis SIL';
+  src: url('/fonts/charis-700.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('/fonts/scp-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('/fonts/scp-600.woff2') format('woff2');
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -32,7 +46,7 @@ body {
 }
 
 h1, h2, h3 { color: var(--ink); line-height: 1.15; margin: 0 0 0.4rem; }
-h1 { font-size: 2.1rem; }
+h1 { font-size: 2.5rem; }
 h2 { font-size: 1.45rem; margin-top: 2.6rem; }
 h3 { font-size: 1.15rem; color: var(--ink-2); }
 
@@ -81,8 +95,8 @@ details.group > summary {
   cursor: pointer;
   list-style: none;
   font-weight: 700;
-  color: var(--ink);
-  font-size: 1.15rem;              /* same rank as 'Scenario preset' / 'Policy responses' */
+  color: var(--ink-2);
+  font-size: 0.95rem;              /* every rail group, incl. preset/responses, at this rank */
   padding: 0.4rem 0;
 }
 details.group > summary::-webkit-details-marker { display: none; }
@@ -141,6 +155,25 @@ dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
     no-repeat right 0.55rem center;
 }
 .picker select:focus, .lever select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.picker select:hover, .lever select:hover { border-color: var(--accent); background-color: var(--bg-well); }
+input[type='checkbox'], input[type='radio'] { accent-color: var(--accent); }
+/* explicit range styling: consistent hover (thumb darkens, track stays put) */
+input[type='range'] { -webkit-appearance: none; appearance: none; background: transparent; height: 22px; }
+input[type='range']::-webkit-slider-runnable-track {
+  height: 4px; border-radius: 2px; background: var(--line);
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--accent); border: 0; margin-top: -5px;
+}
+input[type='range']::-webkit-slider-thumb:hover { background: #1f4666; }
+input[type='range']::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line); }
+input[type='range']::-moz-range-thumb {
+  width: 14px; height: 14px; border-radius: 50%; background: var(--accent); border: 0;
+}
+input[type='range']::-moz-range-thumb:hover { background: #1f4666; }
+
 .overlay-row { display: block; font-size: 0.95rem; padding: 0.15rem 0; }
 
 .lever { margin: 0.55rem 0 0.75rem; }
@@ -177,8 +210,8 @@ dialog::backdrop { background: rgba(26, 26, 24, 0.45); }
 .metric-row.heroes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.6rem 0 1.1rem; }
 .metric-tier { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin: 1.1rem 0; }
 .metric-label { min-height: 1.2rem; }
-.metric-value { font-size: 1.55rem; font-weight: 600; letter-spacing: -0.01em; }
-.metric.hero .metric-value { font-size: 2.6rem; }
+.metric-value { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; }
+.metric.hero .metric-value { font-size: 1.9rem; }
 .metric-ground { min-height: 2.6rem; margin-top: 0.15rem; }  /* fixed slot: the row never reflows */
 
 /* ---- charts ---- */
@@ -279,3 +312,32 @@ dialog h4 { margin: 1.1rem 0 0.35rem; }
 a.dl { display: inline-block; text-decoration: none; margin-left: 0.5rem; }
 .site-footer { margin-top: 3.5rem; border-top: 1px solid var(--line); padding-top: 0.9rem; }
 .state-controls { padding: 0.6rem 1rem 0.2rem; }
+
+/* inline numbers in prose match the serif's x-height (mono renders optically larger) */
+p .num, li .num, .caption .num { font-size: 0.88em; }
+
+.modified-note { margin: 0.8rem 0; }
+.state-controls { padding: 1rem 1.2rem 0.7rem; margin: 1.1rem 0 1rem; align-items: center; }
+.state-controls .lever { margin: 0.2rem 0; }
+
+/* ---- the custom listbox (closed control AND open menu in the site design) ---- */
+.listbox { position: relative; }
+.listbox-button {
+  width: 100%;
+  display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+  font-family: var(--font-serif); font-size: 0.95rem; color: var(--ink);
+  background: var(--bg-page); border: 1px solid var(--line); border-radius: 3px;
+  padding: 0.4rem 0.55rem; cursor: pointer; text-align: left;
+}
+.listbox-button:hover { border-color: var(--accent); background: var(--bg-well); }
+.listbox-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.listbox-chevron { color: var(--ink-3); font-size: 0.8em; }
+.listbox-pop {
+  position: absolute; z-index: 40; left: 0; right: 0; margin: 0.15rem 0 0; padding: 0.25rem;
+  list-style: none; background: var(--bg-panel); border: 1px solid var(--line);
+  border-radius: 4px; box-shadow: 0 6px 18px rgba(26, 26, 24, 0.14);
+  max-height: 300px; overflow-y: auto;
+}
+.listbox-opt { padding: 0.32rem 0.5rem; border-radius: 3px; font-size: 0.93rem; cursor: pointer; }
+.listbox-opt.active { background: var(--bg-well); }
+.listbox-opt.selected { font-weight: 700; }

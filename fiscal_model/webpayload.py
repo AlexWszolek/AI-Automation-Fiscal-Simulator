@@ -85,7 +85,7 @@ def _summary_json(res, ledger, grouping: str, units: str, start_year: int, cbo) 
     df = summary_mod.build_fiscal_summary(res, ledger, grouping=grouping, units=units,
                                           start_year=start_year, cbo=cbo)
     year_cols = [c for c in df.columns if str(c)[:2] == "20" and str(c).isdigit()]
-    rows = [{"group": r["group"].lstrip("①②③④ "), "label": r["label"], "kind": r["kind"],
+    rows = [{"group": r["group"].lstrip("⓪①②③④ "), "label": r["label"], "kind": r["kind"],
              "values": [None if (isinstance(r[c], float) and math.isnan(r[c])) else round(float(r[c]), 4)
                         for c in year_cols],
              "total": None if (isinstance(r["Total"], float) and math.isnan(r["Total"]))
@@ -94,16 +94,29 @@ def _summary_json(res, ledger, grouping: str, units: str, start_year: int, cbo) 
     return {"years": [int(c) for c in year_cols], "rows": rows}
 
 
-def build_scenario_payload(data, deltas, cfg: dict, ctx_cache: dict | None = None) -> dict:
+def build_scenario_payload(data, deltas, cfg: dict, ctx_cache: dict | None = None,
+                           pool: dict | None = None) -> dict:
     """Run the model for a resolved config and assemble the full ScenarioPayload (see module
     doc + the plan's schema). `ctx_cache` (cfg_key → mc.ScenarioContext) is shared across calls
-    so overlay readouts reuse one context per base, exactly like the app's cache_resource."""
+    so overlay readouts reuse one context per base, exactly like the app's cache_resource.
+
+    `pool` (mc.context_key → ScenarioContext) makes the MAIN run reuse a built template too —
+    construction is ~2/3 of a cold payload (engine merges, an Excel read); with a pool only the
+    first request per structural shape pays it. Bit-identical to fresh construction (the MC
+    anchor test pins ScenarioContext.run against DynamicModelV2 exactly)."""
     r = resolve_config(cfg)
     ui, v2p, preset, overlays = r["ui"], r["v2p"], r["preset"], r["overlays"]
     start_year = preset.start_year if preset is not None else 2026
 
-    m = DynamicModelV2(data, deltas, v2p)                    # keep the object: state_table
-    res = m.run()
+    if pool is not None:
+        key = mc_mod.context_key(v2p)
+        ctx = pool.get(key)
+        if ctx is None:
+            ctx = pool[key] = mc_mod.ScenarioContext(data, deltas, v2p)
+        m, res = ctx.run_model(v2p)                          # bound copy: state_table lands on it
+    else:
+        m = DynamicModelV2(data, deltas, v2p)                # keep the object: state_table
+        res = m.run()
     res = res.assign(state_gap_cum_B=res["state_gap_B"].cumsum())
     final = res.iloc[-1]
 

@@ -4,7 +4,7 @@
 // flat slate blue. Tooltips carry the dollar figures (the only tooltips on the site).
 import type { VisualizationSpec } from 'vega-embed'
 import type { StateRow } from '../lib/types'
-import { POS, TOKENS } from './vega'
+import { POS, TOKENS } from './palette'
 
 const TOOLTIP: [keyof StateRow, string, string][] = [
   ['revenue_loss_pct', 'Revenue lost (% of state receipts)', ',.1f'],

@@ -2,7 +2,7 @@
 // red = raising the lever worsens the deficit, blue = improves it.
 import type { VisualizationSpec } from 'vega-embed'
 import { TORNADO_LABELS } from './labels'
-import { NEG, POS } from './vega'
+import { NEG, POS } from './palette'
 import type { TornadoEntry } from '../lib/types'
 
 export function tornado(entry: TornadoEntry, top = 12, stale = false): VisualizationSpec {

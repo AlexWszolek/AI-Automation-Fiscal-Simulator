@@ -3,6 +3,7 @@
 import { useId, useState } from 'react'
 import type { GridSpecNum } from '../lib/config'
 import { trueMinus } from '../lib/format'
+import { ListBox } from './ListBox'
 
 /** Receding help: a dotted-underline label that reveals the app's help text on hover/focus.
     No ⓘ icons (approved deviation). */
@@ -70,17 +71,17 @@ export function SelectControl({ label, help, values, value, display, onChange }:
   display?: Record<string, string>
   onChange: (v: string) => void
 }) {
-  const id = useId()
   return (
     <div className="lever">
       <div className="lever-head">
         <HelpTip label={label} help={help} />
       </div>
-      <select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
-        {values.map((v) => (
-          <option key={v} value={v}>{display?.[v] ?? v}</option>
-        ))}
-      </select>
+      <ListBox
+        ariaLabel={label}
+        value={value}
+        options={values.map((v) => ({ value: v, label: display?.[v] ?? v }))}
+        onChange={onChange}
+      />
     </div>
   )
 }

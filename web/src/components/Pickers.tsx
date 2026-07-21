@@ -5,6 +5,7 @@ import { thousands } from '../lib/format'
 import type { ScenarioConfig, ScenarioPayload } from '../lib/types'
 import type { ScenarioAction } from '../state/useScenario'
 import { HelpTip } from './controls'
+import { ListBox } from './ListBox'
 
 export function PresetPicker({ cfg, dispatch }: {
   cfg: ScenarioConfig
@@ -12,19 +13,19 @@ export function PresetPicker({ cfg, dispatch }: {
 }) {
   const p = presetMeta(cfg.preset)
   return (
-    <div className="picker">
-      <h3>Scenario preset</h3>
-      <select
-        value={cfg.preset ?? 'custom'}
-        onChange={(e) => dispatch({ type: 'setPreset', preset: e.target.value === 'custom' ? null : e.target.value })}
-      >
-        <option value="custom">Custom</option>
-        {PRESETS.map((pm) => (
-          <option key={pm.key} value={pm.key}>{pm.name}</option>
-        ))}
-      </select>
-      {p && <p className="caption">{p.blurb}</p>}
-    </div>
+    <details className="group" open>
+      <summary>Scenario preset</summary>
+      <div className="picker">
+        <ListBox
+          ariaLabel="Scenario preset"
+          value={cfg.preset ?? 'custom'}
+          options={[{ value: 'custom', label: 'Custom' },
+            ...PRESETS.map((pm) => ({ value: pm.key, label: pm.name }))]}
+          onChange={(v) => dispatch({ type: 'setPreset', preset: v === 'custom' ? null : v })}
+        />
+        {p && <p className="caption">{p.blurb}</p>}
+      </div>
+    </details>
   )
 }
 
@@ -34,8 +35,9 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
   dispatch: (a: ScenarioAction) => void
 }) {
   return (
-    <div className="picker">
-      <h3>Policy responses</h3>
+    <details className="group" open>
+      <summary>Policy responses</summary>
+      <div className="picker">
       {OVERLAYS.map((o) => (
         <label key={o.key} className="overlay-row">
           <input
@@ -63,6 +65,7 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
           ({thousands(payload.overlay_readouts_combined.pct)}% of the gap)
         </p>
       )}
-    </div>
+      </div>
+    </details>
   )
 }

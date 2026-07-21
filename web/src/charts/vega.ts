@@ -2,24 +2,9 @@
 // a custom tooltip handler (site typography, not vega's default), and a mount helper.
 // Charts are STATIC — no zoom/pan/actions; tooltips are the crosshair readout and the map.
 import vegaEmbed, { type Result, type VisualizationSpec } from 'vega-embed'
+import { TOKENS } from './palette'
 
-// Mirror of tokens.css (vega cannot read CSS custom properties).
-export const TOKENS = {
-  ink: '#1a1a18',
-  ink2: '#3d3d3a',
-  ink3: '#6e6e68',
-  line: '#e2dfd7',
-  bad: '#8c2f28',
-  good: '#5b7c99',
-  serif: "'Times New Roman', Times, 'Liberation Serif', Tinos, serif",
-  mono: "ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace",
-} as const
-
-// Chart series palette — transitional 7-color set carried over from the Streamlit app;
-// converging on red/blue/ink as charts adopt the semantic rule.
-export const PALETTE = ['#3b6ea5', '#d9a441', '#4e937a', '#b3554d', '#7d6ca3', '#6b7b8c', '#a98467']
-export const NEG = TOKENS.bad
-export const POS = TOKENS.good
+export { NEG, PALETTE, POS, TOKENS } from './palette'
 
 export const BASE_CONFIG = {
   background: 'transparent',

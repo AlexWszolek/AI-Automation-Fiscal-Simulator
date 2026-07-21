@@ -17,14 +17,19 @@ server {
         try_files $uri /index.html;
     }
 
-    # committed data bundles + fonts: long cache, immutable-ish (redeploys replace them)
+    # hashed build outputs + fonts never change under the same name — cache forever
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    location /fonts/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    # data bundles + generated pages change on redeploy — short cache, quick pickup
     location /data/ {
         expires 1h;
         add_header Cache-Control "public";
-    }
-    location /fonts/ {
-        expires 30d;
-        add_header Cache-Control "public, immutable";
     }
 
     # the compute service (custom slider values + modified-config tornados)

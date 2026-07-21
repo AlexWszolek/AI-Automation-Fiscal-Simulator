@@ -4,7 +4,7 @@
 // flush-aligned so they never squish; bar charts use a band axis so no phantom years appear.
 import type { VisualizationSpec } from 'vega-embed'
 import { LABELS } from './labels'
-import { PALETTE } from './vega'
+import { PALETTE } from './palette'
 
 export interface TsOpts {
   kind?: 'line' | 'area' | 'bar'
@@ -34,13 +34,18 @@ export function timeSeries(
       value: r[c],
     })),
   )
+  const nYears = rows.length
   const ordinalX = kind === 'bar'
   const xEnc = ordinalX
-    ? { field: 'year', type: 'ordinal' as const, title: null, axis: { labelAngle: 0 } }
+    ? {
+        field: 'year', type: 'ordinal' as const, title: null,
+        axis: { labelAngle: 0, labelOverlap: 'parity' },
+      }
     : {
         field: 'year', type: 'quantitative' as const, title: null,
         scale: { nice: false },
-        axis: { tickMinStep: 1, format: 'd', labelFlush: true, labelOverlap: 'parity' },
+        // let vega pick ~6-8 ticks — forcing every year overlapped at long horizons
+        axis: { tickCount: Math.min(nYears, 7), format: 'd', labelFlush: true, labelOverlap: 'parity' },
       }
   const mark =
     kind === 'line'

@@ -251,14 +251,20 @@ class ScenarioContext:
         self.base = base
         self._template = DynamicModelV2(data, deltas, base)
 
-    def run(self, v2p: V2Params) -> pd.DataFrame:
+    def run_model(self, v2p: V2Params):
+        """Bind the config on a shallow copy and return (model, result). The model copy carries
+        post-run attributes (state_table) without exposing the shared template to mutation —
+        this is how the API serves per-request runs without re-paying construction."""
         for name in FROZEN:
             assert getattr(v2p, name) == getattr(self.base, name), \
                 f"'{name}' is structural/frozen in this context — rebuild the context to change it"
         m = copy.copy(self._template)            # shallow: shared arrays are re-bound, never mutated
         m._v1 = copy.copy(self._template._v1)    # v1 gets per-draw p/lp/ui_share/g_cell rebinds
         m._bind_params(v2p)
-        return m.run()
+        return m, m.run()
+
+    def run(self, v2p: V2Params) -> pd.DataFrame:
+        return self.run_model(v2p)[1]
 
 
 # ---- the runner --------------------------------------------------------------------------------------
@@ -335,3 +341,10 @@ def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: i
 
     return MCResult(draws=draws_df, paths=paths, percentiles=percentiles, tornado=tornado,
                     base_run=base_run)
+
+
+def context_key(v2p: V2Params) -> tuple:
+    """The reuse key for a ScenarioContext: the FROZEN/structural field values plus the adoption
+    path length. Two configs with equal keys can share one built template (run() asserts the
+    same set); PERTURBED sliders never invalidate a context."""
+    return tuple(repr(getattr(v2p, name)) for name in sorted(FROZEN))

@@ -44,6 +44,19 @@ def test_static_equals_live_for_pristine_presets(client):
                                "re-run scripts/gen_web_bundle.py"
 
 
+def test_pooled_context_matches_fresh_model(client, data):
+    """The service reuses a ScenarioContext pool across requests; a lever-modified config
+    served through the pool must be bit-identical to a fresh DynamicModelV2 build."""
+    from api.scenario import sanitize
+    from fiscal_model import webpayload
+    body = {"preset": "agi-5y", "levers": {"cog": 0.55, "reab": 0.02}}
+    client.post("/api/run", json={"preset": "agi-5y"})       # warms the pool for this shape
+    pooled = client.post("/api/run", json=body).json()       # served via the warm pool
+    deltas = pd.read_parquet(DELTA_CACHE)
+    fresh = webpayload.build_scenario_payload(data, deltas, sanitize(body))          # no pool
+    assert pooled == json.loads(json.dumps(fresh))
+
+
 def test_junk_request_never_500s(client):
     r = client.post("/api/run", json={"preset": "nope", "overlays": ["bogus", "ubi"],
                                       "levers": {"cog": 99, "demand": -5, "banana": "phone",

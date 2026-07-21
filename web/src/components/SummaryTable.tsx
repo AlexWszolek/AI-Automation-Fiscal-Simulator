@@ -4,6 +4,7 @@
 import { useState } from 'react'
 import copy from '../content/copy.json'
 import { LABELS } from '../charts/labels'
+import COLUMN_NAMES from '../gen/column_names.json'
 import { Markdown } from '../content/md'
 import { toCsv, download } from '../lib/csv'
 import { thousands, trueMinus } from '../lib/format'
@@ -101,7 +102,7 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
               <thead>
                 <tr>
                   <th>Year</th>
-                  {detailCols.map((c) => <th key={c} title={c}>{LABELS[c] ?? c}</th>)}
+                  {detailCols.map((c) => <th key={c} title={c}>{LABELS[c] ?? (COLUMN_NAMES as Record<string, string>)[c] ?? c}</th>)}
                 </tr>
               </thead>
               <tbody>

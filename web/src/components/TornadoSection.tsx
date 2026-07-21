@@ -7,8 +7,21 @@ import type { ScenarioConfig, TornadoEntry } from '../lib/types'
 import { useTornado } from '../state/useTornado'
 import { ChartPanel } from './ChartPanel'
 
-function caption(e: TornadoEntry): string {
-  return `Each bar shows how strongly one assumption drives the final-year deficit, across ${e.n} model runs that jitter every live assumption ±15% around your settings; red means raising it worsens the deficit, blue means it improves it. Across those runs the final-year deficit increase stays between $${thousands(e.p10)}B and $${thousands(e.p90)}B (P10-P90). That band measures robustness to mis-calibrated assumptions within this scenario — the honest uncertainty about the future is the spread across the scenario presets themselves.`
+function Caption({ e }: { e: TornadoEntry }) {
+  return (
+    <>
+      Each bar is a <em>Spearman rank correlation</em>: across{' '}
+      <span className="num">{e.n}</span> model runs that jitter every live assumption ±15%
+      around your settings, how consistently does raising that assumption move the final-year
+      deficit? <span className="num">±1</span> means perfectly in lockstep, near{' '}
+      <span className="num">0</span> means little independent influence — red pushes the
+      deficit up, blue pulls it down. Across those runs the final-year deficit increase stays
+      between <span className="num">${thousands(e.p10)}B</span> and{' '}
+      <span className="num">${thousands(e.p90)}B</span> (P10–P90). That band measures
+      robustness to mis-calibrated assumptions within this scenario — the honest uncertainty
+      about the future is the spread across the scenario presets themselves.
+    </>
+  )
 }
 
 export function TornadoSection({ cfg }: { cfg: ScenarioConfig }) {
@@ -36,7 +49,10 @@ export function TornadoSection({ cfg }: { cfg: ScenarioConfig }) {
         </p>
       )}
       {t.entry ? (
-        <ChartPanel spec={tornado(t.entry, 12, t.stale)} caption={caption(t.entry)} />
+        <figure className="chart-panel">
+          <ChartPanel spec={tornado(t.entry, 12, t.stale)} />
+          <figcaption className="caption"><Caption e={t.entry} /></figcaption>
+        </figure>
       ) : (
         !t.progress && (
           <p className="caption">
