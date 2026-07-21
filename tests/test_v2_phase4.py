@@ -199,3 +199,17 @@ def test_shipped_default_runs_end_to_end(data, deltas, rung1_ready):
 def test_corp_xor_guard_unaffected(data, deltas):
     with pytest.raises(AssertionError):
         DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, corp_offset_scale=0.5))
+
+
+def test_survivor_delta_vectorized_parity(data, deltas):
+    """The vectorized delta() (cached base sides + padded slot matrices) must equal the
+    per-state reference _delta_loop BIT-FOR-BIT on every channel — the anchor that lets the
+    fast path exist at all (same discipline as mc_pool vs run_mc)."""
+    from fiscal_model.survivor import SurvivorEngine
+    eng = SurvivorEngine(data, deltas)
+    rng = np.random.default_rng(7)
+    Warr = 1.0 + 0.3 * rng.standard_normal(len(eng.worker_wage))     # per-cell W, dw both signs
+    for W in (0.5, 0.9, 1.0, 1.0000001, 1.1, 1.5, 3.0, Warr):
+        new, ref = eng.delta(W), eng._delta_loop(W)
+        for k in ("inc_fed", "inc_state", "payroll"):
+            assert np.array_equal(new[k], ref[k], equal_nan=True), (k, W if np.ndim(W) == 0 else "array")
