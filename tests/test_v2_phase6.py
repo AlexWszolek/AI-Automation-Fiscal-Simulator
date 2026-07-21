@@ -200,3 +200,22 @@ def test_performance_budget(data, deltas):
     m.run()
     per_period = (time.perf_counter() - t0) / 10
     assert per_period < 1.0, f"per-period recompute {per_period:.3f}s exceeds the 1s budget"
+
+
+# --------------------------------------------------------------- controller ringing guard
+RING_IDS = [i for i, (cid, _o) in enumerate(SWEEP)
+            if any(t in cid for t in ("demand", "state-cut", "state-mix", "mpc-stick", "kitchensink"))]
+
+
+@pytest.mark.parametrize("cfg_id,overrides", [SWEEP[i] for i in RING_IDS],
+                         ids=[SWEEP[i][0] for i in RING_IDS])
+def test_induced_stock_does_not_ring(data, deltas, cfg_id, overrides):
+    """Oscillation guard for the level-targeting controller (equations review A.7.3): the
+    induced stock may rise and release, but a limit cycle (repeated up-down) shows total
+    variation far above its range. Bound TV ≤ 3×range — monotone-rise-then-release stays ≤ 2×;
+    the near-total-automation limit cycle the `active` key fixed was ≫ 3× before the fix."""
+    res = DynamicModelV2(data, deltas, replace(DEFAULTS_V1REDUCTION, **overrides)).run()
+    ind = res["induced_M"].to_numpy()
+    rng = float(ind.max() - ind.min())
+    tv = float(np.abs(np.diff(ind)).sum())
+    assert tv <= 3.0 * rng + 1e-9, f"{cfg_id}: induced TV {tv:.2f} > 3×range {rng:.2f} — ringing"

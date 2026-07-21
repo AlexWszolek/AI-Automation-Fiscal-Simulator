@@ -229,13 +229,25 @@ class DynamicModelV2:
         self._net_ui_pw = (v1.wage - blend("inc_fed") - blend("inc_state") - self._emp_fica_pw
                            - blend("transfer_fed") - blend("transfer_state") - v1.ui * v1.ui_share)
         # Level-controller stability guard: the induced stock appears in its own target (the multiplier
-        # fixed point); with the one-period lag it converges geometrically iff the loop gain
-        # ρ = dm·mpc·stickiness·d̄/va_pw < 1 (ρ ≈ 0.1 at the shipped dm=0.5). Fail loud, don't diverge.
+        # fixed point); with the one-period lag it converges geometrically iff the COMBINED loop gain
+        # is < 1. Two feedback paths share the target:
+        #   direct   — induced income withdrawal → demand → employment: k·d̄  (ρ ≈ 0.1 at shipped dm);
+        #   state    — induced state-tax losses → balanced-budget contraction → demand: an induced
+        #              worker costs the state ledger (inc_state + cons_state + transfer_state) per
+        #              head, and the close feeds at worst 1.0× (full-cut mode, MPC_GOV = 1) back into
+        #              the same k·target. Bounding the close weight at 1.0 makes the guard hold for
+        #              every response mode (equations review A.7.1). Fail loud, don't diverge.
         if params.demand_multiplier > 0 and self._va_per_worker > 0:
             d_bar = float((v1.emp0 * self._net_after_pw).sum()) / v1.emp0.sum()
-            rho = (params.demand_multiplier * params.mpc * params.consumption_stickiness
-                   * d_bar / self._va_per_worker)
-            assert rho < 1.0, f"demand loop gain ρ={rho:.2f} ≥ 1 — the induced fixed point diverges"
+            state_loss_pw = (v1.arr["after"]["inc_state"] + v1.arr["after"]["cons_state"]
+                            + v1.arr["after"]["transfer_state"])
+            d_state = float((v1.emp0 * state_loss_pw).sum()) / v1.emp0.sum()
+            k = (params.demand_multiplier * params.mpc * params.consumption_stickiness
+                 / self._va_per_worker)
+            rho, rho_state = k * d_bar, k * d_state
+            assert rho + rho_state < 1.0, \
+                f"combined demand loop gain ρ={rho:.2f}+{rho_state:.2f} ≥ 1 — " \
+                "the induced fixed point diverges (direct + state-fiscal feedback)"
 
     # ---- t=0 base-rate gate (J.2): the published base-linkage effective rates. (The absolute
     #      revenue ledger the deltas net against is Phase-5 work for the tax-regime solver.) ----

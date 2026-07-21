@@ -7,6 +7,15 @@ the period (year).
 
 ---
 
+**Structural stance (read first).** Two modeling choices make this model conservative on
+offsets, and they shape the headline numbers as much as any equation below: (1) **capital
+income has zero MPC** — retained profit reaches demand only through taxes, never through
+shareholder consumption or investment; (2) **no new-task creation** — displaced workers
+re-enter only through the fixed reabsorption rate into the finite low-exposure refuge, so
+automation never endogenously creates work. Both are deliberate (the model asks what happens
+if the offsets the optimists count on do NOT arrive), and both are flagged here rather than
+buried: an offset-rich world lies outside this model's envelope by construction.
+
 ## Part 0 — The fixed per-worker channel deltas (precomputed, cached)
 
 For each cell, displacing one worker produces a per-worker fiscal delta by channel. These are **baked once**
@@ -47,6 +56,13 @@ flow_t   = clip(target_t − auto_disp, 0, employed)        # this period's auto
 auto_disp += flow_t
 employed −= flow_t ;  on_ui = flow_t                      # displace()
 ```
+Two documented biases (equations review A.1): the union form treats the channels as
+task-level substitutes — for occupations automatable only when BOTH are feasible it is an
+upper bound on exposure. And `flow = clip(target − auto_disp, 0, employed)` means a large
+induced stock (which drains `employed`) crowds out automation displacement, deferring firm-side
+savings in deep-contraction runs — conservative on the capital side exactly when the shock is
+worst. (Attrition does not bind here: only exhausted/induced retire, never the employed.)
+
 The t−1 SIGNED demand-controller flow lands now (Step 9 stores it; 0 at t=0):
 ```
 positive → displace_extra (employed → induced, capped at employed)
@@ -88,6 +104,11 @@ C5c (every branch, exact):  wage_cost + overflow_to_profit + overflow_to_price =
 market_frac = survivor_elasticity · slack_prev            # slack_prev: see Step 10; 0 at t=0
 W_surv   = clip(W_mech + market_frac, 0, survivor_raise_ceiling)
 ```
+Three deliberate properties (review A.4): the snap branch is a mechanical funding rule — survivor
+wages are fully downward-flexible within a period when gains cannot cover the standing raise. The
+market term is a partial-equilibrium overlay OUTSIDE the C5c ledger: no counterparty books the
+market-driven wage change (a wage cut is not routed to profit or prices). And the floor is 0, not
+W_mech — slack can push W below the funded level (this is how agi-20y's wage collapse happens).
 The raise is SELF-FINANCING — taxed once, as labour income (below); there is no profit netting.
 Survivor tax effect (per cell, gain = revenue up), Δw = wage·(W_surv − 1):
 ```
@@ -107,6 +128,12 @@ P    = 1 − price_passthrough · (price_reduction_total / (VA_BASE · Y))
 nGDP = VA_BASE · Y · P · (1 + baseline_growth_rate)^t             # trend growth: %-GDP denominators ONLY
 ```
 (VA_BASE = $29.3T, COMP_TOTAL = $15.0T; nominal dollar columns never see g.)
+Y is SUPPLY-SIDE capacity (review A.5): the demand contraction moves employment (Step 9) but
+never feeds back into Y — which is why reported GDP and reported employment can diverge in a
+deep-contraction run. And debt compounds at a fixed NOMINAL r (Step 8.5) while P can deflate
+persistently under high price passthrough: real debt mechanically balloons. That is Fisher's
+debt-deflation channel, present and intentional — a deflationary automation shock makes existing
+nominal debt heavier.
 
 ### Step 7 · Federal ledger (losses +)  (`dynamics_v2.py`)
 ```
@@ -121,6 +148,10 @@ ui_outlay = on_ui · ui_benefit · ui_share  ;  ui_share = min(1, ui_weeks/52)  
 ```
 `retired` carry NOTHING (delta-neutral — the baseline twin retired too); `exited` carry the after-loss
 plus draw SSDI (Step 8.5); `induced` carry the full after-loss.
+Annual granularity (review A.2): a worker displaced and reabsorbed within the same period still
+draws the full `ui_share` year of benefits — UI outlays are overstated by ~`reab_rate·ui_outlay`
+of within-year timing. The reabsorption pool DOES include `on_ui` (Step 10) — there is no forced
+march through exhaustion.
 
 ### Step 8 · State balanced-budget close (each of 51 states)  (`government.py`)
 ```
@@ -163,7 +194,15 @@ target_cell   = k·[ max(0, hh_withdrawal)·active_share_national               
                   + contraction[s]·employed/state_emp[s] ]                            [austerity in-state]
 flow          = target_cell − induced_stock              # SIGNED; applied at the START of t+1 (Step 1-2)
 ```
-Stability: loop gain ρ = dm·mpc·stickiness·d̄/va_pw ≈ 0.1 at shipped dm=0.5 (asserted < 1 at construction).
+Stability (review A.7.1): TWO feedback paths share the target — the direct income loop
+ρ = k·d̄ and the state-fiscal loop (induced → state tax losses → balanced-budget contraction →
+demand) ρ_state = k·(inc_state+cons_state+transfer_state per head), close weight bounded at 1.0
+(full-cut mode). The COMBINED gain is asserted < 1 at bind time; measured worst corner
+(dm=2, mpc=1, stickiness=1): 0.46 + 0.06 = 0.51. Two more deliberate properties: max(0, ·) makes
+the controller ASYMMETRIC — injections can zero the contraction but never generate induced
+expansion (no stimulus boom, conservative); and the stock adjusts to target instantly against
+t−1 wage/slack terms (the `active` allocation key above is what prevents the near-total-automation
+limit cycle).
 cons_state is excluded from net_pw (it is keyed to the same take-home drop — double-count).
 
 ### Step 10 · Period end — worker transitions  (`workers.age_and_transition`)
@@ -188,7 +227,8 @@ Baumol pull (service work rides economy-wide productivity) vs crowding pressure 
 refuge wages down) — Baumol can dominate, so re-employed wages can RISE amid mass displacement. The 6-channel
 `reab_delta` is `T(hh)−T(hh−wage_removed)`, `FICA(wage)−FICA(w_d)`, consumption on the take-home drop, and
 `interp(hh−wage_removed) − interp(hh)` for transfers. **`haircut=0 ⇒ wage_removed=0 ⇒ all channels 0`
-(reabsorbed fiscally whole).**
+(reabsorbed fiscally whole).** The scar is CONSTANT over the horizon — Davis–von Wachter find
+partial decay over 10-20 years, so the tail years are conservative (review A.2).
 
 ### Reporting
 ```
