@@ -22,6 +22,7 @@ from fiscal_model import webpayload
 from fiscal_model.app_params import canon
 
 TORNADO_N, TORNADO_SPREAD, TORNADO_SEED = 150, 0.15, 0
+TORNADO_PARTIAL_EVERY = 40      # a labeled partial entry lands every ~40 draws while refining
 # Draw-level process parallelism (fiscal_model/mc_pool.py). Default 1 = serial (dev/tests);
 # the server unit sets this to cores − 2. The executor is created EAGERLY in __init__ (main
 # thread, right after the data load) so the Linux fork never happens from the job thread.
@@ -111,14 +112,21 @@ class TornadoJobs:
                 def progress(i: int, total: int) -> None:
                     job["done"], job["total"] = i, total
 
+                def on_partial(pr, n_done: int) -> None:
+                    job["partial"] = _entry_from_result(pr, n_done)
+
                 if self.executor is not None:
                     r = mc_pool.run_mc_pooled(ctx, n=n, spread=TORNADO_SPREAD, seed=TORNADO_SEED,
-                                              executor=self.executor, progress=progress)
+                                              executor=self.executor, progress=progress,
+                                              on_partial=on_partial,
+                                              partial_every=TORNADO_PARTIAL_EVERY)
                 else:
                     r = mc_mod.run_mc(ctx, n=n, spread=TORNADO_SPREAD, seed=TORNADO_SEED,
-                                      progress=progress)
+                                      progress=progress, on_partial=on_partial,
+                                      partial_every=TORNADO_PARTIAL_EVERY)
                 entry = _entry_from_result(r, n)
                 with self.lock:
+                    job.pop("partial", None)           # the real result supersedes any partial
                     job.update(status="done", done=n, total=n, result=entry)
                     self.results[rep] = entry
                     while len(self.results) > 32:

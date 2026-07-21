@@ -91,6 +91,28 @@ def test_tornado_overlay_cart_is_instant(client):
         assert r["status"] == "done" and r["result"]["n"] == 200, body
 
 
+def test_tornado_job_partial_surfaces(client, monkeypatch):
+    """While a job refines, the status endpoint carries a labeled partial entry (progressive
+    display); the final result supersedes it and the partial key disappears."""
+    import api.jobs as jobs_mod
+    monkeypatch.setattr(jobs_mod, "TORNADO_PARTIAL_EVERY", 4)
+    body = {"preset": "brynjolfsson-augment", "levers": {"reab": 0.02}, "n": 12}
+    r = client.post("/api/tornado", json=body).json()
+    assert r["status"] in ("queued", "running")
+    import time
+    partials, s = [], None
+    for _ in range(1200):
+        s = client.get(f"/api/tornado/{r['job_id']}").json()
+        if "partial" in s:
+            partials.append(s["partial"]["n"])
+        if s["status"] in ("done", "error"):
+            break
+        time.sleep(0.05)
+    assert s["status"] == "done", s
+    assert partials and all(4 <= p < 12 for p in partials)    # refining entries appeared
+    assert "partial" not in s and s["result"]["n"] == 12      # superseded on completion
+
+
 def test_tornado_job_lifecycle(client):
     """A modified config runs through the worker (tiny N to keep the suite fast)."""
     body = {"preset": "acemoglu-modest", "levers": {"cog": 0.5}, "n": 6}

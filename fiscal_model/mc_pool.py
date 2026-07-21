@@ -78,12 +78,17 @@ def make_executor(workers: int, data=None, deltas=None) -> ProcessPoolExecutor:
 
 def run_mc_pooled(context: mc.ScenarioContext, n: int = 300, spread: float = 0.15, seed: int = 0,
                   *, workers: int = 1, executor: ProcessPoolExecutor | None = None,
-                  progress=None, chunk: int = 5, invariant_every: int = 20) -> mc.MCResult:
+                  progress=None, chunk: int = 5, invariant_every: int = 20,
+                  on_partial=None, partial_every: int = 40) -> mc.MCResult:
     """run_mc across processes. workers<=1 with no executor → the serial reference path.
-    Pass a long-lived `executor` (the API's) or let this create/tear down a spawn pool."""
+    Pass a long-lived `executor` (the API's) or let this create/tear down a spawn pool.
+    `on_partial(partial_result, n_done)` fires as done crosses partial_every multiples — the
+    partial covers whichever chunks completed (iid draws: any subset is a valid sample); the
+    FINAL result is unaffected (same rows reassembled in global order)."""
     if executor is None and workers <= 1:
         return mc.run_mc(context, n=n, spread=spread, seed=seed, progress=progress,
-                         invariant_every=invariant_every)
+                         invariant_every=invariant_every,
+                         on_partial=on_partial, partial_every=partial_every)
     base = context.base
     base_run = context.run(base)                       # the parent's context serves the base run
     baseline_M = float(base_run["population_M"].iloc[0])
@@ -95,12 +100,18 @@ def run_mc_pooled(context: mc.ScenarioContext, n: int = 300, spread: float = 0.1
         futures = [ex.submit(_run_chunk, base, n, spread, seed, s, e, baseline_M, invariant_every)
                    for s, e in bounds]
         done, parts = 0, []
+        next_partial = partial_every
         for f in as_completed(futures):
             start, rows, path_frames = f.result()      # worker failures re-raise here, draw pinned
             parts.append((start, rows, path_frames))
             done += len(rows)
             if progress:
                 progress(done, n)
+            if on_partial and done >= next_partial and done < n:
+                sofar = sorted(parts, key=lambda t: t[0])
+                on_partial(mc._finalize([r for _, rs, _ in sofar for r in rs],
+                                        [p for _, _, ps in sofar for p in ps], base_run), done)
+                next_partial = done + partial_every
         parts.sort(key=lambda t: t[0])                 # global draw order — bit-parity requires it
         rows = [r for _, rs, _ in parts for r in rs]
         path_frames = [p for _, _, ps in parts for p in ps]

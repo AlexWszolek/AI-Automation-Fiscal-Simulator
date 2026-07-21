@@ -148,3 +148,19 @@ def test_pooled_equals_serial_bitwise(data, deltas):
     for name in ("draws", "paths", "percentiles", "tornado", "base_run"):
         _assert_bit_equal(getattr(pooled, name), getattr(serial, name))
     assert ticks[-1] == (8, 8) and [t for _, t in ticks] == [8] * len(ticks)
+
+
+def test_partial_callbacks_do_not_change_final(data, deltas):
+    """Progressive display: partial MCResults fire mid-run with increasing n, and the FINAL
+    result is bit-identical to a plain run (same rows in the same order, same finalize)."""
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("rung-1 artifacts not built")
+    ctx = mc.ScenarioContext(data, deltas, BASE0)
+    plain = mc.run_mc(ctx, n=8, spread=0.15, seed=0)
+    partials = []
+    with_p = mc.run_mc(ctx, n=8, spread=0.15, seed=0,
+                       on_partial=lambda r, d: partials.append((d, r)), partial_every=3)
+    for name in ("draws", "paths", "percentiles", "tornado", "base_run"):
+        _assert_bit_equal(getattr(with_p, name), getattr(plain, name))
+    assert [d for d, _ in partials] == [3, 6]                 # fires mid-run only, never at n
+    assert all(len(r.draws) == d for d, r in partials)        # each partial covers d draws

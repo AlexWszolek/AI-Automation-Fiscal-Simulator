@@ -53,7 +53,7 @@ export function useTornado(cfg: ScenarioConfig): TornadoState {
         }
         const poll = async () => {
           if (!live()) return
-          const s = await fetch(`/api/tornado/${started.job_id}`).then((r) => r.json() as Promise<{ status: string; done: number; total: number; result?: TornadoEntry }>)
+          const s = await fetch(`/api/tornado/${started.job_id}`).then((r) => r.json() as Promise<{ status: string; done: number; total: number; result?: TornadoEntry; partial?: TornadoEntry }>)
           if (!live()) return
           if (s.status === 'done' && s.result) {
             lastEntry.current = s.result
@@ -61,7 +61,10 @@ export function useTornado(cfg: ScenarioConfig): TornadoState {
           } else if (s.status === 'error') {
             setState({ entry: lastEntry.current, stale: true, progress: null, unavailable: true })
           } else {
-            setState({ entry: lastEntry.current, stale: lastEntry.current != null,
+            // a partial entry (first ~40 draws) replaces the grayed previous-config chart while
+            // the job refines — the progress line carries the "n of total" labeling
+            setState({ entry: s.partial ?? lastEntry.current,
+                       stale: !s.partial && lastEntry.current != null,
                        progress: { done: s.done, total: s.total }, unavailable: false })
             pollTimer = setTimeout(poll, POLL_MS)
           }

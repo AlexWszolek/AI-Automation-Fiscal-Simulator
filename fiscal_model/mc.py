@@ -349,15 +349,30 @@ def _finalize(rows: list, path_frames: list, base_run: pd.DataFrame) -> MCResult
 
 
 def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: int = 0,
-           progress=None, invariant_every: int = 20) -> MCResult:
+           progress=None, invariant_every: int = 20,
+           on_partial=None, partial_every: int = 40) -> MCResult:
     """Run N perturbed draws through the fast path. `progress(i, n)` is called every few draws.
     Every `invariant_every`-th draw (plus draw 0) is checked against the FULL conservation battery.
+    `on_partial(partial_result, n_done)` fires every `partial_every` draws with an MCResult over
+    the draws completed so far (draws are iid, so any prefix is a valid smaller sample) — the
+    final return is bit-identical with or without partials (same rows, same order, same finalize).
     The serial reference implementation — mc_pool.run_mc_pooled must match it bit-for-bit."""
     base = context.base
     base_run = context.run(base)
     baseline_M = float(base_run["population_M"].iloc[0])
     draws = sample_draws(base, n, spread, seed)
-    rows, path_frames = _run_rows(context, draws, range(n), n, baseline_M, invariant_every, progress)
+    if on_partial is None:
+        rows, path_frames = _run_rows(context, draws, range(n), n, baseline_M,
+                                      invariant_every, progress)
+    else:
+        rows, path_frames = [], []
+        for s in range(0, n, partial_every):
+            r, p = _run_rows(context, draws, range(s, min(s + partial_every, n)), n,
+                             baseline_M, invariant_every, progress)
+            rows += r
+            path_frames += p
+            if len(rows) < n:
+                on_partial(_finalize(rows, path_frames, base_run), len(rows))
     return _finalize(rows, path_frames, base_run)
 
 
