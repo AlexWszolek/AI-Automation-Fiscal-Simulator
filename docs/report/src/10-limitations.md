@@ -2,6 +2,17 @@
 
 # 10. Simplifications and biases
 
+**The deliberate simplifications of this model.** There are two significant structural decisions
+that this model makes. First, capital income does not spend, with retained profit only impacting
+the economy through corporate taxes; there is no shareholder-consumption or investment channel,
+with the latter likely being a significant source of economic growth. Second, there is no task
+creation: displaced workers re-enter only through a fixed re-employment rate into a finite set of
+low-exposure occupations; automation never endogenously creates new kinds of work. Both of these
+decisions are deliberate. The history of automation shows that offsets will eventually arrive, but
+this model asks what the fiscal impacts will be if the offsets arrive late or never. Fiscal
+authorities will still need to be able to respond to this scenario, but consider the numbers to be
+in a world with no offsets.
+
 Following the practice we admired in the Windfall Trust's paper, every known simplification is
 listed with its direction of bias on the headline (the federal fiscal gap). "Overstates" means the
 true gap is likely smaller than modeled; "understates" means larger.
