@@ -13,6 +13,9 @@ After=network.target
 # so this note lives on its own line). Replace or delete the User line to run as root.
 User=fiscal
 WorkingDirectory=/srv/fiscal-simulator
+# Tornado draw parallelism: worker processes forked at startup (copy-on-write with the loaded
+# model). Size to cores - 2 on a dedicated-CPU box; delete the line (default 1) to run serial.
+Environment=FISCAL_TORNADO_WORKERS=6
 ExecStart=/srv/fiscal-simulator/.venv/bin/uvicorn api.main:app --host 127.0.0.1 --port 8000 --log-level warning
 Restart=on-failure
 RestartSec=5

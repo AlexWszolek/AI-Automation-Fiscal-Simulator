@@ -288,17 +288,16 @@ def _draw_scalars(v2p: V2Params) -> dict:
     return out
 
 
-def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: int = 0,
-           progress=None, invariant_every: int = 20) -> MCResult:
-    """Run N perturbed draws through the fast path. `progress(i, n)` is called every few draws.
-    Every `invariant_every`-th draw (plus draw 0) is checked against the FULL conservation battery."""
-    base = context.base
-    base_run = context.run(base)
-    baseline_M = float(base_run["population_M"].iloc[0])
-    draws = sample_draws(base, n, spread, seed)
+def _run_rows(context: ScenarioContext, draws: list, indices, n: int, baseline_M: float,
+              invariant_every: int, progress=None) -> tuple:
+    """Run the given GLOBAL draw indices through the fast path → (rows, path_frames).
 
+    `indices` are positions into the full `draws` list; the invariant-check cadence and the
+    progress condition key off the global index, so a worker running a slice performs exactly
+    the checks the serial run would on those draws (mc_pool splits ranges across processes)."""
     rows, path_frames = [], []
-    for i, v2p in enumerate(draws):
+    for i in indices:
+        v2p = draws[i]
         try:
             res = context.run(v2p)
             if invariant_every and i % invariant_every == 0:
@@ -315,7 +314,13 @@ def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: i
         path_frames.append(pf)
         if progress and (i % 5 == 0 or i == n - 1):
             progress(i + 1, n)
+    return rows, path_frames
 
+
+def _finalize(rows: list, path_frames: list, base_run: pd.DataFrame) -> MCResult:
+    """Assemble the MCResult from per-draw rows/path frames (must be in global draw order —
+    the percentile/Spearman statistics are order-sensitive only through float accumulation,
+    so identical input order ⇒ bit-identical output)."""
     draws_df = pd.DataFrame(rows)
     paths = pd.concat(path_frames, ignore_index=True)
 
@@ -341,6 +346,19 @@ def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: i
 
     return MCResult(draws=draws_df, paths=paths, percentiles=percentiles, tornado=tornado,
                     base_run=base_run)
+
+
+def run_mc(context: ScenarioContext, n: int = 300, spread: float = 0.15, seed: int = 0,
+           progress=None, invariant_every: int = 20) -> MCResult:
+    """Run N perturbed draws through the fast path. `progress(i, n)` is called every few draws.
+    Every `invariant_every`-th draw (plus draw 0) is checked against the FULL conservation battery.
+    The serial reference implementation — mc_pool.run_mc_pooled must match it bit-for-bit."""
+    base = context.base
+    base_run = context.run(base)
+    baseline_M = float(base_run["population_M"].iloc[0])
+    draws = sample_draws(base, n, spread, seed)
+    rows, path_frames = _run_rows(context, draws, range(n), n, baseline_M, invariant_every, progress)
+    return _finalize(rows, path_frames, base_run)
 
 
 def context_key(v2p: V2Params) -> tuple:

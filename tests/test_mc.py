@@ -131,3 +131,20 @@ def test_per_draw_timing_budget(data, deltas):
     for _ in range(3):
         ctx.run(d)
     assert (time.perf_counter() - t0) / 3 < 0.5                 # loose CI bound (measured ~0.15-0.24s)
+
+
+def test_pooled_equals_serial_bitwise(data, deltas):
+    """mc_pool determinism gate: chunked multi-process run ≡ the serial reference, bit-for-bit
+    (workers regenerate the same seeded draw list and rows reassemble in global order). Spawn
+    workers load their own data (~5s each) — the one deliberately slow test in this file."""
+    if not reabsorption.engine_artifacts_exist():
+        pytest.skip("rung-1 artifacts not built")
+    from fiscal_model import mc_pool
+    ctx = mc.ScenarioContext(data, deltas, BASE0)
+    serial = mc.run_mc(ctx, n=8, spread=0.15, seed=0)
+    ticks = []
+    pooled = mc_pool.run_mc_pooled(ctx, n=8, spread=0.15, seed=0, workers=2, chunk=3,
+                                   progress=lambda d, t: ticks.append((d, t)))
+    for name in ("draws", "paths", "percentiles", "tornado", "base_run"):
+        _assert_bit_equal(getattr(pooled, name), getattr(serial, name))
+    assert ticks[-1] == (8, 8) and [t for _, t in ticks] == [8] * len(ticks)

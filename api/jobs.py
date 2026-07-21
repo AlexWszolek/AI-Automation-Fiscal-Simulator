@@ -9,6 +9,7 @@ of an in-flight config return the existing job id.
 from __future__ import annotations
 
 import json
+import os
 import threading
 import uuid
 from collections import OrderedDict
@@ -16,10 +17,15 @@ from pathlib import Path
 from queue import Queue
 
 from fiscal_model import mc as mc_mod
+from fiscal_model import mc_pool
 from fiscal_model import webpayload
 from fiscal_model.app_params import canon
 
 TORNADO_N, TORNADO_SPREAD, TORNADO_SEED = 150, 0.15, 0
+# Draw-level process parallelism (fiscal_model/mc_pool.py). Default 1 = serial (dev/tests);
+# the server unit sets this to cores − 2. The executor is created EAGERLY in __init__ (main
+# thread, right after the data load) so the Linux fork never happens from the job thread.
+TORNADO_WORKERS = int(os.environ.get("FISCAL_TORNADO_WORKERS", "1"))
 _PRECOMP = Path(__file__).resolve().parent.parent / "data" / "app_precomputed" / "mc_tornado.json"
 
 
@@ -50,6 +56,8 @@ class TornadoJobs:
                                 for e in payload["entries"]}
         except FileNotFoundError:
             self.precomputed = {}
+        self.executor = (mc_pool.make_executor(TORNADO_WORKERS, data, deltas)
+                         if TORNADO_WORKERS > 1 else None)
         threading.Thread(target=self._worker, daemon=True, name="tornado-worker").start()
 
     # ------------------------------------------------------------------ public
@@ -103,8 +111,12 @@ class TornadoJobs:
                 def progress(i: int, total: int) -> None:
                     job["done"], job["total"] = i, total
 
-                r = mc_mod.run_mc(ctx, n=n, spread=TORNADO_SPREAD, seed=TORNADO_SEED,
-                                  progress=progress)
+                if self.executor is not None:
+                    r = mc_pool.run_mc_pooled(ctx, n=n, spread=TORNADO_SPREAD, seed=TORNADO_SEED,
+                                              executor=self.executor, progress=progress)
+                else:
+                    r = mc_mod.run_mc(ctx, n=n, spread=TORNADO_SPREAD, seed=TORNADO_SEED,
+                                      progress=progress)
                 entry = _entry_from_result(r, n)
                 with self.lock:
                     job.update(status="done", done=n, total=n, result=entry)
