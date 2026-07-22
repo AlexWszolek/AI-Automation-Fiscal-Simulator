@@ -136,9 +136,12 @@ baseline, extracted by `scripts/extract_cbo_baseline.py` from the published work
 regenerate with `scripts/precompute_app_mc.py` after ANY preset/lever change; a freshness test
 fails the suite if it goes stale).
 
-**Deploy (Streamlit Community Cloud):** point the app at `app/streamlit_app.py`, set Python
-to 3.12 in the advanced settings, done — the runtime artifacts and `requirements.txt` are all
-it needs (the PolicyEngine bake and PUMS download never run on the deploy box).
+**Streamlit Community Cloud (retired → redirect stub):** the production site is
+https://aifiscalimpacts.alexwszolek.com; the old Streamlit deployment should point its
+"Main file path" at `app/redirect_stub.py` (Settings → Main file path), which forwards every
+visit — with its full query string, the URL format is identical by design — to the new site.
+`app/streamlit_app.py` stays in the repo untouched: it is the source the web copy extractor
+reads, and `.venv/bin/streamlit run app/streamlit_app.py` still works locally.
 
 Step by step: `uv venv --python 3.12 .venv` → `uv pip install --python .venv/bin/python -r requirements.txt`
 → download PUMS into `data/external/` → `python -m fiscal_model.noc` →

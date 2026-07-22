@@ -42,6 +42,21 @@
         "warning"
       ],
       "port": 8000
+    },
+    {
+      "name": "fiscal-stub",
+      "runtimeExecutable": ".venv/bin/streamlit",
+      "runtimeArgs": [
+        "run",
+        "app/redirect_stub.py",
+        "--server.headless",
+        "true",
+        "--server.port",
+        "8502",
+        "--browser.gatherUsageStats",
+        "false"
+      ],
+      "port": 8502
     }
   ]
 }
