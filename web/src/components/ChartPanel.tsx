@@ -46,24 +46,50 @@ export function ChartPanel({ spec, caption, title, lazy }: {
     }
   }, [])
 
+  // Slider updates change only the DATA of a structurally identical spec — swap the dataset
+  // on the live vega view (fast: no parse/compile/re-mount) and fall back to a full re-embed
+  // whenever the structure differs (series set, year count, compact variant) or the swap throws.
+  const resultRef = useRef<Result | null>(null)
+  const structKeyRef = useRef('')
+
   useEffect(() => {
     if (!near) return
-    let result: Result | undefined
     let gone = false
-    if (el.current) {
-      void import('../charts/vega').then(({ mount }) => {
-        if (gone || !el.current) return
-        return mount(el.current, spec).then((r) => {
-          if (gone) r.finalize()
-          else result = r
-        })
-      })
-    }
+    const values = (spec as { data?: { values?: unknown[] } }).data?.values
+    const structKey = JSON.stringify({ ...(spec as object), data: null }) + `|${fitWidth}`
+    void import('../charts/vega').then(async ({ mount }) => {
+      if (gone || !el.current) return
+      if (resultRef.current && structKeyRef.current === structKey && values) {
+        try {
+          const t0 = performance.now()
+          const view = resultRef.current.view
+          view.data('source_0', values)
+          await view.resize().runAsync()
+          if (import.meta.env.DEV) console.debug(`[chart] data-swap ${(performance.now() - t0).toFixed(0)}ms`)
+          return
+        } catch { /* structure drifted after all — re-embed below */ }
+      }
+      resultRef.current?.finalize()
+      resultRef.current = null
+      const t0 = performance.now()
+      const r = await mount(el.current, spec)
+      if (gone) {
+        r.finalize()
+        return
+      }
+      resultRef.current = r
+      structKeyRef.current = structKey
+      if (import.meta.env.DEV) console.debug(`[chart] embed ${(performance.now() - t0).toFixed(0)}ms`)
+    })
     return () => {
       gone = true
-      result?.finalize()
     }
   }, [spec, near, fitWidth])
+
+  useEffect(() => () => {
+    resultRef.current?.finalize()
+    resultRef.current = null
+  }, [])
 
   return (
     <figure className="chart-panel">

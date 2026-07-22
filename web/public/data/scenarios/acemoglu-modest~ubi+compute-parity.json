@@ -30,11 +30,11 @@
  },
  "grounding": {
   "debt_stock": "\u2248 8.4 extra years of the FY2025 federal deficit \u2014 on top of what CBO already projects",
-  "fed_deficit_flow": "\u2248 1.5\u00d7 the entire FY2024 defense budget, every year \u2014 on top of what CBO already projects",
-  "jobs": "\u2248 0.5\u00d7 the federal civilian workforce",
+  "fed_deficit_flow": "\u2248 0.9\u00d7 annual Social Security outlays, every year \u2014 on top of what CBO already projects",
+  "jobs": "\u2248 0.8\u00d7 the active-duty US military",
   "real_gdp": "\u2248 0.2 years of normal (~2%/yr) real growth, arriving all at once",
-  "revenue_flow": "\u2248 2.6\u00d7 the annual NIH budget",
-  "state_flow": "\u2248 0.1\u00d7 the annual NIH budget, every year"
+  "revenue_flow": "\u2248 0.4\u00d7 the entire Apollo program",
+  "state_flow": "\u2248 0.0\u00d7 the entire Apollo program, every year"
  },
  "overlay_readouts": [
   {

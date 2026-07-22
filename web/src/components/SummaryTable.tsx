@@ -7,7 +7,7 @@ import { LABELS } from '../charts/labels'
 import COLUMN_NAMES from '../gen/column_names.json'
 import { Markdown } from '../content/md'
 import { toCsv, download } from '../lib/csv'
-import { thousands, trueMinus } from '../lib/format'
+import { trueMinus } from '../lib/format'
 import type { ScenarioPayload, SummaryView } from '../lib/types'
 import { HelpTip } from './controls'
 
@@ -63,7 +63,6 @@ function SummaryGrid({ v }: { v: SummaryView }) {
 export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
   const [view, setView] = useState<ViewKey>('tax')
   const [pct, setPct] = useState(false)
-  const sc = payload.scale_check
   const key = `${view === 'channel' ? 'channel' : 'tax'}_${pct ? 'pct' : 'busd'}` as const
   const cfgP = payload.config
   const csvStem = `fiscal-simulator-${cfgP.preset ?? 'custom'}-${cfgP.start_year}-${cfgP.start_year + cfgP.n_periods - 1}`
@@ -135,23 +134,10 @@ export function SummaryTable({ payload }: { payload: ScenarioPayload }) {
             <Markdown text={PROSE.summary_signs} />
           </div>
           <SummaryGrid v={payload.summary[key]} />
-          {Math.abs(sc.add_pct) >= 1 && (
+          {pct && payload.scale_check.extrapolated && (
             <p className="caption">
-              <strong>Scale check:</strong> in <span className="num">{sc.final_year}</span> this
-              scenario {sc.add_pct > 0 ? 'adds' : 'removes'}{' '}
-              <strong className="num">{thousands(Math.abs(sc.add_pct))}%</strong>{' '}
-              {sc.add_pct > 0 ? 'to' : 'from'} CBO's projected{' '}
-              {Math.min(sc.final_year, sc.cbo_max_year)} deficit
-              (<span className="num">${thousands(sc.cbo_deficit_B)}B</span>) — on top of what CBO
-              already projects.
-              {sc.final_year > sc.cbo_max_year &&
-                " (CBO's projections end at FY2036; the comparison holds their 2036 value.)"}
-            </p>
-          )}
-          {pct && sc.extrapolated && (
-            <p className="caption">
-              % columns past FY{sc.cbo_max_year} extrapolate CBO revenue at the baseline's
-              terminal growth rate.
+              % columns past FY{payload.scale_check.cbo_max_year} extrapolate CBO revenue at
+              the baseline's terminal growth rate.
             </p>
           )}
           <button className="dl" onClick={() => {

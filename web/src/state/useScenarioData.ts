@@ -1,6 +1,8 @@
 // Data for the current config: pristine configs fetch a committed static bundle by slug
 // (instant, works with the API down); lever-modified configs go to POST /api/run with a
-// 300ms debounce (Phase 3 — until the API lands, custom configs surface `apiDown`).
+// 150ms debounce and IN-FLIGHT COALESCING — during a slider drag at most one request is on
+// the wire; stale ticks exit at the cancellation check, so the newest config fires the
+// moment the active request settles (the server never sees a queue of dead configs).
 // Always keeps the last good payload on screen while the next one loads.
 import { useEffect, useRef, useState } from 'react'
 import { isPristine, slugFor } from '../lib/config'
@@ -14,6 +16,8 @@ export interface ScenarioData {
 }
 
 const bundleCache = new Map<string, ScenarioPayload>()
+const DEBOUNCE_MS = 150
+let liveQueue: Promise<void> = Promise.resolve()   // serializes live fetches (coalescing)
 
 export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
   const [payload, setPayload] = useState<ScenarioPayload | null>(null)
@@ -82,7 +86,9 @@ export function useScenarioData(cfg: ScenarioConfig): ScenarioData {
       void run()
       return
     }
-    const t = setTimeout(run, 300)
+    const t = setTimeout(() => {
+      liveQueue = liveQueue.then(() => (cancelled() ? undefined : run()))
+    }, DEBOUNCE_MS)
     return () => clearTimeout(t)
   }, [cfg])
 

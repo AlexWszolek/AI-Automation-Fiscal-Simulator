@@ -29,10 +29,10 @@
  "grounding": {
   "debt_stock": "\u2248 2.8 extra years of the FY2025 federal deficit \u2014 on top of what CBO already projects",
   "fed_deficit_flow": "\u2248 0.7\u00d7 the entire FY2024 defense budget, every year \u2014 on top of what CBO already projects",
-  "jobs": "\u2248 2.3\u00d7 the jobs lost in the Great Recession",
+  "jobs": "\u2248 0.9\u00d7 the jobs lost at the COVID trough",
   "real_gdp": "\u2248 0.9 years of normal (~2%/yr) real growth, arriving all at once",
   "revenue_flow": "\u2248 0.7 full years of federal individual income-tax receipts",
-  "state_flow": "\u2248 2.6\u00d7 the annual NIH budget, every year"
+  "state_flow": "\u2248 0.4\u00d7 the entire Apollo program, every year"
  },
  "overlay_readouts": [
   {

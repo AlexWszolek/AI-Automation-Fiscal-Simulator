@@ -45,19 +45,30 @@ def test_anchor_cross_checks(cbo, data):
 
 
 def test_ground_picks_legible_ratio():
-    # 2200 B/yr deficit → defense (850) gives ratio 2.6, inside [0.3, 30] → first candidate wins
+    # nearest-×1 among in-window candidates: 2200/1775 = 1.24 (deficit) beats 2200/850 = 2.6
     line = ground(2200.0, "fed_deficit_flow")
-    assert "2.6× the entire FY2024 defense budget" in line
+    assert "1.2× the FY2025 federal deficit" in line
     assert "on top of what CBO already projects" in line
-    # a small figure falls through to the NIH comparator
-    small = ground(60.0, "fed_deficit_flow")
-    assert "NIH" in small
+    # a small figure lands on the Apollo comparator (no small-agency budgets)
+    small = ground(200.0, "fed_deficit_flow")
+    assert "Apollo" in small and "NIH" not in small
     # improvements get the mirrored clause, never "on top of"
     imp = ground(-500.0, "debt_stock")
     assert "improvement" in imp and "on top of" not in imp
-    # jobs
-    assert "Great Recession" in ground(26.0, "jobs")          # 26M / 8.7M = 3.0 ✓ window
+    # the debt stock ALWAYS grounds in deficit-years (the user's call), even at huge ratios
+    assert "extra years of the FY2025 federal deficit" in ground(39_663.0, "debt_stock")
+    # jobs: nearest ×1 — 26M sits closest to the COVID trough (21.9M), not 3× Great Recession
+    assert "COVID" in ground(26.0, "jobs")
+    assert "Great Recession" in ground(9.5, "jobs")           # 9.5/8.7 = 1.09 → nearest
     assert ground(0.0, "jobs") == ""
+
+
+def test_ground_near_equal_drops_the_multiplier():
+    # within ±7% of an anchor the line reads "≈ the ..." with no ratio
+    line = ground(124.0, "jobs")                              # 124/123.8 → population of Japan
+    assert line == "≈ the population of Japan"
+    # the years-form template keeps its number even near 1
+    assert "extra years" in ground(1775.0, "debt_stock")
 
 
 def test_ground_fallback_nearest_ratio():
