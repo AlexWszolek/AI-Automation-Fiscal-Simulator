@@ -136,12 +136,16 @@ baseline, extracted by `scripts/extract_cbo_baseline.py` from the published work
 regenerate with `scripts/precompute_app_mc.py` after ANY preset/lever change; a freshness test
 fails the suite if it goes stale).
 
-**Streamlit Community Cloud (retired → redirect stub):** the production site is
-https://aifiscalimpacts.alexwszolek.com; the old Streamlit deployment should point its
-"Main file path" at `app/redirect_stub.py` (Settings → Main file path), which forwards every
-visit — with its full query string, the URL format is identical by design — to the new site.
-`app/streamlit_app.py` stays in the repo untouched: it is the source the web copy extractor
-reads, and `.venv/bin/streamlit run app/streamlit_app.py` still works locally.
+**Streamlit Community Cloud (deleted):** the production site is
+https://aifiscalimpacts.alexwszolek.com; the old Streamlit deployment has been deleted.
+`app/redirect_stub.py` remains in the repo — if the app is ever redeployed, point the Cloud
+"Main file path" at it and every old link forwards (full query string; identical URL format).
+`app/streamlit_app.py` stays untouched: it is the source the web copy extractor reads, and
+`.venv/bin/streamlit run app/streamlit_app.py` still works locally.
+
+**Feedback builds — hiding the sensitivity tornado:** build the front end with
+`VITE_HIDE_TORNADO=1 npx vite build` to drop the "Which assumptions drive this number?"
+section entirely (no tornado.json fetch, no API jobs); a plain `npx vite build` restores it.
 
 Step by step: `uv venv --python 3.12 .venv` → `uv pip install --python .venv/bin/python -r requirements.txt`
 → download PUMS into `data/external/` → `python -m fiscal_model.noc` →

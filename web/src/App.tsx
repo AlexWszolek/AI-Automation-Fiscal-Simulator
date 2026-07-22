@@ -21,6 +21,10 @@ import { INITIAL, useScenario } from './state/useScenario'
 import { useScenarioData } from './state/useScenarioData'
 
 const CAPTIONS = copy.captions as string[]
+// Operator kill-switch for the sensitivity section (feedback rounds, constrained servers):
+// build with VITE_HIDE_TORNADO=1 to drop the section entirely — no tornado.json fetch, no
+// API jobs. A plain build restores it.
+const HIDE_TORNADO = import.meta.env.VITE_HIDE_TORNADO === '1'
 // Employed is ~90% of the area — the pale fill lets the distress bands carry the color
 const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a1d', '#b9b2a6']
 const WAGE_CAPTION =
@@ -155,7 +159,7 @@ export default function App() {
 
         {payload && <StatesSection cfg={cfg} payload={payload} dispatch={dispatch} />}
         {payload && <SummaryTable payload={payload} />}
-        {payload && <TornadoSection cfg={cfg} />}
+        {payload && !HIDE_TORNADO && <TornadoSection cfg={cfg} />}
         {loading && !payload && <p className="caption col-wide">Loading the scenario…</p>}
         <footer className="col-wide caption site-footer">
           Thanks to Princeton's Summer Social Impact Internship for funding my internship at
