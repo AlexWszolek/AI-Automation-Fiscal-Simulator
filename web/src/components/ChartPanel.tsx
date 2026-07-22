@@ -1,6 +1,8 @@
 // Mounts a vega-lite spec and shows the app's caption under it (the show_chart pattern).
 // The vega runtime is dynamically imported (its ~380KB chunk stays off the first paint), and
 // `lazy` charts (the map with its topojson) mount only when scrolled near the viewport.
+// A ResizeObserver re-embeds when the container's width actually changes (width:'container'
+// only measures at embed time) — phone rotation, window resizes, drawer settling.
 import { useEffect, useRef, useState } from 'react'
 import type { VisualizationSpec } from 'vega-embed'
 import type { Result } from 'vega-embed'
@@ -13,6 +15,7 @@ export function ChartPanel({ spec, caption, title, lazy }: {
 }) {
   const el = useRef<HTMLDivElement>(null)
   const [near, setNear] = useState(!lazy)
+  const [fitWidth, setFitWidth] = useState(0)
 
   useEffect(() => {
     if (!lazy || near || !el.current) return
@@ -25,6 +28,23 @@ export function ChartPanel({ spec, caption, title, lazy }: {
     io.observe(el.current)
     return () => io.disconnect()
   }, [lazy, near])
+
+  useEffect(() => {
+    if (!el.current) return
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const ro = new ResizeObserver((entries) => {
+      const w = Math.round(entries[0].contentRect.width)
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        setFitWidth((prev) => (Math.abs(w - prev) > 8 ? w : prev))
+      }, 150)
+    })
+    ro.observe(el.current)
+    return () => {
+      clearTimeout(timer)
+      ro.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (!near) return
@@ -43,7 +63,7 @@ export function ChartPanel({ spec, caption, title, lazy }: {
       gone = true
       result?.finalize()
     }
-  }, [spec, near])
+  }, [spec, near, fitWidth])
 
   return (
     <figure className="chart-panel">

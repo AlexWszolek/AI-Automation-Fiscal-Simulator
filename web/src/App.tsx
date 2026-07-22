@@ -3,7 +3,7 @@
 // copy are the Streamlit app's; layout and type are DESIGN.md. The address bar always encodes
 // the current configuration through the golden-pinned codec — old shared links resolve
 // identically, with the API down.
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import copy from './content/copy.json'
 import { timeSeries } from './charts/timeSeries'
 import { AboutSection, ShareBox } from './components/AboutModal'
@@ -15,8 +15,8 @@ import { StatesSection } from './components/StatesSection'
 import { SummaryTable } from './components/SummaryTable'
 import { TornadoSection } from './components/TornadoSection'
 import { configFromLocation, queryStringFor } from './lib/codec'
-import { effectiveLevers } from './lib/config'
-import { thousands } from './lib/format'
+import { effectiveLevers, presetMeta } from './lib/config'
+import { dollarsB, thousands } from './lib/format'
 import { INITIAL, useScenario } from './state/useScenario'
 import { useScenarioData } from './state/useScenarioData'
 
@@ -48,14 +48,37 @@ export default function App() {
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname)
   }, [qs])
 
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
   return (
     <div className="shell">
-      <aside className="rail">
-        <PresetPicker cfg={cfg} dispatch={dispatch} />
-        <OverlayPicker cfg={cfg} payload={payload} dispatch={dispatch} />
-        <LeverPanel cfg={cfg} dispatch={dispatch} />
-        <ShareBox queryString={qs} />
-        <AboutSection />
+      <aside className={drawerOpen ? 'rail open' : 'rail'}>
+        {/* mobile-only sticky bar (display:none on desktop): the whole bar is the drawer
+            toggle, with the final-year deficit pinned so lever effects stay visible */}
+        <button
+          type="button"
+          className="mobile-bar"
+          aria-expanded={drawerOpen}
+          onClick={() => setDrawerOpen((o) => !o)}
+        >
+          <span className="mobile-bar-scenario">
+            <span className="mobile-bar-chevron" aria-hidden>{drawerOpen ? '▴' : '▾'}</span>
+            {' '}Scenario · <span className="mobile-bar-preset">{presetMeta(cfg.preset)?.name ?? 'Custom'}</span>
+          </span>
+          {payload && (
+            <span className="mobile-bar-metric">
+              <span className="num">{dollarsB(payload.final.fed_deficit_abs_B)}</span>
+              <span className="mobile-bar-metric-label">deficit, final yr</span>
+            </span>
+          )}
+        </button>
+        <div className="rail-body">
+          <PresetPicker cfg={cfg} dispatch={dispatch} />
+          <OverlayPicker cfg={cfg} payload={payload} dispatch={dispatch} />
+          <LeverPanel cfg={cfg} dispatch={dispatch} />
+          <ShareBox queryString={qs} />
+          <AboutSection />
+        </div>
       </aside>
 
       <main className="content">

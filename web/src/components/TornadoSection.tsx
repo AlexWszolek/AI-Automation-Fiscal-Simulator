@@ -4,6 +4,7 @@
 import { tornado } from '../charts/tornado'
 import { thousands } from '../lib/format'
 import type { ScenarioConfig, TornadoEntry } from '../lib/types'
+import { useCompact } from '../lib/useCompact'
 import { useTornado } from '../state/useTornado'
 import { ChartPanel } from './ChartPanel'
 
@@ -26,6 +27,7 @@ function Caption({ e }: { e: TornadoEntry }) {
 
 export function TornadoSection({ cfg }: { cfg: ScenarioConfig }) {
   const t = useTornado(cfg)
+  const compact = useCompact()
 
   return (
     <section className="col-wide">
@@ -50,7 +52,7 @@ export function TornadoSection({ cfg }: { cfg: ScenarioConfig }) {
       )}
       {t.entry ? (
         <figure className="chart-panel">
-          <ChartPanel spec={tornado(t.entry, 12, t.stale)} />
+          <ChartPanel spec={tornado(t.entry, 12, t.stale, compact)} />
           <figcaption className="caption"><Caption e={t.entry} /></figcaption>
         </figure>
       ) : (

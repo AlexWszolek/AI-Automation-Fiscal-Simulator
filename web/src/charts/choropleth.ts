@@ -15,7 +15,7 @@ const TOOLTIP: [keyof StateRow, string, string][] = [
   ['implied_rate_hike_pct', 'Implied rate hike (%)', ',.1f'],
 ]
 
-export function choropleth(states: StateRow[]): VisualizationSpec {
+export function choropleth(states: StateRow[], height = 420): VisualizationSpec {
   const dmax = Math.max(...states.map((s) => s.revenue_loss_pct), 1.0)
   return {
     data: {
@@ -52,6 +52,6 @@ export function choropleth(states: StateRow[]): VisualizationSpec {
     },
     projection: { type: 'albersUsa' },
     width: 'container',
-    height: 420,
+    height,
   }
 }

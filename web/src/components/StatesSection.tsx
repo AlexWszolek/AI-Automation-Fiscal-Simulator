@@ -12,6 +12,7 @@ import { effectiveLevers } from '../lib/config'
 import { ChartPanel } from './ChartPanel'
 import { LeverRow } from './LeverPanel'
 import { StateTable } from './StateTable'
+import { useCompact } from '../lib/useCompact'
 
 const PROSE = copy.prose as Record<string, string>
 const CAPTIONS = copy.captions as string[]
@@ -21,6 +22,7 @@ export function StatesSection({ cfg, payload, dispatch }: {
   payload: ScenarioPayload
   dispatch: (a: ScenarioAction) => void
 }) {
+  const compact = useCompact()
   const [view, setView] = useState<'map' | 'table'>('map')
   const values = effectiveLevers(cfg)
   const f = payload.final
@@ -59,7 +61,7 @@ export function StatesSection({ cfg, payload, dispatch }: {
       </div>
       <div className="col-wide">
         {view === 'map' ? (
-          <ChartPanel spec={choropleth(payload.states)} caption={PROSE.map_caption} />
+          <ChartPanel spec={choropleth(payload.states, compact ? 320 : 420)} caption={PROSE.map_caption} />
         ) : (
           <>
             <StateTable states={payload.states} />

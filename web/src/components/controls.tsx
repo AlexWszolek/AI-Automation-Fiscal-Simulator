@@ -1,23 +1,45 @@
 // The input primitives + the receding help affordance. No component library — plain elements
 // styled by app.css; every control shows its current value in mono tabular-nums.
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import type { GridSpecNum } from '../lib/config'
 import { trueMinus } from '../lib/format'
 import { ListBox } from './ListBox'
 
-/** Receding help: a dotted-underline label that reveals the app's help text on hover/focus.
-    No ⓘ icons (approved deviation). */
+/** Receding help: a dotted-underline label that reveals the app's help text on hover/focus,
+    or on tap (click toggles; tapping elsewhere closes — a tabIndex span is not tap-focusable
+    on iOS, so hover/focus alone is unreachable on touch). No ⓘ icons (approved deviation). */
 export function HelpTip({ label, help }: { label: string; help?: string | null }) {
   const [open, setOpen] = useState(false)
+  const [pinned, setPinned] = useState(false)
+  const root = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    if (!pinned) return
+    const onDoc = (e: PointerEvent) => {
+      if (root.current && !root.current.contains(e.target as Node)) {
+        setPinned(false)
+        setOpen(false)
+      }
+    }
+    document.addEventListener('pointerdown', onDoc)
+    return () => document.removeEventListener('pointerdown', onDoc)
+  }, [pinned])
+
   if (!help) return <span className="lever-label">{label}</span>
   return (
     <span
+      ref={root}
       className="lever-label has-help"
       tabIndex={0}
       onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseLeave={() => !pinned && setOpen(false)}
       onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
+      onBlur={() => !pinned && setOpen(false)}
+      onClick={() => {
+        const next = !pinned
+        setPinned(next)
+        setOpen(next)
+      }}
     >
       {label}
       {open && <span className="help-pop caption">{help}</span>}
