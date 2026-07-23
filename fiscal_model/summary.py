@@ -40,6 +40,8 @@ def _tax_rows(res: pd.DataFrame) -> list:
         ("Federal revenue changes", "Overflow corporate tax", r["survivor_overflow_corp_tax_B"], "fed", "flow"),
         ("Federal revenue changes", "Automation (robot) tax", r["automation_tax_B"], "fed", "flow"),
         ("Federal revenue changes", "UBI recapture", r["ubi_recapture_B"], "fed", "flow"),
+        ("Federal revenue changes", "SWF profit share", r["swf_revenue_B"], "fed", "flow"),
+        ("Federal revenue changes", "Federal VAT", r["fed_vat_B"], "fed", "flow"),
         ("Federal revenue changes", "Tax on UI benefits", r["ui_tax_fed_B"], "fed", "flow"),
         # baseline tax-regime surcharges (the income/capital/consumption × dials; 0 at current law)
         ("Federal revenue changes", "Income tax surcharge", r["income_surcharge_fed_B"], "fed", "flow"),
@@ -94,12 +96,13 @@ def _channel_rows(res: pd.DataFrame) -> list:
     labour_lost = -(r["inc_fed_loss_B"] + r["payroll_fed_loss_B"] + r["inc_state_loss_B"])
     labour_back = r["survivor_gain_fed_B"] + r["survivor_gain_state_B"]
     capital_back = (r["corp_offset_B"] + r["compute_pool_tax_B"]
-                    + r["survivor_overflow_corp_tax_B"] + r["automation_tax_B"])
+                    + r["survivor_overflow_corp_tax_B"] + r["automation_tax_B"]
+                    + r["swf_revenue_B"])
     surcharges = (r["income_surcharge_fed_B"] + r["income_surcharge_state_B"]
                   + r["corp_surcharge_fed_B"] + r["corp_surcharge_state_B"]
                   + r["excise_surcharge_fed_B"] + r["cons_surcharge_state_B"])
     ch1 = labour_lost + labour_back + capital_back
-    ch3_taxed = -r["cons_state_loss_B"]
+    ch3_taxed = -r["cons_state_loss_B"] + r["fed_vat_B"]
     spending = (r["transfer_fed_B"] + r["transfer_state_B"] + r["ssdi_outlay_B"]
                 + (r["ui_outlay_fed_B"] - r["ui_tax_fed_B"])
                 + (r["ubi_outlay_B"] - r["ubi_recapture_B"]))
@@ -121,7 +124,8 @@ def _channel_rows(res: pd.DataFrame) -> list:
          "combined", "memo"),
         ("③ Taxable → consumer surplus", "Consumer price gains (untaxed, memo)",
          r["price_reduction_B"] + r["survivor_overflow_price_B"], "combined", "memo"),
-        ("③ Taxable → consumer surplus", "Consumption tax change", ch3_taxed, "combined", "flow"),
+        ("③ Taxable → consumer surplus", "Consumption tax change (incl. federal VAT)", ch3_taxed,
+         "combined", "flow"),
         ("④ Government spending", "Net new spending (transfers+UI+SSDI+UBI)", spending,
          "combined", "flow"),
         ("Net", "Net fiscal impact (federal + state)", combined, "combined", "net"),

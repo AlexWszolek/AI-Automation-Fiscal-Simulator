@@ -56,6 +56,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"]
              + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"]
+             - res["swf_revenue_B"] - res["fed_vat_B"]
              + res["ssdi_outlay_B"]
              - res["income_surcharge_fed_B"] - res["corp_surcharge_fed_B"]   # baseline tax-regime
              - res["excise_surcharge_fed_B"])                                # surcharges (revenue)

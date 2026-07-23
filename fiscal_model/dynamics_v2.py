@@ -298,6 +298,7 @@ class DynamicModelV2:
         baseline_emp = v1.emp0.sum()
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
+        withdrawal_prev = 0.0                             # t−1 standing net income withdrawal (J.1)
         Y_prev = 1.0                                      # t−1 real-output index (J.1, for W_reab); 1 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
         induced_flow_pending = np.zeros(len(v1.wage))     # SIGNED level-controller flow for t+1; 0 at t=0
@@ -485,12 +486,28 @@ class DynamicModelV2:
             ubi_outlay = p.ubi_annual * baseline_emp                    # gross: per-worker UBI × workforce
             ubi_recapture = v2p.ubi_recapture_rate * ubi_outlay
             automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated comp bill
+            # Sovereign-wealth-fund equity share of AFTER-corporate-tax automation profit
+            # (retained + survivor overflow, net of the corporate recapture the ledger already
+            # books). Zero capital MPC ⇒ no demand interaction. Exactly 0.0 when the share is 0.
+            swf_revenue = (v2p.swf_profit_share
+                           * max(0.0, disp.retained_profit + overflow_to_profit
+                                 - corp_offset_cell.sum() - overflow_corp_tax)
+                           if v2p.swf_profit_share > 0 else 0.0)
+            # Federal VAT (Korinek-Lockwood stage 1): a NEW tax vs baseline, so LEVEL revenue on
+            # a 2/3-of-value-added consumption base that erodes with the t−1 standing net income
+            # withdrawal (and grows when UBI/raises inject) — the same J.1 lag the market wage
+            # term uses. Nominal dollars never see trend growth (A2 rule). Exactly 0.0 at rate 0.
+            fed_vat = (v2p.fed_vat_rate
+                       * max(0.0, (2.0 / 3.0) * macro.VA_BASELINE_USD
+                             - p.kernel_params.mpc * p.kernel_params.consumption_stickiness
+                             * withdrawal_prev)
+                       if v2p.fed_vat_rate > 0 else 0.0)
             # SSDI outlay on the exited stock (coherence fix: they carried the after-loss but drew no
             # benefit — ~$162B/yr missing by y10). Federal; not in the baked transfer grids (no overlap
             # beyond the small documented SSI-concurrency approximation). Inert at reduction (exited ≡ 0).
             ssdi_outlay = st.exited.sum() * v2p.ssdi_annual
             net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax + ssdi_outlay \
-                - surch_fed_total                        # baseline tax surcharges: federal revenue
+                - surch_fed_total - swf_revenue - fed_vat  # surcharges/SWF/VAT: federal revenue
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
@@ -520,6 +537,7 @@ class DynamicModelV2:
                                     else self._reab_scar_pw)).sum())
             hh_withdrawal -= wage_bill * (W_surv - 1.0)                 # survivor raises inject; cuts withdraw
             hh_withdrawal -= ubi_outlay - ubi_recapture                 # net UBI injects
+            withdrawal_prev = hh_withdrawal                             # carried for the t+1 VAT base
             k = (p.demand_multiplier * p.kernel_params.mpc
                  * p.kernel_params.consumption_stickiness / self._va_per_worker
                  if self._va_per_worker > 0 else 0.0)
@@ -556,7 +574,8 @@ class DynamicModelV2:
                                + corp_offset_cell.sum() + cp.tax_fed + sd_fed.sum()
                                + overflow_corp_tax
                                + automation_tax
-                               + surch_fed_total) / 1e9  # automation tax + surcharges are revenue
+                               + surch_fed_total
+                               + swf_revenue + fed_vat) / 1e9  # robot tax/surcharges/SWF/VAT are revenue
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
 
@@ -611,6 +630,8 @@ class DynamicModelV2:
                 "transfer_fed_B": ch["transfer_fed"].sum() / 1e9,
                 "ui_outlay_fed_B": ui_outlay_fed.sum() / 1e9, "ui_tax_fed_B": ui_tax_fed.sum() / 1e9,
                 "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: gross UBI outlay
+                "swf_revenue_B": swf_revenue / 1e9,                     # SWF equity share (overlay)
+                "fed_vat_B": fed_vat / 1e9,                             # federal VAT (overlay)
                 "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
                 "ssdi_outlay_B": ssdi_outlay / 1e9,                    # coherence: SSDI on the exited

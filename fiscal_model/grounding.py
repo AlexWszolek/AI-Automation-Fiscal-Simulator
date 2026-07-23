@@ -156,6 +156,8 @@ def ground(value: float, kind: str) -> str:
     in_window = [s for s in scored if 0.3 <= s[0] <= 30]
     pool = in_window if in_window else scored
     r, _a, tmpl = min(pool, key=lambda s: abs(_math.log(s[0])))
+    if r < 0.095:                    # "≈ 0.0× the Apollo program" communicates nothing — stay silent
+        return ""
     if 0.93 <= r <= 1.07 and "{r}× " in tmpl:
         line = tmpl.replace("{r}× ", "")                # "≈ the population of Japan"
     else:

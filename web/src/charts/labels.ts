@@ -52,6 +52,8 @@ export const TORNADO_LABELS: Record<string, string> = {
   compute_effective_rate: 'Compute pool tax rate',
   automation_tax_rate: 'Robot tax rate',
   ubi_recapture_rate: 'UBI recapture',
+  swf_profit_share: 'SWF profit share',
+  fed_vat_rate: 'Federal VAT rate',
   baseline_growth_rate: 'Trend growth',
   demand_multiplier: 'Demand multiplier',
   price_passthrough: 'Price pass-through',

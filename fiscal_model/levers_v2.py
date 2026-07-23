@@ -135,6 +135,10 @@ class V2Params:
     #   gap needing more than this spills to a forced spending cut (states can't raise rates without bound).
     interest_rate: float = 0.03
     ubi_annual: float = 0.0
+    # Overlay-only instruments (no UI sliders; set by presets.OVERLAYS). Both are exactly
+    # inert at 0.0 — the ledger adds a literal 0.0, preserving the C8 anchor bit-for-bit.
+    swf_profit_share: float = 0.0    # government equity share of AFTER-corporate-tax automation profit
+    fed_vat_rate: float = 0.0        # federal VAT on a 2/3-of-value-added consumption base (K-L)
     corp_offset_scale: float = 1.0   # v1-DEPRECATED: superseded by the disposition router (corporate
     #                                  XOR) — would double-apply with disp_factor; asserted ==1.0 in V2.
     consumption_scale: float = 1.0   # v1 post-hoc consumption scale (applied once; not superseded yet)
