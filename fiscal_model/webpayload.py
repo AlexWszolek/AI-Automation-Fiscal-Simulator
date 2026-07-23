@@ -124,26 +124,40 @@ def build_scenario_payload(data, deltas, cfg: dict, ctx_cache: dict | None = Non
                         - final["retired_M"])
     inc_tax_lost_cum_B = float(res["inc_fed_loss_B"].sum())
 
-    # overlay readouts: base WITHOUT overlays vs each overlay alone (one shared context)
+    # overlay readouts: base WITHOUT overlays vs each overlay alone (one shared context).
+    # Overlays touch only PERTURBED fields, so the MAIN pooled context is frozen-shape-compatible
+    # with every readout config — reuse it instead of building a readout context (~0.8s) that
+    # ctx_cache would miss on every slider move (it keys on the FULL lever repr). The context_key
+    # guard keeps this honest: if it ever stops holding, we fall back to the old ctx_cache path
+    # rather than drifting. ScenarioContext.run is pinned bit-identical to a fresh model, so
+    # which compatible context serves a run cannot change any number.
     overlay_readouts, combined = [], None
     if overlays:
-        if ctx_cache is None:
-            ctx_cache = {}
         base_no = canon(build_v2_params(ui))
-        bkey = cfg_key(base_no)
-        ctx = ctx_cache.get(bkey)
-        if ctx is None:
-            ctx = ctx_cache[bkey] = mc_mod.ScenarioContext(data, deltas, base_no)
-        gap = float(ctx.run(base_no).iloc[-1]["fed_deficit_B"])
+        if pool is not None and mc_mod.context_key(base_no) == key:
+            rctx = ctx
+        else:
+            if ctx_cache is None:
+                ctx_cache = {}
+            bkey = cfg_key(base_no)
+            rctx = ctx_cache.get(bkey)
+            if rctx is None:
+                rctx = ctx_cache[bkey] = mc_mod.ScenarioContext(data, deltas, base_no)
+        gap = float(rctx.run(base_no).iloc[-1]["fed_deficit_B"])
         for k in overlays:
             ovp = canon(presets_mod.apply_overlays(base_no, [k])[0])
-            rec = gap - float(ctx.run(ovp).iloc[-1]["fed_deficit_B"])
+            rec = gap - float(rctx.run(ovp).iloc[-1]["fed_deficit_B"])
             overlay_readouts.append({
                 "key": k, "name": presets_mod.OVERLAYS[k].name, "no_gap": gap <= 1.0,
                 "recovered_B": round(rec, 4), "gap_B": round(gap, 4),
                 "pct": round(100 * rec / gap, 4) if gap > 1.0 else None})
         if len(overlays) > 1 and gap > 1.0:
-            rec_all = gap - float(ctx.run(canon(v2p)).iloc[-1]["fed_deficit_B"])
+            # all-overlays-on IS the main config — reuse its run instead of re-running it
+            # (canon is a no-op on resolved configs; guarded so a future canon change
+            # degrades to the old re-run, not to drift)
+            pv = canon(v2p)
+            rec_all = gap - float(final["fed_deficit_B"] if pv == v2p
+                                  else rctx.run(pv).iloc[-1]["fed_deficit_B"])
             combined = {"recovered_B": round(rec_all, 4), "gap_B": round(gap, 4),
                         "pct": round(100 * rec_all / gap, 4)}
 

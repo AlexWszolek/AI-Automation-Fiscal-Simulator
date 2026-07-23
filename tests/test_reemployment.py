@@ -143,9 +143,15 @@ def test_invariants_battery_with_everything_on(data, deltas):
 
 def test_reab_delta_vectorized_parity(data, deltas):
     """The vectorized ReabsorptionEngine.delta (hoisted before-sides + shared slot matrices +
-    hoisted at-mean transfer interp) must equal the per-state/per-program reference _delta_loop
-    BIT-FOR-BIT on all 7 outputs — the anchor that lets the bind-time fast path exist (the
-    survivor._delta_loop / mc_pool discipline)."""
+    hoisted at-mean transfer interp) against the per-state/per-program reference _delta_loop
+    (always pure np.interp) — the anchor that lets the fast paths exist (the
+    survivor._delta_loop / mc_pool discipline).
+
+    wage_index==1 (bind time, every non-Baumol scenario): BIT-FOR-BIT on all 7 outputs.
+    wage_index≠1 (the per-period Baumol/crowding path): delta uses the _interp_rows shared-search
+    blend, which agrees with np.interp only to 1 ulp (numpy's kernel fuses the final multiply-add
+    on some platforms) — so the anchor there is a tight relative tolerance, still far below any
+    real logic bug."""
     from fiscal_model.kernel import KernelParams
     from fiscal_model.transfers import TransferLookup
     eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(), KernelParams())
@@ -155,4 +161,41 @@ def test_reab_delta_vectorized_parity(data, deltas):
         new = eng.delta(hc, 0.6, 0.5, wage_index=wi)
         ref = eng._delta_loop(hc, 0.6, 0.5, wage_index=wi)
         for k in keys:
-            assert np.array_equal(new[k], ref[k], equal_nan=True), (hc, wi, k)
+            if wi == 1.0:
+                assert np.array_equal(new[k], ref[k], equal_nan=True), (hc, wi, k)
+            else:
+                np.testing.assert_allclose(new[k], ref[k], rtol=1e-12, atol=1e-9,
+                                           err_msg=str((hc, wi, k)))
+
+
+def test_interp_rows_matches_np_interp_rounding_only(data, deltas):
+    """_interp_rows (the shared-search multi-program blend on the wage-dynamics path) vs per-row
+    np.interp over every real transfer grid: identical binary-search bracket and edge rules, so
+    the ONLY permitted difference is the final multiply-add rounding (numpy's kernel may fuse it;
+    ufunc composition rounds twice). That bounds the ABSOLUTE error at ~1 ulp of the program's
+    benefit scale (~1e-12 dollars) — near cancellation points the relative-to-result error can
+    look huge while the absolute error stays there. Any bracket/edge bug would differ at the
+    benefit scale itself, 12 orders above this bound. Queries cover knots exactly, knots±1ulp,
+    midpoints, and beyond-grid overshoot both sides."""
+    from fiscal_model.kernel import KernelParams
+    from fiscal_model.transfers import TransferLookup
+    eng = reabsorption.ReabsorptionEngine(data, deltas, TransferLookup(), KernelParams())
+    n_groups = 0
+    for (f, s, k), tr in eng._tr.items():
+        xs, Y, progs, S = tr[0], tr[1], tr[2], tr[5]
+        if not progs:
+            continue
+        eps = np.spacing(np.abs(xs) + 1.0)
+        q = np.concatenate([xs, xs - eps, xs + eps,
+                            (xs[:-1] + xs[1:]) / 2 if xs.size > 1 else xs,
+                            np.linspace(-1.0, 1.5 * abs(float(xs[-1])) + 1.0, 401)])
+        got = reabsorption._interp_rows(xs, Y, q, S)             # the production (slope-matrix) path
+        # divide-then-gather ≡ gather-then-divide: the S fast path must be BIT-identical to the
+        # direct formula (same elementwise operands and ops, just batched at bind time)
+        assert np.array_equal(got, reabsorption._interp_rows(xs, Y, q)), (f, s, k)
+        want = np.vstack([np.interp(q, xs, Y[p]) for p in range(Y.shape[0])])
+        scale = np.abs(Y).max(axis=1, keepdims=True)             # per-program benefit scale
+        bound = 2.0 * np.spacing(np.maximum(np.abs(want), scale))
+        assert (np.abs(got - want) <= bound).all(), (f, s, k)
+        n_groups += 1
+    assert n_groups > 300              # the sweep really covered the (filing, state, kids) grids

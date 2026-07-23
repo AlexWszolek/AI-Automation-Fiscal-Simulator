@@ -37,7 +37,14 @@ def test_static_equals_live_for_pristine_presets(client):
     both sides are webpayload.build_scenario_payload, so drift means a stale bundle."""
     for slug, body in [("acemoglu-modest", {"preset": "acemoglu-modest"}),
                        ("custom", {}),
-                       ("agi-5y~ubi", {"preset": "agi-5y", "overlays": ["ubi"]})]:
+                       ("agi-5y~ubi", {"preset": "agi-5y", "overlays": ["ubi"]}),
+                       # multi-overlay: covers the combined-readout reuse of the main run
+                       ("agi-5y~cw-robot-tax+compute-parity",
+                        {"preset": "agi-5y", "overlays": ["cw-robot-tax", "compute-parity"]}),
+                       # Baumol preset: covers the per-period _interp_rows wage-dynamics path
+                       # (≤1 ulp vs np.interp — invisible at the payload's 4-decimal rounding)
+                       ("karger-rapid~swf+fed-vat",
+                        {"preset": "karger-rapid", "overlays": ["swf", "fed-vat"]})]:
         bundle = json.loads((SCENARIOS / f"{slug}.json").read_text())
         live = client.post("/api/run", json=body).json()
         assert live == bundle, f"{slug}: live response drifted from the committed bundle — " \

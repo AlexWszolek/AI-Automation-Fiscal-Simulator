@@ -44,6 +44,47 @@ _FILINGS = [("Married filing jointly", "p_mfj", "inc_married_usd"),
 EXPOSURE_PCTILE = 0.30
 
 
+def _interp_rows(xs: np.ndarray, Y: np.ndarray, q: np.ndarray,
+                 S: np.ndarray | None = None) -> np.ndarray:
+    """np.interp of EVERY row of Y over the shared grid xs at query q — one binary search shared
+    by all rows instead of one np.interp call per program. Same formula and edge rules as numpy's
+    C loop: slope = (y1−y0)/(x1−x0) then slope·(q−x0)+y0, left edge q<xs[0] → ys[0], right edge
+    q≥xs[-1] → ys[-1] (numpy special-cases q==xs[-1] to ys[-1]; the general formula would give
+    (ys[-1]−ys[-2])+ys[-2], not bitwise ys[-1]).
+
+    NOT guaranteed bit-identical to np.interp: numpy's compiled kernel may fuse the final
+    multiply-add into one rounding (it does on macOS arm64 — verified empirically), which no
+    composition of numpy ufuncs can reproduce; the absolute deviation is bounded by ~1 ulp of
+    the program's benefit scale, ~1e-12 dollars (pinned in tests/test_reemployment — near
+    cancellation points the RELATIVE error can look large while the absolute error stays there).
+    It is therefore used ONLY on the wage-dynamics path
+    (delta(wage_index≠1) — the per-period Baumol/crowding re-evaluation, which post-dates every
+    bit-frozen artifact); the wage_index==1 path keeps calling real np.interp so the legacy
+    bit-parity anchors (delta ≡ _delta_loop exact, C8, golden pins, non-Baumol bundles) are
+    untouched."""
+    nx = xs.size
+    if nx == 1:                                    # single-knot grid: np.interp is the constant ys[0]
+        return np.repeat(Y[:, :1], q.size, axis=1)
+    j = xs.searchsorted(q, side="right") - 1       # xs[j] ≤ q < xs[j+1] for interior q; j ∈ [−1, nx−1]
+    np.minimum(j, nx - 2, out=j)                   # integer clamp (np.clip's wrapper is ~6µs/call —
+    np.maximum(j, 0, out=j)                        # measurable at ~460 calls per period)
+    x0 = xs[j]
+    if S is None:
+        vals = (Y[:, j + 1] - Y[:, j]) / (xs[j + 1] - x0) * (q - x0) + Y[:, j]
+    else:
+        # S = the precomputed per-segment slope matrix (Y[:,1:]−Y[:,:-1])/(xs[1:]−xs[:-1]);
+        # divide-then-gather ≡ gather-then-divide elementwise, so identical bits, fewer temporaries
+        # (np.interp itself precomputes slopes when len(q) ≥ len(xs))
+        vals = S[:, j] * (q - x0) + Y[:, j]
+    left = q < xs[0]
+    if left.any():
+        vals[:, left] = Y[:, :1]
+    right = q >= xs[-1]
+    if right.any():
+        vals[:, right] = Y[:, -1:]
+    return vals
+
+
 def _weighted_percentile(values, weights, q: float) -> float:
     """Employment-weighted q-quantile (linear interpolation on the weighted CDF midpoints)."""
     v = np.asarray(values, float); w = np.asarray(weights, float)
@@ -154,7 +195,13 @@ class ReabsorptionEngine:
                              for f, _, _ in _FILINGS for s in self._states}
         self._pk_by_state = {(f, s): self._pk[f][self._idx[s]]
                              for f, _, _ in _FILINGS for s in self._states}
-        self._tr = {}                       # (filing, state, k) -> (xs, [(ys, fed_share, interp@mean)])
+        # (filing, state, k) -> (xs, Y row-matrix of all program ys, [(fed_share, interp@mean)],
+        # fed-share vector, stacked at-mean matrix A). Y/A rows follow the dict's insertion order,
+        # so row p ↔ the p-th program exactly as the reference iterates them. The at-mean side
+        # stays a real np.interp (hoisted, bit-safe). The legacy wage_index==1 path in delta()
+        # consumes (xs, Y, progs) per program — bit-frozen; the wage-dynamics path consumes
+        # (xs, Y, fs_vec, A) through _interp_rows + matvec accumulation.
+        self._tr = {}
         for f, _, _ in _FILINGS:
             for s in self._states:
                 idx = self._idx[s]
@@ -163,9 +210,16 @@ class ReabsorptionEngine:
                 h = self.hh_mean[f][idx]
                 for k in ([0] if f == "Single" else [0, 1, 2, 3]):
                     xs, progs = self._ci.lookup.program_arrays(s, f, k)
-                    self._tr[(f, s, k)] = (xs, [(ys, self._ci.lookup.fed_share.get(prog, 1.0),
-                                                 np.interp(h, xs, ys))
-                                                for prog, ys in progs.items()])
+                    Y = (np.array([ys for ys in progs.values()], dtype=float)
+                         if progs else np.zeros((0, xs.size)))
+                    plist = [(self._ci.lookup.fed_share.get(prog, 1.0),
+                              np.interp(h, xs, ys)) for prog, ys in progs.items()]
+                    fs_vec = np.array([fs for fs, _ in plist])
+                    A = (np.vstack([am for _, am in plist])
+                         if plist else np.zeros((0, idx.size)))
+                    S = ((Y[:, 1:] - Y[:, :-1]) / (xs[1:] - xs[:-1])
+                         if xs.size > 1 else np.zeros((Y.shape[0], 0)))
+                    self._tr[(f, s, k)] = (xs, Y, plist, fs_vec, A, S)
 
     def delta(self, haircut: float, mpc: float, stickiness: float,
               wage_index: float = 1.0) -> dict:
@@ -179,8 +233,13 @@ class ReabsorptionEngine:
 
         Vectorized fast path (bind-time hot spot: ~98ms → ~30ms/draw): all "before" sides come
         from the constants hoisted at construction, state income tax runs on the shared slot
-        matrices, and only the after-side transfer interp remains per call — bit-identical to
-        `_delta_loop` (the retained reference), pinned in tests/test_reemployment."""
+        matrices, and only the after-side transfer interp remains per call. At wage_index==1
+        (bind time, every non-Baumol scenario) it calls real np.interp per program and is
+        bit-identical to `_delta_loop` (the retained reference), pinned in tests/test_reemployment.
+        At wage_index≠1 — the per-period Baumol/crowding re-evaluation, fired ~n_periods times per
+        run — the programs of each (filing, state, kids) group share one `_interp_rows` blend
+        (one binary search for all rows; ≤1 ulp vs np.interp, see its docstring), pinned with a
+        tight-tolerance variant of the same anchor."""
         w_d = np.maximum(self.worker_wage * (1.0 - haircut), self.service_floor)
         if wage_index != 1.0:
             w_d = w_d * wage_index
@@ -206,11 +265,22 @@ class ReabsorptionEngine:
                 h_after = lo[idx]                                    # == max(mean[idx]−wr[idx], 0)
                 wt_s, pk_s = self._wt_by_state[(f, s)], self._pk_by_state[(f, s)]
                 for k in ks:
-                    xs, progs = self._tr[(f, s, k)]
-                    dfed = np.zeros(idx.size); dstate = np.zeros(idx.size)
-                    for ys, fs, at_mean in progs:
-                        dprog = np.interp(h_after, xs, ys) - at_mean
-                        dfed += dprog * fs; dstate += dprog * (1.0 - fs)
+                    xs, Y, progs, fs_vec, A, S = self._tr[(f, s, k)]
+                    if not progs:
+                        # keep the reference's += of exact zeros (skipping could launder a −0.0)
+                        dfed = np.zeros(idx.size); dstate = np.zeros(idx.size)
+                    elif wage_index != 1.0:
+                        # wage-dynamics path: one shared search for all programs, then a matvec
+                        # over the P≈7 program rows. The matvec reorders a tiny sum (~1e-15
+                        # relative) — inside the wi≠1 tolerance anchor, like _interp_rows itself.
+                        D = _interp_rows(xs, Y, h_after, S) - A  # (P, m)
+                        dfed = fs_vec @ D
+                        dstate = (1.0 - fs_vec) @ D
+                    else:                                        # legacy path: bit-frozen np.interp
+                        dfed = np.zeros(idx.size); dstate = np.zeros(idx.size)
+                        for p, (fs, at_mean) in enumerate(progs):
+                            dprog = np.interp(h_after, xs, Y[p]) - at_mean
+                            dfed += dprog * fs; dstate += dprog * (1.0 - fs)
                     pkk = pk_s[:, k]
                     tr_fed[idx] += wt_s * pkk * dfed
                     tr_state[idx] += wt_s * pkk * dstate
