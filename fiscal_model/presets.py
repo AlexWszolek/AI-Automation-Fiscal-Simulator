@@ -386,6 +386,112 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
             state_cut_share="AGI-class gaps close by cuts (§1)",
             state_rate_hike_cap="see state_cut_share (§1)"),
     ),
+
+    Preset(
+        key="karger-rapid", name="Karger et al. — Expert survey, rapid (P≈14%)",
+        blurb="The NBER expert survey's rapid scenario at its elicited 14% probability: strong "
+              "growth, modest displacement that exits the labor force rather than the "
+              "unemployment rolls, and a falling labor share.",
+        adoption_start=0.03, adoption_end=0.16, n_periods=10,
+        overrides=dict(cognitive_feasibility=0.60, physical_feasibility=0.15, robotics_lag=8.0,
+                       reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
+                       retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.15,
+                       survivor_elasticity=0.0, productivity_passthrough=0.95,
+                       price_passthrough=0.30, demand_multiplier=0.30,
+                       baseline_growth_rate=0.05, compute_effective_rate=0.10,
+                       reab_wage_baumol=0.30),
+        provenance=dict(
+            adoption="calibrated: net employment decline ≈3.1% by 2030 — the survey's rapid "
+                     "AI-attributable LFP exit ≈1.7pp plus displacement churn (w35046, §5)",
+            cognitive_feasibility="rapid = AI surpasses most cognitive tasks; adoption, not "
+                                  "capability, binds (usage ≈1/3 of feasibility, Anthropic §8)",
+            physical_feasibility="rapid includes physical tasks late; token share at 2030 (§5)",
+            robotics_lag="physical capability arrives late in the window (§5)",
+            lfp_exit_rate="the survey's signature: unemployment stays 5-6%; displacement exits "
+                          "the labor force (~10M by 2050) → elevated 0.06 (§5)",
+            reabsorption_rate="0.35 mid-slack, churn consistent with stable unemployment (§5)",
+            reemployment_haircut="Farber central 0.13 (§1)",
+            retained_profit_share="labor share 55.5→52.0 by 2030: capital-skewed gains (§5)",
+            price_reduction_share="0.55/0.25/0.20 split (§5)",
+            productivity_passthrough="0.95, near the model ceiling; the model still books only "
+                                     "+3.0% GDP by 2030 vs the survey's +7.2% — AI-broad TFP "
+                                     "gains beyond automated tasks sit outside the no-offsets "
+                                     "frame (documented, §5)",
+            baseline_growth_rate="rapid nominal ≈ 3.3% real + ~2% inflation (§5)",
+            demand_multiplier="no demand doom loop in the expert median (§5)",
+            auto_cost="heavy AI infrastructure investment (§5)",
+            survivor_elasticity="raises arrive funded via the survivor share, not tightness (§5)",
+            reab_wage_baumol="service wages ride growth; median income rises under rapid (§5)",
+            compute_effective_rate="shipped default",
+            price_passthrough="shipped default"),
+    ),
+
+    Preset(
+        key="metaculus-2035", name="Metaculus — Crowd median, 2035",
+        blurb="The Labor Automation Hub's community medians: employment ≈7.5% below the no-AI "
+              "baseline by 2035, labor share down ~4pp, survivor wages up — displacement "
+              "without a doom loop.",
+        adoption_start=0.02, adoption_end=0.20, n_periods=10,
+        overrides=dict(cognitive_feasibility=0.55, physical_feasibility=0.20, robotics_lag=7.0,
+                       reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
+                       retained_profit_share=0.45, price_reduction_share=0.20, auto_cost=0.10,
+                       survivor_elasticity=0.0, productivity_passthrough=0.45,
+                       price_passthrough=0.30, demand_multiplier=0.50,
+                       baseline_growth_rate=0.04, compute_effective_rate=0.10,
+                       reab_wage_baumol=0.35, reab_wage_crowding=0.10),
+        provenance=dict(
+            adoption="calibrated: net employment −7.3% by 2035 vs the crowd's −4.44% plus the "
+                     "+3.1% no-AI baseline ⇒ ≈7.5% AI-attributed gap (labor hub, §6)",
+            cognitive_feasibility="white-collar tier leads: −12 to −15% by 2035 (§6)",
+            physical_feasibility="forecasters expect robotics in warehouse work by 2035 (§6)",
+            robotics_lag="physical displacement arrives mid-window (§6)",
+            reabsorption_rate="growth concentrated in care/licensed occupations (§6)",
+            reemployment_haircut="55% grad underemployment ⇒ downshift re-employment (§6)",
+            lfp_exit_rate="long-term unemployment stays ≤4.5%: exits, not unemployment (§6)",
+            retained_profit_share="labor share −4 to −5pp by 2035 (§6)",
+            price_reduction_share="0.45/0.20/0.35 split: visible survivor raises (§6)",
+            survivor_elasticity="crowd real median wage +4.9% is partly composition; the "
+                                "like-for-like W here reaches +2.3% via the funded share (§6)",
+            productivity_passthrough="crowd labor productivity +28.6% by 2035 is economy-wide; "
+                                     "the model books the automation-linked part (§6)",
+            demand_multiplier="commentary flags a consumption problem; mid value (§6)",
+            baseline_growth_rate="~2% real + 2% inflation",
+            auto_cost="shipped default", compute_effective_rate="shipped default",
+            price_passthrough="shipped default",
+            reab_wage_baumol="service wages rise with tight refuge demand (§6)",
+            reab_wage_crowding="crowding pressure from the displaced inflow (§6)"),
+    ),
+
+    Preset(
+        key="openai-transition", name="OpenAI — Jobs transition framework",
+        blurb="Their four archetypes read as a decade of displacement pressure: the 18% "
+              "high-automation-risk cohort plus partial staffing compression where jobs "
+              "reorganize — explicitly a map of pressure, not a job-loss forecast.",
+        adoption_start=0.05, adoption_end=0.20, n_periods=10, adoption_reach_year=7,
+        overrides=dict(cognitive_feasibility=0.75, physical_feasibility=0.05, robotics_lag=10.0,
+                       reabsorption_rate=0.55, reemployment_haircut=0.12, lfp_exit_rate=0.03,
+                       retained_profit_share=0.55, price_reduction_share=0.30, auto_cost=0.15,
+                       survivor_elasticity=0.0, productivity_passthrough=0.35,
+                       price_passthrough=0.30, demand_multiplier=0.45,
+                       baseline_growth_rate=0.04, compute_effective_rate=0.10),
+        provenance=dict(
+            adoption="18% high-risk + ~a third of the 24% reorganize cohort's staffing "
+                     "compression ⇒ ceiling ≈0.20 of feasible work, reached ~2033 (§7)",
+            cognitive_feasibility="their high-risk/reorganize archetypes are LLM-cognitive (§7)",
+            physical_feasibility="41% of employment is physically gated; barely touched (§7)",
+            robotics_lag="LLM-era frame; robotics outside the window (§7)",
+            reabsorption_rate="the 12% grow-with-AI bucket absorbs; elevated 0.55 (§7)",
+            reemployment_haircut="Farber central (§1)",
+            lfp_exit_rate="near-normal exit; pressure ≠ separation in their frame (§7)",
+            retained_profit_share="0.55/0.30/0.15: gains partly kept, partly priced (§7)",
+            price_reduction_share="elastic-demand occupations expand as costs fall (§7)",
+            demand_multiplier="their demand-elasticity axis, mid value (§7)",
+            productivity_passthrough="reorganize = task recomposition, moderate dividend (§7)",
+            survivor_elasticity="no wage-market claim made (§7)",
+            baseline_growth_rate="~2% real + 2% inflation",
+            auto_cost="shipped default", compute_effective_rate="shipped default",
+            price_passthrough="shipped default"),
+    ),
 ]}
 
 
@@ -421,6 +527,18 @@ def _ubi(v2p: V2Params) -> tuple[V2Params, str]:
                "Korinek-Lockwood 0.25-0.375)")
 
 
+def _swf(v2p: V2Params) -> tuple[V2Params, str]:
+    p = replace(v2p, swf_profit_share=0.20)
+    return p, ("SWF: the government holds a 20% equity share of after-corporate-tax automation "
+               "profit — revenue scales automatically with the shock (the insurance property)")
+
+
+def _vat(v2p: V2Params) -> tuple[V2Params, str]:
+    p = replace(v2p, fed_vat_rate=0.05)
+    return p, ("Federal VAT: 5% on a consumption base of two-thirds of value added, eroding "
+               "with the standing income withdrawal (no behavioral response modeled)")
+
+
 def _parity(v2p: V2Params) -> tuple[V2Params, str]:
     p = replace(v2p, compute_effective_rate=0.27)
     return p, ("Compute-pool parity tax: effective rate 0.27 (Windfall capital ETR 26.7%) vs the "
@@ -439,7 +557,10 @@ class Overlay:
 OVERLAYS: dict[str, Overlay] = {o.key: o for o in [
     Overlay("cw-robot-tax", "Robot tax — optimal (Costinot-Werning)",
             "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic, central).",
-            "Costinot-Werning REStud 2023 (PRESET_EVIDENCE §3); should not scale UP with depth",
+            "Costinot-Werning REStud 2023 (PRESET_EVIDENCE §3); should not scale UP with depth. "
+            "Literature caution: robot taxes score worst of nine instruments on Convergence's FIRI "
+            "(6/16: base definition, reclassification, arbitrage); the IMF recommends against "
+            "special gen-AI taxes; incidence partly leaks to workers/consumers",
             _cw),
     Overlay("grt-robot-tax", "Robot tax — transitional (GRT)",
             "5.1% ad-valorem, their decade-1 Mirrleesian rate (steady state: zero).",
@@ -449,7 +570,17 @@ OVERLAYS: dict[str, Overlay] = {o.key: o for o in [
             "Korinek-Lockwood NBER 34873 recapture 0.25-0.375 (PRESET_EVIDENCE §3)", _ubi),
     Overlay("compute-parity", "Compute-pool parity taxation",
             "Tax the compute-capital pool like domestic capital (ETR 0.27) instead of 0.05.",
-            "Windfall capital ETR 26.7% vs GRT post-TCJA 5% (PRESET_EVIDENCE §1)", _parity),
+            "Windfall capital ETR 26.7% vs GRT post-TCJA 5%; Korinek-Lockwood: an INPUT tax — "
+            "stage-2-appropriate, production-inefficient while labor persists (PRESET_EVIDENCE §1, §7)",
+            _parity),
+    Overlay("swf", "Sovereign wealth fund — 20% of AI profits",
+            "Government equity share of after-tax automation profit; revenue scales with the shock.",
+            "Korinek-Lockwood equity mechanisms; Convergence FIRI resilience 4/4; Feb-2025 US SWF "
+            "executive order. 20% is illustrative, not derived (PRESET_EVIDENCE §7)", _swf),
+    Overlay("fed-vat", "Federal VAT 5% (Korinek-Lockwood stage 1)",
+            "A new broad consumption tax — their primary post-labor instrument; base erodes as displacement deepens.",
+            "Korinek-Lockwood stage 1; Convergence feasibility 4/4, VAT volatility −40-50%; Karger "
+            "policy #1 pairs a 15% VAT with UBI — composes with the UBI overlay (PRESET_EVIDENCE §7)", _vat),
 ]}
 
 _EXCLUSIVE = ("cw-robot-tax", "grt-robot-tax")   # both write automation_tax_rate

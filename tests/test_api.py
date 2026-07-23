@@ -29,7 +29,7 @@ def client(data):
 
 def test_health(client):
     r = client.get("/api/health").json()
-    assert r["status"] == "ok" and r["model_loaded"] and r["presets"] == 10
+    assert r["status"] == "ok" and r["model_loaded"] and r["presets"] == 13
 
 
 def test_static_equals_live_for_pristine_presets(client):

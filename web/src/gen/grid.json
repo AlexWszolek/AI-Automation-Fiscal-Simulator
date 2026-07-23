@@ -274,6 +274,16 @@
    "blurb": "Tax the compute-capital pool like domestic capital (ETR 0.27) instead of 0.05.",
    "key": "compute-parity",
    "name": "Compute-pool parity taxation"
+  },
+  {
+   "blurb": "Government equity share of after-tax automation profit; revenue scales with the shock.",
+   "key": "swf",
+   "name": "Sovereign wealth fund \u2014 20% of AI profits"
+  },
+  {
+   "blurb": "A new broad consumption tax \u2014 their primary post-labor instrument; base erodes as displacement deepens.",
+   "key": "fed-vat",
+   "name": "Federal VAT 5% (Korinek-Lockwood stage 1)"
   }
  ],
  "presets": [
@@ -1534,6 +1544,417 @@
     }
    },
    "start_year": 2027
+  },
+  {
+   "adoption_end": 0.16,
+   "adoption_reach_year": null,
+   "adoption_start": 0.03,
+   "blurb": "The NBER expert survey's rapid scenario at its elicited 14% probability: strong growth, modest displacement that exits the labor force rather than the unemployment rolls, and a falling labor share.",
+   "defaults": {
+    "adopt0": 0.03,
+    "adopt1": 0.16,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 0.6,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.3,
+    "elasticity": 0.0,
+    "growth": 0.05,
+    "haircut": 0.13,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.06,
+    "n_periods": 10,
+    "phys": 0.15,
+    "price": 0.25,
+    "price_pt": 0.3,
+    "prod_pt": 0.95,
+    "rate_cap": 1.0,
+    "reab": 0.35,
+    "reab_baumol": 0.3,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 8,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "karger-rapid",
+   "n_periods": 10,
+   "name": "Karger et al. \u2014 Expert survey, rapid (P\u224814%)",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reab_wage_baumol",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "calibrated: net employment decline \u22483.1% by 2030 \u2014 the survey's rapid AI-attributable LFP exit \u22481.7pp plus displacement churn (w35046, \u00a75)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "heavy AI infrastructure investment (\u00a75)",
+     "value": "0.15"
+    },
+    "baseline_growth_rate": {
+     "text": "rapid nominal \u2248 3.3% real + ~2% inflation (\u00a75)",
+     "value": "0.05"
+    },
+    "cognitive_feasibility": {
+     "text": "rapid = AI surpasses most cognitive tasks; adoption, not capability, binds (usage \u22481/3 of feasibility, Anthropic \u00a78)",
+     "value": "0.6"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "no demand doom loop in the expert median (\u00a75)",
+     "value": "0.3"
+    },
+    "lfp_exit_rate": {
+     "text": "the survey's signature: unemployment stays 5-6%; displacement exits the labor force (~10M by 2050) \u2192 elevated 0.06 (\u00a75)",
+     "value": "0.06"
+    },
+    "physical_feasibility": {
+     "text": "rapid includes physical tasks late; token share at 2030 (\u00a75)",
+     "value": "0.15"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "0.55/0.25/0.20 split (\u00a75)",
+     "value": "0.25"
+    },
+    "productivity_passthrough": {
+     "text": "0.95, near the model ceiling; the model still books only +3.0% GDP by 2030 vs the survey's +7.2% \u2014 AI-broad TFP gains beyond automated tasks sit outside the no-offsets frame (documented, \u00a75)",
+     "value": "0.95"
+    },
+    "reab_wage_baumol": {
+     "text": "service wages ride growth; median income rises under rapid (\u00a75)",
+     "value": "0.3"
+    },
+    "reabsorption_rate": {
+     "text": "0.35 mid-slack, churn consistent with stable unemployment (\u00a75)",
+     "value": "0.35"
+    },
+    "reemployment_haircut": {
+     "text": "Farber central 0.13 (\u00a71)",
+     "value": "0.13"
+    },
+    "retained_profit_share": {
+     "text": "labor share 55.5\u219252.0 by 2030: capital-skewed gains (\u00a75)",
+     "value": "0.55"
+    },
+    "robotics_lag": {
+     "text": "physical capability arrives late in the window (\u00a75)",
+     "value": "8"
+    },
+    "survivor_elasticity": {
+     "text": "raises arrive funded via the survivor share, not tightness (\u00a75)",
+     "value": "0"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 0.2,
+   "adoption_reach_year": null,
+   "adoption_start": 0.02,
+   "blurb": "The Labor Automation Hub's community medians: employment \u22487.5% below the no-AI baseline by 2035, labor share down ~4pp, survivor wages up \u2014 displacement without a doom loop.",
+   "defaults": {
+    "adopt0": 0.02,
+    "adopt1": 0.2,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.1,
+    "ceiling": 1.5,
+    "cog": 0.55,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.5,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.12,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.04,
+    "n_periods": 10,
+    "phys": 0.2,
+    "price": 0.2,
+    "price_pt": 0.3,
+    "prod_pt": 0.45,
+    "rate_cap": 1.0,
+    "reab": 0.45,
+    "reab_baumol": 0.35,
+    "reab_crowd": 0.1,
+    "retained": 0.45,
+    "rob_base": 1.0,
+    "robotics_lag": 7,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "metaculus-2035",
+   "n_periods": 10,
+   "name": "Metaculus \u2014 Crowd median, 2035",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reab_wage_baumol",
+    "reab_wage_crowding",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "calibrated: net employment \u22127.3% by 2035 vs the crowd's \u22124.44% plus the +3.1% no-AI baseline \u21d2 \u22487.5% AI-attributed gap (labor hub, \u00a76)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "baseline_growth_rate": {
+     "text": "~2% real + 2% inflation",
+     "value": "0.04"
+    },
+    "cognitive_feasibility": {
+     "text": "white-collar tier leads: \u221212 to \u221215% by 2035 (\u00a76)",
+     "value": "0.55"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "commentary flags a consumption problem; mid value (\u00a76)",
+     "value": "0.5"
+    },
+    "lfp_exit_rate": {
+     "text": "long-term unemployment stays \u22644.5%: exits, not unemployment (\u00a76)",
+     "value": "0.04"
+    },
+    "physical_feasibility": {
+     "text": "forecasters expect robotics in warehouse work by 2035 (\u00a76)",
+     "value": "0.2"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "0.45/0.20/0.35 split: visible survivor raises (\u00a76)",
+     "value": "0.2"
+    },
+    "productivity_passthrough": {
+     "text": "crowd labor productivity +28.6% by 2035 is economy-wide; the model books the automation-linked part (\u00a76)",
+     "value": "0.45"
+    },
+    "reab_wage_baumol": {
+     "text": "service wages rise with tight refuge demand (\u00a76)",
+     "value": "0.35"
+    },
+    "reab_wage_crowding": {
+     "text": "crowding pressure from the displaced inflow (\u00a76)",
+     "value": "0.1"
+    },
+    "reabsorption_rate": {
+     "text": "growth concentrated in care/licensed occupations (\u00a76)",
+     "value": "0.45"
+    },
+    "reemployment_haircut": {
+     "text": "55% grad underemployment \u21d2 downshift re-employment (\u00a76)",
+     "value": "0.12"
+    },
+    "retained_profit_share": {
+     "text": "labor share \u22124 to \u22125pp by 2035 (\u00a76)",
+     "value": "0.45"
+    },
+    "robotics_lag": {
+     "text": "physical displacement arrives mid-window (\u00a76)",
+     "value": "7"
+    },
+    "survivor_elasticity": {
+     "text": "crowd real median wage +4.9% is partly composition; the like-for-like W here reaches +2.3% via the funded share (\u00a76)",
+     "value": "0"
+    }
+   },
+   "start_year": 2026
+  },
+  {
+   "adoption_end": 0.2,
+   "adoption_reach_year": 7,
+   "adoption_start": 0.05,
+   "blurb": "Their four archetypes read as a decade of displacement pressure: the 18% high-automation-risk cohort plus partial staffing compression where jobs reorganize \u2014 explicitly a map of pressure, not a job-loss forecast.",
+   "defaults": {
+    "adopt0": 0.05,
+    "adopt1": 0.2,
+    "atax": 0.0,
+    "attrition": 0.025,
+    "auto_cost": 0.15,
+    "ceiling": 1.5,
+    "cog": 0.75,
+    "compute_rate": 0.1,
+    "cons_mult": 1.0,
+    "corp_mult": 1.0,
+    "demand": 0.45,
+    "elasticity": 0.0,
+    "growth": 0.04,
+    "haircut": 0.12,
+    "income_mult": 1.0,
+    "interest": 0.03,
+    "lfp": 0.03,
+    "n_periods": 10,
+    "phys": 0.05,
+    "price": 0.3,
+    "price_pt": 0.3,
+    "prod_pt": 0.35,
+    "rate_cap": 1.0,
+    "reab": 0.55,
+    "reab_baumol": 0.0,
+    "reab_crowd": 0.0,
+    "retained": 0.55,
+    "rob_base": 1.0,
+    "robotics_lag": 10,
+    "spillover": 0.5,
+    "state_cut": 0.0,
+    "state_resp": "mix",
+    "ubi": 0,
+    "ubi_recapture": 0.25,
+    "ui_weeks": 26,
+    "unbounded": false
+   },
+   "key": "openai-transition",
+   "n_periods": 10,
+   "name": "OpenAI \u2014 Jobs transition framework",
+   "override_fields": [
+    "adoption_path",
+    "auto_cost",
+    "baseline_growth_rate",
+    "cognitive_feasibility",
+    "compute_effective_rate",
+    "demand_multiplier",
+    "lfp_exit_rate",
+    "physical_feasibility",
+    "price_passthrough",
+    "price_reduction_share",
+    "productivity_passthrough",
+    "reabsorption_rate",
+    "reemployment_haircut",
+    "retained_profit_share",
+    "robotics_lag",
+    "survivor_elasticity"
+   ],
+   "provenance": {
+    "adoption": {
+     "text": "18% high-risk + ~a third of the 24% reorganize cohort's staffing compression \u21d2 ceiling \u22480.20 of feasible work, reached ~2033 (\u00a77)",
+     "value": "1"
+    },
+    "auto_cost": {
+     "text": "shipped default",
+     "value": "0.15"
+    },
+    "baseline_growth_rate": {
+     "text": "~2% real + 2% inflation",
+     "value": "0.04"
+    },
+    "cognitive_feasibility": {
+     "text": "their high-risk/reorganize archetypes are LLM-cognitive (\u00a77)",
+     "value": "0.75"
+    },
+    "compute_effective_rate": {
+     "text": "shipped default",
+     "value": "0.1"
+    },
+    "demand_multiplier": {
+     "text": "their demand-elasticity axis, mid value (\u00a77)",
+     "value": "0.45"
+    },
+    "lfp_exit_rate": {
+     "text": "near-normal exit; pressure \u2260 separation in their frame (\u00a77)",
+     "value": "0.03"
+    },
+    "physical_feasibility": {
+     "text": "41% of employment is physically gated; barely touched (\u00a77)",
+     "value": "0.05"
+    },
+    "price_passthrough": {
+     "text": "shipped default",
+     "value": "0.3"
+    },
+    "price_reduction_share": {
+     "text": "elastic-demand occupations expand as costs fall (\u00a77)",
+     "value": "0.3"
+    },
+    "productivity_passthrough": {
+     "text": "reorganize = task recomposition, moderate dividend (\u00a77)",
+     "value": "0.35"
+    },
+    "reabsorption_rate": {
+     "text": "the 12% grow-with-AI bucket absorbs; elevated 0.55 (\u00a77)",
+     "value": "0.55"
+    },
+    "reemployment_haircut": {
+     "text": "Farber central (\u00a71)",
+     "value": "0.12"
+    },
+    "retained_profit_share": {
+     "text": "0.55/0.30/0.15: gains partly kept, partly priced (\u00a77)",
+     "value": "0.55"
+    },
+    "robotics_lag": {
+     "text": "LLM-era frame; robotics outside the window (\u00a77)",
+     "value": "10"
+    },
+    "survivor_elasticity": {
+     "text": "no wage-market claim made (\u00a77)",
+     "value": "0"
+    }
+   },
+   "start_year": 2026
   }
  ],
  "start_year_custom": 2026

@@ -77,4 +77,6 @@ n_states_capped,States at rate cap,States that hit the rate-hike cap,count
 state_balanced,All states balanced,All 51 states balanced within tolerance,bool
 state_fiscal_position_B,State revenue (level),ABSOLUTE state+local revenue position,"$B/yr, level"
 induced_pending_M,Queued demand flow,Demand-driven employment flow queued for next year (signed),millions
+swf_revenue_B,SWF profit share,Sovereign-wealth-fund equity share of after-corporate-tax automation profit (overlay),$B/yr
+fed_vat_B,Federal VAT,"Federal VAT revenue on a 2/3-of-value-added consumption base, eroding with the standing income withdrawal (overlay)",$B/yr
 standing_withdrawal_B,Standing withdrawal,The standing demand withdrawal the induced stock tracks,"$B, level"

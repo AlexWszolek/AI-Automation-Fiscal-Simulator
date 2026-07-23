@@ -34,7 +34,7 @@ def payload():
 def test_every_config_present(payload):
     keys = {e["key"] for e in payload["entries"]}
     expected = {webpayload.slug(cfg) for cfg in pristine_configs()}
-    assert len(expected) == 120
+    assert len(expected) == 624
     assert keys == expected
 
 

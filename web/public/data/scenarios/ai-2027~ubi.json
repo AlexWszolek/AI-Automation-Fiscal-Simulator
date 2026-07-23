@@ -1,6 +1,6 @@
 {
  "config": {
-  "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=0.9, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.1), np.float64(0.2285714285714286), np.float64(0.3571428571428572), np.float64(0.48571428571428577), np.float64(0.6142857142857143), np.float64(0.7428571428571429), np.float64(0.8714285714285716), np.float64(1.0)], robotics_cognitive_coupling=0.0, robotics_lag=3.0, robotics_base=1.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.7, price_reduction_share=0.2, survivor_gains_share=0.10000000000000003, auto_cost=0.3, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.1, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, reab_wage_baumol=0.0, reab_wage_crowding=0.0, lfp_exit_rate=0.05, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.2, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.3, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.04, ubi_annual=12000.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=8)",
+  "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=1.0, physical_feasibility=0.9, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.1), np.float64(0.2285714285714286), np.float64(0.3571428571428572), np.float64(0.48571428571428577), np.float64(0.6142857142857143), np.float64(0.7428571428571429), np.float64(0.8714285714285716), np.float64(1.0)], robotics_cognitive_coupling=0.0, robotics_lag=3.0, robotics_base=1.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.7, price_reduction_share=0.2, survivor_gains_share=0.10000000000000003, auto_cost=0.3, offshore_share=0.0, compute_effective_rate=0.05, ui_weeks=26, reabsorption_rate=0.1, reabsorption_rung=1, reemployment_haircut=0.4, reabsorption_floor_pctile=0.3, reab_wage_baumol=0.0, reab_wage_crowding=0.0, lfp_exit_rate=0.05, survivor_elasticity=-0.5, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=1.2, price_passthrough=0.5, productivity_passthrough=0.9, denominator='absolute', automation_tax_rate=0.0, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.08, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.3, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.04, ubi_annual=12000.0, swf_profit_share=0.0, fed_vat_rate=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=8)",
   "levers": {},
   "modified_fields": [],
   "n_periods": 8,
@@ -72,6 +72,7 @@
    "fed_deficit_pct_gdp": 4.8163,
    "fed_deficit_real_B": 1482.5223,
    "fed_revenue_B": 4914.9365,
+   "fed_vat_B": 0.0,
    "headline_deficit": 1479.668,
    "inc_fed_loss_B": 97.8027,
    "inc_state_loss_B": 23.8527,
@@ -117,6 +118,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.0,
    "survivor_wage_cost_B": 59.2621,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 39.7525,
    "transfer_state_B": 11.133,
    "transfers_added_B": 129.7256,
@@ -153,6 +155,7 @@
    "fed_deficit_pct_gdp": 5.0266,
    "fed_deficit_real_B": 1792.7655,
    "fed_revenue_B": 4733.9829,
+   "fed_vat_B": 0.0,
    "headline_deficit": 1784.6854,
    "inc_fed_loss_B": 239.1919,
    "inc_state_loss_B": 58.8725,
@@ -198,6 +201,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.053,
    "survivor_wage_cost_B": 148.8389,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 107.8625,
    "transfer_state_B": 30.71,
    "transfers_added_B": 266.0169,
@@ -234,6 +238,7 @@
    "fed_deficit_pct_gdp": 5.1271,
    "fed_deficit_real_B": 2131.4977,
    "fed_revenue_B": 4532.0595,
+   "fed_vat_B": 0.0,
    "headline_deficit": 2116.3396,
    "inc_fed_loss_B": 396.1859,
    "inc_state_loss_B": 98.2101,
@@ -279,6 +284,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.1348,
    "survivor_wage_cost_B": 253.4714,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 189.9594,
    "transfer_state_B": 54.3177,
    "transfers_added_B": 401.06,
@@ -315,6 +321,7 @@
    "fed_deficit_pct_gdp": 5.2387,
    "fed_deficit_real_B": 2549.843,
    "fed_revenue_B": 4295.546,
+   "fed_vat_B": 0.0,
    "headline_deficit": 2525.2173,
    "inc_fed_loss_B": 601.326,
    "inc_state_loss_B": 149.9406,
@@ -360,6 +367,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.2305,
    "survivor_wage_cost_B": 373.1595,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 302.4621,
    "transfer_state_B": 86.6598,
    "transfers_added_B": 575.2434,
@@ -396,6 +404,7 @@
    "fed_deficit_pct_gdp": 5.1991,
    "fed_deficit_real_B": 2907.8868,
    "fed_revenue_B": 4058.3974,
+   "fed_vat_B": 0.0,
    "headline_deficit": 2874.5055,
    "inc_fed_loss_B": 793.4301,
    "inc_state_loss_B": 197.7561,
@@ -441,6 +450,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.3616,
    "survivor_wage_cost_B": 471.937,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 408.4922,
    "transfer_state_B": 117.7139,
    "transfers_added_B": 671.5797,
@@ -477,6 +487,7 @@
    "fed_deficit_pct_gdp": 5.0235,
    "fed_deficit_real_B": 3216.9779,
    "fed_revenue_B": 3915.0507,
+   "fed_vat_B": 0.0,
    "headline_deficit": 3174.8523,
    "inc_fed_loss_B": 979.6358,
    "inc_state_loss_B": 244.0648,
@@ -522,6 +533,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.4757,
    "survivor_wage_cost_B": 570.7145,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 505.7967,
    "transfer_state_B": 145.8071,
    "transfers_added_B": 796.9773,
@@ -558,6 +570,7 @@
    "fed_deficit_pct_gdp": 4.7132,
    "fed_deficit_real_B": 3444.6425,
    "fed_revenue_B": 3855.2448,
+   "fed_vat_B": 0.0,
    "headline_deficit": 3394.5694,
    "inc_fed_loss_B": 1149.717,
    "inc_state_loss_B": 286.2944,
@@ -603,6 +616,7 @@
    "survivor_overflow_profit_B": 0.0,
    "survivor_slack_prev": 0.589,
    "survivor_wage_cost_B": 669.492,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 594.3495,
    "transfer_state_B": 171.3135,
    "transfers_added_B": 911.0365,
@@ -639,6 +653,7 @@
    "fed_deficit_pct_gdp": 4.4004,
    "fed_deficit_real_B": 3641.9848,
    "fed_revenue_B": 3815.2154,
+   "fed_vat_B": 0.0,
    "headline_deficit": 3578.8768,
    "inc_fed_loss_B": 1292.368,
    "inc_state_loss_B": 321.3683,
@@ -684,6 +699,7 @@
    "survivor_overflow_profit_B": 155.9308,
    "survivor_slack_prev": 0.6958,
    "survivor_wage_cost_B": 446.979,
+   "swf_revenue_B": 0.0,
    "transfer_fed_B": 670.981,
    "transfer_state_B": 193.4732,
    "transfers_added_B": 996.3777,
@@ -1437,7 +1453,7 @@
     {
      "group": "Taxable \u2192 consumer surplus",
      "kind": "flow",
-     "label": "Consumption tax change",
+     "label": "Consumption tax change (incl. federal VAT)",
      "total": -510.4487,
      "values": [
       -7.6694,
@@ -1611,7 +1627,7 @@
     {
      "group": "Taxable \u2192 consumer surplus",
      "kind": "flow",
-     "label": "Consumption tax change",
+     "label": "Consumption tax change (incl. federal VAT)",
      "total": -0.9843,
      "values": [
       -0.1371,
@@ -1796,6 +1812,38 @@
       554.2337,
       554.2337,
       554.2337
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
+     "label": "SWF profit share",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
+     "label": "Federal VAT",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
      ]
     },
     {
@@ -2354,6 +2402,38 @@
       8.068,
       7.7736,
       7.4983
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
+     "label": "SWF profit share",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
+     "label": "Federal VAT",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
      ]
     },
     {

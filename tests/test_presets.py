@@ -157,10 +157,10 @@ def preset_runs(data):
         pytest.skip("benefit-lookup / NOC artifacts absent — presets are calibrated to rung 1")
     deltas = pd.read_parquet(DELTA_CACHE)
     runs = {}
-    by_horizon: dict = {}
-    for p in ALL:                                    # group same-horizon presets on one context —
-        by_horizon.setdefault(p.n_periods, []).append(p)   # ctx.run is bit-identical to fresh build
-    for group in by_horizon.values():
+    by_ctx: dict = {}
+    for p in ALL:                                    # group context-compatible presets (same FROZEN
+        by_ctx.setdefault(mc.context_key(presets.to_params(p)), []).append(p)   # fields) on one context
+    for group in by_ctx.values():
         ctx = mc.ScenarioContext(data, deltas, presets.to_params(group[0]))
         for p in group:
             runs[p.key] = (ctx.run(presets.to_params(p)), presets.to_params(p), ctx)

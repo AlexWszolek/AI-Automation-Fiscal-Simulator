@@ -187,7 +187,107 @@ lever ceilings apply as in ⑧.
 | Acemoglu | 10y GDP +~1.1% (upper bound incl. capital deepening) | matches preset ① by construction |
 | Korinek-Suh BAU | ~2%/yr real output growth | matches `baseline_growth_rate` in ①–④ |
 
-## 5. Calibration tensions with DEFAULTS_SHIPPED
+## 5. Karger et al. expert survey (`karger-rapid`)
+
+Source: Karger, Kuusela, Abaluck, Bryan, Halperin, Jones, Murphy, Trammell, Rosenberg, Tetlock —
+NBER WP 35046 (April 2026); survey fielded Oct 2025–Feb 2026, 69 economists (reweighted) + AI
+experts + superforecasters + public. The rapid scenario carries an **elicited probability of
+14.0% (mean) / 10% (median)** — the only preset in this set with a probability attached.
+
+| Survey target (rapid, 2030) | Value | Model translation | Achieved |
+|---|---|---|---|
+| GDP growth | +3.3%/yr (vs CBO ~2.0) → +7.2% level above baseline | productivity_passthrough 0.95 (near ceiling) | **+3.0%** — the model books only automation-linked gains; AI-broad TFP outside automated tasks is outside the no-offsets frame (deliberate, see the About disclosure) |
+| LFPR | 62.6→59.3%; AI-attributable ≈1.7pp ≈ 4.5M | lfp_exit_rate 0.06 + adoption 0.03→0.16 | net employment −3.1% by 2030 incl. exits |
+| Unemployment | stays 5-6% (exit, not unemployment) | elevated exit + reabsorption 0.35 | matches: displaced flow through to exit/reabsorption |
+| Labor share | 55.5→52.0% | retained-heavy 0.55/0.25/0.20 split | saved-bill migration 1.6% of VA — within-job compression (which the survey includes) is not a model channel |
+| Median HH income | rises to $87k | survivor share 0.20 + Baumol 0.30 | W_surv rises; refuge wages ride growth |
+
+Fiscal cross-check: the Budget Lab (Iselin-Nunn, July 2026) runs the same Karger scenarios
+through their tax microsimulation → federal revenue +$85-216B/yr by 2030. This model's
+karger-rapid lands at deficit **+$21B/yr by 2030** — near-neutral. The two agree the rapid
+scenario is fiscally mild this decade; the sign differs because the Budget Lab books no
+displacement costs and this model books no AI-broad growth dividend.
+
+## 6. Metaculus Labor Automation Hub (`metaculus-2035`)
+
+Source: metaculus.com/labor-hub (Renaissance Philanthropy / Schultz Family Foundation);
+recency-weighted community medians, 18-44 forecasters/question, resolved against BLS OEWS.
+Retrieved July 2026. Machine-readable: labor-hub-tools.metaculus.com/api/question-stats.
+
+| Crowd median | Value | Model translation | Achieved |
+|---|---|---|---|
+| Employment vs 2025 | −4.44% by 2035; vs the +3.1% no-AI baseline ⇒ ≈7.5% AI-attributed gap | adoption 0.02→0.20 linear | **−7.3% by 2035** |
+| Labor share | 58.2% (2030) → 55.5% (2035), −4-5pp | 0.45/0.20/0.35 disposition | saved-bill migration 3.7% of VA |
+| Real median wage | +4.9% by 2035 (composition-inclusive) | survivor share 0.35 + Baumol 0.35/crowding 0.10 | like-for-like W_surv **+2.3%** — the crowd's median includes composition shift as low-wage jobs are displaced; the model's W is like-for-like (documented difference) |
+| Long-term unemployment | ≤4.5% (exits, not unemployment) | lfp_exit 0.04 | matches the 7th-state design |
+| Occupation tiers | white-collar −12-15%, care/licensed +0.6-12% | cognitive-led exposure + finite refuge | matches the refuge structure |
+
+The crowd's P25 tail (−13.6% employment, labor share 51%) approximates the model's agi-20y
+territory; the crowd median is the moderate scenario between acemoglu-modest and agi-20y.
+Deficit lands ≈ −$55B/yr by 2035 (mildly positive): productivity recapture + survivor-wage
+taxes roughly offset displacement losses at this severity — the fiscal sign is sensitive to
+the survivor share (0.35 here, from the crowd's rising-wage medians).
+
+## 7. OpenAI jobs transition framework (`openai-transition`) + new overlays
+
+Source: Richmond, "The AI Jobs Transition Framework" (OpenAI Economic Research, April 2026):
+across 900+ occupations / 152M jobs — 18% at high automation risk (27M), 24% reorganize (37M),
+12% grow with AI, 46% little change; exposure × human necessity × GPT-estimated demand
+elasticity (sanity-checked vs Autor-Dorn: home health aides −0.8, teachers −0.3 to −0.45).
+Their categories are explicitly "not job-loss forecasts" — the preset reads them as a decade
+of displacement PRESSURE: ceiling ≈ the 18% high-risk cohort plus ~⅓ of the reorganize
+cohort's staffing compression → adoption 0.05→0.20 reached ~2033, elevated reabsorption 0.55
+(the grow-with-AI bucket), physical work barely touched (their 41% physical-necessity share).
+Achieved: net employment −8.8% by 2035, deficit ≈ −$104B/yr (a mildly fiscally-positive
+"reorganize" world).
+
+**SWF overlay (`swf`)**: the government holds a 20% equity share of after-corporate-tax
+automation profit (retained + survivor overflow − corporate recapture). Korinek-Lockwood's
+equity-based mechanisms: non-distortionary, and revenue scales automatically with the shock —
+the insurance property they emphasize. Convergence Analysis FIRI: resilience 4/4 (highest of
+nine instruments), incentives 2/4 (winner-picking risk). Context: the Feb 3, 2025 executive
+order directing a US SWF plan. The 20% share is illustrative, not derived from any source.
+
+**Federal VAT overlay (`fed-vat`)**: 5% on a consumption base of two-thirds of value added
+(K-L's convention), eroding with the standing net income withdrawal — the base itself shrinks
+as displacement deepens, which is their argument for building consumption-tax infrastructure
+EARLY. Convergence FIRI: consumption taxes score 12/16 with feasibility 4/4; VAT adoption cut
+revenue volatility 40-50% across 103 countries. Karger et al.'s policy #1 funds a $12k UBI
+with a 15% VAT — the ubi + fed-vat overlays compose to approximate it. Static: no behavioral
+response, no regressivity modeling (top-10% pay ~60% of the poorer half's consumption-tax
+share — flagged, not modeled; Karger's elicited median for UBI+VAT: 0 GDP effect, −2pp LFPR).
+
+**Robot-tax caution (applies to cw/grt overlays)**: robot/automation taxes score worst of
+nine instruments on Convergence's FIRI (6/16 — base definition, reclassification, arbitrage);
+the IMF SDN/2024/002 recommends against special gen-AI taxes on the same grounds, finding
+automation taxes welfare-positive only under high transition costs; incidence partly leaks to
+workers and consumers (UK DST 2% passed 1:1 to prices). The overlays remain useful as
+what-if instruments; the literature's skepticism is now part of their provenance.
+
+## 8. External corroboration and tensions (site-design evidence)
+
+- **The 30% refuge**: Anthropic's nowcasting note (Massenkoff-McCrory, March 2026) finds 30%
+  of US employment shows zero observed AI usage, at $22.23/hr vs $32.69 for top-exposure
+  workers — independent empirical support for `EXPOSURE_PCTILE = 0.30` and the wage-downgrade
+  refuge (the exposed earn 47% more, so per-worker tax-base erosion exceeds the average).
+- **Null-to-2025 anchor**: their CPS diff-in-diff finds no differential unemployment for
+  exposed workers through late 2025 (+0.20pp, SE 0.19). All presets start displacement in
+  2026 — compliant. The first observed margin is a hiring freeze on 22-25-year-old entrants
+  (−14% job-finding), not incumbent layoffs — see the EQUATIONS.md grain note.
+- **CBO 60774** (Dec 2024) states the model's central mechanism in its own words: "a shift in
+  income from workers to businesses/investors could offset revenue gains from a larger
+  economy." No CBO quantification exists — this model occupies that gap.
+- **The tax wedge**: IMF SDN/2024/002 (Bachas et al.): advanced-economy average tax rate on
+  labor ~30% vs ~20% on capital — the authoritative version of the intro's "taxed at roughly
+  25-30% … taxed far less."
+- **Labor-share consensus**: Karger rapid 52.0% by 2030 / 45% by 2050 (AI experts 40%);
+  Metaculus 55.5% by 2035; Budget Lab scenarios 51.3-55% — the tax-base-migration premise is
+  the median expert view, quantified.
+- **Exit, not unemployment**: Karger (unemployment 5-6% even under rapid; ~10M LFP exits) and
+  Metaculus (long-term unemployment ≤4.5% while employment falls) both describe displacement
+  as labor-force exit — the model's SSDI-exit/retired states are the consensus mechanism.
+
+## 9. Calibration tensions with DEFAULTS_SHIPPED
 
 1. **`automation_tax_rate = 0.07` was far above the optimal-tax literature.** On the saved-bill base
    it was equivalent to a ~23–70% ad-valorem robot tax (depending on auto_cost); Costinot-Werning's
@@ -203,7 +303,7 @@ lever ceilings apply as in ⑧.
 5. **Reabsorption default 0 ("the thesis")** is *below* every empirical anchor (worst measured:
    China Shock ~0.05–0.10/yr). Keep as the thesis pole; presets carry the literature values.
 
-## 6. Known gaps the evidence exposed (report caveats)
+## 10. Known gaps the evidence exposed (report caveats)
 
 - **No behavioral response to the robot tax** (Korea: −28% installations per 2pp). Our
   `automation_tax_rate` changes only the fiscal split, never adoption. Hand-code via lower adoption

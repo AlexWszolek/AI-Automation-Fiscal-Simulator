@@ -151,7 +151,11 @@ plus draw SSDI (Step 8.5); `induced` carry the full after-loss.
 Annual granularity (review A.2): a worker displaced and reabsorbed within the same period still
 draws the full `ui_share` year of benefits — UI outlays are overstated by ~`reab_rate·ui_outlay`
 of within-year timing. The reabsorption pool DOES include `on_ui` (Step 10) — there is no forced
-march through exhaustion.
+march through exhaustion. Separation grain: the model books displacement as separations of
+employed workers, while the earliest observed margin (Anthropic nowcasting, 2026) is a HIRING
+freeze on labor-market entrants (−14% job-finding for exposed 22-25-year-olds; null incumbent
+unemployment through 2025) — at this model's annual, stock-based grain the two are fiscally
+similar, but the sequencing differs in the first year or two.
 
 ### Step 8 · State balanced-budget close (each of 51 states)  (`government.py`)
 ```
