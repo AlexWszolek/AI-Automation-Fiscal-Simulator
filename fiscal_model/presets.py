@@ -36,17 +36,36 @@ class Preset:
     # would silently flat-extend/truncate — dynamics._adoption clamps indices without error):
     # linear start→end over years 0..reach, flat at end after. None = linear over the whole horizon.
     adoption_reach_year: Optional[int] = None
+    # Published trajectory knots ((year, value), ...): interior points the SOURCE itself states,
+    # threaded piecewise-linearly between (0, start) and (reach, end). NOT a lever — every knot must
+    # be a number in the source text (smooth shape families with baked constants were measured and
+    # rejected: their renormalization constants move mid-path adoption more than any defensible p/q
+    # choice, with no external anchor; the report discloses shape sensitivity instead).
+    adoption_knots: Optional[tuple] = None
     # Calendar year of period 0 — maps model years onto real years for the app's summary
     # columns, chart axes, and CBO-projection denominators. Most presets start "now".
     start_year: int = 2026
 
 
 def build_adoption_path(preset: Preset, n_periods: int) -> list:
-    """The preset's cumulative adoption ceiling per period, synthesized for the requested horizon."""
+    """The preset's cumulative adoption ceiling per period, synthesized for the requested horizon.
+
+    Between anchored points the path is linear — the minimal-assumption choice where the source
+    publishes only endpoints. Where the source publishes a trajectory, `adoption_knots` threads
+    the ramp through its numbers (the no-knots branches are untouched: bit-identical to before)."""
     n = int(n_periods)
     if preset.adoption_reach_year is None:
+        assert not preset.adoption_knots, f"{preset.key}: knots require adoption_reach_year"
         return list(np.linspace(preset.adoption_start, preset.adoption_end, n))
-    ramp = np.linspace(preset.adoption_start, preset.adoption_end, preset.adoption_reach_year + 1)
+    if preset.adoption_knots:
+        xs = [0.0, *(float(y) for y, _ in preset.adoption_knots), float(preset.adoption_reach_year)]
+        ys = [preset.adoption_start, *(float(v) for _, v in preset.adoption_knots),
+              preset.adoption_end]
+        assert all(b > a for a, b in zip(xs, xs[1:])), f"{preset.key}: knot years must be interior ascending"
+        assert all(b >= a for a, b in zip(ys, ys[1:])), f"{preset.key}: adoption is cumulative — knots must be non-decreasing"
+        ramp = np.interp(np.arange(preset.adoption_reach_year + 1, dtype=float), xs, ys)
+    else:
+        ramp = np.linspace(preset.adoption_start, preset.adoption_end, preset.adoption_reach_year + 1)
     if n <= ramp.size:               # horizon shorter than the transition: honest truncation
         return list(ramp[:n])
     return list(ramp) + [preset.adoption_end] * (n - ramp.size)
@@ -306,6 +325,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
               "automatable by 2035-36; employment 62%→12% over 2032-2040. World state only — their "
               "permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
         adoption_start=0.05, adoption_end=1.0, n_periods=14, adoption_reach_year=9, start_year=2027,
+        adoption_knots=((5, 0.20), (8, 0.85)),   # their published shares: 20% (2032), 85% (2035)
         overrides=dict(cognitive_feasibility=0.95, physical_feasibility=0.95, robotics_lag=9.0,
                        reabsorption_rate=0.15, reemployment_haircut=0.30, lfp_exit_rate=0.05,
                        retained_profit_share=0.55, price_reduction_share=0.30, auto_cost=0.30,
@@ -316,10 +336,12 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
         provenance=dict(
             cognitive_feasibility="AI 2040 App.X n1: AI automates 50% of cognitive tasks by 2032, "
                                   "95% by 2035 (would be 100% but for bans) → terminal 0.95 (§2⑧)",
-            adoption="kinked: reach 1.0 at year 9 (2036: 'pretty much everything'); value-weighted "
-                     "AI/robot labor share 20% (2032) → 85% (2035). Our linear kink front-loads the "
-                     "mid-path drop vs their flat-to-2032 employment — their early stability comes "
-                     "from new-job creation the model maps onto reabsorption (§2⑧)",
+            adoption="knotted to their published trajectory: value-weighted AI/robot labor share "
+                     "20% (2032=y5) → 85% (2035=y8), reach 1.0 at y9 (2036: 'pretty much "
+                     "everything'). Share-to-adoption mapping is level-approximate (value-weighted "
+                     "vs share-of-feasible), same convention as the reach anchor; replaces the "
+                     "linear kink that front-loaded the mid-path drop vs their flat-to-2032 "
+                     "employment (§2⑧)",
             physical_feasibility="robots 35% of physical tasks 2032, 95% by 2036 (App.X n1) (§2⑧)",
             robotics_lag="robot channel full at 2036 = year 9 from the 2027 start (§2⑧)",
             reabsorption_rate="2032-34: displaced white-collar 'get new jobs doing things AIs "
@@ -354,6 +376,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
               "2031, integration 'as fast as markets allow' — their AI 2027 Race ending on a 2030 "
               "fuse. 10 years (2027-2036).",
         adoption_start=0.05, adoption_end=1.0, n_periods=10, adoption_reach_year=7, start_year=2027,
+        adoption_knots=((4, 0.05),),   # hold at start until ASI early 2031; integration only after
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.95, robotics_lag=6.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
                        retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.30,
@@ -364,9 +387,12 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
         provenance=dict(
             cognitive_feasibility="'ASI early 2031, 10,000× AI R&D speedup' — no pause, no bans; "
                                   "full cognitive feasibility (§2⑨)",
-            adoption="kinked: reach 1.0 at year 7 (2034) — takeoff 2030-31 then 'integrated into "
-                     "everything approximately as fast as the markets and laws allow'; their "
-                     "no-regulation counterfactual is >1000× growth by 2033 (App.X) (§2⑨)",
+            adoption="knotted to their published timing: hold at start through y4 (superintelligence "
+                     "early 2031 — integration begins only post-takeoff), then 'integrated into "
+                     "everything approximately as fast as the markets and laws allow' → 1.0 at "
+                     "year 7 (2034); the knot value is the start level by identity (nothing "
+                     "integrates before ASI). Their no-regulation counterfactual is >1000× growth "
+                     "by 2033 (App.X) (§2⑨)",
             physical_feasibility="unregulated robot explosion post-ASI; 0.95 terminal (§2⑨)",
             robotics_lag="robot capacity full ~2033 = year 6 from 2027 (takeoff+2) (§2⑨)",
             reabsorption_rate="no managed transition, no dividend, no time — AI-2027-race value (§2⑨)",

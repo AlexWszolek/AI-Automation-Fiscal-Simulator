@@ -1,9 +1,10 @@
 """Deterministic report artifact builder — every figure, table, and citable number in the report.
 
 Stages (composable via --stage; default = all):
-  compute     per-preset MC (N draws, seeded) -> parquet/CSVs + overlay recovery runs
-  validation  Windfall 3x2 grid, RAND-S3 replication, Acemoglu GDP check
-  render      PNGs from the cached CSVs (re-runs without the model)
+  compute      per-preset MC (N draws, seeded) -> parquet/CSVs + overlay recovery runs
+  validation   Windfall 3x2 grid, RAND-S3 replication, Acemoglu GDP check
+  sensitivity  adoption-shape sensitivity: reported presets re-run under asymmetric-S paths (§10)
+  render       PNGs from the cached CSVs (re-runs without the model)
 Outputs land in docs/report/artifacts/; manifest.json (written last, atomically) is the DRIFT
 FIREWALL: the report prose may cite numbers ONLY through {{n:...}} placeholders resolved against
 it, so text and model can never disagree silently.
@@ -270,6 +271,88 @@ def build_validation(env: Env) -> dict:
     }
 
 
+# ------------------------------------------------------------- adoption-shape sensitivity stage
+# The report keeps adoption LINEAR between anchored endpoints (piecewise-linear through published
+# knots where a source states its own trajectory). This stage prices that choice: each reported
+# preset re-runs under two asymmetric-S alternatives spanning the renormalized diffusion family
+# (Bass-shaped, p/q at the literature's 0.03/0.38 — after renormalization these are shape
+# constants, not empirical coefficients), and the movement in the report's headline numbers is
+# recorded for the §10 disclosure. The two variants bracket the family's real fork: SELF-similar
+# (one canonical S stretched onto every ramp window — front-loads mid-path adoption) vs RAW-time
+# (t in years — back-loads short ramps, front-loads long ones). Knotted presets are skipped:
+# their trajectory is source-pinned, so shape is not a free choice there.
+BASS_P, BASS_Q = 0.03, 0.38
+_BASS_T99 = float(np.log((1.0 + (BASS_Q / BASS_P) * 0.99) / (1.0 - 0.99)) / (BASS_P + BASS_Q))
+
+
+def _bass_f(t):
+    e = np.exp(-(BASS_P + BASS_Q) * np.asarray(t, float))
+    return (1.0 - e) / (1.0 + (BASS_Q / BASS_P) * e)
+
+
+def _s_ramp(n_pts: int, variant: str) -> np.ndarray:
+    """Normalized 0→1 ramp shape over n_pts yearly samples (endpoints exact)."""
+    if variant == "raw":
+        f = _bass_f(np.arange(n_pts, dtype=float))
+    else:                                          # "self"
+        f = _bass_f(np.linspace(0.0, 1.0, n_pts) * _BASS_T99)
+    return f / f[-1]
+
+
+def _shaped_path(preset, variant: str) -> list:
+    """build_adoption_path with the linear ramp swapped for an S variant (same kink contract)."""
+    s, e, n = preset.adoption_start, preset.adoption_end, preset.n_periods
+    if preset.adoption_reach_year is None:
+        return list(s + (e - s) * _s_ramp(n, variant))
+    ramp = s + (e - s) * _s_ramp(preset.adoption_reach_year + 1, variant)
+    if n <= ramp.size:
+        return list(ramp[:n])
+    return list(ramp) + [e] * (n - ramp.size)
+
+
+def build_shape_sensitivity(env: Env, manifest: dict) -> dict:
+    per, outside, n_runs = {}, 0, 0
+    for key, frag in manifest["presets"].items():
+        preset = presets.PRESETS[key]
+        if preset.adoption_knots:
+            per[key] = {"skipped": "trajectory source-pinned by knots"}
+            continue
+        base = presets.to_params(preset)
+        ctx = mc.ScenarioContext(env.data, env.deltas, base)
+        lin = ctx.run(base).iloc[-1]
+        # drift firewall: the stage's own base must reproduce the published manifest number
+        assert abs(float(lin["fed_deficit_B"]) - frag["final"]["fed_deficit_delta_B"]) < 0.15, key
+        band = frag["mc"]["final_fed_deficit_B"]
+        row = {"linear": {"final_deficit_B": round(float(lin["fed_deficit_B"]), 1),
+                          "debt_B": round(float(lin["fed_debt_B"]), 1)}}
+        for variant in ("raw", "self"):
+            res = ctx.run(replace(base, adoption_path=_shaped_path(preset, variant))).iloc[-1]
+            fd, debt = float(res["fed_deficit_B"]), float(res["fed_debt_B"])
+            in_band = bool(band["p10"] <= fd <= band["p90"])
+            n_runs += 1
+            outside += (not in_band)
+            row[variant] = {"final_deficit_B": round(fd, 1), "debt_B": round(debt, 1),
+                            "debt_shift_B": round(debt - float(lin["fed_debt_B"]), 1),
+                            "debt_shift_pct": round(100.0 * (debt - float(lin["fed_debt_B"]))
+                                                    / abs(float(lin["fed_debt_B"])), 1),
+                            "final_deficit_in_band": in_band}
+        per[key] = row
+        print(f"  shape-sensitivity {key}: raw {row['raw']['debt_shift_pct']:+.1f}% "
+              f"self {row['self']['debt_shift_pct']:+.1f}% (cum debt)")
+    # summary stats, split by the house $-floor convention (percentages explode on ~zero bases):
+    # % among the large-debt worlds (|cum debt| ≥ $1T), plain $B among the modest ones.
+    large = [abs(v[m]["debt_shift_pct"]) for v in per.values() if "linear" in v
+             for m in ("raw", "self") if abs(v["linear"]["debt_B"]) >= 1000.0]
+    small = [abs(v[m]["debt_shift_B"]) for v in per.values() if "linear" in v
+             for m in ("raw", "self") if abs(v["linear"]["debt_B"]) < 1000.0]
+    return {"config": {"p": BASS_P, "q": BASS_Q, "t99_years": round(_BASS_T99, 2),
+                       "variants": ["raw", "self"]},
+            "per_preset": per,
+            "summary": {"n_runs": n_runs, "n_final_deficit_outside_band": outside,
+                        "max_debt_shift_pct_large": round(max(large), 1) if large else None,
+                        "max_debt_shift_B_small": round(max(small), 1) if small else None}}
+
+
 # --------------------------------------------------------------------------- comparison stage
 def build_comparison(manifest_presets: dict) -> dict:
     out = ART / "comparison"
@@ -319,7 +402,8 @@ def main() -> None:
     ap.add_argument("--spread", type=float, default=SPREAD)
     ap.add_argument("--seed", type=int, default=SEED)
     ap.add_argument("--preset", choices=list(presets.PRESETS), default=None)
-    ap.add_argument("--stage", choices=["all", "compute", "validation", "render"], default="all")
+    ap.add_argument("--stage", choices=["all", "compute", "validation", "sensitivity", "render"],
+                    default="all")
     args = ap.parse_args()
 
     charts.enable_print_theme()
@@ -353,6 +437,12 @@ def main() -> None:
             manifest["comparison"] = build_comparison(manifest["presets"])
             build_recovery_matrix(manifest["overlays"],
                                   {k: v["name"] for k, v in manifest["presets"].items()})
+
+    if args.stage in ("all", "sensitivity"):
+        # scoped to the presets already in the manifest: the disclosure covers what the report
+        # covers, whatever that set is at build time (report inclusion is decided elsewhere)
+        manifest.setdefault("sensitivity", {})
+        manifest["sensitivity"]["adoption_shape"] = build_shape_sensitivity(env, manifest)
 
     if args.stage in ("all", "validation"):
         manifest["validation"] = build_validation(env)

@@ -153,16 +153,21 @@ zeroes taxable corporate income, n.42) → auto_cost 0.30; **GDP growth ~100%/yr
 0.90 and interest 0.04 shipped; magnitude divergence documented in provenance). Two deliberate
 exclusions: their **permit-fee cap-and-trade** ($50T FY2032, $180T 2034) and **Citizen's Dividend**
 ($45K → $1M/person) are POLICY, not world state — the preset models Plan A's world under current
-US law; compose the UBI/compute-parity overlays to approximate their regime. Two known shape
-divergences (documented in the preset provenance): our linear kink front-loads the mid-path
-employment drop (their employment is flat to 2032 because new jobs absorb the displaced — mapped
-onto reabsorption 0.15), and our current-law world keeps 81M working at reduced wages in 2040
-where theirs retire onto dividends.
+US law; compose the UBI/compute-parity overlays to approximate their regime. The adoption path is
+**knotted to their published trajectory** (0.05 at 2027 → 0.20 at 2032 → 0.85 at 2035 → 1.0 at
+2036, flat after): the earlier linear kink front-loaded the mid-path employment drop vs their
+flat-to-2032 employment (their early stability comes from new-job creation the model maps onto
+reabsorption 0.15). The share-to-adoption mapping is level-approximate (value-weighted labor share
+vs share-of-feasible-work), the same convention as the reach anchor. One known shape divergence
+remains (documented in the preset provenance): our current-law world keeps 81M working at reduced
+wages in 2040 where theirs retire onto dividends.
 
 **⑨ AI 2040 — Plan D (The Race).** The no-deal branch: light-touch regulation, full AI-R&D
 automation 2030, **superintelligence early 2031** (10,000× R&D speedup chart), integration "as
 fast as the markets and laws allow" — the paper's own gloss: *AI 2027's Race ending on a 2030
-fuse*. Period 0 = 2027, horizon 10y; kinked adoption reaching 1.0 at year 7 (2034); crisis
+fuse*. Period 0 = 2027, horizon 10y; adoption knotted to their published timing — flat at the
+start level through 2031 (integration begins only after superintelligence early 2031), then to
+1.0 at year 7 (2034); crisis
 labor-market values carried from the AI-2027/AGI presets (reabsorption 0.05, haircut 0.40, lfp
 0.10, elasticity −0.50, dm 1.50); disposition 0.80/0.15/0.05 (no deal, no permits, no sharing);
 their no-regulation counterfactual is **>1000× growth by 2033** (App. X) — unrepresentable,

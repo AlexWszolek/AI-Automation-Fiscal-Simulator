@@ -74,6 +74,8 @@ def test_ui_grid_representability():
             assert _on_grid(v, lo, hi, step), f"{p.key}.{f}={v} is off the widget grid {lo}..{hi}/{step}"
         assert _on_grid(p.adoption_start, 0.0, 1.0, 0.01), p.key
         assert _on_grid(p.adoption_end, 0.0, 1.0, 0.01), p.key
+        for y, v in (p.adoption_knots or ()):
+            assert y == int(y) and _on_grid(v, 0.0, 1.0, 0.01), f"{p.key} knot ({y}, {v})"
         assert 3 <= p.n_periods <= 30
         # the price slider's max is 1 − retained
         assert p.overrides["price_reduction_share"] <= 1.0 - p.overrides["retained_profit_share"] + 1e-9
@@ -102,6 +104,37 @@ def test_kinked_path_is_parametric():
     assert len(short) == 4 and short[-1] < 1.0
     # to_params at a stretched horizon keeps the kink (the whole point of the parametric form)
     assert presets.to_params(p, n_periods=20).adoption_path[5] == 1.0
+
+
+# ------------------------------------------------------------------------ pure: trajectory knots
+def test_knotted_path_hits_published_values():
+    # Plan A: the source's own numbers — 20% at 2032 (y5), 85% at 2035 (y8), everything at 2036 (y9)
+    p = presets.PRESETS["ai2040-plan-a"]
+    path = presets.build_adoption_path(p, p.n_periods)
+    assert math.isclose(path[0], 0.05) and math.isclose(path[5], 0.20)
+    assert math.isclose(path[8], 0.85) and math.isclose(path[9], 1.0)
+    assert all(math.isclose(x, 1.0) for x in path[9:]), "flat after reach"
+    assert all(b >= a for a, b in zip(path, path[1:])), "cumulative adoption is monotone"
+    # truncation inside the transition keeps the knot values it can reach
+    assert math.isclose(presets.build_adoption_path(p, 6)[5], 0.20)
+    # stretched horizon keeps the knots (parametric form, same contract as the kink)
+    assert math.isclose(presets.to_params(p, n_periods=20).adoption_path[8], 0.85)
+
+    # Plan D: hold at start through ASI (y4 = early 2031), then ramp to 1.0 at y7 (2034)
+    p = presets.PRESETS["ai2040-plan-d"]
+    path = presets.build_adoption_path(p, p.n_periods)
+    assert all(math.isclose(x, 0.05) for x in path[:5]), "no integration before superintelligence"
+    assert math.isclose(path[7], 1.0) and path[5] > 0.05
+    assert all(b >= a for a, b in zip(path, path[1:]))
+
+
+def test_knot_validation_asserts():
+    base = presets.PRESETS["ai2040-plan-a"]
+    for bad in (dict(adoption_reach_year=None),                        # knots need a reach year
+                dict(adoption_knots=((8, 0.85), (5, 0.20))),           # years must ascend
+                dict(adoption_knots=((5, 0.90), (8, 0.20)))):          # values must be monotone
+        with pytest.raises(AssertionError):
+            presets.build_adoption_path(replace(base, **bad), base.n_periods)
 
 
 # ------------------------------------------------------------------------------- pure: overlays

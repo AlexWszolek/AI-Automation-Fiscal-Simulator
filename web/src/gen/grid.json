@@ -1320,7 +1320,7 @@
    ],
    "provenance": {
     "adoption": {
-     "text": "kinked: reach 1.0 at year 9 (2036: 'pretty much everything'); value-weighted AI/robot labor share 20% (2032) \u2192 85% (2035). Our linear kink front-loads the mid-path drop vs their flat-to-2032 employment \u2014 their early stability comes from new-job creation the model maps onto reabsorption (\u00a72\u2467)",
+     "text": "knotted to their published trajectory: value-weighted AI/robot labor share 20% (2032=y5) \u2192 85% (2035=y8), reach 1.0 at y9 (2036: 'pretty much everything'). Share-to-adoption mapping is level-approximate (value-weighted vs share-of-feasible), same convention as the reach anchor; replaces the linear kink that front-loaded the mid-path drop vs their flat-to-2032 employment (\u00a72\u2467)",
      "value": "1"
     },
     "auto_cost": {
@@ -1467,7 +1467,7 @@
    ],
    "provenance": {
     "adoption": {
-     "text": "kinked: reach 1.0 at year 7 (2034) \u2014 takeoff 2030-31 then 'integrated into everything approximately as fast as the markets and laws allow'; their no-regulation counterfactual is >1000\u00d7 growth by 2033 (App.X) (\u00a72\u2468)",
+     "text": "knotted to their published timing: hold at start through y4 (superintelligence early 2031 \u2014 integration begins only post-takeoff), then 'integrated into everything approximately as fast as the markets and laws allow' \u2192 1.0 at year 7 (2034); the knot value is the start level by identity (nothing integrates before ASI). Their no-regulation counterfactual is >1000\u00d7 growth by 2033 (App.X) (\u00a72\u2468)",
      "value": "1"
     },
     "auto_cost": {

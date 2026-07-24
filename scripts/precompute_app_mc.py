@@ -1,7 +1,8 @@
 """Precompute the app's always-on sensitivity tornado for every preset × policy-response cart.
 
-Writes data/app_precomputed/mc_tornado.json — one entry per pristine config (10 presets/custom
-× 12 valid overlay subsets = 120), keyed by the canonical config repr (fiscal_model.app_params
+Writes data/app_precomputed/mc_tornado.json — one entry per pristine config (every preset +
+custom × every valid overlay subset; 13 × 48 = 624 as of the swf/fed-vat overlays — the count
+is printed at startup), keyed by the canonical config repr (fiscal_model.app_params
 .cfg_key), so the live app serves any preset+overlay tornado instantly and only ever computes
 for slider-modified settings. Every base derives via webpayload.resolve_config — the exact
 function the API worker uses (api/jobs.py) — so the cfg_repr keys match by construction.
@@ -9,8 +10,8 @@ Deterministic bytes: fixed seed, insertion-ordered keys, no timestamps — runni
 produce identical files (tests/test_app_precomputed.py pins the key set and key-matching;
 re-run this script whenever a preset, overlay, or CUSTOM_DEFAULTS changes).
 
-  .venv/bin/python scripts/precompute_app_mc.py --workers 8    # ~20 min (120 configs × N=200)
-  .venv/bin/python scripts/precompute_app_mc.py                # serial, ~2h
+  .venv/bin/python scripts/precompute_app_mc.py --workers 8    # ~100 min (624 configs × N=200)
+  .venv/bin/python scripts/precompute_app_mc.py                # serial, most of a day
 """
 from __future__ import annotations
 

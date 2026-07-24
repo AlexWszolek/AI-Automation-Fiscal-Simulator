@@ -32,6 +32,15 @@ cognitive feasibility) and physical (Webb robot exposure × robotics feasibility
 multiplicatively, and the physical channel ramps in linearly over `robotics_lag` years: physical
 automation waits for AI-built industrial capacity.
 
+The path of `adoption(t)` is **linear between anchored points**. Where a source publishes only
+endpoints ("half of exposed work automated over the decade"), a straight ramp is the
+minimal-assumption reading — smooth S-shaped families fitted to the same endpoints require shape
+constants no source pins down, and the ones the diffusion literature suggests were measured to
+move mid-path adoption more than any defensible choice among them (the cost of the linear
+convention is quantified in Section 10). Where a source publishes its own trajectory, the ramp
+threads *piecewise-linearly through the published points* instead — every knot a number in the
+source text, none a fitting parameter.
+
 Displaced workers draw UI for the statutory window, then exhaust; the exhausted are reabsorbed at
 `reabsorption_rate` per year into re-employment at `max(origin_wage·(1−haircut), service_floor)` —
 the permanent scar the displacement literature measures — or exit the labor force at
