@@ -560,7 +560,8 @@ ui: dict[str, Any] = dict(mapping="percentile", cog=cog, phys=phys,
           state_cut_share=state_cut_share, state_rate_hike_cap=rate_cap, automation_tax_rate=automation_tax,
           interest=interest, ubi=ubi, ubi_recapture_rate=ubi_recapture, baseline_growth_rate=growth,
           denominator="absolute",
-          income_tax_mult=income_mult, corp_tax_mult=corp_mult, cons_tax_mult=cons_mult)
+          income_tax_mult=income_mult, corp_tax_mult=corp_mult, cons_tax_mult=cons_mult,
+          equity_pe_multiple=float(d["equity_pe"]))   # sliderless: rides the active defaults
 # Overlays apply AFTER the sliders and OVERRIDE the corresponding levers; v2p is the single source
 # of truth for every consumer below (model run, JSON export, MC base, UBI warning).
 v2p, _overlay_notes = presets_mod.apply_overlays(build_v2_params(ui), overlay_keys)
@@ -960,6 +961,10 @@ TORNADO_LABELS = {
     "ubi_recapture_rate": "UBI recapture",
     "swf_profit_share": "SWF profit share",
     "fed_vat_rate": "Federal VAT rate",
+    "equity_pe_multiple": "Equity capitalization multiple",
+    "equity_taxable_share": "Taxable share of equity",
+    "cg_realization_rate": "Capital-gains realization rate",
+    "shareholder_eff_rate": "Capital-gains tax rate",
     "baseline_growth_rate": "Trend growth",
     "demand_multiplier": "Demand multiplier",
     "price_passthrough": "Price pass-through",

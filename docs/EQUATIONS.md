@@ -180,6 +180,22 @@ debt           = debt·(1 + interest_rate) + net_fed
 ubi_required_rate = ubi_annual·baseline_emp·(1−recapture) / [wage_bill·W_surv + Σ reabsorbed·w_d]
 ```
 
+### Step 8.6 · Shareholder windfall channel (CG on undistributed earnings)  (`dynamics_v2.py`)
+The kernel's corporate offset already taxes dividends + pass-through income on the routed surplus;
+this leg prices the remaining flow: realized capital gains on the after-tax UNDISTRIBUTED corporate
+earnings the automated stock adds. `undist_pw` (deltas cache) = corp_share·comp·(1−eff_corp)·(1−payout),
+sector-employment-weighted per occupation — the corp-offset construction with taxes and dividends out.
+```
+undist   = Σ auto_disp·undist_pw · retained_profit_share·(1−auto_cost)   # + survivor overflow at the
+                                                                          #   blended per-$ ratio
+E_t      = max(0, undist − automation_tax − swf_revenue)     # robot tax + SWF paid from this pool
+R_t      = cg_realization_rate · G_{t−1}                     # realizations draw the t−1 stock; R_0 = 0
+G_t      = G_{t−1} + equity_taxable_share·equity_pe_multiple·max(0, E_t − E_{t−1}) − R_t
+cg_tax_t = shareholder_eff_rate · R_t                        # → federal revenue (C6); zero MPC
+```
+Each increment to the permanent earnings level is capitalized ONCE (no re-capitalization of the
+standing stream); exactly 0.0 at `equity_pe_multiple = 0` (the C8 off value). Ledger identities: C-sh.
+
 ### Step 9 · LEVEL-TARGETING demand (the stock controller; signed; one-period lag)  (`dynamics_v2.py`)
 The induced stock TRACKS a target proportional to the STANDING net withdrawal — a stationary shock gives
 a stationary induced stock; injections lower the target and RELEASE workers back to employed:
@@ -274,6 +290,10 @@ fed_deficit_abs_B = 1833 + net_fed/1e9    state_gap_B = Σ gap / 1e9
 | `attrition_rate` | `retired += (exhausted+induced)·rate` | DELTA-NEUTRAL retirement — the standing loss decays (deficit ↓) |
 | `ssdi_annual` | `ssdi_outlay = Σ exited·ssdi` | SSDI on the LFP-exited (deficit ↑) |
 | `ubi_recapture_rate` | `net UBI = outlay·(1−recapture)` | tax clawback + means-test crowd-out |
+| `equity_pe_multiple` | `ΔG += taxable·pe·ΔE⁺` (Step 8.6) | capitalizes the undistributed-earnings increment; 0 = channel off (C8) |
+| `equity_taxable_share` | scales the accrual into the taxable stock | only taxable-account holders ever realize |
+| `cg_realization_rate` | `R_t = rate·G_{t−1}` | deferral: the stock realizes slowly (step-up folded in) |
+| `shareholder_eff_rate` | `cg_tax = rate·R_t` | average effective rate on realized LTCG (fed revenue ↑) |
 | `baseline_growth_rate` | `nGDP ×= (1+g)^t` | %-GDP denominators only (fixes r>g=0) |
 | `ui_weeks` | `ui_share = min(1, weeks/52)` | UI outlay window (blend of during/after) |
 | `demand_multiplier` | `induced_target = dm·mpc·stick·standing_withdrawal/va_pw` | Okun-style LEVEL multiplier: the induced stock tracks the standing shortfall (signed; releases on recovery) |

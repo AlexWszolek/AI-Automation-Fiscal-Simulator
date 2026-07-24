@@ -61,22 +61,27 @@ class DynamicsParams:
 
 
 # ----------------------------------------------------------------- precompute
-def corporate_per_worker(data: loaders.FiscalData, kp: KernelParams) -> pd.Series:
-    """Federal corporate-tax offset per displaced worker, by occupation (employment-weighted
-    over the sectors the occupation works in)."""
+def corporate_per_worker(data: loaders.FiscalData, kp: KernelParams) -> pd.DataFrame:
+    """Per displaced worker, by occupation (employment-weighted over the sectors the occupation
+    works in): the federal corporate-tax offset AND the after-tax undistributed corporate
+    earnings the shareholder windfall channel capitalizes (same construction, same weights)."""
     k = Kernel(data, kp)
     m = data.matrices_sector.copy()
     m = m[m["emp_thousands"] > 0]
     m["comp_per_worker"] = m["comp_musd"] / m["emp_thousands"] * 1_000.0   # $m/$k *1000 = $
-    vals = []
+    vals, undist = [], []
     for r in m.itertuples():
         corp, div, pt = k._corporate(r.industry, r.comp_per_worker)
         vals.append(corp + div + pt)
+        undist.append(k._corporate_undistributed(r.industry, r.comp_per_worker))
     m["corp_offset_pw"] = vals
+    m["undist_pw"] = undist
     # employment-weighted average over sectors for each occupation
     g = m.groupby("soc_code").apply(
-        lambda d: np.average(d["corp_offset_pw"], weights=d["emp_thousands"]))
-    g.name = "corp_per_worker_fed"
+        lambda d: pd.Series({"corp_per_worker_fed": np.average(d["corp_offset_pw"],
+                                                               weights=d["emp_thousands"]),
+                             "undist_per_worker": np.average(d["undist_pw"],
+                                                             weights=d["emp_thousands"])}))
     return g
 
 
@@ -85,7 +90,10 @@ def precompute_worker_deltas(data: loaders.FiscalData, lookup: TransferLookup,
     """Per (occupation × state): employed, worker_wage, ui_benefit, and the during/after
     per-worker fiscal delta by channel. Cached (scenario-invariant)."""
     if DELTA_CACHE.exists() and not force:
-        return pd.read_parquet(DELTA_CACHE)
+        df = pd.read_parquet(DELTA_CACHE)
+        if "undist_per_worker" in df.columns:
+            return df
+        # cache predates the shareholder windfall channel — rebuild once (self-migrating)
 
     ci = CellIntegrator(data, lookup, kp)
     emp = data.oews.groupby(["soc_code", "state"])["employment_persons"].sum()
@@ -109,8 +117,9 @@ def precompute_worker_deltas(data: loaders.FiscalData, lookup: TransferLookup,
         rows.append(rec)
     df = pd.DataFrame(rows)
     corp = corporate_per_worker(data, kp)
-    df = df.merge(corp.rename("corp_per_worker_fed"), left_on="soc_code", right_index=True, how="left")
+    df = df.merge(corp, left_on="soc_code", right_index=True, how="left")
     df["corp_per_worker_fed"] = df["corp_per_worker_fed"].fillna(0.0)
+    df["undist_per_worker"] = df["undist_per_worker"].fillna(0.0)
     INTERIM.mkdir(parents=True, exist_ok=True)
     df.to_parquet(DELTA_CACHE, index=False)
     return df

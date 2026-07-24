@@ -50,6 +50,18 @@ the conversion. Three recurring unit traps:
 | `auto_cost` | J-Curve: intangible co-investment 2.7–4.1× observable AI investment → **0.3–0.6** in buildout years, declining. Davidson/AI 2027: 0.3–0.5 early, → 0.1–0.2. Steady-state: ~0.05–0.10. | 0.05 → 0.5 |
 | `compute_effective_rate` | GRT: US effective capital tax 10% → **5%** post-TCJA (status quo). Windfall capital ETR: **0.267** (avg 20.5% corporate EATR + top-up) = domestic-parity taxation. Korinek-Lockwood AGI-stage: ~0.04 of the AGI capital *stock* (different base — normative). | 0.05 → 0.27 |
 
+### Shareholder windfall channel (CG on undistributed after-tax corporate earnings; current law, all presets)
+
+All four fetch-verified — quotes + URLs in `docs/research/shareholder-channel-evidence-raw.json`;
+mechanism + measured magnitudes in `docs/research/shareholder-channel-design.md`.
+
+| Lever | Evidence | Shipped |
+|---|---|---|
+| `equity_pe_multiple` | Long-run S&P mean P/E **16.23** / median 15.08 (Shiller via multpl). Current market (2026-07): trailing 28.5, CAPE 40.4 — a disclosed sensitivity, not the anchor. Applied ONCE per increment to the permanent undistributed-earnings level (no re-capitalization). | **16** |
+| `equity_taxable_share` | Rosenthal–Mucciolo 2024: taxable-account share of US stock **27%** in 2022 (79% in 1965; foreigners 42%, retirement ~27%). Rosenthal–Austin 2016: 24.2% (2015). | **0.27** |
+| `cg_realization_rate` | Gravelle–Lindsey (via Treasury OTA WP-66): **3.1%**/yr of the accrued-gains stock realized, 1960–84. Modern arithmetic (~$2T realized 2021 / ~$40–50T unrealized stock) ≈ 4–5%; buyback churn (2024: $942.5B, ~60% of cash returned) argues the upper half. Step-up at death (CBO: 47% of stock gains never realized) is *why* this is low — not a separate lever. CBO cross-check: realizations revert to 3.7% of GDP long-run. | **0.04** (0.03–0.05) |
+| `shareholder_eff_rate` | Treasury OTA taxes-paid table: average effective rate on realized gains **19.4%** (2013–14, the current 23.8%-top regime); 17–19% modern (Tax Foundation/CBO). Qualified dividends share the schedule (dividends are NOT this channel — the kernel's corporate offset already books them at sector payout ratios). | **0.19** |
+
 ### Macro & demand
 
 | Lever | Evidence | Range |

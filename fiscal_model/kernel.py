@@ -173,6 +173,26 @@ class Kernel:
         pass_tax = self.params.passthrough_individual_rate * pass_portion
         return corp_tax, div_tax, pass_tax
 
+    def _corporate_undistributed(self, sector: str, lost_comp: float) -> float:
+        """After-corporate-tax UNDISTRIBUTED corporate earnings per the same construction as
+        `_corporate` (kept in lockstep with it line-for-line — the surplus that is neither taxed
+        away nor paid out as dividends). This is the base the shareholder windfall channel
+        capitalizes: the only shareholder-side flow `_corporate` does NOT already tax
+        (dividends and pass-through income are taxed there; retained earnings are taxed only on
+        realization, which is the channel's job). Pass-through surplus is excluded — it is not
+        publicly traded corporate equity."""
+        if sector not in self._cap.index:
+            raise KeyError(f"unknown sector for corporate channel: {sector!r}")
+        row = self._cap.loc[sector]
+        corp_share = row["corp_share_taxable_capital_income"]
+        if pd.isna(corp_share):                          # Government: capital share is depreciation
+            return 0.0
+        corp_portion = corp_share * self.params.surplus_capture * lost_comp
+        eff_corp = row["eff_corp_tax_rate"]
+        after_tax = corp_portion - (0.0 if pd.isna(eff_corp) else eff_corp) * corp_portion
+        payout = row["dividend_payout_ratio"]
+        return after_tax * (1.0 - (0.0 if pd.isna(payout) else payout))
+
     # -- consumption channel -------------------------------------------------
     def _consumption_tax(self, state: str, disposable_income_loss: float) -> float:
         rate = float(self._cons.get(state, 0.0))

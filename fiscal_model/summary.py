@@ -35,6 +35,7 @@ def _tax_rows(res: pd.DataFrame) -> list:
         ("Federal revenue changes", "Income tax", -r["inc_fed_loss_B"], "fed", "flow"),
         ("Federal revenue changes", "Payroll (FICA)", -r["payroll_fed_loss_B"], "fed", "flow"),
         ("Federal revenue changes", "Corporate recovery", r["corp_offset_B"], "fed", "flow"),
+        ("Federal revenue changes", "Windfall capital gains", r["shareholder_cg_tax_B"], "fed", "flow"),
         ("Federal revenue changes", "Compute-pool tax", r["compute_pool_tax_B"], "fed", "flow"),
         ("Federal revenue changes", "Survivor wage taxes", r["survivor_gain_fed_B"], "fed", "flow"),
         ("Federal revenue changes", "Overflow corporate tax", r["survivor_overflow_corp_tax_B"], "fed", "flow"),
@@ -97,7 +98,7 @@ def _channel_rows(res: pd.DataFrame) -> list:
     labour_back = r["survivor_gain_fed_B"] + r["survivor_gain_state_B"]
     capital_back = (r["corp_offset_B"] + r["compute_pool_tax_B"]
                     + r["survivor_overflow_corp_tax_B"] + r["automation_tax_B"]
-                    + r["swf_revenue_B"])
+                    + r["swf_revenue_B"] + r["shareholder_cg_tax_B"])
     surcharges = (r["income_surcharge_fed_B"] + r["income_surcharge_state_B"]
                   + r["corp_surcharge_fed_B"] + r["corp_surcharge_state_B"]
                   + r["excise_surcharge_fed_B"] + r["cons_surcharge_state_B"])

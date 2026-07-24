@@ -43,6 +43,21 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
     domestic = res["automation_spend_B"] - res["offshore_leak_B"]
     assert _rel(res["compute_pool_tax_B"], domestic * v2p.compute_effective_rate), "C3"
 
+    # C-sh: shareholder windfall ledger — each increment to the undistributed earnings level is
+    # capitalized once into the taxable stock; realizations draw from the t−1 stock; tax = rate ×
+    # realized. All columns are exactly zero at pe = 0 (the C8 off value), so the identities hold
+    # trivially at reduction and bind everywhere else.
+    G_prev = res["shareholder_windfall_stock_B"].shift(fill_value=0.0)
+    sh_dE = (res["shareholder_undist_B"]
+             - res["shareholder_undist_B"].shift(fill_value=0.0)).clip(lower=0.0)
+    assert _rel(res["shareholder_realized_B"], v2p.cg_realization_rate * G_prev), "C-sh realizations"
+    assert _rel(res["shareholder_windfall_stock_B"],
+                G_prev + v2p.equity_taxable_share * v2p.equity_pe_multiple * sh_dE
+                - res["shareholder_realized_B"]), "C-sh stock ledger"
+    assert _rel(res["shareholder_cg_tax_B"],
+                v2p.shareholder_eff_rate * res["shareholder_realized_B"]), "C-sh tax"
+    assert (res["shareholder_windfall_stock_B"] >= -1e-9).all(), "C-sh stock non-negative"
+
     # C4: real = nominal / price level (deficit AND debt) — the A2 price double-application trap. The
     # price level itself must stay positive (a negative P would sign-flip every real/%GDP column while
     # the ratio identity stayed a passing tautology).
@@ -56,7 +71,7 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
              - res["survivor_gain_fed_B"] - res["compute_pool_tax_B"]
              - res["survivor_overflow_corp_tax_B"]
              + res["ubi_outlay_B"] - res["ubi_recapture_B"] - res["automation_tax_B"]
-             - res["swf_revenue_B"] - res["fed_vat_B"]
+             - res["swf_revenue_B"] - res["fed_vat_B"] - res["shareholder_cg_tax_B"]
              + res["ssdi_outlay_B"]
              - res["income_surcharge_fed_B"] - res["corp_surcharge_fed_B"]   # baseline tax-regime
              - res["excise_surcharge_fed_B"])                                # surcharges (revenue)

@@ -39,7 +39,8 @@ CUSTOM_DEFAULTS = dict(cog=0.70, phys=0.20, robotics_lag=4, rob_base=1.0, adopt0
                        price_pt=0.3, prod_pt=0.30, growth=0.04, lfp=0.03, attrition=0.025,
                        atax=0.0, ubi_recapture=0.25, demand=0.5,
                        income_mult=1.0, corp_mult=1.0, cons_mult=1.0,
-                       state_resp="mix", state_cut=0.0, rate_cap=1.0)
+                       state_resp="mix", state_cut=0.0, rate_cap=1.0,
+                       equity_pe=16.0)   # shareholder channel: no slider; DEFAULTS_SHIPPED value
 
 
 def preset_widget_defaults(preset) -> dict:
@@ -62,7 +63,8 @@ def preset_widget_defaults(preset) -> dict:
                 atax=p.automation_tax_rate, ubi_recapture=p.ubi_recapture_rate,
                 demand=p.demand_multiplier, state_resp=p.state_response,
                 income_mult=p.income_tax_mult, corp_mult=p.corp_tax_mult, cons_mult=p.cons_tax_mult,
-                state_cut=p.state_cut_share, rate_cap=p.state_rate_hike_cap)
+                state_cut=p.state_cut_share, rate_cap=p.state_rate_hike_cap,
+                equity_pe=p.equity_pe_multiple)
 
 
 # ---------------------------------------------------------------------------- params construction
@@ -92,7 +94,10 @@ def build_v2_params(ui: dict) -> V2Params:
         interest_rate=ui["interest"], ubi_annual=float(ui["ubi"]), ubi_recapture_rate=ui["ubi_recapture_rate"],
         baseline_growth_rate=ui["baseline_growth_rate"], denominator=ui["denominator"],
         income_tax_mult=ui["income_tax_mult"], corp_tax_mult=ui["corp_tax_mult"],
-        cons_tax_mult=ui["cons_tax_mult"])
+        cons_tax_mult=ui["cons_tax_mult"],
+        # sliderless (shareholder channel): threaded so the explicit V2Params(...) construction
+        # cannot silently fall back to the dataclass OFF default while presets ship it ON
+        equity_pe_multiple=ui["equity_pe_multiple"])
 
 
 def ui_from_defaults(d: dict, *, rung: int, preset=None, mapping: str = "percentile",
@@ -125,7 +130,8 @@ def ui_from_defaults(d: dict, *, rung: int, preset=None, mapping: str = "percent
                 interest=d["interest"], ubi=d["ubi"], ubi_recapture_rate=d["ubi_recapture"],
                 baseline_growth_rate=d["growth"], denominator=denominator,
                 income_tax_mult=d["income_mult"], corp_tax_mult=d["corp_mult"],
-                cons_tax_mult=d["cons_mult"])
+                cons_tax_mult=d["cons_mult"],
+                equity_pe_multiple=float(d["equity_pe"]))
 
 
 def canon(v2p: V2Params) -> V2Params:

@@ -1,6 +1,6 @@
 {
  "config": {
-  "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.6, physical_feasibility=0.15, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.03), np.float64(0.044444444444444446), np.float64(0.05888888888888889), np.float64(0.07333333333333333), np.float64(0.08777777777777779), np.float64(0.10222222222222223), np.float64(0.11666666666666667), np.float64(0.13111111111111112), np.float64(0.14555555555555555), np.float64(0.16)], robotics_cognitive_coupling=0.0, robotics_lag=8.0, robotics_base=1.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.55, price_reduction_share=0.25, survivor_gains_share=0.19999999999999996, auto_cost=0.15, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.35, reabsorption_rung=1, reemployment_haircut=0.13, reabsorption_floor_pctile=0.3, reab_wage_baumol=0.3, reab_wage_crowding=0.0, lfp_exit_rate=0.06, survivor_elasticity=0.0, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.3, price_passthrough=0.3, productivity_passthrough=0.95, denominator='absolute', automation_tax_rate=0.007649999999999999, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.05, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.3, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=12000.0, swf_profit_share=0.2, fed_vat_rate=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
+  "cfg_repr": "V2Params(exposure_mapping='percentile', logistic_midpoint=0.0, logistic_steepness=0.6, cognitive_feasibility=0.6, physical_feasibility=0.15, robotics_maturity=0.0, adoption=1.0, adoption_path=[np.float64(0.03), np.float64(0.044444444444444446), np.float64(0.05888888888888889), np.float64(0.07333333333333333), np.float64(0.08777777777777779), np.float64(0.10222222222222223), np.float64(0.11666666666666667), np.float64(0.13111111111111112), np.float64(0.14555555555555555), np.float64(0.16)], robotics_cognitive_coupling=0.0, robotics_lag=8.0, robotics_base=1.0, sector_adoption_mult=1.0, sector_adoption_ceiling=1.0, task_job_passthrough=1.0, retained_profit_share=0.55, price_reduction_share=0.25, survivor_gains_share=0.19999999999999996, auto_cost=0.15, offshore_share=0.0, compute_effective_rate=0.1, ui_weeks=26, reabsorption_rate=0.35, reabsorption_rung=1, reemployment_haircut=0.13, reabsorption_floor_pctile=0.3, reab_wage_baumol=0.3, reab_wage_crowding=0.0, lfp_exit_rate=0.06, survivor_elasticity=0.0, survivor_raise_ceiling=1.5, survivor_spillover_to_profit=0.5, mpc=0.95, consumption_stickiness=1.0, marginal_taxable_multiplier=1.0, demand_multiplier=0.3, price_passthrough=0.3, productivity_passthrough=0.95, denominator='absolute', automation_tax_rate=0.007649999999999999, attrition_rate=0.025, ssdi_annual=18000.0, baseline_growth_rate=0.05, income_tax_mult=1.0, corp_tax_mult=1.0, cons_tax_mult=1.0, ubi_recapture_rate=0.3, equity_pe_multiple=16.0, equity_taxable_share=0.27, cg_realization_rate=0.04, shareholder_eff_rate=0.19, surplus_capture=1.0, dividend_tax_rate=0.188, passthrough_individual_rate=0.25, state_response='mix', state_cut_share=0.0, state_rate_hike_cap=1.0, interest_rate=0.03, ubi_annual=12000.0, swf_profit_share=0.2, fed_vat_rate=0.0, corp_offset_scale=1.0, consumption_scale=1.0, n_periods=10)",
   "levers": {},
   "modified_fields": [],
   "n_periods": 10,
@@ -40,15 +40,15 @@
  },
  "overlay_readouts": [
   {
-   "gap_B": -13.6754,
+   "gap_B": -15.4611,
    "key": "grt-robot-tax",
    "name": "Robot tax \u2014 transitional (GRT)",
    "no_gap": true,
    "pct": null,
-   "recovered_B": 5.4156
+   "recovered_B": 5.241
   },
   {
-   "gap_B": -13.6754,
+   "gap_B": -15.4611,
    "key": "ubi",
    "name": "UBI $12k + 30% recapture",
    "no_gap": true,
@@ -56,12 +56,12 @@
    "recovered_B": -1290.6237
   },
   {
-   "gap_B": -13.6754,
+   "gap_B": -15.4611,
    "key": "swf",
    "name": "Sovereign wealth fund \u2014 20% of AI profits",
    "no_gap": true,
    "pct": null,
-   "recovered_B": 66.1909
+   "recovered_B": 64.5172
   }
  ],
  "rows": [
@@ -118,6 +118,10 @@
    "revenue_lost_B": 39.0995,
    "revenue_lost_pct": 1.0827,
    "saved_bill_B": 152.3882,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 0.0,
    "standing_withdrawal_B": 6.4673,
    "state_balanced": true,
@@ -201,6 +205,10 @@
    "revenue_lost_B": 46.5908,
    "revenue_lost_pct": 1.2901,
    "saved_bill_B": 228.8877,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 1.5875,
    "standing_withdrawal_B": 7.903,
    "state_balanced": true,
@@ -284,6 +292,10 @@
    "revenue_lost_B": 53.3377,
    "revenue_lost_pct": 1.4769,
    "saved_bill_B": 307.42,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 3.3236,
    "standing_withdrawal_B": 8.756,
    "state_balanced": true,
@@ -367,6 +379,10 @@
    "revenue_lost_B": 59.9464,
    "revenue_lost_pct": 1.6599,
    "saved_bill_B": 387.9852,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 5.1685,
    "standing_withdrawal_B": 9.574,
    "state_balanced": true,
@@ -450,6 +466,10 @@
    "revenue_lost_B": 66.4136,
    "revenue_lost_pct": 1.839,
    "saved_bill_B": 470.5833,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 7.1113,
    "standing_withdrawal_B": 10.3523,
    "state_balanced": true,
@@ -533,6 +553,10 @@
    "revenue_lost_B": 72.8746,
    "revenue_lost_pct": 2.0179,
    "saved_bill_B": 555.2142,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 9.1418,
    "standing_withdrawal_B": 11.1216,
    "state_balanced": true,
@@ -616,6 +640,10 @@
    "revenue_lost_B": 79.3493,
    "revenue_lost_pct": 2.1972,
    "saved_bill_B": 641.8779,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 11.2562,
    "standing_withdrawal_B": 11.8857,
    "state_balanced": true,
@@ -699,6 +727,10 @@
    "revenue_lost_B": 85.8719,
    "revenue_lost_pct": 2.3778,
    "saved_bill_B": 730.5745,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 13.452,
    "standing_withdrawal_B": 12.6522,
    "state_balanced": true,
@@ -782,6 +814,10 @@
    "revenue_lost_B": 92.4516,
    "revenue_lost_pct": 2.56,
    "saved_bill_B": 821.3039,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 15.7285,
    "standing_withdrawal_B": 13.4234,
    "state_balanced": true,
@@ -865,6 +901,10 @@
    "revenue_lost_B": 96.223,
    "revenue_lost_pct": 2.6644,
    "saved_bill_B": 902.8073,
+   "shareholder_cg_tax_B": 0.0,
+   "shareholder_realized_B": 0.0,
+   "shareholder_undist_B": 0.0,
+   "shareholder_windfall_stock_B": 0.0,
    "ssdi_outlay_B": 18.0858,
    "standing_withdrawal_B": 13.6816,
    "state_balanced": true,
@@ -1973,6 +2013,24 @@
     {
      "group": "Federal revenue changes",
      "kind": "flow",
+     "label": "Windfall capital gains",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
      "label": "Compute-pool tax",
      "total": 77.9856,
      "values": [
@@ -2632,6 +2690,24 @@
       0.9807,
       1.0631,
       1.1242
+     ]
+    },
+    {
+     "group": "Federal revenue changes",
+     "kind": "flow",
+     "label": "Windfall capital gains",
+     "total": 0.0,
+     "values": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
      ]
     },
     {

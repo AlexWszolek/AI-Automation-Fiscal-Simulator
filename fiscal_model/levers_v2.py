@@ -120,6 +120,22 @@ class V2Params:
     #   income (UBI never enters the interp argument), so this is the ONLY clawback — no double-count.
     #   MUST default 0 (ubi_annual is a v1 knob; C8 runs UBI at reduction). Shipped 0.25.
 
+    # ---------------- shareholder windfall channel (NEW; off = pe 0 = v1) ----------------
+    # The CG leg on UNDISTRIBUTED after-corporate-tax earnings — the one shareholder-side flow the
+    # kernel's corporate offset does NOT already tax (dividends + pass-through are booked there).
+    # Design + fetch-verified anchors: docs/research/shareholder-channel-design.md.
+    equity_pe_multiple: float = 0.0     # capitalization multiple on the increment to the permanent
+    #   after-tax undistributed earnings level (long-run S&P mean P/E ≈ 16; current-market ~28 is a
+    #   disclosed sensitivity, not the anchor). 0 = no capitalization → the channel vanishes (C8 off).
+    equity_taxable_share: float = 0.27  # share of US corporate equity in TAXABLE accounts
+    #   (Rosenthal–Mucciolo 2024: 27% in 2022, down from 79% in 1965 — retirement/nonprofit/foreign
+    #   holders never pay CG). Inert at pe=0 → the same default ships in both configs.
+    cg_realization_rate: float = 0.04   # annual realization of the accrued taxable windfall stock
+    #   (Gravelle–Lindsey: 3.1%/yr historical; modern arithmetic ~4–5% incl. buyback churn; step-up
+    #   at death is WHY this is low, not a separate lever). Inert at pe=0.
+    shareholder_eff_rate: float = 0.19  # avg effective federal rate on realized LTCG (Treasury OTA:
+    #   19.4% in 2013–14 under the current 23.8%-top regime). Inert at pe=0.
+
     # ---------------- corporate kernel rates (v1) ----------------
     surplus_capture: float = 1.0                # INERT in V2: it only enters the frozen worker-delta
     # cache (built once at KernelParams()), so changing it does nothing. The disposition router
@@ -198,6 +214,8 @@ DEFAULTS_SHIPPED = replace(
     ubi_recapture_rate=0.25,        # coherence: ~avg effective clawback + means-test crowd-out on UBI
     baseline_growth_rate=0.04,      # coherence: nominal trend growth for the %-GDP denominators
     robotics_lag=4.0,               # coherence C6: robotic capacity builds over ~4 years of AI deployment
+    equity_pe_multiple=16.0,        # shareholder channel ON at the long-run market multiple — current
+    #   law taxes realized gains on the equity windfall; booking it at zero was the missing line
 )
 
 
@@ -219,4 +237,8 @@ def is_v1_reduction(p: V2Params) -> bool:
         "automation_tax_rate", "attrition_rate", "ubi_recapture_rate", "baseline_growth_rate",
         "robotics_lag", "robotics_base", "reab_wage_baumol", "reab_wage_crowding",
         # tax-regime multipliers: 1.0 = current law (their off value)
-        "income_tax_mult", "corp_tax_mult", "cons_tax_mult"))
+        "income_tax_mult", "corp_tax_mult", "cons_tax_mult",
+        # shareholder windfall channel: pe=0 kills both legs exactly. (equity_taxable_share /
+        # cg_realization_rate / shareholder_eff_rate are NOT listed: inert at pe=0, same default
+        # ships in both configs — the ssdi_annual pattern.)
+        "equity_pe_multiple"))

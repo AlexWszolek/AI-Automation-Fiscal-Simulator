@@ -62,6 +62,12 @@ class DynamicModelV2:
             comp=("comp_musd", "sum"), emp=("emp_thousands", "sum"))
         ms["comp_pw"] = np.where(ms["emp"] > 0, ms["comp"] / ms["emp"] * 1000.0, 0.0)
         self._comp_pw = self._v1.d["soc_code"].map(ms["comp_pw"]).fillna(0.0).to_numpy()
+        # per-cell after-tax UNDISTRIBUTED corporate earnings per worker (the shareholder windfall
+        # channel's capitalization base — built alongside corp_per_worker_fed in the deltas cache)
+        self._undist_pw = self._v1.d["undist_per_worker"].to_numpy()
+        # after-corporate-tax UNDISTRIBUTED earnings per automated worker — the shareholder
+        # windfall channel's capitalization base (built alongside corp_per_worker_fed, same weights)
+        self._undist_pw = self._v1.d["undist_per_worker"].to_numpy()
 
         # The two exposure channels mapped to cells — FEASIBILITY-FREE (they depend only on the fixed
         # mapping fields), so a draw's g_cell is one combine_channels call in _bind_params.
@@ -299,6 +305,10 @@ class DynamicModelV2:
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
         withdrawal_prev = 0.0                             # t−1 standing net income withdrawal (J.1)
+        sh_E_prev = 0.0                                   # shareholder channel: t−1 undistributed level
+        sh_G = 0.0                                        # accrued taxable windfall stock (unrealized)
+        sh_E_prev = 0.0                                   # shareholder channel: t−1 undistributed
+        sh_G = 0.0                                        #   earnings level and accrued taxable stock
         Y_prev = 1.0                                      # t−1 real-output index (J.1, for W_reab); 1 at t=0
         W_mech = 1.0                                      # accumulated survivor mechanical wage multiplier
         induced_flow_pending = np.zeros(len(v1.wage))     # SIGNED level-controller flow for t+1; 0 at t=0
@@ -506,8 +516,30 @@ class DynamicModelV2:
             # benefit — ~$162B/yr missing by y10). Federal; not in the baked transfer grids (no overlap
             # beyond the small documented SSI-concurrency approximation). Inert at reduction (exited ≡ 0).
             ssdi_outlay = st.exited.sum() * v2p.ssdi_annual
+            # Shareholder windfall channel (docs/research/shareholder-channel-design.md): the
+            # kernel's corporate offset already taxes dividends + pass-through income on the routed
+            # surplus; this leg prices the one flow still booked at zero — realized capital gains on
+            # the UNDISTRIBUTED after-tax earnings the automated stock adds. Each increment to that
+            # permanent earnings level is capitalized ONCE at the long-run market multiple (a
+            # disclosed convention, not a forecast — the measured holder/realization structure is
+            # the bottleneck), accrues into a taxable stock, and realizes at the measured rate.
+            # Robot tax + SWF are conservatively paid out of this pool; zero capital MPC ⇒ no
+            # demand interaction (the SWF convention). Exactly 0.0 at pe = 0 (the C8 off value).
+            if v2p.equity_pe_multiple > 0:
+                sh_undist = ((auto_disp * self._undist_pw).sum()
+                             * v2p.retained_profit_share * (1.0 - v2p.auto_cost))
+                if disp.retained_profit > 0:          # survivor overflow at the blended ratio
+                    sh_undist += overflow_to_profit * (sh_undist / disp.retained_profit)
+                sh_E = max(0.0, sh_undist - automation_tax - swf_revenue)
+                sh_realized = v2p.cg_realization_rate * sh_G          # from the t−1 stock; 0 at t=0
+                sh_G = sh_G + (v2p.equity_taxable_share * v2p.equity_pe_multiple
+                               * max(0.0, sh_E - sh_E_prev)) - sh_realized
+                sh_E_prev = sh_E
+                sh_cg_tax = v2p.shareholder_eff_rate * sh_realized
+            else:
+                sh_E = sh_realized = sh_cg_tax = 0.0
             net_fed = net_fed + ubi_outlay - ubi_recapture - automation_tax + ssdi_outlay \
-                - surch_fed_total - swf_revenue - fed_vat  # surcharges/SWF/VAT: federal revenue
+                - surch_fed_total - swf_revenue - fed_vat - sh_cg_tax  # surcharges/SWF/VAT/CG: revenue
 
             debt = debt * (1 + p.interest_rate) + net_fed
 
@@ -575,7 +607,8 @@ class DynamicModelV2:
                                + overflow_corp_tax
                                + automation_tax
                                + surch_fed_total
-                               + swf_revenue + fed_vat) / 1e9  # robot tax/surcharges/SWF/VAT are revenue
+                               + swf_revenue + fed_vat + sh_cg_tax) / 1e9  # robot tax/surcharges/
+            #                                             SWF/VAT/windfall-CG are revenue
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
 
@@ -632,6 +665,10 @@ class DynamicModelV2:
                 "ubi_outlay_B": ubi_outlay / 1e9,                       # fix 2: gross UBI outlay
                 "swf_revenue_B": swf_revenue / 1e9,                     # SWF equity share (overlay)
                 "fed_vat_B": fed_vat / 1e9,                             # federal VAT (overlay)
+                "shareholder_cg_tax_B": sh_cg_tax / 1e9,                # windfall-CG federal revenue
+                "shareholder_realized_B": sh_realized / 1e9,            # realizations this period
+                "shareholder_windfall_stock_B": sh_G / 1e9,             # accrued taxable stock (post)
+                "shareholder_undist_B": sh_E / 1e9,                     # undistributed earnings level
                 "ubi_recapture_B": ubi_recapture / 1e9,                # coherence: clawback + crowd-out
                 "automation_tax_B": automation_tax / 1e9,              # fix 4: robot tax (lowers the deficit)
                 "ssdi_outlay_B": ssdi_outlay / 1e9,                    # coherence: SSDI on the exited

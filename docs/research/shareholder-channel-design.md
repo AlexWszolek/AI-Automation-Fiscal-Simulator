@@ -26,20 +26,33 @@ the measured leakage chain: ~6 cents/yr of federal tax per dollar of retained ea
 steady state, even at generous multiples. If the answer were sensitive to the multiple the
 channel would be dubious; it is not, and showing that *is the point*.
 
-## Mechanism (dynamics layer only — no kernel/bake change)
+## REVISION (implementation discovery): the dividend leg already exists — channel is CG-only
 
-Everything derives from existing labeled columns; `E` is the after-tax new permanent earnings
-level accruing to shareholders:
+The kernel's corporate offset (`kernel._corporate`) already books **three** shareholder-side
+legs on the routed surplus: corporate tax, **dividend tax** (sector payout ratios ×
+`dividend_tax_rate` 0.188), and pass-through individual tax. A design-doc dividend leg would
+have double-counted. What is genuinely booked at zero is precisely the **undistributed** share:
+after-corporate-tax retained earnings that never flow out as dividends — the share that
+capitalizes into equity value and is taxed only on realization. The channel therefore has ONE
+leg and ONE gate lever (`dividend_payout_share` deleted — sector payout data already in the
+model does that job on the dividend side).
+
+## Mechanism (CG leg only; per-cell base like the corporate offset)
+
+`undist_pw` — after-corporate-tax **undistributed** corporate earnings per displaced worker
+(= corp_share·surplus·(1−eff_corp)·(1−payout), sector-employment-weighted per occupation, the
+exact construction of the corporate offset's per-worker base) — joins the precomputed deltas.
+Then per period:
 
 ```
-E_t      = retained_profit_B − corp_offset_B − automation_tax_B − swf_revenue_B     # existing columns
-ΔE_t     = max(0, E_t − E_{t−1})                 # increment to the permanent level (E_{−1} = 0);
-                                                 # max(0) books gains only — the steelman direction
-div_tax_t = dividend_payout_share · E_t · equity_taxable_share · shareholder_eff_rate      # flow leg
-ΔV_t     = equity_pe_multiple · (1 − dividend_payout_share) · ΔE_t                  # new accrued value
-G_t      = G_{t−1} + equity_taxable_share · ΔV_t − R_t          # taxable unrealized windfall stock
-R_t      = cg_realization_rate · G_{t−1}                        # realizations (t=0 realizes nothing)
-cg_tax_t = shareholder_eff_rate · R_t
+undist_t = Σ_cells(auto_disp · undist_pw) · retained_profit_share · (1 − auto_cost)
+           + ρ_t · overflow_to_profit          # survivor overflow at the same blended ratio
+E_t      = max(0, undist_t − automation_tax_B − swf_revenue_B)   # both instruments conservatively
+                                                                 # paid out of the undistributed pool
+ΔE_t     = max(0, E_t − E_{t−1})               # increment to the permanent level (E_{−1} = 0)
+R_t      = cg_realization_rate · G_{t−1}       # realizations (t = 0 realizes nothing)
+G_t      = G_{t−1} + equity_taxable_share · equity_pe_multiple · ΔE_t − R_t
+cg_tax_t = shareholder_eff_rate · R_t          # federal revenue line (C6)
 ```
 
 Notes:
@@ -64,7 +77,11 @@ Notes:
 - **Baseline CG revenue** (~$200B+/yr) is already in the receipts base; the channel books only
   the *windfall delta* — consistent with the model's delta accounting and the t=0 rate gate.
 
-## Levers (5 new V2Params fields — all shipped at measured anchors, none calibrated)
+## Levers (4 new V2Params fields — all shipped at measured anchors, none calibrated)
+
+(`dividend_payout_share` removed per the revision above — the kernel's sector payout ratios
+already govern the dividend side; the S&P payout evidence below now serves as their
+cross-check, and the sole C8 gate is `equity_pe_multiple = 0`.)
 
 | lever | shipped anchor (fetch-verified where noted) | off value (C8) |
 |---|---|---|
@@ -101,13 +118,18 @@ inherited from DEFAULTS_SHIPPED everywhere; provenance lands in the global lever
 - **Reduction**: v1 has no channel; off values zero every new column → bit-parity holds.
 - **Summary table** (`summary.py`): one new revenue row; its self-reconciliation gains the two
   columns.
-- **Sanity magnitude** (final anchors; to be confirmed at implementation): per $1 of after-tax
-  new profit level, dividends yield 0.32·0.27·0.19 ≈ 1.6¢/yr immediately and the CG leg
-  0.68·16·0.27·0.04·0.19 ≈ 2.2¢/yr once accrued — **≈ 3.8¢/yr per windfall dollar at steady
-  state**. AGI-5y-scale worlds (E ≈ $7T): ~$150–250B/yr by the final year, comparable to
-  compute-parity; windfall-medium: tens of $B; modest worlds: single-digit $B. The 96 % leak
-  (non-taxable holders × deferral × the labor-vs-capital rate gap) IS the base-migration thesis,
-  now with its largest missing line priced.
+- **Measured magnitude (implementation, superseding the design estimate)**: agi-5y final-year
+  CG revenue **$28.9B** (cumulative $217B, unrealized stock $3.66T at year 10); windfall-medium
+  final-year $5.2B (cum $26.6B); acemoglu ~$1B. The design estimate (~$150–250B/yr) was 5–8×
+  too high for three *measured* reasons, each a finding in itself: (1) only ~15¢ of each saved
+  compensation dollar survives as after-tax **undistributed C-corp** earnings (BEA sector data:
+  pass-through business excluded, corporate tax off the top, sector payout ratios out — the mean
+  per-worker base is $14.1k vs the $21.2k corporate-offset bundle); (2) the taxable-holder ×
+  realization chain (0.27 × 0.04 × 0.19) yields ~0.02¢/yr per capitalized dollar; (3) deferral
+  pushes most realizations past the fiscal window — the year-10 unrealized stock exceeds
+  cumulative realizations several-fold (a pinned test). The channel's contribution to the
+  headline is ~1% of the AGI-world deficit change: **the equity windfall is fiscally near-mute
+  under current law**, and now that claim is priced rather than assumed.
 
 ## Blast radius (the V2Params-field regen checklist)
 

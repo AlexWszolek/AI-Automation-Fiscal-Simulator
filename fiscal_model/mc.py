@@ -56,6 +56,10 @@ PERTURBED = {
     "ubi_recapture_rate": (0.0, 1.0), "baseline_growth_rate": (0.0, 0.10),
     "swf_profit_share": (0.0, 1.0), "fed_vat_rate": (0.0, 1.0),      # overlay-only; off-stays-off
     "reab_wage_baumol": (0.0, 1.0), "reab_wage_crowding": (0.0, 1.0),  # wage dynamics; off-stays-off
+    # shareholder windfall channel: pe=0 self-preserves (off-stays-off); the three structure
+    # parameters are measured constants whose ±15% expresses anchor uncertainty
+    "equity_pe_multiple": (0.0, np.inf), "equity_taxable_share": (0.0, 1.0),
+    "cg_realization_rate": (0.0, 1.0), "shareholder_eff_rate": (0.0, 1.0),
     # dm bound tracks the UI slider max (2.0): a (0,1) bound would clip every draw around a preset
     # base of 1.2–1.5 to exactly 1.0 — point mass at the edge, degenerate tornado row. ρ ≈ 0.22·dm
     # stays < 1 even for ±2σ draws around 2.0 (the model's fail-loud guard is the backstop).
