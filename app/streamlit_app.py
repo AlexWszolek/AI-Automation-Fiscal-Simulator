@@ -565,7 +565,7 @@ ui: dict[str, Any] = dict(mapping="percentile", cog=cog, phys=phys,
 # of truth for every consumer below (model run, JSON export, MC base, UBI warning).
 v2p, _overlay_notes = presets_mod.apply_overlays(build_v2_params(ui), overlay_keys)
 for _note in _overlay_notes:
-    sb.caption("🏛 " + _note)
+    sb.caption(_note)
 if overlay_keys:
     # live what-did-it-do readout: base-without-responses vs each response alone (cached, ~0.3s
     # each on first render), all through ONE ScenarioContext (overlay fields are PERTURBED)
