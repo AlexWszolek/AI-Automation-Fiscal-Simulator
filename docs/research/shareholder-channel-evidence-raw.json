@@ -1,0 +1,138 @@
+{
+  "_purpose": "Fetch-verified verbatim quotes + URLs anchoring the shareholder windfall channel's five levers (design: shareholder-channel-design.md). Pattern mirrors preset-evidence-raw.json. Quotes were fetched 2026-07-24; PDFs cited as 'fetched' were downloaded and read during verification.",
+  "equity_taxable_share": {
+    "shipped": 0.27,
+    "anchors": [
+      {
+        "title": "Rosenthal & Mucciolo (2024), \"Who's Left to Tax? Grappling With a Dwindling Shareholder Tax Base\", Tax Notes Federal 183, p. 91",
+        "url": "https://taxpolicycenter.org/sites/default/files/publication/165884/ssrn-id4797771.pdf",
+        "verified": "PDF fetched",
+        "quote": "From 1965 to 2022, the share of outstanding U.S. stock held in taxable brokerage and mutual fund accounts declined from 79 percent to 27 percent... The share of publicly traded stock held in taxable accounts similarly declined from 81 percent to 28 percent.",
+        "quote2": "Foreigners held just 16 percent of total U.S. equity in 1986 but increased their share steadily in subsequent decades to 20 percent in 1996, 31 percent in 2007, and 42 percent at the end of 2022."
+      },
+      {
+        "title": "Rosenthal & Austin (2016), \"The Dwindling Taxable Share of U.S. Corporate Stock\", Tax Notes, p. 923",
+        "url": "https://www.urban.org/sites/default/files/publication/80621/2000790-The-Dwindling-Taxable-Share-of-U.S.-Corporate-Stock.pdf",
+        "verified": "PDF fetched",
+        "quote": "We estimate that the share of U.S. corporate stock held in taxable accounts fell more than two-thirds over the last 50 years, from 83.6 percent in 1965 to 24.2 percent in 2015.",
+        "quote2": "We calculated that the total value of outstanding U.S. corporate stock is $22.8 trillion, of which $5.5 trillion is held in taxable accounts, or 24.2 percent of the total."
+      }
+    ]
+  },
+  "cg_realization_rate": {
+    "shipped": 0.04,
+    "band": [0.03, 0.05],
+    "anchors": [
+      {
+        "title": "Gillingham, Greenlees & Zieschang (1989), Treasury OTA Paper 66, citing Gravelle & Lindsey (1988)",
+        "url": "https://home.treasury.gov/system/files/131/WP-66.pdf",
+        "verified": "PDF fetched",
+        "quote": "On average, according to their estimates, only 3.1 percent of the stock of accrued gains was realized in any given year during the 1960-84 period."
+      },
+      {
+        "title": "CBO (Feb 2023), \"CBO's Projections of Realized Capital Gains Subject to the Individual Income Tax\"",
+        "url": "https://www.cbo.gov/publication/58914",
+        "verified": "official PDF via Wayback mirror (cbo.gov 403s non-browser fetches)",
+        "quote": "In CBO's February 2023 baseline projections, capital gains realizations decrease from an estimated high of 8.7 percent of gross domestic product (GDP) in 2021 to a long-run average of 3.7 percent of GDP by 2033.",
+        "quote2": "Gains have typically fluctuated between 2 percent and 7 percent of GDP in recent decades."
+      },
+      {
+        "title": "Liscow & Fox fact sheet (Yale, Jan 2025), \"The Role of Unrealized Gains and Borrowing in the Taxation of the Rich\"",
+        "url": "https://economics.yale.edu/sites/default/files/publication-documents/2025-01/UnrealizedGainsandTaxesKeyFactSheet.pdf",
+        "verified": "fetched",
+        "quote": "a mere 4% of their economic income",
+        "note": "Musk/Bezos/Buffett 2014-18: assets +$137B vs $5.7B recognized income — slow realization at the top is measured, not assumed."
+      },
+      {
+        "rationale": "Shipped 0.04 sits between the citable 3.1% stock-based historical rate and the ~4-5%/yr modern arithmetic (2021 realizations >$2T against a ~$40-50T unrealized stock — the stock figure is NOT fetch-verified, so the modern rate is derived, not cited). Buyback churn (see dividend_payout_share) argues the upper half."
+      }
+    ]
+  },
+  "shareholder_eff_rate": {
+    "shipped": 0.19,
+    "anchors": [
+      {
+        "title": "Treasury OTA (2016), \"Taxes Paid on Capital Gains for Returns with Positive Net Capital Gains, 1954-2014\"",
+        "url": "https://home.treasury.gov/system/files/131/Taxes-Paid-on-Capital-Gains-for-Returns-with-Positive-Net-Capital-Gains.pdf",
+        "verified": "PDF fetched",
+        "quote": "The 2013 maximum rate includes the effect of the 3.8% tax on net investment income and 3% itemized deduction phaseout, computed as 25.102=20+3.8+.03*(39.6+3.8).",
+        "note": "Average effective rate 19.4% in both 2013 (gains $510.5B, taxes $98.8B) and 2014 (gains $716.2B, taxes $139.1B) — the current statutory regime."
+      },
+      {
+        "title": "Tax Foundation, \"Federal Capital Gains Tax Collections, Historical Data\" (Treasury/CBO reproduction)",
+        "url": "https://taxfoundation.org/data/all/federal/federal-capital-gains-tax-collections-historical-data/",
+        "verified": "fetched",
+        "note": "Effective rate 18.0% (2018), 19.2% (2019), 16.2% (2020); 2021/2022 ratios (14.7%/26.2%) distorted by FY-tax vs CY-gains mismatch per the page's own caveat. ~17-19% is the defensible average anchor. Qualified dividends share the LTCG schedule, so one rate serves both legs."
+      }
+    ]
+  },
+  "dividend_payout_share": {
+    "shipped": 0.32,
+    "anchors": [
+      {
+        "title": "Damodaran (NYU Stern), \"S&P Earnings History\"",
+        "url": "https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datafile/spearn.htm",
+        "verified": "fetched",
+        "note": "2022: earnings 219.49, dividends 68.34, payout 31.14%; 2023: earnings 219.70, dividends 70.30, payout 32.00%."
+      },
+      {
+        "title": "S&P Dow Jones Indices (Mar 2025), Q4 2024 buybacks release",
+        "url": "https://www.prnewswire.com/news-releases/sp-500-q4-2024-buybacks-increase-7-4-and-2024-expenditure-sets-new-record-by-increasing-18-5-earnings-per-share-increases-from-buybacks-decline-for-the-quarter-as-q1-2025s-impact-is-expected-to-increase-302405380.html",
+        "verified": "fetched",
+        "quote": "2024 expenditure set an annual record of $942.5 billion",
+        "quote2": "For 2024, dividends set a record $629.6 billion payments, up 7.0% on an aggregate basis from 2023's $588.2 billion.",
+        "note": "Buybacks (~60% of the $1.57T total cash return) are folded into the CG leg — sellers realize gains when tendering — rather than into payout; this is why cg_realization_rate anchors above its historical floor."
+      }
+    ]
+  },
+  "equity_pe_multiple": {
+    "shipped": 16,
+    "anchors": [
+      {
+        "title": "multpl.com (Shiller data), S&P 500 PE Ratio",
+        "url": "https://www.multpl.com/s-p-500-pe-ratio",
+        "verified": "fetched 2026-07-23",
+        "quote": "Current S&P 500 PE Ratio: 28.49",
+        "note": "Historical mean 16.23, median 15.08. Shipped 16 = the long-run mean (conservative convention); the current market (trailing 28.5, CAPE 40.4 per https://www.multpl.com/shiller-pe) is a disclosed sensitivity, not the anchor."
+      }
+    ]
+  },
+  "context_step_up_at_death": {
+    "anchors": [
+      {
+        "title": "CRS R47113 (Gravelle & Marples), \"Capital Gains Taxes: An Overview of the Issues\"",
+        "url": "https://www.everycrsreport.com/reports/R47113.html",
+        "verified": "fetched (everycrsreport mirror; congress.gov bot-blocked)",
+        "quote": "CBO uses 47%, but that measure is for corporate stock, which is more likely to be realized based on the shorter holding periods.",
+        "note": "Broader studies: 52-54% of accrued gains never realized; CRS models 'approximately half of capital gains escaping tax at death'. This is folded into cg_realization_rate, not a separate lever."
+      },
+      {
+        "title": "Treasury OTA (2014), \"Tax Expenditure for Exclusion of Capital Gains at Death\"",
+        "url": "https://home.treasury.gov/system/files/131/Step-Up-Basis-2014.pdf",
+        "verified": "PDF fetched",
+        "quote": "2013 - $44.800 billion... 2024 - $99.180 billion"
+      }
+    ]
+  },
+  "context_baseline_cg_revenue": {
+    "anchors": [
+      {
+        "title": "Tax Foundation historical table (Treasury/CBO)",
+        "url": "https://taxfoundation.org/data/all/federal/federal-capital-gains-tax-collections-historical-data/",
+        "verified": "fetched",
+        "note": "Federal taxes paid on capital gains: FY2020 $185.6B, FY2021 $304.8B, FY2022 $336.3B. Realizations: 2021 $2,073.7B (8.75% of GDP), 2022 $1,283.6B (4.93%). The channel books only the WINDFALL delta; this baseline is already inside the receipts control totals."
+      }
+    ]
+  },
+  "context_buyback_excise": {
+    "anchors": [
+      {
+        "title": "CRS R47397, \"The 1% Excise Tax on Stock Repurchases (Buybacks)\"",
+        "url": "https://www.everycrsreport.com/reports/R47397.html",
+        "verified": "fetched (mirror)",
+        "quote": "a 1% excise tax on stock repurchases by publicly traded corporations",
+        "note": "IRC 4501, effective after Dec 31 2022, JCT score $74B FY2022-31. Omitted from the channel (small understatement of recovery); disclosed in report section 10."
+      }
+    ]
+  }
+}
