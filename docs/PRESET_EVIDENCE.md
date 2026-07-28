@@ -92,7 +92,7 @@ Two values are snapped to their sidebar widget grids (recorded in the preset pro
 | `cognitive_feasibility` | 0.20 | 0.30 | 0.55 | 0.30 | 1.0 | 1.0 | 1.0 |
 | `physical_feasibility` | 0.05 | 0.10 | 0.20 | 0.20 | 1.0 | 1.0 | 0.90 |
 | `robotics_lag` | 8 | 6 | 5 | 4 | 10 | 2 | 3 |
-| adoption start → end | 0.02→0.23 | 0.02→0.30 | 0.05→0.50 | 0.05→0.40 | 0.05→1.0 | 0.20→1.0 † | 0.10→1.0 |
+| adoption start → end | 0.02→0.23 | 0.02→0.30 | 0.05→0.50 | 0.05→0.40 | 0.05→1.0 | 0.20→1.0 † | 0.20→1.0 ‡ |
 | `n_periods` | 10 | 10 | 10 | 15 | 20 | 10 | 8 |
 | `reabsorption_rate` | 0.50 | 0.60 | 0.30 | 0.075 | 0.05 | 0.05 | 0.10 |
 | `reemployment_haircut` | 0.13 | 0.10 | 0.30 | 0.25 | 0.40 | 0.40 | 0.40 |
@@ -114,6 +114,14 @@ Two values are snapped to their sidebar widget grids (recorded in the preset pro
 automation at year 5**, flat thereafter — Korinek-Suh's aggressive transition viewed over a 10-year
 fiscal window. ⑤⑥ also set `interest_rate=0.04` (Korinek-Lockwood discount anchor) and close state
 gaps half by spending cuts under a low rate-hike cap (labor-base hikes cannot close AGI-stage gaps).
+
+‡ ⑦'s path is kinked on the same parametric form: linear 0.20→1.0 reaching **1.0 at year 5**, flat
+over the remaining three years of the 8-year horizon. Both endpoints come from ⑦'s own Davidson
+anchor, which the earlier shipped path (0.10→1.0 linear across all 8 years, no kink) contradicted in
+both: the scenario clock **starts at** the 20%-AI milestone, so start = 0.20, not 0.10; and the
+capability median of ~3y for 20%→100% plus 1–2y of real-world diffusion puts the ceiling at t+4–t+5,
+not t+8. Year 5 is the conservative end of that window, chosen because the same evidence block
+cautions that Davidson's 20%→100% is technical *capability*, not realized adoption.
 
 Presets ship with the robot tax **off**; taxation is a composable *policy overlay* (§3), so the
 scenario answers "what does the world do to the budget" and the overlay answers "what does policy
@@ -149,7 +157,8 @@ fiscal question most needs): kinked adoption reaching 1.0 at year 5 — their wa
 exit (0.10/yr), crisis demand regime (dm 1.5), growth at the explosion band's edge (0.08).
 
 **⑦ AI 2027 — Takeoff.** Cognitive feasibility 1.0 near-immediately, robots ramp in 3y (SEZ
-build-out), adoption ceiling by year ~5, heavy compute investment (auto_cost 0.30), growth 0.08.
+build-out), adoption 0.20 → ceiling at year 5 (‡ above — both endpoints are the preset's own
+Davidson anchor), heavy compute investment (auto_cost 0.30), growth 0.08.
 Note the authors' own updated medians (Dec 2030 / Jan 2035) have slipped from the scenario's dates —
 this preset is the *shape* of a fast takeoff, dated optimistically.
 

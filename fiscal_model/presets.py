@@ -86,7 +86,7 @@ def to_params(preset: Preset, n_periods: Optional[int] = None,
     return replace(base, n_periods=n, adoption_path=build_adoption_path(preset, n), **ov)
 
 
-# ---------------------------------------------------------------------------- the seven presets
+# ---------------------------------------------------------------------------- the twelve presets
 # Values quantized to the sidebar widget grids; provenance records source vs shipped where snapped.
 # Unlisted fields inherit DEFAULTS_SHIPPED (rung 1, ceiling 1.5, spillover 0.5, ui_weeks 26,
 # attrition 0.025, ubi 0, robot tax 0 — taxation lives in OVERLAYS).
@@ -290,8 +290,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
     Preset(
         key="ai-2027", name="AI 2027 — Fast takeoff",
         blurb="The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 "
-              "years, heavy compute investment, 8-year horizon.",
-        adoption_start=0.10, adoption_end=1.0, n_periods=8,
+              "years, adoption saturates at year 5, heavy compute investment, 8-year horizon.",
+        adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.90, robotics_lag=3.0,
                        reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
                        retained_profit_share=0.70, price_reduction_share=0.20, auto_cost=0.30,
@@ -301,7 +301,11 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
                        interest_rate=0.04),
         provenance=dict(
             cognitive_feasibility="superhuman coder → ASI within ~1y of scenario start (§1)",
-            adoption="Davidson: 20%→100% capability median ~3y; deployment trails <1y (§1)",
+            adoption="Davidson: the scenario clock starts AT the 20%-AI milestone (start 0.20); "
+                     "capability 20%→100% median ~3y + 1-2y real-world diffusion → ceiling by "
+                     "t+4-t+5, shipped at the conservative end (reach year 5), flat after. The "
+                     "same evidence block's caveat — 20%→100% is technical CAPABILITY, not "
+                     "realized adoption — is why t+5 rather than t+4 (§2⑦)",
             physical_feasibility="robot economy: ~1M robots/mo by end-2028 (§1)",
             robotics_lag="special-economic-zone build-out: 3-4y (§1)",
             reabsorption_rate="little re-employment during takeoff (§2⑦)",
