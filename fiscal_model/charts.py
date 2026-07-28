@@ -66,6 +66,63 @@ def final_outcome_dotplot(rows: pd.DataFrame, value_title: str = "final-year fed
     return (rule + dot).properties(width=width, height=28 * len(rows) + 20)
 
 
+# ---------------------------------------------------------------- cross-preset small multiples
+# One panel per preset in place of a per-preset figure each. Scales are INDEPENDENT per panel by
+# necessity, not preference: horizons run 8-20 years and final-year deficits span three orders of
+# magnitude, so a shared scale would flatten every modest world into the axis. The grids therefore
+# read as SHAPE comparisons — read levels off the cross-preset table.
+_GRID_AXIS = alt.Axis(labelFontSize=8, tickCount=4)
+
+
+def fan_grid(panels: pd.DataFrame, y_title: str, order: list | None = None,
+             columns: int = 4, width: int = 148, height: int = 104) -> alt.FacetChart:
+    """Small-multiples fan chart: one `fan_chart` panel per preset (3×4 at twelve presets).
+
+    `panels` is the per-preset `fan_widen` output concatenated, plus a `preset` display-name
+    column; `order` fixes panel sequence (default: order of appearance). Panel axis titles are
+    dropped — repeated twelve times they crowd out the panels themselves, so `y_title` (and the
+    year axis) belong in the figure caption instead."""
+    src = alt.Chart(panels)
+    x = alt.X("period:Q", title=None, axis=_GRID_AXIS)
+    layered = alt.layer(
+        src.mark_area(opacity=0.22).encode(
+            x=x, y=alt.Y("p10:Q", title=None, axis=_GRID_AXIS), y2="p90:Q"),
+        src.mark_area(opacity=0.35).encode(x=x, y="p25:Q", y2="p75:Q"),
+        src.mark_line(strokeWidth=1.5).encode(x=x, y="p50:Q"),
+        src.mark_line(strokeDash=[4, 2], color="black").encode(x=x, y="base:Q"),
+    ).properties(width=width, height=height)
+    return _facet(layered, panels, order, columns)
+
+
+def tornado_grid(panels: pd.DataFrame, order: list | None = None, top: int = 6,
+                 columns: int = 3, width: int = 150, height: int = 112) -> alt.FacetChart:
+    """Small-multiples tornado: the top-|ρ| levers per preset, one panel each.
+
+    `panels` is the per-preset tornado frame (already filtered to one target) concatenated, plus a
+    `preset` display-name column. Truncated to `top` levers per panel so the labels stay legible —
+    the full fifteen-lever ranking per preset lives in the cached CSVs."""
+    trimmed = (panels.assign(_absr=panels["spearman"].abs())
+               .sort_values(["preset", "_absr"], ascending=[True, False])
+               .groupby("preset", sort=False).head(top).drop(columns="_absr"))
+    bars = alt.Chart(trimmed).mark_bar().encode(
+        x=alt.X("spearman:Q", title=None, axis=_GRID_AXIS),
+        y=alt.Y("lever:N", sort="-x", title=None,
+                axis=alt.Axis(labelFontSize=8, labelLimit=115)),
+    ).properties(width=width, height=height)
+    return _facet(bars, trimmed, order, columns)
+
+
+def _facet(chart, panels: pd.DataFrame, order: list | None, columns: int) -> alt.FacetChart:
+    """Facet into a grid with per-panel independent scales (see the note above)."""
+    seq = order if order is not None else list(dict.fromkeys(panels["preset"]))
+    return (chart
+            .facet(facet=alt.Facet("preset:N", title=None, sort=seq,
+                                   header=alt.Header(labelFontSize=10, labelFontWeight="bold")),
+                   columns=columns)
+            .resolve_scale(x="independent", y="independent")
+            .resolve_axis(x="independent", y="independent"))
+
+
 def overlay_recovery_bars(matrix: pd.DataFrame, width: int = 620) -> alt.Chart:
     """Grouped bars: cumulative deficit recovery ($B) per preset × overlay.
 

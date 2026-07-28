@@ -48,7 +48,7 @@ unit-elastically by our modeled price level ({{n:validation.rand_s3.price_level_
 ten) — against their −25 percent. The gap is a mechanism difference, stated plainly: RAND's number
 is overwhelmingly a *deflation* result inside a nominal macro model with an active Federal
 Reserve, while this model deliberately never feeds price-level changes into nominal tax
-computations (the A2 rule, Section 4.6) because real-world bracket schedules are indexed and the
+computations (the A2 rule, Section 4.7) because real-world bracket schedules are indexed and the
 double-count risk runs the other way. What the comparison does confirm: when we let prices carry
 revenue the way theirs do (the adjusted number), the two models' *displacement-plus-pricing*
 stories are the same order of magnitude, and the remaining difference is our recovery channels —

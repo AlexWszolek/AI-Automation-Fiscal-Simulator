@@ -104,6 +104,7 @@ def build_preset(env: Env, key: str, n: int, spread: float, seed: int) -> tuple[
     r.paths.to_parquet(out / "paths.parquet", index=False)
     r.percentiles.to_csv(out / "percentiles.csv", index=False)
     r.base_run.to_csv(out / "base_run.csv", index=False)
+    r.tornado.to_csv(out / "tornado.csv", index=False)   # feeds the comparison grid + render stage
     for grouping in ("tax", "channel"):
         summary.build_fiscal_summary(r.base_run, env.ledger, grouping, "busd").to_csv(
             out / f"summary_{grouping}.csv", index=False)
@@ -134,9 +135,15 @@ def build_preset(env: Env, key: str, n: int, spread: float, seed: int) -> tuple[
             "n_states_capped": int(fin["n_states_capped"]),
             "induced_M": round(float(fin["induced_M"]), 2),
             "productivity_gain_pct": round(100.0 * (float(fin["productivity_index"]) - 1.0), 2),
+            # shareholder windfall channel (Step 8.6): the flow the report cites against the
+            # standing unrealized stock — the deferral story needs both numbers side by side
+            "shareholder_cg_tax_B": round(float(fin["shareholder_cg_tax_B"]), 1),
+            "shareholder_windfall_stock_B": round(float(fin["shareholder_windfall_stock_B"]), 1),
         },
         "cumulative": {
             "net_fiscal_impact_B": round(float(net_fiscal(r.base_run).sum()), 1),
+            "shareholder_cg_tax_B": round(float(r.base_run["shareholder_cg_tax_B"].sum()), 1),
+            "shareholder_realized_B": round(float(r.base_run["shareholder_realized_B"].sum()), 1),
             "cum10_net_fiscal_impact_B": round(cum10(net_fiscal(r.base_run)), 1),
             "cum10_pct_of_baseline_fed_revenue": round(
                 cum10(net_fiscal(r.base_run)) / (min(10, len(r.base_run)) * env.ledger.fed_revenue0)
@@ -354,6 +361,22 @@ def build_shape_sensitivity(env: Env, manifest: dict) -> dict:
 
 
 # --------------------------------------------------------------------------- comparison stage
+def _grid_panels(manifest_presets: dict) -> tuple[pd.DataFrame, pd.DataFrame, list]:
+    """Concatenate the cached per-preset fan/tornado frames into faceting inputs.
+
+    The report carries small multiples instead of a fan + tornado per preset; both grids are built
+    from the CSVs `build_preset` already wrote, so the comparison stage costs no model runs."""
+    fans, tors, order = [], [], []
+    for key, v in manifest_presets.items():
+        d = ART / "presets" / key
+        pct, base_run = pd.read_csv(d / "percentiles.csv"), pd.read_csv(d / "base_run.csv")
+        fans.append(charts.fan_widen(pct, base_run, "fed_deficit_B").assign(preset=v["name"]))
+        tors.append(pd.read_csv(d / "tornado.csv").query("target == 'final_fed_deficit_B'")
+                    .assign(preset=v["name"]))
+        order.append(v["name"])
+    return pd.concat(fans, ignore_index=True), pd.concat(tors, ignore_index=True), order
+
+
 def build_comparison(manifest_presets: dict) -> dict:
     out = ART / "comparison"
     out.mkdir(parents=True, exist_ok=True)
@@ -364,7 +387,16 @@ def build_comparison(manifest_presets: dict) -> dict:
                          for v in manifest_presets.values()])
     rows.to_csv(out / "final_outcomes.csv", index=False)
     charts.save_png(charts.final_outcome_dotplot(rows), out / "final_outcome_dotplot.png")
-    return {"figures": {"final_outcome_dotplot": "comparison/final_outcome_dotplot.png"}}
+
+    fans, tors, order = _grid_panels(manifest_presets)
+    fans.to_csv(out / "fan_grid_panels.csv", index=False)
+    tors.to_csv(out / "tornado_grid_panels.csv", index=False)
+    charts.save_png(charts.fan_grid(fans, "federal deficit Δ ($B)", order),
+                    out / "fan_grid.png")
+    charts.save_png(charts.tornado_grid(tors, order), out / "tornado_grid.png")
+    return {"figures": {"final_outcome_dotplot": "comparison/final_outcome_dotplot.png",
+                        "fan_grid": "comparison/fan_grid.png",
+                        "tornado_grid": "comparison/tornado_grid.png"}}
 
 
 def build_recovery_matrix(manifest_overlays: dict, names: dict) -> None:
@@ -389,10 +421,21 @@ def render_from_cache() -> None:
         for metric, fname, y_title in FAN_METRICS:
             charts.save_png(charts.fan_chart(pct, base_run, metric, y_title, title=p.name),
                             out / f"{fname}.png")
-    comp = ART / "comparison" / "final_outcomes.csv"
-    if comp.exists():
-        charts.save_png(charts.final_outcome_dotplot(pd.read_csv(comp)),
-                        ART / "comparison" / "final_outcome_dotplot.png")
+        if (out / "tornado.csv").exists():
+            charts.save_png(charts.tornado_chart(pd.read_csv(out / "tornado.csv"),
+                                                 "final_fed_deficit_B", title=p.name),
+                            out / "tornado_deficit.png")
+    comp = ART / "comparison"
+    if (comp / "final_outcomes.csv").exists():
+        charts.save_png(charts.final_outcome_dotplot(pd.read_csv(comp / "final_outcomes.csv")),
+                        comp / "final_outcome_dotplot.png")
+    if (comp / "fan_grid_panels.csv").exists():
+        fans = pd.read_csv(comp / "fan_grid_panels.csv")
+        tors = pd.read_csv(comp / "tornado_grid_panels.csv")
+        order = list(dict.fromkeys(fans["preset"]))
+        charts.save_png(charts.fan_grid(fans, "federal deficit Δ ($B)", order),
+                        comp / "fan_grid.png")
+        charts.save_png(charts.tornado_grid(tors, order), comp / "tornado_grid.png")
 
 
 # --------------------------------------------------------------------------- main

@@ -7,7 +7,7 @@ do that here: conservation identities asserted at runtime, and an exact reductio
 
 ## 5.1 The conservation battery
 
-Eight identities hold on every period of every run — including every Monte Carlo draw sampled for
+Nine identities hold on every period of every run — including every Monte Carlo draw sampled for
 this report, and including the presentation layer (the fiscal summary tables in Section 7 assert
 their own reconciliation before rendering):
 
@@ -22,9 +22,14 @@ their own reconciliation before rendering):
   cannot double-apply.
 - **C5c (funded raises).** Survivor wage cost plus overflows exactly equals the routed survivor
   gains, in every branch of the funding logic — raises cannot be paid out of nothing.
-- **C6 (federal reconciliation).** The federal deficit equals the signed sum of its thirteen
+- **C6 (federal reconciliation).** The federal deficit equals the signed sum of its nineteen
   labeled components. Any new fiscal flow that is not added to the reconciliation breaks the
-  build, which is the point: the ledger cannot silently drop a leg.
+  build, which is the point: the ledger cannot silently drop a leg. The shareholder windfall line
+  (Section 4.5) was added under exactly that constraint.
+- **C-sh (shareholder stock ledger).** The accrued windfall stock moves by capitalized increment
+  minus realizations, realizations are the measured rate times last period's stock, and the tax is
+  the effective rate times realizations — asserted per period, so the channel cannot book revenue
+  without a stock to draw it from, and the stock cannot go negative.
 - **C6-state / C7 (state composition and closure).** Each state's revenue change is composed from
   its labeled parts before the balanced-budget solve, and the solve closes the gap to numerical
   residual zero.
@@ -47,7 +52,7 @@ approximation of them.
 
 ## 5.3 Test surface
 
-The repository carries 245 regression tests: the conservation battery across lever sweeps, numeric
+The repository carries 357 regression tests: the conservation battery across lever sweeps, numeric
 anchors for each kernel channel, the displacement-literature behavioral pins (attrition lowers the
 deficit; a job stays automated after its worker is reabsorbed; a stationary shock produces a
 stationary induced-layoff stock), sampler domain properties for the Monte Carlo, UI-grid

@@ -22,38 +22,12 @@ changes answers by an order of magnitude.
    and reabsorption; only the long-run *annual* loss (10–20 percent, ten-plus years out) maps to
    the permanent re-employment haircut.
 
-## 6.1 The seven scenarios
-
 Each preset is a full lever configuration with per-lever provenance (the application surfaces the
-anchor sentence for every value; the evidence document carries the quotes). In brief:
+anchor sentence for every value; the evidence document carries the quotes). Because a scenario's
+anchoring story and its results are one subject, each preset is introduced where its numbers are
+reported, in Section 7. The as-shipped lever table for all twelve appears in Appendix B.
 
-1. **Acemoglu — Modest AI.** His ten-year upper bounds at face value: 19.9 percent of the wage
-   bill exposed, 23 percent of exposed tasks profitably automatable within the decade, a
-   0.15 productivity pass-through implied by his TFP arithmetic, no wage response, and a normal
-   labor market (Farber-central haircut 0.13, reabsorption 0.5/year).
-2. **Brynjolfsson — Augmentation.** AI complements more than it substitutes: adoption starts near
-   the realized pace measured in early payroll data (~2 percent cumulative), survivors capture a
-   fifth of the surplus with positive wage complementarity, scarring is mild, and productivity
-   pass-through is strong (the GenAI-at-Work gains).
-3. **Windfall Trust — Medium.** Their medium displacement scenario translated onto our levers: 60
-   percent of jobs exposed, half of exposed work automated over the decade, re-employment at 70
-   percent of prior wage, their high-value-capture disposition, and capital taxed at their
-   26.7 percent ETR. The direct external comparator (Section 9).
-4. **China-Shock Grind.** A moderate shock met by the labor market Autor, Dorn, and Hanson
-   actually measured: reabsorption at 0.075/year (decade-scale adjustment), labor-force exit the
-   dominant margin, JLS-severity scarring, and full demand amplification, over fifteen years. The
-   mechanism preset: displacement is moderate but nothing heals.
-5. **Korinek–Suh — AGI in 20 years.** Full automation over twenty years, wages collapsing before
-   the end, capital keeping the gains, states forced onto spending cuts.
-6. **Korinek–Suh — AGI in 5 years.** The aggressive transition as its own stress case: a kinked
-   adoption path reaching full automation at year five, viewed over a ten-year fiscal window.
-7. **AI 2027 — Fast takeoff.** The AI Futures Project's scenario shape: cognition maxes almost
-   immediately, robots ramp over three years through crash build-out, heavy compute investment,
-   an eight-year horizon.
-
-The as-shipped lever table for all seven appears in Appendix B.
-
-## 6.2 The four policy overlays
+## 6.1 The four policy overlays
 
 Policy composes on top of any scenario and overrides the corresponding levers:
 

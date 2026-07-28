@@ -43,6 +43,37 @@ def test_dotplot_and_recovery_bars():
     assert spec2["encoding"]["row"]["field"] == "preset"
 
 
+def _grid_panels(n_presets=3):
+    """Concatenated fan/tornado frames shaped exactly as the comparison stage builds them."""
+    fans, tors = [], []
+    for i in range(n_presets):
+        pct, base, tor = _fake_mc(n_periods=8 + i)                 # horizons deliberately differ
+        fans.append(charts.fan_widen(pct, base, "fed_deficit_B").assign(preset=f"P{i}"))
+        tors.append(tor.assign(preset=f"P{i}"))
+    return pd.concat(fans, ignore_index=True), pd.concat(tors, ignore_index=True)
+
+
+def test_fan_grid_facets_with_independent_scales():
+    fans, _ = _grid_panels()
+    spec = charts.fan_grid(fans, "deficit ($B)", columns=4).to_dict()
+    assert spec["facet"]["field"] == "preset" and spec["columns"] == 4
+    assert spec["facet"]["sort"] == ["P0", "P1", "P2"]              # panel order is caller's
+    assert len(spec["spec"]["layer"]) == 4                          # same anatomy as fan_chart
+    # per-panel scales are the whole point: mixed horizons/levels must not share an axis
+    assert spec["resolve"]["scale"] == {"x": "independent", "y": "independent"}
+
+
+def test_tornado_grid_trims_per_panel_by_abs_rho():
+    _, tors = _grid_panels()
+    spec = charts.tornado_grid(tors, top=2, columns=3).to_dict()
+    assert spec["facet"]["field"] == "preset" and spec["columns"] == 3
+    assert spec["resolve"]["scale"] == {"x": "independent", "y": "independent"}
+    rows = spec["datasets"][spec["data"]["name"]]     # facet hoists data to the top level
+    assert len(rows) == 3 * 2                                      # top-2 kept per preset
+    assert {r["lever"] for r in rows} == {"a", "b"}                 # |rho|: a .9, b -.5, c .1 dropped
+    assert all(r["preset"] in {"P0", "P1", "P2"} for r in rows)
+
+
 def test_print_theme_registers_white_background():
     charts.enable_print_theme()
     import altair as alt

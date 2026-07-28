@@ -4,8 +4,9 @@
 
 The dynamic layer runs the economy forward one year at a time. Workers move through seven states;
 firms route the saved wage bill; the compute pool accumulates; survivor wages update under an
-explicit budget constraint; the federal government borrows; the states balance; and the demand
-consequences of all of it come back one period later as induced layoffs. This section walks one
+explicit budget constraint; the federal government borrows; the states balance; shareholders accrue
+a claim they realize only slowly; and the demand consequences of all of it come back one period
+later as induced layoffs. This section walks one
 period in execution order. Appendix A carries the complete equation reference; here we state the
 load-bearing mechanics.
 
@@ -111,7 +112,39 @@ step on the post-recomputation base, residual asserted ≈ 0, identity C7), and 
 consequences — spending cuts at a government-spending multiplier, rate hikes at the household
 MPC — are not free: they enter the demand channel below, *in the state where they happen*.
 
-## 4.5 Demand: a level-targeting controller
+## 4.5 Shareholders: the deferred equity claim
+
+The disposition router books corporate tax, dividend tax, and pass-through individual tax on the
+routed surplus. What it leaves at zero is the **undistributed** share: after-corporate-tax retained
+earnings that never flow out as dividends, capitalize into equity value, and are taxed only when
+somebody sells. That is a first-order federal revenue line, and this channel prices it.
+
+The obvious objection is that equity prices cannot be projected. This channel never projects them —
+it prices the *incremental claim*, conditionally, the same way the corporate offset already
+steelmans full conversion of saved compensation to taxable surplus. The undistributed earnings the
+automated stock adds are computed per cell on the corporate offset's own construction with taxes and
+payout removed; automation-tax and sovereign-fund instruments are conservatively paid from that same
+pool; a capitalization multiple converts each *increment* to the permanent earnings level — never
+the standing stream — into paper wealth; and realizations draw the accrued stock down at a measured
+rate:
+
+```
+E_t      = max(0, undistributed_t − automation_tax − swf_revenue)
+R_t      = cg_realization_rate · G_{t−1}                      (t = 0 realizes nothing)
+G_t      = G_{t−1} + equity_taxable_share · equity_pe_multiple · max(0, E_t − E_{t−1}) − R_t
+cg_tax_t = shareholder_eff_rate · R_t                         → federal revenue (C6)
+```
+
+Every parameter is externally measured: the long-run market price/earnings mean rather than today's
+richer multiple (the conservative convention), the taxable-account share of US corporate equity, the
+measured fraction of the accrued gain stock realized per year, and the average effective rate on
+realized gains. None is calibrated against anything the model targets, and the multiple — the one
+input no source can pin — is not where the answer comes from: the bottleneck is the measured leakage
+chain, which is why the finding survives generous multiples. The result is **conditional accounting,
+not a forecast**: *if* the surplus lands as permanent corporate earnings, this is what the current
+shareholder-side regime collects on it. Section 7.13 reports the magnitude, and why it is small.
+
+## 4.6 Demand: a level-targeting controller
 
 Second-round demand is modeled as a stock, not a ratchet. The standing net income withdrawal —
 take-home pay lost by every non-employed stock, minus UI and transfers actually received, minus
@@ -122,7 +155,7 @@ The loop gain is provably below one at every shipped configuration, so the feedb
 geometrically instead of spiraling — and the model asserts this at construction rather than
 trusting it.
 
-## 4.6 Prices and productivity
+## 4.7 Prices and productivity
 
 Automation deflates prices through the price-reduction disposition (pass-through configurable) and
 raises real output through an output-weighted productivity dividend (full automation of the
