@@ -238,7 +238,7 @@ def is_v1_reduction(p: V2Params) -> bool:
         "robotics_lag", "robotics_base", "reab_wage_baumol", "reab_wage_crowding",
         # tax-regime multipliers: 1.0 = current law (their off value)
         "income_tax_mult", "corp_tax_mult", "cons_tax_mult",
-        # shareholder windfall channel: pe=0 kills both legs exactly. (equity_taxable_share /
+        # shareholder windfall channel: pe=0 kills the CG leg exactly. (equity_taxable_share /
         # cg_realization_rate / shareholder_eff_rate are NOT listed: inert at pe=0, same default
         # ships in both configs — the ssdi_annual pattern.)
         "equity_pe_multiple"))

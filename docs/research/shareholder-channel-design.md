@@ -1,9 +1,13 @@
-# Design: the shareholder windfall channel (dividend + capital-gains recapture)
+# Design: the shareholder windfall channel (capital-gains recapture on undistributed earnings)
 
-**Status: design pass — not yet implemented.** Necessity-test verdict: PASS — a first-order
-federal revenue line currently booked at $0 (shareholder-level tax on the equity claim the
+**Status: SHIPPED.** Implemented CG-only — see the REVISION below for why the dividend leg turned
+out to be redundant — and merged in `a3b5c67`, then re-baselined across every reported number in
+the 2026-07-27 report redo (`b383308`…`7310de0`). Necessity-test verdict *at design time*: PASS —
+a first-order federal revenue line then booked at $0 (shareholder-level tax on the equity claim the
 automation surplus creates), on the causal path to the headline, with every parameter an
-externally measured quantity. No parameter is calibrated against the model's own targets.
+externally measured quantity. No parameter is calibrated against the model's own targets. The
+measured magnitude the implementation returned is at the end of the correctness surface below; it
+is far smaller than this design estimated, for three reasons that are themselves findings.
 
 ## The objection this design answers
 
@@ -80,14 +84,18 @@ Notes:
 ## Levers (4 new V2Params fields — all shipped at measured anchors, none calibrated)
 
 (`dividend_payout_share` removed per the revision above — the kernel's sector payout ratios
-already govern the dividend side; the S&P payout evidence below now serves as their
-cross-check, and the sole C8 gate is `equity_pe_multiple = 0`.)
+already govern the dividend side, and the sole C8 gate is `equity_pe_multiple = 0`. The S&P payout
+evidence gathered for that lever survives as a **cross-check on those ratios**, not as a lever of
+its own: Damodaran's S&P payout ratio ran 31.1% in 2022 and 32.0% in 2023, VERIFIED — the same
+order as the sector-employment-weighted payout the kernel already applies. Buybacks are
+economically payout but taxed as realizations, so they ride in the CG leg rather than the dividend
+one: 2024 was a record $942.5B, ~60% of the $1.57T total cash return, VERIFIED — which is why the
+realization anchor below leans above its historical floor.)
 
 | lever | shipped anchor (fetch-verified where noted) | off value (C8) |
 |---|---|---|
 | `equity_pe_multiple` | **16** — long-run S&P mean P/E 16.23 / median 15.08 (multpl/Shiller, VERIFIED). Current market is far richer (trailing 28.5, CAPE 40.4 as of 2026-07) — using the long-run mean is the conservative convention; the current-market alternative is a disclosed sensitivity | 0 |
-| `dividend_payout_share` | **0.32** — Damodaran S&P payout ratio 31.1% (2022) / 32.0% (2023), VERIFIED. Buybacks (2024 record $942.5B, ~60% of the $1.57T total cash return, VERIFIED) are folded into the CG leg — sellers realize gains when tendering — which is why the realization anchor leans above its historical floor | 0 |
-| `equity_taxable_share` | **0.27** — Rosenthal–Mucciolo 2024 (Tax Notes Federal, VERIFIED): taxable-account share of US stock 27% in 2022 (79% in 1965); the 2016 Rosenthal–Austin canonical gives 24.2% (2015). Foreigners 42%, retirement ~27% — the leak is structural and growing | — (inert at pe=payout=0) |
+| `equity_taxable_share` | **0.27** — Rosenthal–Mucciolo 2024 (Tax Notes Federal, VERIFIED): taxable-account share of US stock 27% in 2022 (79% in 1965); the 2016 Rosenthal–Austin canonical gives 24.2% (2015). Foreigners 42%, retirement ~27% — the leak is structural and growing | — (inert at pe=0) |
 | `cg_realization_rate` | **0.04** — the citable stock-based rate is 3.1%/yr (Gravelle–Lindsey 1960–84, via Treasury OTA WP-66, VERIFIED: "only 3.1 percent of the stock of accrued gains was realized in any given year"); modern arithmetic (~$2T realized 2021 over a ~$40–50T unrealized stock) runs ~4–5% and buyback churn argues the upper half — 0.04 splits the difference, band 0.03–0.05. CBO cross-check: realizations revert to 3.7% of GDP long-run (VERIFIED) | — (inert) |
 | `shareholder_eff_rate` | **0.19** — Treasury OTA taxes-paid table (VERIFIED): average effective rate on realized gains 19.4% in 2013–14 (the current 23.8%-top-rate regime); modern extension ~17–19% (Tax Foundation/CBO, FY-CY mismatch caveat noted). Qualified dividends share the schedule | — (inert) |
 
@@ -101,23 +109,24 @@ currently books at zero *delta* is one of the federal ledger's larger items.
 Omitted: the 1% IRA buyback excise (IRC §4501, JCT $74B/10y, VERIFIED) — a small understatement
 of recovery, §10-disclosed. Full verbatim quotes + URLs: shareholder-channel-evidence-raw.json.
 
-`DEFAULTS_V1REDUCTION`: pe = 0, payout = 0 → both legs vanish exactly → C8 preserved.
-MC: all five join PERTURBED at the ±15% convention. Presets: no overrides — current law,
+`DEFAULTS_V1REDUCTION`: pe = 0 → the leg vanishes exactly → C8 preserved.
+MC: all four join PERTURBED at the ±15% convention. Presets: no overrides — current law,
 inherited from DEFAULTS_SHIPPED everywhere; provenance lands in the global lever table
 (PRESET_EVIDENCE §1) + raw-json quotes, not per-preset.
 
 ## Correctness surface
 
-- **Columns**: `shareholder_div_tax_B`, `shareholder_cg_tax_B`, `shareholder_windfall_stock_B`
-  (G), `shareholder_realized_B` (R).
-- **C6**: two new subtractive lines (`− div_tax − cg_tax`); the reconciliation breaks loudly
-  if either is dropped.
-- **New invariant (C-sh)**: the stock ledger — `G_t − G_{t−1} = taxable_share·pe·(1−payout)·ΔE_t
-  − R_t`, `cg_tax = rate·R_t`, `div_tax = payout·E_t·taxable_share·rate` — asserted per period
-  alongside C1–C8.
+- **Columns**: `shareholder_cg_tax_B`, `shareholder_windfall_stock_B` (G),
+  `shareholder_realized_B` (R). No `div_tax` column: the dividend leg is the kernel's,
+  booked in the corporate offset.
+- **C6**: one new subtractive line (`− cg_tax`); the reconciliation breaks loudly if it is
+  dropped.
+- **New invariant (C-sh)**: the stock ledger — `G_t − G_{t−1} = taxable_share·pe·ΔE⁺_t − R_t`,
+  `R_t = cg_realization_rate·G_{t−1}`, `cg_tax = shareholder_eff_rate·R_t`, and `G_t ≥ 0` —
+  asserted per period alongside C1–C8.
 - **Reduction**: v1 has no channel; off values zero every new column → bit-parity holds.
-- **Summary table** (`summary.py`): one new revenue row; its self-reconciliation gains the two
-  columns.
+- **Summary table** (`summary.py`): one new revenue row (the windfall-CG line); its
+  self-reconciliation gains that column.
 - **Measured magnitude (implementation, superseding the design estimate)**: agi-5y final-year
   CG revenue **$28.9B** (cumulative $217B, unrealized stock $3.66T at year 10); windfall-medium
   final-year $5.2B (cum $26.6B); acemoglu ~$1B. The design estimate (~$150–250B/yr) was 5–8×
@@ -138,14 +147,20 @@ tornado (~100 min), 624 scenario bundles, grid.json + codec vectors (URL codec g
 web pages. All preset numbers move (channel on by default — it is current law). Tests: C6/C8
 sweeps, sampler domains, goldens re-baseline **by intent** (modeling change, not optimization).
 
-## Sequencing decision (open — Alex)
+## Sequencing decision (RESOLVED — option 2)
 
-The mechanism + tests can land immediately, but the moment it merges, the live app's numbers
-diverge from the report's frozen manifest until the report redo (which also carries the
-ai-2027 re-time to reach≈4–5/start 0.2 per the Davidson evidence rationale, and the
-12-preset report scope). Options:
-1. Land now, regen app artifacts, report catches up at the redo (interim divergence, disclosed).
-2. Hold the merge; land mechanism + redo as one batch (no divergence, later app improvement).
+The open question was whether to land the mechanism immediately, which would have left the live
+app's numbers diverging from the report's frozen manifest until the report redo. The two options
+were: (1) land now and let the report catch up at the redo, disclosing the interim divergence, or
+(2) hold the merge and land mechanism + redo as one batch — no divergence, at the cost of a later
+app improvement.
+
+**Alex chose option 2, executed 2026-07-27.** The branch merged as the redo's first commit
+(`a3b5c67`, fast-forward), and the same batch carried the ai-2027 re-time — start 0.20 and the
+adoption ceiling at year 5, the conservative end of the t+4–t+5 window the Davidson rationale
+gives — together with the 12-preset report scope, with every artifact regenerated in one pass. No
+divergence window ever opened. The blast radius above was paid exactly once: ~95 minutes of
+rebuild across the app tornado, the 624 bundles, the report manifest, and the global screening.
 
 ## Explicitly out of scope
 
