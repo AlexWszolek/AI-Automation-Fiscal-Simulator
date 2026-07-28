@@ -1123,11 +1123,11 @@
   },
   {
    "adoption_end": 1.0,
-   "adoption_reach_year": null,
-   "adoption_start": 0.1,
-   "blurb": "The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 years, heavy compute investment, 8-year horizon.",
+   "adoption_reach_year": 5,
+   "adoption_start": 0.2,
+   "blurb": "The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 years, adoption saturates at year 5, heavy compute investment, 8-year horizon.",
    "defaults": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1189,7 +1189,7 @@
    ],
    "provenance": {
     "adoption": {
-     "text": "Davidson: 20%\u2192100% capability median ~3y; deployment trails <1y (\u00a71)",
+     "text": "Davidson: the scenario clock starts AT the 20%-AI milestone (start 0.20); capability 20%\u2192100% median ~3y + 1-2y real-world diffusion \u2192 ceiling by t+4-t+5, shipped at the conservative end (reach year 5), flat after. The same evidence block's caveat \u2014 20%\u2192100% is technical CAPABILITY, not realized adoption \u2014 is why t+5 rather than t+4 (\u00a72\u2466)",
      "value": "1"
     },
     "auto_cost": {

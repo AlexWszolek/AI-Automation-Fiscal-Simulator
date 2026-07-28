@@ -1554,7 +1554,7 @@
   },
   {
    "current": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1598,7 +1598,7 @@
    "overlays": [],
    "preset": "ai-2027",
    "pristine": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1639,7 +1639,7 @@
   },
   {
    "current": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1686,7 +1686,7 @@
    ],
    "preset": "ai-2027",
    "pristine": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1727,7 +1727,7 @@
   },
   {
    "current": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,
@@ -1771,7 +1771,7 @@
    "overlays": [],
    "preset": "ai-2027",
    "pristine": {
-    "adopt0": 0.1,
+    "adopt0": 0.2,
     "adopt1": 1.0,
     "atax": 0.0,
     "attrition": 0.025,

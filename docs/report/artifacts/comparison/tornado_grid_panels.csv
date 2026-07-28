@@ -1,0 +1,375 @@
+lever,target,spearman,preset
+price_reduction_share,final_fed_deficit_B,0.627955611955612,Acemoglu — Modest AI
+retained_profit_share,final_fed_deficit_B,-0.613021345021345,Acemoglu — Modest AI
+reabsorption_rate,final_fed_deficit_B,-0.5783144423144423,Acemoglu — Modest AI
+reemployment_haircut,final_fed_deficit_B,0.2597660837660838,Acemoglu — Modest AI
+cognitive_feasibility,final_fed_deficit_B,-0.2428304908304908,Acemoglu — Modest AI
+adoption_end,final_fed_deficit_B,-0.2352827232827233,Acemoglu — Modest AI
+lfp_exit_rate,final_fed_deficit_B,0.1553394113394113,Acemoglu — Modest AI
+robotics_lag,final_fed_deficit_B,0.1387766347766347,Acemoglu — Modest AI
+ssdi_annual,final_fed_deficit_B,0.0664978504978505,Acemoglu — Modest AI
+price_passthrough,final_fed_deficit_B,-0.0632364272364272,Acemoglu — Modest AI
+demand_multiplier,final_fed_deficit_B,0.0622150582150582,Acemoglu — Modest AI
+shareholder_eff_rate,final_fed_deficit_B,-0.050015774015774,Acemoglu — Modest AI
+attrition_rate,final_fed_deficit_B,-0.0498612738612738,Acemoglu — Modest AI
+survivor_raise_ceiling,final_fed_deficit_B,-0.03602544002544,Acemoglu — Modest AI
+physical_feasibility,final_fed_deficit_B,-0.0335452175452175,Acemoglu — Modest AI
+equity_taxable_share,final_fed_deficit_B,-0.0289796089796089,Acemoglu — Modest AI
+interest_rate,final_fed_deficit_B,0.0232524232524232,Acemoglu — Modest AI
+cg_realization_rate,final_fed_deficit_B,-0.0226653586653586,Acemoglu — Modest AI
+survivor_gains_share,final_fed_deficit_B,0.0208329448329448,Acemoglu — Modest AI
+auto_cost,final_fed_deficit_B,-0.0203163443163443,Acemoglu — Modest AI
+ui_weeks,final_fed_deficit_B,0.0181748035751178,Acemoglu — Modest AI
+mpc,final_fed_deficit_B,0.0169209349433169,Acemoglu — Modest AI
+survivor_spillover_to_profit,final_fed_deficit_B,0.0156880716880716,Acemoglu — Modest AI
+state_rate_hike_cap,final_fed_deficit_B,0.0151694671694671,Acemoglu — Modest AI
+ubi_recapture_rate,final_fed_deficit_B,0.0125998805998805,Acemoglu — Modest AI
+productivity_passthrough,final_fed_deficit_B,0.010066006066006,Acemoglu — Modest AI
+baseline_growth_rate,final_fed_deficit_B,0.0067181467181467,Acemoglu — Modest AI
+equity_pe_multiple,final_fed_deficit_B,0.0047168927168927,Acemoglu — Modest AI
+consumption_stickiness,final_fed_deficit_B,-0.0031111142185959,Acemoglu — Modest AI
+compute_effective_rate,final_fed_deficit_B,-0.0014738414738414,Acemoglu — Modest AI
+adoption_end,final_fed_deficit_B,-0.6258284658284659,Brynjolfsson — Augmentation
+cognitive_feasibility,final_fed_deficit_B,-0.534932490932491,Brynjolfsson — Augmentation
+price_reduction_share,final_fed_deficit_B,0.3924201204201204,Brynjolfsson — Augmentation
+reabsorption_rate,final_fed_deficit_B,-0.3711412791412791,Brynjolfsson — Augmentation
+retained_profit_share,final_fed_deficit_B,-0.2963259323259323,Brynjolfsson — Augmentation
+reemployment_haircut,final_fed_deficit_B,0.1896493176493176,Brynjolfsson — Augmentation
+compute_effective_rate,final_fed_deficit_B,-0.1185237705237705,Brynjolfsson — Augmentation
+lfp_exit_rate,final_fed_deficit_B,0.0828832428832428,Brynjolfsson — Augmentation
+attrition_rate,final_fed_deficit_B,-0.0622800742800742,Brynjolfsson — Augmentation
+ssdi_annual,final_fed_deficit_B,0.0541962901962901,Brynjolfsson — Augmentation
+physical_feasibility,final_fed_deficit_B,-0.0491230211230211,Brynjolfsson — Augmentation
+consumption_stickiness,final_fed_deficit_B,-0.0433174177814322,Brynjolfsson — Augmentation
+ui_weeks,final_fed_deficit_B,0.0419399904475827,Brynjolfsson — Augmentation
+ubi_recapture_rate,final_fed_deficit_B,-0.0399113559113559,Brynjolfsson — Augmentation
+mpc,final_fed_deficit_B,0.0382177932654414,Brynjolfsson — Augmentation
+baseline_growth_rate,final_fed_deficit_B,0.0367064887064887,Brynjolfsson — Augmentation
+equity_taxable_share,final_fed_deficit_B,-0.0353697233697233,Brynjolfsson — Augmentation
+productivity_passthrough,final_fed_deficit_B,-0.0324045444045444,Brynjolfsson — Augmentation
+auto_cost,final_fed_deficit_B,0.0313276753276753,Brynjolfsson — Augmentation
+shareholder_eff_rate,final_fed_deficit_B,-0.0272651912651912,Brynjolfsson — Augmentation
+cg_realization_rate,final_fed_deficit_B,-0.0242077082077082,Brynjolfsson — Augmentation
+equity_pe_multiple,final_fed_deficit_B,-0.0218905778905778,Brynjolfsson — Augmentation
+survivor_spillover_to_profit,final_fed_deficit_B,-0.0178910098910098,Brynjolfsson — Augmentation
+survivor_elasticity,final_fed_deficit_B,0.0147519507519507,Brynjolfsson — Augmentation
+survivor_gains_share,final_fed_deficit_B,-0.0147400107400107,Brynjolfsson — Augmentation
+demand_multiplier,final_fed_deficit_B,-0.0123631683631683,Brynjolfsson — Augmentation
+survivor_raise_ceiling,final_fed_deficit_B,-0.0084216444216444,Brynjolfsson — Augmentation
+interest_rate,final_fed_deficit_B,-0.0066773346773346,Brynjolfsson — Augmentation
+price_passthrough,final_fed_deficit_B,0.0032551472551472,Brynjolfsson — Augmentation
+state_rate_hike_cap,final_fed_deficit_B,-0.0021277581277581,Brynjolfsson — Augmentation
+robotics_lag,final_fed_deficit_B,-0.0009071289071289,Brynjolfsson — Augmentation
+reabsorption_rate,final_fed_deficit_B,-0.4540918180918181,Windfall Trust — Medium
+adoption_end,final_fed_deficit_B,0.4226792546792546,Windfall Trust — Medium
+retained_profit_share,final_fed_deficit_B,-0.4139654699654699,Windfall Trust — Medium
+price_reduction_share,final_fed_deficit_B,0.4139654699654699,Windfall Trust — Medium
+cognitive_feasibility,final_fed_deficit_B,0.3589462069462069,Windfall Trust — Medium
+reemployment_haircut,final_fed_deficit_B,0.2692140532140532,Windfall Trust — Medium
+compute_effective_rate,final_fed_deficit_B,-0.2082181002181002,Windfall Trust — Medium
+demand_multiplier,final_fed_deficit_B,0.1463628743628743,Windfall Trust — Medium
+lfp_exit_rate,final_fed_deficit_B,0.1383680703680703,Windfall Trust — Medium
+ssdi_annual,final_fed_deficit_B,0.1129624249624249,Windfall Trust — Medium
+physical_feasibility,final_fed_deficit_B,0.1049330129330129,Windfall Trust — Medium
+mpc,final_fed_deficit_B,0.1024493823316049,Windfall Trust — Medium
+consumption_stickiness,final_fed_deficit_B,0.093659578395089,Windfall Trust — Medium
+survivor_elasticity,final_fed_deficit_B,-0.084032268032268,Windfall Trust — Medium
+ubi_recapture_rate,final_fed_deficit_B,0.0837716397716397,Windfall Trust — Medium
+ui_weeks,final_fed_deficit_B,0.0737169347057605,Windfall Trust — Medium
+auto_cost,final_fed_deficit_B,-0.0649778209778209,Windfall Trust — Medium
+attrition_rate,final_fed_deficit_B,-0.0628461868461868,Windfall Trust — Medium
+equity_taxable_share,final_fed_deficit_B,-0.0422530142530142,Windfall Trust — Medium
+state_rate_hike_cap,final_fed_deficit_B,0.026087786087786,Windfall Trust — Medium
+shareholder_eff_rate,final_fed_deficit_B,0.0253298893298893,Windfall Trust — Medium
+robotics_lag,final_fed_deficit_B,0.025006741006741,Windfall Trust — Medium
+survivor_spillover_to_profit,final_fed_deficit_B,0.0208736728736728,Windfall Trust — Medium
+interest_rate,final_fed_deficit_B,0.0171272451272451,Windfall Trust — Medium
+price_passthrough,final_fed_deficit_B,-0.0155413355413355,Windfall Trust — Medium
+equity_pe_multiple,final_fed_deficit_B,-0.0148603228603228,Windfall Trust — Medium
+baseline_growth_rate,final_fed_deficit_B,-0.0139416139416139,Windfall Trust — Medium
+survivor_raise_ceiling,final_fed_deficit_B,-0.0138951378951378,Windfall Trust — Medium
+cg_realization_rate,final_fed_deficit_B,0.0054665934665934,Windfall Trust — Medium
+productivity_passthrough,final_fed_deficit_B,-0.0036482676482676,Windfall Trust — Medium
+demand_multiplier,final_fed_deficit_B,0.5136347976347976,China-Shock Grind
+adoption_end,final_fed_deficit_B,0.4481043401043401,China-Shock Grind
+mpc,final_fed_deficit_B,0.3736412874073321,China-Shock Grind
+consumption_stickiness,final_fed_deficit_B,0.3257137166392296,China-Shock Grind
+lfp_exit_rate,final_fed_deficit_B,0.2625328185328185,China-Shock Grind
+cognitive_feasibility,final_fed_deficit_B,0.2575389295389295,China-Shock Grind
+survivor_elasticity,final_fed_deficit_B,-0.2311272511272511,China-Shock Grind
+physical_feasibility,final_fed_deficit_B,0.1288671448671448,China-Shock Grind
+reemployment_haircut,final_fed_deficit_B,0.1101724101724101,China-Shock Grind
+reabsorption_rate,final_fed_deficit_B,-0.0989574509574509,China-Shock Grind
+survivor_gains_share,final_fed_deficit_B,-0.0807055647055647,China-Shock Grind
+survivor_raise_ceiling,final_fed_deficit_B,0.0662310062310062,China-Shock Grind
+productivity_passthrough,final_fed_deficit_B,0.0558430158430158,China-Shock Grind
+ssdi_annual,final_fed_deficit_B,0.0519849999849999,China-Shock Grind
+attrition_rate,final_fed_deficit_B,-0.0517151197151197,China-Shock Grind
+ubi_recapture_rate,final_fed_deficit_B,0.0472462792462792,China-Shock Grind
+interest_rate,final_fed_deficit_B,0.0402376722376722,China-Shock Grind
+shareholder_eff_rate,final_fed_deficit_B,-0.0351741111741111,China-Shock Grind
+price_passthrough,final_fed_deficit_B,-0.0284812004812004,China-Shock Grind
+survivor_spillover_to_profit,final_fed_deficit_B,0.02804542004542,China-Shock Grind
+retained_profit_share,final_fed_deficit_B,0.0263260223260223,China-Shock Grind
+compute_effective_rate,final_fed_deficit_B,-0.0254927654927654,China-Shock Grind
+auto_cost,final_fed_deficit_B,0.0249785289785289,China-Shock Grind
+equity_pe_multiple,final_fed_deficit_B,0.0211583131583131,China-Shock Grind
+robotics_lag,final_fed_deficit_B,-0.0185934545934545,China-Shock Grind
+baseline_growth_rate,final_fed_deficit_B,-0.008055704055704,China-Shock Grind
+state_rate_hike_cap,final_fed_deficit_B,0.0076331956331956,China-Shock Grind
+price_reduction_share,final_fed_deficit_B,0.0068424668424668,China-Shock Grind
+equity_taxable_share,final_fed_deficit_B,0.0056253056253056,China-Shock Grind
+cg_realization_rate,final_fed_deficit_B,0.0035909435909435,China-Shock Grind
+ui_weeks,final_fed_deficit_B,0.0007994217891635,China-Shock Grind
+lfp_exit_rate,final_fed_deficit_B,0.5148924948924949,Korinek-Suh — AGI in 20 years
+demand_multiplier,final_fed_deficit_B,0.3991112551112551,Korinek-Suh — AGI in 20 years
+ssdi_annual,final_fed_deficit_B,0.3789409269409269,Korinek-Suh — AGI in 20 years
+attrition_rate,final_fed_deficit_B,-0.2519165519165519,Korinek-Suh — AGI in 20 years
+mpc,final_fed_deficit_B,0.2394555086295165,Korinek-Suh — AGI in 20 years
+consumption_stickiness,final_fed_deficit_B,0.2202164211168869,Korinek-Suh — AGI in 20 years
+reabsorption_rate,final_fed_deficit_B,-0.2138016818016818,Korinek-Suh — AGI in 20 years
+adoption_end,final_fed_deficit_B,0.1668006242864379,Korinek-Suh — AGI in 20 years
+price_reduction_share,final_fed_deficit_B,0.1622518142518142,Korinek-Suh — AGI in 20 years
+retained_profit_share,final_fed_deficit_B,-0.1595498795498795,Korinek-Suh — AGI in 20 years
+reemployment_haircut,final_fed_deficit_B,0.1595450435450435,Korinek-Suh — AGI in 20 years
+survivor_elasticity,final_fed_deficit_B,-0.0954113154113154,Korinek-Suh — AGI in 20 years
+auto_cost,final_fed_deficit_B,0.0868126948126948,Korinek-Suh — AGI in 20 years
+physical_feasibility,final_fed_deficit_B,0.0727126884196105,Korinek-Suh — AGI in 20 years
+productivity_passthrough,final_fed_deficit_B,-0.0601242355572761,Korinek-Suh — AGI in 20 years
+survivor_gains_share,final_fed_deficit_B,0.055090987090987,Korinek-Suh — AGI in 20 years
+shareholder_eff_rate,final_fed_deficit_B,-0.0506201186201186,Korinek-Suh — AGI in 20 years
+robotics_lag,final_fed_deficit_B,0.0449715689715689,Korinek-Suh — AGI in 20 years
+survivor_raise_ceiling,final_fed_deficit_B,0.0421057141057141,Korinek-Suh — AGI in 20 years
+state_cut_share,final_fed_deficit_B,-0.0324354204354204,Korinek-Suh — AGI in 20 years
+baseline_growth_rate,final_fed_deficit_B,-0.0277553557553557,Korinek-Suh — AGI in 20 years
+price_passthrough,final_fed_deficit_B,-0.0168011448011448,Korinek-Suh — AGI in 20 years
+cg_realization_rate,final_fed_deficit_B,-0.0154467514467514,Korinek-Suh — AGI in 20 years
+compute_effective_rate,final_fed_deficit_B,-0.0143343983343983,Korinek-Suh — AGI in 20 years
+equity_pe_multiple,final_fed_deficit_B,0.0137323097323097,Korinek-Suh — AGI in 20 years
+interest_rate,final_fed_deficit_B,-0.0136871056871056,Korinek-Suh — AGI in 20 years
+ui_weeks,final_fed_deficit_B,0.013134869308064,Korinek-Suh — AGI in 20 years
+cognitive_feasibility,final_fed_deficit_B,0.012535494163781,Korinek-Suh — AGI in 20 years
+equity_taxable_share,final_fed_deficit_B,-0.0098514338514338,Korinek-Suh — AGI in 20 years
+survivor_spillover_to_profit,final_fed_deficit_B,-0.0022002622002622,Korinek-Suh — AGI in 20 years
+ubi_recapture_rate,final_fed_deficit_B,-0.0017176937176937,Korinek-Suh — AGI in 20 years
+state_rate_hike_cap,final_fed_deficit_B,-0.0003787083787083,Korinek-Suh — AGI in 20 years
+ssdi_annual,final_fed_deficit_B,0.6101314901314902,Korinek-Suh — AGI in 5 years
+lfp_exit_rate,final_fed_deficit_B,0.5882468642468642,Korinek-Suh — AGI in 5 years
+demand_multiplier,final_fed_deficit_B,0.2372123252123252,Korinek-Suh — AGI in 5 years
+attrition_rate,final_fed_deficit_B,-0.1997112797112797,Korinek-Suh — AGI in 5 years
+retained_profit_share,final_fed_deficit_B,-0.1519283959283959,Korinek-Suh — AGI in 5 years
+price_reduction_share,final_fed_deficit_B,0.1481360081360081,Korinek-Suh — AGI in 5 years
+mpc,final_fed_deficit_B,0.1425514068907878,Korinek-Suh — AGI in 5 years
+reabsorption_rate,final_fed_deficit_B,-0.1211114651114651,Korinek-Suh — AGI in 5 years
+consumption_stickiness,final_fed_deficit_B,0.1161970032208911,Korinek-Suh — AGI in 5 years
+auto_cost,final_fed_deficit_B,0.1126855246855246,Korinek-Suh — AGI in 5 years
+reemployment_haircut,final_fed_deficit_B,0.1046701646701646,Korinek-Suh — AGI in 5 years
+cognitive_feasibility,final_fed_deficit_B,-0.0774289620380557,Korinek-Suh — AGI in 5 years
+survivor_gains_share,final_fed_deficit_B,0.077034233034233,Korinek-Suh — AGI in 5 years
+shareholder_eff_rate,final_fed_deficit_B,-0.0671685551685551,Korinek-Suh — AGI in 5 years
+productivity_passthrough,final_fed_deficit_B,-0.0567429323177295,Korinek-Suh — AGI in 5 years
+survivor_raise_ceiling,final_fed_deficit_B,0.0475088635088635,Korinek-Suh — AGI in 5 years
+robotics_lag,final_fed_deficit_B,0.0418557778557778,Korinek-Suh — AGI in 5 years
+state_cut_share,final_fed_deficit_B,-0.0337331257331257,Korinek-Suh — AGI in 5 years
+adoption_end,final_fed_deficit_B,-0.0321969667128866,Korinek-Suh — AGI in 5 years
+state_rate_hike_cap,final_fed_deficit_B,0.0299837099837099,Korinek-Suh — AGI in 5 years
+survivor_elasticity,final_fed_deficit_B,-0.0249210729210729,Korinek-Suh — AGI in 5 years
+physical_feasibility,final_fed_deficit_B,0.0218008620907569,Korinek-Suh — AGI in 5 years
+ui_weeks,final_fed_deficit_B,0.0120952993562495,Korinek-Suh — AGI in 5 years
+equity_taxable_share,final_fed_deficit_B,0.011086775086775,Korinek-Suh — AGI in 5 years
+compute_effective_rate,final_fed_deficit_B,-0.0085577125577125,Korinek-Suh — AGI in 5 years
+price_passthrough,final_fed_deficit_B,-0.0085483405483405,Korinek-Suh — AGI in 5 years
+cg_realization_rate,final_fed_deficit_B,0.0077126837126837,Korinek-Suh — AGI in 5 years
+interest_rate,final_fed_deficit_B,-0.0071377631377631,Korinek-Suh — AGI in 5 years
+equity_pe_multiple,final_fed_deficit_B,0.0067114267114267,Korinek-Suh — AGI in 5 years
+ubi_recapture_rate,final_fed_deficit_B,-0.0064800904800904,Korinek-Suh — AGI in 5 years
+baseline_growth_rate,final_fed_deficit_B,-0.0058635583222503,Korinek-Suh — AGI in 5 years
+survivor_spillover_to_profit,final_fed_deficit_B,0.0037969837969837,Korinek-Suh — AGI in 5 years
+adoption_end,final_fed_deficit_B,0.3703419089578293,AI 2027 — Fast takeoff
+demand_multiplier,final_fed_deficit_B,0.3528212928212928,AI 2027 — Fast takeoff
+lfp_exit_rate,final_fed_deficit_B,0.2852807252807253,AI 2027 — Fast takeoff
+mpc,final_fed_deficit_B,0.2785759377223836,AI 2027 — Fast takeoff
+physical_feasibility,final_fed_deficit_B,0.2745775330203652,AI 2027 — Fast takeoff
+consumption_stickiness,final_fed_deficit_B,0.2507595040122412,AI 2027 — Fast takeoff
+reabsorption_rate,final_fed_deficit_B,-0.2377687897687897,AI 2027 — Fast takeoff
+ssdi_annual,final_fed_deficit_B,0.2181737901737901,AI 2027 — Fast takeoff
+auto_cost,final_fed_deficit_B,0.2083197403197403,AI 2027 — Fast takeoff
+reemployment_haircut,final_fed_deficit_B,0.1994653874653874,AI 2027 — Fast takeoff
+price_reduction_share,final_fed_deficit_B,0.1961300801300801,AI 2027 — Fast takeoff
+retained_profit_share,final_fed_deficit_B,-0.1853576213576213,AI 2027 — Fast takeoff
+attrition_rate,final_fed_deficit_B,-0.1773975453975454,AI 2027 — Fast takeoff
+compute_effective_rate,final_fed_deficit_B,-0.1195137475137475,AI 2027 — Fast takeoff
+survivor_elasticity,final_fed_deficit_B,-0.0853577053577053,AI 2027 — Fast takeoff
+shareholder_eff_rate,final_fed_deficit_B,-0.069009429009429,AI 2027 — Fast takeoff
+cognitive_feasibility,final_fed_deficit_B,0.0559657218409045,AI 2027 — Fast takeoff
+survivor_raise_ceiling,final_fed_deficit_B,0.052015804015804,AI 2027 — Fast takeoff
+survivor_gains_share,final_fed_deficit_B,0.0516868476868476,AI 2027 — Fast takeoff
+interest_rate,final_fed_deficit_B,0.0292845412845412,AI 2027 — Fast takeoff
+ubi_recapture_rate,final_fed_deficit_B,0.0292253812253812,AI 2027 — Fast takeoff
+ui_weeks,final_fed_deficit_B,-0.0281830560657973,AI 2027 — Fast takeoff
+equity_pe_multiple,final_fed_deficit_B,0.0274585474585474,AI 2027 — Fast takeoff
+equity_taxable_share,final_fed_deficit_B,-0.0197773037773037,AI 2027 — Fast takeoff
+baseline_growth_rate,final_fed_deficit_B,0.0159301942393362,AI 2027 — Fast takeoff
+cg_realization_rate,final_fed_deficit_B,-0.0123609963609963,AI 2027 — Fast takeoff
+robotics_lag,final_fed_deficit_B,-0.0121208161208161,AI 2027 — Fast takeoff
+price_passthrough,final_fed_deficit_B,-0.0072875832875832,AI 2027 — Fast takeoff
+state_rate_hike_cap,final_fed_deficit_B,-0.0063578943578943,AI 2027 — Fast takeoff
+productivity_passthrough,final_fed_deficit_B,-0.001162001690304,AI 2027 — Fast takeoff
+survivor_spillover_to_profit,final_fed_deficit_B,0.0005414045414045,AI 2027 — Fast takeoff
+adoption_end,final_fed_deficit_B,0.5953389779914874,AI 2040 — Plan A (The Deal)
+cognitive_feasibility,final_fed_deficit_B,0.3318519792960816,AI 2040 — Plan A (The Deal)
+demand_multiplier,final_fed_deficit_B,0.3158921678921679,AI 2040 — Plan A (The Deal)
+physical_feasibility,final_fed_deficit_B,0.2960488360287557,AI 2040 — Plan A (The Deal)
+reabsorption_rate,final_fed_deficit_B,-0.1844800004800005,AI 2040 — Plan A (The Deal)
+consumption_stickiness,final_fed_deficit_B,0.1841918753435116,AI 2040 — Plan A (The Deal)
+mpc,final_fed_deficit_B,0.1804185935075559,AI 2040 — Plan A (The Deal)
+ssdi_annual,final_fed_deficit_B,0.152999636999637,AI 2040 — Plan A (The Deal)
+lfp_exit_rate,final_fed_deficit_B,0.1477929397929397,AI 2040 — Plan A (The Deal)
+price_reduction_share,final_fed_deficit_B,0.1315666435666435,AI 2040 — Plan A (The Deal)
+reemployment_haircut,final_fed_deficit_B,0.130998346998347,AI 2040 — Plan A (The Deal)
+retained_profit_share,final_fed_deficit_B,-0.108083088083088,AI 2040 — Plan A (The Deal)
+auto_cost,final_fed_deficit_B,0.0748292908292908,AI 2040 — Plan A (The Deal)
+baseline_growth_rate,final_fed_deficit_B,-0.0548027889433372,AI 2040 — Plan A (The Deal)
+equity_pe_multiple,final_fed_deficit_B,0.0508295308295308,AI 2040 — Plan A (The Deal)
+cg_realization_rate,final_fed_deficit_B,-0.0504247824247824,AI 2040 — Plan A (The Deal)
+attrition_rate,final_fed_deficit_B,-0.0469728589728589,AI 2040 — Plan A (The Deal)
+ui_weeks,final_fed_deficit_B,0.0370509754061062,AI 2040 — Plan A (The Deal)
+compute_effective_rate,final_fed_deficit_B,-0.0347005307005307,AI 2040 — Plan A (The Deal)
+survivor_gains_share,final_fed_deficit_B,-0.0286705846705846,AI 2040 — Plan A (The Deal)
+equity_taxable_share,final_fed_deficit_B,-0.0283440523440523,AI 2040 — Plan A (The Deal)
+state_cut_share,final_fed_deficit_B,-0.0265677745677745,AI 2040 — Plan A (The Deal)
+productivity_passthrough,final_fed_deficit_B,-0.0215734326275855,AI 2040 — Plan A (The Deal)
+interest_rate,final_fed_deficit_B,-0.0166853806853806,AI 2040 — Plan A (The Deal)
+price_passthrough,final_fed_deficit_B,-0.0161981921981922,AI 2040 — Plan A (The Deal)
+survivor_spillover_to_profit,final_fed_deficit_B,-0.0136499056499056,AI 2040 — Plan A (The Deal)
+survivor_elasticity,final_fed_deficit_B,-0.013096237096237,AI 2040 — Plan A (The Deal)
+survivor_raise_ceiling,final_fed_deficit_B,-0.0129827169827169,AI 2040 — Plan A (The Deal)
+state_rate_hike_cap,final_fed_deficit_B,-0.0085486285486285,AI 2040 — Plan A (The Deal)
+ubi_recapture_rate,final_fed_deficit_B,-0.0046606726606726,AI 2040 — Plan A (The Deal)
+robotics_lag,final_fed_deficit_B,0.0044222564222564,AI 2040 — Plan A (The Deal)
+shareholder_eff_rate,final_fed_deficit_B,0.0012953772953772,AI 2040 — Plan A (The Deal)
+lfp_exit_rate,final_fed_deficit_B,0.4897620697620697,AI 2040 — Plan D (The Race)
+ssdi_annual,final_fed_deficit_B,0.4429798309798309,AI 2040 — Plan D (The Race)
+demand_multiplier,final_fed_deficit_B,0.2791879471879472,AI 2040 — Plan D (The Race)
+auto_cost,final_fed_deficit_B,0.2665642825642825,AI 2040 — Plan D (The Race)
+retained_profit_share,final_fed_deficit_B,-0.2211450651450651,AI 2040 — Plan D (The Race)
+price_reduction_share,final_fed_deficit_B,0.2204400884400884,AI 2040 — Plan D (The Race)
+mpc,final_fed_deficit_B,0.1759737273649159,AI 2040 — Plan D (The Race)
+attrition_rate,final_fed_deficit_B,-0.153005685005685,AI 2040 — Plan D (The Race)
+consumption_stickiness,final_fed_deficit_B,0.1422433290102496,AI 2040 — Plan D (The Race)
+reabsorption_rate,final_fed_deficit_B,-0.1061330861330861,AI 2040 — Plan D (The Race)
+survivor_gains_share,final_fed_deficit_B,0.1011518811518811,AI 2040 — Plan D (The Race)
+cognitive_feasibility,final_fed_deficit_B,-0.0982019619574863,AI 2040 — Plan D (The Race)
+reemployment_haircut,final_fed_deficit_B,0.0928138408138408,AI 2040 — Plan D (The Race)
+compute_effective_rate,final_fed_deficit_B,-0.0844766644766644,AI 2040 — Plan D (The Race)
+shareholder_eff_rate,final_fed_deficit_B,-0.0662187182187182,AI 2040 — Plan D (The Race)
+productivity_passthrough,final_fed_deficit_B,-0.0638326775578581,AI 2040 — Plan D (The Race)
+survivor_elasticity,final_fed_deficit_B,-0.0579226659226659,AI 2040 — Plan D (The Race)
+equity_pe_multiple,final_fed_deficit_B,-0.0348731748731748,AI 2040 — Plan D (The Race)
+equity_taxable_share,final_fed_deficit_B,-0.0286517206517206,AI 2040 — Plan D (The Race)
+survivor_spillover_to_profit,final_fed_deficit_B,-0.0277984477984477,AI 2040 — Plan D (The Race)
+survivor_raise_ceiling,final_fed_deficit_B,0.0269473349473349,AI 2040 — Plan D (The Race)
+baseline_growth_rate,final_fed_deficit_B,-0.024333150232466,AI 2040 — Plan D (The Race)
+price_passthrough,final_fed_deficit_B,-0.02404044004044,AI 2040 — Plan D (The Race)
+interest_rate,final_fed_deficit_B,-0.021009393009393,AI 2040 — Plan D (The Race)
+cg_realization_rate,final_fed_deficit_B,0.0202795402795402,AI 2040 — Plan D (The Race)
+state_cut_share,final_fed_deficit_B,-0.0119505239505239,AI 2040 — Plan D (The Race)
+state_rate_hike_cap,final_fed_deficit_B,0.0059951219951219,AI 2040 — Plan D (The Race)
+physical_feasibility,final_fed_deficit_B,0.0054145095268052,AI 2040 — Plan D (The Race)
+robotics_lag,final_fed_deficit_B,0.0043357243357243,AI 2040 — Plan D (The Race)
+ubi_recapture_rate,final_fed_deficit_B,0.0036576996576996,AI 2040 — Plan D (The Race)
+ui_weeks,final_fed_deficit_B,-0.0024200052140114,AI 2040 — Plan D (The Race)
+adoption_end,final_fed_deficit_B,-0.0005865104201242,AI 2040 — Plan D (The Race)
+reabsorption_rate,final_fed_deficit_B,-0.6961399561399562,"Karger et al. — Expert survey, rapid (P≈14%)"
+price_reduction_share,final_fed_deficit_B,0.4281998361998362,"Karger et al. — Expert survey, rapid (P≈14%)"
+lfp_exit_rate,final_fed_deficit_B,0.3057833097833098,"Karger et al. — Expert survey, rapid (P≈14%)"
+retained_profit_share,final_fed_deficit_B,-0.2691789411789412,"Karger et al. — Expert survey, rapid (P≈14%)"
+reemployment_haircut,final_fed_deficit_B,0.2655807735807736,"Karger et al. — Expert survey, rapid (P≈14%)"
+cognitive_feasibility,final_fed_deficit_B,-0.2198983238983239,"Karger et al. — Expert survey, rapid (P≈14%)"
+ssdi_annual,final_fed_deficit_B,0.1905613665613665,"Karger et al. — Expert survey, rapid (P≈14%)"
+adoption_end,final_fed_deficit_B,-0.1819444339444339,"Karger et al. — Expert survey, rapid (P≈14%)"
+compute_effective_rate,final_fed_deficit_B,-0.1671377271377271,"Karger et al. — Expert survey, rapid (P≈14%)"
+survivor_gains_share,final_fed_deficit_B,-0.0999410679410679,"Karger et al. — Expert survey, rapid (P≈14%)"
+auto_cost,final_fed_deficit_B,0.0985699825699825,"Karger et al. — Expert survey, rapid (P≈14%)"
+attrition_rate,final_fed_deficit_B,-0.0834794634794634,"Karger et al. — Expert survey, rapid (P≈14%)"
+robotics_lag,final_fed_deficit_B,0.0672548592548592,"Karger et al. — Expert survey, rapid (P≈14%)"
+survivor_spillover_to_profit,final_fed_deficit_B,0.0661700101700101,"Karger et al. — Expert survey, rapid (P≈14%)"
+ui_weeks,final_fed_deficit_B,0.0648217623105806,"Karger et al. — Expert survey, rapid (P≈14%)"
+shareholder_eff_rate,final_fed_deficit_B,-0.0526395526395526,"Karger et al. — Expert survey, rapid (P≈14%)"
+cg_realization_rate,final_fed_deficit_B,-0.0424400104400104,"Karger et al. — Expert survey, rapid (P≈14%)"
+interest_rate,final_fed_deficit_B,0.0396648396648396,"Karger et al. — Expert survey, rapid (P≈14%)"
+equity_taxable_share,final_fed_deficit_B,-0.0384905544905544,"Karger et al. — Expert survey, rapid (P≈14%)"
+baseline_growth_rate,final_fed_deficit_B,0.0373877413877413,"Karger et al. — Expert survey, rapid (P≈14%)"
+mpc,final_fed_deficit_B,0.0370125456263497,"Karger et al. — Expert survey, rapid (P≈14%)"
+survivor_raise_ceiling,final_fed_deficit_B,0.0292783492783492,"Karger et al. — Expert survey, rapid (P≈14%)"
+physical_feasibility,final_fed_deficit_B,0.0292536652536652,"Karger et al. — Expert survey, rapid (P≈14%)"
+ubi_recapture_rate,final_fed_deficit_B,-0.020087228087228,"Karger et al. — Expert survey, rapid (P≈14%)"
+productivity_passthrough,final_fed_deficit_B,-0.0193238699457259,"Karger et al. — Expert survey, rapid (P≈14%)"
+equity_pe_multiple,final_fed_deficit_B,0.0169604089604089,"Karger et al. — Expert survey, rapid (P≈14%)"
+consumption_stickiness,final_fed_deficit_B,0.016501754511382,"Karger et al. — Expert survey, rapid (P≈14%)"
+state_rate_hike_cap,final_fed_deficit_B,0.0132960012960012,"Karger et al. — Expert survey, rapid (P≈14%)"
+price_passthrough,final_fed_deficit_B,0.0094105894105894,"Karger et al. — Expert survey, rapid (P≈14%)"
+reab_wage_baumol,final_fed_deficit_B,0.0087083727083727,"Karger et al. — Expert survey, rapid (P≈14%)"
+demand_multiplier,final_fed_deficit_B,-0.0048623208623208,"Karger et al. — Expert survey, rapid (P≈14%)"
+reabsorption_rate,final_fed_deficit_B,-0.5406783126783127,"Metaculus — Crowd median, 2035"
+adoption_end,final_fed_deficit_B,-0.4975802335802335,"Metaculus — Crowd median, 2035"
+cognitive_feasibility,final_fed_deficit_B,-0.464952236952237,"Metaculus — Crowd median, 2035"
+price_reduction_share,final_fed_deficit_B,0.3355949035949035,"Metaculus — Crowd median, 2035"
+reemployment_haircut,final_fed_deficit_B,0.1979474939474939,"Metaculus — Crowd median, 2035"
+survivor_gains_share,final_fed_deficit_B,-0.1890927210927211,"Metaculus — Crowd median, 2035"
+lfp_exit_rate,final_fed_deficit_B,0.1704789864789865,"Metaculus — Crowd median, 2035"
+compute_effective_rate,final_fed_deficit_B,-0.1067116667116667,"Metaculus — Crowd median, 2035"
+auto_cost,final_fed_deficit_B,0.1056770016770016,"Metaculus — Crowd median, 2035"
+robotics_lag,final_fed_deficit_B,0.103017103017103,"Metaculus — Crowd median, 2035"
+equity_taxable_share,final_fed_deficit_B,0.1003933123933124,"Metaculus — Crowd median, 2035"
+cg_realization_rate,final_fed_deficit_B,-0.0756572916572916,"Metaculus — Crowd median, 2035"
+equity_pe_multiple,final_fed_deficit_B,0.0613278013278013,"Metaculus — Crowd median, 2035"
+retained_profit_share,final_fed_deficit_B,-0.0608803328803328,"Metaculus — Crowd median, 2035"
+ssdi_annual,final_fed_deficit_B,0.0477127677127677,"Metaculus — Crowd median, 2035"
+demand_multiplier,final_fed_deficit_B,0.0405696045696045,"Metaculus — Crowd median, 2035"
+physical_feasibility,final_fed_deficit_B,-0.0364136044136044,"Metaculus — Crowd median, 2035"
+mpc,final_fed_deficit_B,0.0335868363853503,"Metaculus — Crowd median, 2035"
+shareholder_eff_rate,final_fed_deficit_B,-0.0276194676194676,"Metaculus — Crowd median, 2035"
+attrition_rate,final_fed_deficit_B,-0.0257231657231657,"Metaculus — Crowd median, 2035"
+baseline_growth_rate,final_fed_deficit_B,-0.0249887049887049,"Metaculus — Crowd median, 2035"
+productivity_passthrough,final_fed_deficit_B,0.019021783021783,"Metaculus — Crowd median, 2035"
+consumption_stickiness,final_fed_deficit_B,0.0189165360490261,"Metaculus — Crowd median, 2035"
+price_passthrough,final_fed_deficit_B,-0.0182590742590742,"Metaculus — Crowd median, 2035"
+ubi_recapture_rate,final_fed_deficit_B,0.0168970968970968,"Metaculus — Crowd median, 2035"
+state_rate_hike_cap,final_fed_deficit_B,0.015019167019167,"Metaculus — Crowd median, 2035"
+interest_rate,final_fed_deficit_B,-0.0148839628839628,"Metaculus — Crowd median, 2035"
+ui_weeks,final_fed_deficit_B,-0.0131086526049832,"Metaculus — Crowd median, 2035"
+reab_wage_baumol,final_fed_deficit_B,-0.0122943242943242,"Metaculus — Crowd median, 2035"
+reab_wage_crowding,final_fed_deficit_B,-0.011043431043431,"Metaculus — Crowd median, 2035"
+survivor_spillover_to_profit,final_fed_deficit_B,0.0097102057102057,"Metaculus — Crowd median, 2035"
+survivor_raise_ceiling,final_fed_deficit_B,0.0004389724389724,"Metaculus — Crowd median, 2035"
+adoption_end,final_fed_deficit_B,-0.5652011652011653,OpenAI — Jobs transition framework
+cognitive_feasibility,final_fed_deficit_B,-0.5526775806775807,OpenAI — Jobs transition framework
+price_reduction_share,final_fed_deficit_B,0.3567140487140487,OpenAI — Jobs transition framework
+reabsorption_rate,final_fed_deficit_B,-0.3150724950724951,OpenAI — Jobs transition framework
+retained_profit_share,final_fed_deficit_B,-0.2803550083550084,OpenAI — Jobs transition framework
+reemployment_haircut,final_fed_deficit_B,0.2289654609654609,OpenAI — Jobs transition framework
+lfp_exit_rate,final_fed_deficit_B,0.1634084354084354,OpenAI — Jobs transition framework
+survivor_gains_share,final_fed_deficit_B,-0.0731385971385971,OpenAI — Jobs transition framework
+shareholder_eff_rate,final_fed_deficit_B,-0.0708099588099588,OpenAI — Jobs transition framework
+compute_effective_rate,final_fed_deficit_B,-0.0543046623046623,OpenAI — Jobs transition framework
+ui_weeks,final_fed_deficit_B,-0.0508749164288304,OpenAI — Jobs transition framework
+price_passthrough,final_fed_deficit_B,-0.048010404010404,OpenAI — Jobs transition framework
+cg_realization_rate,final_fed_deficit_B,-0.0438894798894798,OpenAI — Jobs transition framework
+physical_feasibility,final_fed_deficit_B,-0.0409466689466689,OpenAI — Jobs transition framework
+ssdi_annual,final_fed_deficit_B,0.0343981063981064,OpenAI — Jobs transition framework
+interest_rate,final_fed_deficit_B,0.0334458934458934,OpenAI — Jobs transition framework
+productivity_passthrough,final_fed_deficit_B,0.0299269139269139,OpenAI — Jobs transition framework
+equity_taxable_share,final_fed_deficit_B,-0.0277545637545637,OpenAI — Jobs transition framework
+demand_multiplier,final_fed_deficit_B,0.0237043437043437,OpenAI — Jobs transition framework
+baseline_growth_rate,final_fed_deficit_B,0.0219869859869859,OpenAI — Jobs transition framework
+auto_cost,final_fed_deficit_B,0.021030657030657,OpenAI — Jobs transition framework
+state_rate_hike_cap,final_fed_deficit_B,0.0163479763479763,OpenAI — Jobs transition framework
+survivor_spillover_to_profit,final_fed_deficit_B,-0.0149513909513909,OpenAI — Jobs transition framework
+survivor_raise_ceiling,final_fed_deficit_B,-0.0147724587724587,OpenAI — Jobs transition framework
+robotics_lag,final_fed_deficit_B,0.0114698874698874,OpenAI — Jobs transition framework
+consumption_stickiness,final_fed_deficit_B,-0.0113181020183508,OpenAI — Jobs transition framework
+attrition_rate,final_fed_deficit_B,-0.0111927711927711,OpenAI — Jobs transition framework
+ubi_recapture_rate,final_fed_deficit_B,0.0107029907029907,OpenAI — Jobs transition framework
+equity_pe_multiple,final_fed_deficit_B,-0.0086655566655566,OpenAI — Jobs transition framework
+mpc,final_fed_deficit_B,-0.0072406650417499,OpenAI — Jobs transition framework

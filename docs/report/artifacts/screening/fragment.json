@@ -6,15 +6,15 @@
   "sampler": "lhs",
   "n_dims": 26,
   "n_periods": 10,
-  "generated": "2026-07-10 12:28",
-  "git_sha": "b6f045b"
+  "generated": "2026-07-27 19:28",
+  "git_sha": "910978b"
  },
  "regimes": {
-  "improves_pct": 6.5,
-  "band_0_1_pct": 11.7,
-  "band_1_3_pct": 29.6,
-  "band_gt3_pct": 52.2,
-  "capped_anywhere_pct": 0.5
+  "improves_pct": 6.0,
+  "band_0_1_pct": 11.3,
+  "band_1_3_pct": 29.7,
+  "band_gt3_pct": 53.0,
+  "capped_anywhere_pct": 0.6
  },
  "checks": {
   "invariant_failures": 0,
@@ -22,65 +22,75 @@
   "cycle_batch_max_alternations": 0
  },
  "deficit_delta_final_B": {
-  "p5": -107.0,
-  "p25": 678.0,
-  "p50": 1453.0,
-  "p75": 2326.0,
-  "p95": 3550.0
+  "p5": -66.0,
+  "p25": 709.0,
+  "p50": 1478.0,
+  "p75": 2358.0,
+  "p95": 3587.0
  },
  "top_drivers": {
   "uncertainty": [
    {
     "lever": "retained_profit_share",
     "spearman": -0.161,
-    "eta2": 0.0321
+    "eta2": 0.032,
+    "eta2_debiased": 0.0302
    },
    {
     "lever": "price_reduction_share",
-    "spearman": 0.14,
-    "eta2": 0.025
+    "spearman": 0.142,
+    "eta2": 0.0254,
+    "eta2_debiased": 0.0236
    },
    {
     "lever": "reabsorption_rate",
-    "spearman": -0.108,
-    "eta2": 0.0154
+    "spearman": -0.104,
+    "eta2": 0.0139,
+    "eta2_debiased": 0.0121
    },
    {
     "lever": "auto_cost",
-    "spearman": 0.084,
-    "eta2": 0.0094
+    "spearman": 0.086,
+    "eta2": 0.0096,
+    "eta2_debiased": 0.0077
    },
    {
     "lever": "lfp_exit_rate",
-    "spearman": 0.065,
-    "eta2": 0.0063
+    "spearman": 0.066,
+    "eta2": 0.0066,
+    "eta2_debiased": 0.0047
    }
   ],
   "policy": [
    {
     "lever": "ubi_annual",
     "spearman": 0.818,
-    "eta2": 0.6314
+    "eta2": 0.6317,
+    "eta2_debiased": 0.631
    },
    {
     "lever": "ubi_recapture_rate",
     "spearman": -0.32,
-    "eta2": 0.119
+    "eta2": 0.1195,
+    "eta2_debiased": 0.1179
    },
    {
     "lever": "compute_effective_rate",
-    "spearman": -0.161,
-    "eta2": 0.0302
+    "spearman": -0.162,
+    "eta2": 0.0306,
+    "eta2_debiased": 0.0287
    },
    {
     "lever": "automation_tax_frac",
-    "spearman": -0.097,
-    "eta2": 0.0158
+    "spearman": -0.098,
+    "eta2": 0.0159,
+    "eta2_debiased": 0.014
    },
    {
     "lever": "interest_rate",
     "spearman": -0.018,
-    "eta2": 0.0017
+    "eta2": 0.0017,
+    "eta2_debiased": 0.0
    }
   ]
  },

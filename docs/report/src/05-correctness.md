@@ -52,7 +52,7 @@ approximation of them.
 
 ## 5.3 Test surface
 
-The repository carries 357 regression tests: the conservation battery across lever sweeps, numeric
+The repository carries 359 regression tests: the conservation battery across lever sweeps, numeric
 anchors for each kernel channel, the displacement-literature behavioral pins (attrition lowers the
 deficit; a job stays automated after its worker is reabsorbed; a stationary shock produces a
 stationary induced-layoff stock), sampler domain properties for the Monte Carlo, UI-grid

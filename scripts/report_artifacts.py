@@ -348,14 +348,22 @@ def build_shape_sensitivity(env: Env, manifest: dict) -> dict:
               f"self {row['self']['debt_shift_pct']:+.1f}% (cum debt)")
     # summary stats, split by the house $-floor convention (percentages explode on ~zero bases):
     # % among the large-debt worlds (|cum debt| ≥ $1T), plain $B among the modest ones.
+    is_large = lambda v: abs(v["linear"]["debt_B"]) >= 1000.0
     large = [abs(v[m]["debt_shift_pct"]) for v in per.values() if "linear" in v
-             for m in ("raw", "self") if abs(v["linear"]["debt_B"]) >= 1000.0]
+             for m in ("raw", "self") if is_large(v)]
     small = [abs(v[m]["debt_shift_B"]) for v in per.values() if "linear" in v
-             for m in ("raw", "self") if abs(v["linear"]["debt_B"]) < 1000.0]
+             for m in ("raw", "self") if not is_large(v)]
+    # The band excursions need the same split, and for the same reason: a modest world's P10-P90
+    # band is only tens of $B wide, so a trivial dollar move leaves it while a severe world's does
+    # not. Reporting a bare "N of M outside" without this split overstates the shape risk.
+    out_large = sum(not v[m]["final_deficit_in_band"] for v in per.values() if "linear" in v
+                    for m in ("raw", "self") if is_large(v))
     return {"config": {"p": BASS_P, "q": BASS_Q, "t99_years": round(_BASS_T99, 2),
                        "variants": ["raw", "self"]},
             "per_preset": per,
             "summary": {"n_runs": n_runs, "n_final_deficit_outside_band": outside,
+                        "n_outside_band_large": out_large,
+                        "n_runs_large": len(large),
                         "max_debt_shift_pct_large": round(max(large), 1) if large else None,
                         "max_debt_shift_B_small": round(max(small), 1) if small else None}}
 

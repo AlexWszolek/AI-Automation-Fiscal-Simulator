@@ -1,37 +1,73 @@
 preset,preset_key,overlay,overlay_key,final_recovery_B,cum_recovery_B,pct_of_cum_gap,cum_instrument_B
-Acemoglu — Modest AI,acemoglu-modest,Robot tax — optimal (Costinot-Werning),cw-robot-tax,0.5,2.5,,3.1
-Acemoglu — Modest AI,acemoglu-modest,Robot tax — transitional (GRT),grt-robot-tax,0.9,4.7,,5.9
+Acemoglu — Modest AI,acemoglu-modest,Robot tax — optimal (Costinot-Werning),cw-robot-tax,0.5,2.4,,3.1
+Acemoglu — Modest AI,acemoglu-modest,Robot tax — transitional (GRT),grt-robot-tax,0.9,4.5,,5.9
 Acemoglu — Modest AI,acemoglu-modest,UBI $12k + 30% recapture,ubi,-1291.1,-12920.5,,-12932.1
 Acemoglu — Modest AI,acemoglu-modest,Compute-pool parity taxation,compute-parity,3.8,19.8,,19.8
-Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — optimal (Costinot-Werning),cw-robot-tax,1.9,9.9,,12.6
-Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — transitional (GRT),grt-robot-tax,3.6,18.7,,23.8
+Acemoglu — Modest AI,acemoglu-modest,Sovereign wealth fund — 20% of AI profits,swf,38.7,203.5,,0.0
+Acemoglu — Modest AI,acemoglu-modest,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,974.3,9751.1,,0.0
+Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — optimal (Costinot-Werning),cw-robot-tax,1.8,9.6,,12.6
+Brynjolfsson — Augmentation,brynjolfsson-augment,Robot tax — transitional (GRT),grt-robot-tax,3.5,18.1,,23.8
 Brynjolfsson — Augmentation,brynjolfsson-augment,UBI $12k + 30% recapture,ubi,-1293.0,-12929.0,,-12932.1
 Brynjolfsson — Augmentation,brynjolfsson-augment,Compute-pool parity taxation,compute-parity,15.2,79.3,,79.3
-Windfall Trust — Medium,windfall-medium,Robot tax — optimal (Costinot-Werning),cw-robot-tax,5.7,31.0,1.8,39.6
-Windfall Trust — Medium,windfall-medium,Robot tax — transitional (GRT),grt-robot-tax,10.9,58.6,3.5,74.8
-Windfall Trust — Medium,windfall-medium,UBI $12k + 30% recapture,ubi,-1228.3,-12609.0,-746.1,-12932.1
-Windfall Trust — Medium,windfall-medium,Compute-pool parity taxation,compute-parity,0.0,-0.0,-0.0,0.0
-China-Shock Grind,china-shock,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.9,24.2,0.5,30.8
-China-Shock Grind,china-shock,Robot tax — transitional (GRT),grt-robot-tax,5.5,45.6,1.0,58.3
-China-Shock Grind,china-shock,UBI $12k + 30% recapture,ubi,-884.1,-16875.4,-377.6,-19398.2
-China-Shock Grind,china-shock,Compute-pool parity taxation,compute-parity,23.4,194.2,4.3,194.2
-Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,31.6,357.6,1.2,457.0
-Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — transitional (GRT),grt-robot-tax,59.7,675.5,2.3,863.2
-Korinek-Suh — AGI in 20 years,agi-20y,UBI $12k + 30% recapture,ubi,-1106.3,-20683.2,-70.6,-25864.2
-Korinek-Suh — AGI in 20 years,agi-20y,Compute-pool parity taxation,compute-parity,329.2,3723.8,12.7,3723.8
-Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,42.8,333.0,1.5,425.3
-Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — transitional (GRT),grt-robot-tax,80.8,629.0,2.8,803.4
-Korinek-Suh — AGI in 5 years,agi-5y,UBI $12k + 30% recapture,ubi,-1175.5,-11212.8,-49.2,-12932.1
-Korinek-Suh — AGI in 5 years,agi-5y,Compute-pool parity taxation,compute-parity,445.0,3465.5,15.2,3465.5
-AI 2027 — Fast takeoff,ai-2027,Robot tax — optimal (Costinot-Werning),cw-robot-tax,66.5,297.1,2.5,379.6
-AI 2027 — Fast takeoff,ai-2027,Robot tax — transitional (GRT),grt-robot-tax,125.6,561.2,4.6,717.0
-AI 2027 — Fast takeoff,ai-2027,UBI $12k + 30% recapture,ubi,-1076.6,-8835.2,-73.1,-10345.7
-AI 2027 — Fast takeoff,ai-2027,Compute-pool parity taxation,compute-parity,691.9,3093.0,25.6,3093.0
-AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — optimal (Costinot-Werning),cw-robot-tax,68.3,603.7,3.4,771.4
-AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — transitional (GRT),grt-robot-tax,129.1,1140.3,6.4,1457.1
-AI 2040 — Plan A (The Deal),ai2040-plan-a,UBI $12k + 30% recapture,ubi,-643.0,-14068.1,-79.6,-18105.0
-AI 2040 — Plan A (The Deal),ai2040-plan-a,Compute-pool parity taxation,compute-parity,711.9,6285.7,35.5,6285.7
-AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — optimal (Costinot-Werning),cw-robot-tax,62.8,397.4,2.0,507.4
-AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — transitional (GRT),grt-robot-tax,118.7,750.6,3.8,958.5
-AI 2040 — Plan D (The Race),ai2040-plan-d,UBI $12k + 30% recapture,ubi,-1158.0,-10807.6,-55.4,-12932.1
-AI 2040 — Plan D (The Race),ai2040-plan-d,Compute-pool parity taxation,compute-parity,653.5,4134.6,21.2,4134.6
+Brynjolfsson — Augmentation,brynjolfsson-augment,Sovereign wealth fund — 20% of AI profits,swf,67.8,353.6,,0.0
+Brynjolfsson — Augmentation,brynjolfsson-augment,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,977.7,9763.8,,0.0
+Windfall Trust — Medium,windfall-medium,Robot tax — optimal (Costinot-Werning),cw-robot-tax,5.6,30.1,1.8,39.6
+Windfall Trust — Medium,windfall-medium,Robot tax — transitional (GRT),grt-robot-tax,10.5,56.8,3.4,74.8
+Windfall Trust — Medium,windfall-medium,UBI $12k + 30% recapture,ubi,-1228.3,-12609.0,-758.0,-12932.1
+Windfall Trust — Medium,windfall-medium,Compute-pool parity taxation,compute-parity,0.0,0.0,0.0,0.0
+Windfall Trust — Medium,windfall-medium,Sovereign wealth fund — 20% of AI profits,swf,186.7,1009.6,60.7,0.0
+Windfall Trust — Medium,windfall-medium,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,940.2,9562.0,574.8,0.0
+China-Shock Grind,china-shock,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.8,23.4,0.5,30.8
+China-Shock Grind,china-shock,Robot tax — transitional (GRT),grt-robot-tax,5.3,44.2,1.0,58.3
+China-Shock Grind,china-shock,UBI $12k + 30% recapture,ubi,-884.1,-16875.4,-380.1,-19398.2
+China-Shock Grind,china-shock,Compute-pool parity taxation,compute-parity,23.4,194.2,4.4,194.2
+China-Shock Grind,china-shock,Sovereign wealth fund — 20% of AI profits,swf,132.3,1099.9,24.8,0.0
+China-Shock Grind,china-shock,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,932.3,14318.3,322.5,0.0
+Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,30.7,346.6,1.2,457.0
+Korinek-Suh — AGI in 20 years,agi-20y,Robot tax — transitional (GRT),grt-robot-tax,58.0,654.8,2.3,863.2
+Korinek-Suh — AGI in 20 years,agi-20y,UBI $12k + 30% recapture,ubi,-1104.9,-20682.0,-71.4,-25864.2
+Korinek-Suh — AGI in 20 years,agi-20y,Compute-pool parity taxation,compute-parity,329.2,3723.8,12.8,3723.8
+Korinek-Suh — AGI in 20 years,agi-20y,Sovereign wealth fund — 20% of AI profits,swf,1069.4,11822.2,40.8,-0.0
+Korinek-Suh — AGI in 20 years,agi-20y,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,768.8,16798.8,58.0,-0.0
+Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — optimal (Costinot-Werning),cw-robot-tax,41.4,322.2,1.4,425.3
+Korinek-Suh — AGI in 5 years,agi-5y,Robot tax — transitional (GRT),grt-robot-tax,78.1,608.6,2.7,803.4
+Korinek-Suh — AGI in 5 years,agi-5y,UBI $12k + 30% recapture,ubi,-1173.2,-11203.1,-49.6,-12932.1
+Korinek-Suh — AGI in 5 years,agi-5y,Compute-pool parity taxation,compute-parity,445.0,3465.5,15.3,3465.5
+Korinek-Suh — AGI in 5 years,agi-5y,Sovereign wealth fund — 20% of AI profits,swf,1018.3,7849.2,34.8,0.0
+Korinek-Suh — AGI in 5 years,agi-5y,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,755.0,8032.8,35.6,0.0
+AI 2027 — Fast takeoff,ai-2027,Robot tax — optimal (Costinot-Werning),cw-robot-tax,65.1,361.8,2.5,477.4
+AI 2027 — Fast takeoff,ai-2027,Robot tax — transitional (GRT),grt-robot-tax,122.9,683.5,4.8,901.7
+AI 2027 — Fast takeoff,ai-2027,UBI $12k + 30% recapture,ubi,-1196.7,-9038.4,-63.6,-10345.7
+AI 2027 — Fast takeoff,ai-2027,Compute-pool parity taxation,compute-parity,703.1,3889.9,27.4,3889.9
+AI 2027 — Fast takeoff,ai-2027,Sovereign wealth fund — 20% of AI profits,swf,850.3,4570.6,32.1,-0.0
+AI 2027 — Fast takeoff,ai-2027,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,723.8,6633.4,46.6,-0.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — optimal (Costinot-Werning),cw-robot-tax,66.1,492.2,3.1,650.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Robot tax — transitional (GRT),grt-robot-tax,124.9,929.8,5.9,1227.9
+AI 2040 — Plan A (The Deal),ai2040-plan-a,UBI $12k + 30% recapture,ubi,-716.4,-15064.0,-95.0,-18105.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Compute-pool parity taxation,compute-parity,712.9,5296.7,33.4,5296.7
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Sovereign wealth fund — 20% of AI profits,swf,718.2,5035.9,31.8,0.0
+AI 2040 — Plan A (The Deal),ai2040-plan-a,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,762.7,12455.6,78.6,0.0
+AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — optimal (Costinot-Werning),cw-robot-tax,66.8,287.0,2.3,378.3
+AI 2040 — Plan D (The Race),ai2040-plan-d,Robot tax — transitional (GRT),grt-robot-tax,126.1,542.2,4.3,714.6
+AI 2040 — Plan D (The Race),ai2040-plan-d,UBI $12k + 30% recapture,ubi,-1254.7,-11570.6,-91.5,-12932.1
+AI 2040 — Plan D (The Race),ai2040-plan-d,Compute-pool parity taxation,compute-parity,723.0,3082.8,24.4,3082.8
+AI 2040 — Plan D (The Race),ai2040-plan-d,Sovereign wealth fund — 20% of AI profits,swf,960.1,4074.4,32.2,0.0
+AI 2040 — Plan D (The Race),ai2040-plan-d,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,704.9,8838.7,69.9,0.0
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.8,16.0,,21.1
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,Robot tax — transitional (GRT),grt-robot-tax,5.2,30.2,,39.8
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,UBI $12k + 30% recapture,ubi,-1290.6,-12913.1,,-12932.1
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,Compute-pool parity taxation,compute-parity,23.0,132.6,,132.6
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,Sovereign wealth fund — 20% of AI profits,swf,64.5,372.0,,0.0
+"Karger et al. — Expert survey, rapid (P≈14%)",karger-rapid,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,974.7,9746.2,,0.0
+"Metaculus — Crowd median, 2035",metaculus-2035,Robot tax — optimal (Costinot-Werning),cw-robot-tax,2.2,11.9,,15.6
+"Metaculus — Crowd median, 2035",metaculus-2035,Robot tax — transitional (GRT),grt-robot-tax,4.2,22.4,,29.5
+"Metaculus — Crowd median, 2035",metaculus-2035,UBI $12k + 30% recapture,ubi,-1293.0,-12928.0,,-12932.1
+"Metaculus — Crowd median, 2035",metaculus-2035,Compute-pool parity taxation,compute-parity,18.5,98.4,,98.4
+"Metaculus — Crowd median, 2035",metaculus-2035,Sovereign wealth fund — 20% of AI profits,swf,67.2,358.7,,-0.0
+"Metaculus — Crowd median, 2035",metaculus-2035,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,980.5,9774.2,,-0.0
+OpenAI — Jobs transition framework,openai-transition,Robot tax — optimal (Costinot-Werning),cw-robot-tax,4.0,27.8,,36.5
+OpenAI — Jobs transition framework,openai-transition,Robot tax — transitional (GRT),grt-robot-tax,7.5,52.4,,69.0
+OpenAI — Jobs transition framework,openai-transition,UBI $12k + 30% recapture,ubi,-1291.1,-12897.8,,-12932.1
+OpenAI — Jobs transition framework,openai-transition,Compute-pool parity taxation,compute-parity,33.2,230.0,,230.0
+OpenAI — Jobs transition framework,openai-transition,Sovereign wealth fund — 20% of AI profits,swf,92.9,645.5,,0.0
+OpenAI — Jobs transition framework,openai-transition,Federal VAT 5% (Korinek-Lockwood stage 1),fed-vat,976.3,9738.5,,0.0
