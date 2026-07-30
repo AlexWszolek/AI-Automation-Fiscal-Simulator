@@ -16,7 +16,7 @@ function Caption({ e }: { e: TornadoEntry }) {
       the settings, how consistently does raising that assumption move the final-year
       deficit? <span className="num">±1</span> means perfectly correlated, near{' '}
       <span className="num">0</span> means little independent influence. Across those runs
-      the final-year deficiet increase stays between{' '}
+      the final-year deficit increase stays between{' '}
       <span className="num">${thousands(e.p10)}B</span> and{' '}
       <span className="num">${thousands(e.p90)}B</span> (P10–P90). This band measures
       robustness to mis-calibrated assumptions within this scenario.

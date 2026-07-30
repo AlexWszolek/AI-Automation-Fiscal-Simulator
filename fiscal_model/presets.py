@@ -157,7 +157,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="windfall-medium", name="Windfall Trust — Medium",
-        blurb="60% of jobs exposed, half automed in 10 years, heavy scarring, high value "
+        blurb="60% of jobs exposed, half automated in 10 years, heavy scarring, high value "
               "capture, and capital taxed at their effective tax rate.",
         adoption_start=0.05, adoption_end=0.50, n_periods=10,
         overrides=dict(cognitive_feasibility=0.55, physical_feasibility=0.20, robotics_lag=5.0,
@@ -419,7 +419,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="karger-rapid", name="Karger et al. — Expert survey, rapid (P≈14%)",
-        blurb="The NBER exper surver's rapid scenario, which sits at a 14% probability. This "
+        blurb="The NBER expert survey's rapid scenario, which sits at a 14% probability. This "
               "means strong growth, modest displacement that exits the labor force, and a "
               "falling labor share.",
         adoption_start=0.03, adoption_end=0.16, n_periods=10,
@@ -494,7 +494,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="openai-transition", name="OpenAI — Jobs transition framework",
-        blurb="18% of occupations with high automation-risk, plus partial staffinf "
+        blurb="18% of occupations with high automation-risk, plus partial staffing "
               "compression where jobs are reorganized. This paper was mapping automation "
               "pressure",
         adoption_start=0.05, adoption_end=0.20, n_periods=10, adoption_reach_year=7,

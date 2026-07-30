@@ -558,7 +558,7 @@
    "adoption_end": 0.5,
    "adoption_reach_year": null,
    "adoption_start": 0.05,
-   "blurb": "60% of jobs exposed, half automed in 10 years, heavy scarring, high value capture, and capital taxed at their effective tax rate.",
+   "blurb": "60% of jobs exposed, half automated in 10 years, heavy scarring, high value capture, and capital taxed at their effective tax rate.",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 0.5,
@@ -1559,7 +1559,7 @@
    "adoption_end": 0.16,
    "adoption_reach_year": null,
    "adoption_start": 0.03,
-   "blurb": "The NBER exper surver's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
+   "blurb": "The NBER expert survey's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
    "defaults": {
     "adopt0": 0.03,
     "adopt1": 0.16,
@@ -1840,7 +1840,7 @@
    "adoption_end": 0.2,
    "adoption_reach_year": 7,
    "adoption_start": 0.05,
-   "blurb": "18% of occupations with high automation-risk, plus partial staffinf compression where jobs are reorganized. This paper was mapping automation pressure",
+   "blurb": "18% of occupations with high automation-risk, plus partial staffing compression where jobs are reorganized. This paper was mapping automation pressure",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 0.2,

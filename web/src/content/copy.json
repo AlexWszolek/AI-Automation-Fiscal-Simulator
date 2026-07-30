@@ -4,7 +4,7 @@
   "Every worker out of the 154M modeled workers is in exactly one band each year. Displacement moves people down the stack, while reabsorption and attrition move them out of limbo.",
   "Federal revenue and the absolute deficit. Revenue falls faster than employment because high-paying occupations are more exposed to automation, and with the tax schedule being progressive the budget loses its best taxpayers first.",
   "The destinations of the wages firms stop paying. Every dollar goes to one destination, and each is taxed at a different rate: profit around 18%, prices around 2%, raises at full labor rates, and compute at the capital rate.",
-  "Jobs lost because displaced housholds stop spending and states cut budgets. This tracks income withdrawal, so stimulus (UBI, raises) re-employs these workers.",
+  "Jobs lost because displaced households stop spending and states cut budgets. This tracks income withdrawal, so stimulus (UBI, raises) re-employs these workers.",
   "What the raises cost firms vs the extra federal tax they generate, which is the mechanism that rebuilds the labor tax base.",
   "The state shortfall, annual and cumulative, before any response, so the deficit states would run if they could borrow. This is what the first years could look like while legislatures catch up. ",
   "The consequence of the response you chose above: revenue recovered by rate hikes vs spending cuts (including cuts FORCED where the cap binds). Try 'Raise taxes' vs 'Cut spending' — the federal picture changes too, because both withdraw demand differently."
@@ -219,7 +219,7 @@
    "widget": "slider"
   },
   "rob_base": {
-   "help": "The shape of that build-out. 1.0 is a straight linear ramp; higher values make capacity compound — robots building the factories that build robots — so the ramp starts slow and finishes explosively. At 1.5, half of all capacity arrives in the last fifth of the lag.",
+   "help": "How the build-out is shaped, with 1.0 being a linear build-out. The idea behind an industrial explosion scenario is that robots build factories that build robots, so the ramp starts slow and finishes fast. At 1.5, half of all capacity is built in the final fifth of the lag.",
    "label": "Robot build-out growth (exponential base)",
    "widget": "slider"
   },
@@ -311,7 +311,7 @@
   "view_help": "The two summary views group the same reconciled flows differently; 'Detailed per-year' is every raw model column."
  },
  "subheaders": [
-  "Asymetric fiscal impact on states",
+  "Asymmetric fiscal impact on states",
   "Fiscal summary",
   "Which assumptions drive this number?",
   "Where the workforce goes",

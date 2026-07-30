@@ -48,7 +48,7 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
         </label>
       ))}
       {payload?.config.overlay_notes.map((n) => (
-        <p key={n} className="caption">🏛 {n}</p>
+        <p key={n} className="caption">{n}</p>
       ))}
       </div>
     </details>

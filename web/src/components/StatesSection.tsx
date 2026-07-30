@@ -33,7 +33,7 @@ export function StatesSection({ cfg, payload, dispatch }: {
   return (
     <section>
       <div className="col-wide">
-        <h2>Asymetric fiscal impact on states</h2>
+        <h2>Asymmetric fiscal impact on states</h2>
         <p>{PROSE.states_intro}</p>
         {/* state_resp has no control (removed 2026-07: the cut-share slider covers the
             continuum and every preset ships 'mix'); old share-URLs setting it still decode. */}
@@ -43,7 +43,7 @@ export function StatesSection({ cfg, payload, dispatch }: {
         </div>
         {f.state_gap_B > 1 && (
           <p>
-            Closign the final-year revenue gap by only by tax increases would mean raising
+            Closing the final-year revenue gap only by tax increases would mean raising
             state taxes by roughly{' '}
             <span className="num">{thousands(sc.implied_pct, 1)}%</span> on everyone still
             working. That is what a <span className="num">${thousands(f.state_gap_B)}B</span>{' '}
