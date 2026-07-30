@@ -12,15 +12,14 @@ function Caption({ e }: { e: TornadoEntry }) {
   return (
     <>
       Each bar is a <em>Spearman rank correlation</em>: across{' '}
-      <span className="num">{e.n}</span> model runs that jitter every live assumption ±15%
-      around your settings, how consistently does raising that assumption move the final-year
-      deficit? <span className="num">±1</span> means perfectly in lockstep, near{' '}
-      <span className="num">0</span> means little independent influence — red pushes the
-      deficit up, blue pulls it down. Across those runs the final-year deficit increase stays
-      between <span className="num">${thousands(e.p10)}B</span> and{' '}
-      <span className="num">${thousands(e.p90)}B</span> (P10–P90). That band measures
-      robustness to mis-calibrated assumptions within this scenario — the honest uncertainty
-      about the future is the spread across the scenario presets themselves.
+      <span className="num">{e.n}</span> model runs that vary live assumptions ±15% around
+      the settings, how consistently does raising that assumption move the final-year
+      deficit? <span className="num">±1</span> means perfectly correlated, near{' '}
+      <span className="num">0</span> means little independent influence. Across those runs
+      the final-year deficiet increase stays between{' '}
+      <span className="num">${thousands(e.p10)}B</span> and{' '}
+      <span className="num">${thousands(e.p90)}B</span> (P10–P90). This band measures
+      robustness to mis-calibrated assumptions within this scenario.
     </>
   )
 }
@@ -46,8 +45,8 @@ export function TornadoSection({ cfg }: { cfg: ScenarioConfig }) {
       )}
       {t.unavailable && (
         <p className="caption">
-          Sensitivity recompute needs the compute service, which is not reachable right now —
-          showing the last available analysis. Preset sensitivities work offline.
+          Sensitivity recompute needs the compute service, which is not reachable right now;
+          showing last available analysis.
         </p>
       )}
       {t.entry ? (

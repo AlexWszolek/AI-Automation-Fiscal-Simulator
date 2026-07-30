@@ -257,7 +257,7 @@
  },
  "overlays": [
   {
-   "blurb": "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic, central).",
+   "blurb": "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic).",
    "key": "cw-robot-tax",
    "name": "Robot tax \u2014 optimal (Costinot-Werning)"
   },
@@ -277,12 +277,12 @@
    "name": "Compute-pool parity taxation"
   },
   {
-   "blurb": "Government equity share of after-tax automation profit; revenue scales with the shock.",
+   "blurb": "Government equity share of after-tax automation profit, so revenue scales with the shock.",
    "key": "swf",
    "name": "Sovereign wealth fund \u2014 20% of AI profits"
   },
   {
-   "blurb": "A new broad consumption tax \u2014 their primary post-labor instrument; base erodes as displacement deepens.",
+   "blurb": "A broad consumption tax, which is Korinek and Lockwood's primary post-labor revenue instrument, but the base erodes as displacement increases.",
    "key": "fed-vat",
    "name": "Federal VAT 5% (Korinek-Lockwood stage 1)"
   }
@@ -292,7 +292,7 @@
    "adoption_end": 0.23,
    "adoption_reach_year": null,
    "adoption_start": 0.02,
-   "blurb": "His 10-year upper bounds at face value: small exposed share, modest productivity, normal labor market, no wage response.",
+   "blurb": "Acemoglu's 10-year upper bounds, which are small exposed share, modest productivity, normal labor market, and no wage response.",
    "defaults": {
     "adopt0": 0.02,
     "adopt1": 0.23,
@@ -425,7 +425,7 @@
    "adoption_end": 0.3,
    "adoption_reach_year": null,
    "adoption_start": 0.02,
-   "blurb": "AI complements more than it substitutes: slow realized adoption, gains shared with survivors, strong productivity, mild scarring.",
+   "blurb": "AI augments more than it automates, so slow realized adoption, gains shared with survivors, strong productivity, and mild impacts.",
    "defaults": {
     "adopt0": 0.02,
     "adopt1": 0.3,
@@ -558,7 +558,7 @@
    "adoption_end": 0.5,
    "adoption_reach_year": null,
    "adoption_start": 0.05,
-   "blurb": "Their Medium scenario translated: 60% exposed, half automated in 10y, heavy scarring, high value capture, capital taxed at their ETR. Direct comparator (10y target -2.8%).",
+   "blurb": "60% of jobs exposed, half automed in 10 years, heavy scarring, high value capture, and capital taxed at their effective tax rate.",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 0.5,
@@ -691,7 +691,7 @@
    "adoption_end": 0.4,
    "adoption_reach_year": null,
    "adoption_start": 0.05,
-   "blurb": "A moderate shock met by the labor market ADH actually measured: decade-scale adjustment, LFP exit dominant, deep scarring, full demand amplification. 15 years.",
+   "blurb": "A scenario where AI automation is similar to the Autor-Dorn-Hanson China shock, so decade-scale adjustment, significant LFP exists, deep scarring, and full demand amplification.",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 0.4,
@@ -733,7 +733,7 @@
    },
    "key": "china-shock",
    "n_periods": 15,
-   "name": "China-Shock Grind",
+   "name": "Autor et al. \u2014 China-shock dynamics",
    "override_fields": [
     "adoption_path",
     "attrition_rate",
@@ -829,7 +829,7 @@
    "adoption_end": 1.0,
    "adoption_reach_year": null,
    "adoption_start": 0.05,
-   "blurb": "Full automation over 20 years; wages collapse before the end; capital keeps the gains; states lean on spending cuts.",
+   "blurb": "Full automation over 20 years, with wages collapsing, capital keeping gains, and states leaning on spending cuts.",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 1.0,
@@ -977,7 +977,7 @@
    "adoption_end": 1.0,
    "adoption_reach_year": 5,
    "adoption_start": 0.2,
-   "blurb": "The aggressive transition: full automation at year 5 (kinked path), viewed over a 10-year fiscal window. The stress case.",
+   "blurb": "Full automation at year 5, viewed over a 10-year fiscal window.",
    "defaults": {
     "adopt0": 0.2,
     "adopt1": 1.0,
@@ -1125,7 +1125,7 @@
    "adoption_end": 1.0,
    "adoption_reach_year": 5,
    "adoption_start": 0.2,
-   "blurb": "The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 years, adoption saturates at year 5, heavy compute investment, 8-year horizon.",
+   "blurb": "Cognition automated almost immediately, robotics ramping up over 3 years, and heavy compute investment.",
    "defaults": {
     "adopt0": 0.2,
     "adopt1": 1.0,
@@ -1263,7 +1263,7 @@
    "adoption_end": 1.0,
    "adoption_reach_year": 9,
    "adoption_start": 0.05,
-   "blurb": "AI Futures' managed transition: US-China consortium slows the takeoff; 95% of tasks automatable by 2035-36; employment 62%\u219212% over 2032-2040. World state only \u2014 their permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
+   "blurb": "A scenario where a US-China consortium slows the takeoff. 95% of tasks automatable by 2035-36; employment decreases form 62% to 12% over 2032-2040. Their permit-fee/Citizen's-Dividend regime is not modeled here. This plays out over a 14 year window.",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 1.0,
@@ -1411,7 +1411,7 @@
    "adoption_end": 1.0,
    "adoption_reach_year": 7,
    "adoption_start": 0.05,
-   "blurb": "AI Futures' no-deal branch: full AI R&D automation 2030, superintelligence early 2031, integration 'as fast as markets allow' \u2014 their AI 2027 Race ending on a 2030 fuse. 10 years (2027-2036).",
+   "blurb": "AI Futures' no-deal scenario, so full AI R&D automation by 2030, superintelligence in early 2031, integration \"as fast as markets allow.\"",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 1.0,
@@ -1559,7 +1559,7 @@
    "adoption_end": 0.16,
    "adoption_reach_year": null,
    "adoption_start": 0.03,
-   "blurb": "The NBER expert survey's rapid scenario at its elicited 14% probability: strong growth, modest displacement that exits the labor force rather than the unemployment rolls, and a falling labor share.",
+   "blurb": "The NBER exper surver's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
    "defaults": {
     "adopt0": 0.03,
     "adopt1": 0.16,
@@ -1697,7 +1697,7 @@
    "adoption_end": 0.2,
    "adoption_reach_year": null,
    "adoption_start": 0.02,
-   "blurb": "The Labor Automation Hub's community medians: employment \u22487.5% below the no-AI baseline by 2035, labor share down ~4pp, survivor wages up \u2014 displacement without a doom loop.",
+   "blurb": "The Labor Automation Hub's community medians, which are employment at roughly 7.5% below the no-AI baseline in 2035, labor share down 4pp, and survivor wages up.",
    "defaults": {
     "adopt0": 0.02,
     "adopt1": 0.2,
@@ -1840,7 +1840,7 @@
    "adoption_end": 0.2,
    "adoption_reach_year": 7,
    "adoption_start": 0.05,
-   "blurb": "Their four archetypes read as a decade of displacement pressure: the 18% high-automation-risk cohort plus partial staffing compression where jobs reorganize \u2014 explicitly a map of pressure, not a job-loss forecast.",
+   "blurb": "18% of occupations with high automation-risk, plus partial staffinf compression where jobs are reorganized. This paper was mapping automation pressure",
    "defaults": {
     "adopt0": 0.05,
     "adopt1": 0.2,

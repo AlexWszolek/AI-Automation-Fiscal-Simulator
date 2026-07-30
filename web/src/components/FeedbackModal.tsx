@@ -52,8 +52,8 @@ export function FeedbackSection() {
         </div>
         <div className="dialog-body feedback-body">
           <p className="caption">
-            Anything helps — a confusing number, a broken chart, a lever that reads wrong. Your
-            current configuration is attached automatically.
+            Feedback on anything confusing, suggestions, and general thoughts. All feedback is
+            appreciated. Your current configuration is attached automatically.
           </p>
           <textarea
             className="feedback-text"
@@ -78,8 +78,8 @@ export function FeedbackSection() {
             {status === 'sent' && <span className="caption">Received — thank you.</span>}
             {status === 'failed' && (
               <span className="caption feedback-fail">
-                Could not reach the feedback service — your text is kept here; please try again
-                later.
+                Could not reach the feedback service. Your text is kept here, so please try
+                again later.
               </span>
             )}
           </div>

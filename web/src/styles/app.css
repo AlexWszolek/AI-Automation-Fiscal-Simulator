@@ -181,7 +181,12 @@ input[type='range']::-moz-range-thumb:hover { background: #1f4666; }
 .lever-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
 .lever-label { font-size: 0.88rem; color: var(--ink-2); }
 .lever-label.has-help { border-bottom: 1px dotted var(--ink-3); cursor: help; }
-.lever, .lever-checkbox, .picker, .overlay-row, .metric, .view-toggle label { position: relative; }
+/* .view-toggle itself must be a positioning ancestor: the View/Units HelpTips sit directly in
+   the row (not inside a label), and without it their .help-pop anchored to the distant page
+   container — rendered off-screen below the content (invisible) while stretching the scroll
+   height (the phantom second scrollbar). */
+.lever, .lever-checkbox, .picker, .overlay-row, .metric, .view-toggle,
+.view-toggle label { position: relative; }
 .help-pop {
   position: absolute;
   left: 0;

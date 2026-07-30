@@ -45,16 +45,16 @@ def test_grid_covers_every_ui_key(genmod):
     assert set(grid) == set(UI_GRID)
 
 
-def test_copy_json_fresh():
-    """The mechanically-ported copy must track the app — editing app copy without re-running
-    scripts/extract_web_copy.py goes red here."""
-    spec = importlib.util.spec_from_file_location("extract_web_copy",
-                                                  ROOT / "scripts" / "extract_web_copy.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
+def test_copy_json_wellformed():
+    """copy.json is HAND-MAINTAINED since copy round 2 (the Streamlit extractor is retired —
+    Decisions tab of docs/website_copy_round2.xlsx). This guards structure, not provenance:
+    the keys the components import must exist and be non-empty."""
     committed = json.loads((ROOT / "web" / "src" / "content" / "copy.json").read_text())
-    assert json.loads(json.dumps(mod.extract(), sort_keys=True, ensure_ascii=False)) == committed, \
-        "web/src/content/copy.json is stale — re-run scripts/extract_web_copy.py"
+    for key in ("about", "captions", "groups", "intro", "learn_more", "levers",
+                "metrics", "prose", "subheaders"):
+        assert committed.get(key), f"copy.json missing/empty top-level key {key!r}"
+    for k, lever in committed["levers"].items():
+        assert lever.get("label"), f"levers.{k} has no label"
 
 
 def test_web_pages_fresh():

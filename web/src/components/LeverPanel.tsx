@@ -24,12 +24,9 @@ export function LeverRow({ k, values, dispatch }: {
   if (spec.type === 'bool')
     return <CheckboxControl label={c.label} help={c.help} value={Boolean(values[k])} onChange={set} />
   if (spec.type === 'enum') {
-    const display = k === 'state_resp'
-      ? { mix: 'Mix of both', raise_rates: 'Raise taxes', cut_spending: 'Cut spending' }
-      : undefined
     return (
       <SelectControl label={c.label} help={c.help} values={(spec as GridSpecEnum).values}
-                     value={String(values[k])} display={display} onChange={set} />
+                     value={String(values[k])} onChange={set} />
     )
   }
 
@@ -48,7 +45,7 @@ export function LeverRow({ k, values, dispatch }: {
     if (bound < 0.01)
       return (
         <p className="caption">
-          Automation tax: 0% — no retained profit left to pay it (retained × (1 − auto cost) ≈ 0).
+          Automation tax is 0%, as there is no retained profit left to pay it.
         </p>
       )
     return (
@@ -82,9 +79,9 @@ export function LeverPanel({ cfg, dispatch }: {
           ))}
           {g.title === 'Firms & compute' && (
             <p className="caption">
-              → Raises for remaining staff:{' '}
+              The remaining saved wages,{' '}
               {Math.round(survivorRemainder(Number(values.retained), Math.min(Number(values.price), Math.max(priceMax(Number(values.retained)), 0))) * 100)}
-              % (the remainder)
+              %, which pay for raises for remaining staff.
             </p>
           )}
         </details>

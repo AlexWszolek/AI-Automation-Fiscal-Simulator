@@ -95,8 +95,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="acemoglu-modest", name="Acemoglu — Modest AI",
-        blurb="His 10-year upper bounds at face value: small exposed share, modest productivity, "
-              "normal labor market, no wage response.",
+        blurb="Acemoglu's 10-year upper bounds, which are small exposed share, modest "
+              "productivity, normal labor market, and no wage response.",
         adoption_start=0.02, adoption_end=0.23, n_periods=10,
         overrides=dict(cognitive_feasibility=0.20, physical_feasibility=0.05, robotics_lag=8.0,
                        reabsorption_rate=0.50, reemployment_haircut=0.13, lfp_exit_rate=0.03,
@@ -126,8 +126,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="brynjolfsson-augment", name="Brynjolfsson — Augmentation",
-        blurb="AI complements more than it substitutes: slow realized adoption, gains shared with "
-              "survivors, strong productivity, mild scarring.",
+        blurb="AI augments more than it automates, so slow realized adoption, gains shared "
+              "with survivors, strong productivity, and mild impacts.",
         adoption_start=0.02, adoption_end=0.30, n_periods=10,
         overrides=dict(cognitive_feasibility=0.30, physical_feasibility=0.10, robotics_lag=6.0,
                        reabsorption_rate=0.60, reemployment_haircut=0.10, lfp_exit_rate=0.02,
@@ -157,8 +157,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="windfall-medium", name="Windfall Trust — Medium",
-        blurb="Their Medium scenario translated: 60% exposed, half automated in 10y, heavy scarring, "
-              "high value capture, capital taxed at their ETR. Direct comparator (10y target -2.8%).",
+        blurb="60% of jobs exposed, half automed in 10 years, heavy scarring, high value "
+              "capture, and capital taxed at their effective tax rate.",
         adoption_start=0.05, adoption_end=0.50, n_periods=10,
         overrides=dict(cognitive_feasibility=0.55, physical_feasibility=0.20, robotics_lag=5.0,
                        reabsorption_rate=0.30, reemployment_haircut=0.30, lfp_exit_rate=0.03,
@@ -188,9 +188,10 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
     ),
 
     Preset(
-        key="china-shock", name="China-Shock Grind",
-        blurb="A moderate shock met by the labor market ADH actually measured: decade-scale "
-              "adjustment, LFP exit dominant, deep scarring, full demand amplification. 15 years.",
+        key="china-shock", name="Autor et al. — China-shock dynamics",
+        blurb="A scenario where AI automation is similar to the Autor-Dorn-Hanson China "
+              "shock, so decade-scale adjustment, significant LFP exists, deep scarring, and "
+              "full demand amplification.",
         adoption_start=0.05, adoption_end=0.40, n_periods=15,
         overrides=dict(cognitive_feasibility=0.30, physical_feasibility=0.20, robotics_lag=4.0,
                        reabsorption_rate=0.075, reemployment_haircut=0.25, lfp_exit_rate=0.10,
@@ -221,8 +222,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
     
     Preset(
         key="agi-20y", name="Korinek-Suh — AGI in 20 years",
-        blurb="Full automation over 20 years; wages collapse before the end; capital keeps the "
-              "gains; states lean on spending cuts.",
+        blurb="Full automation over 20 years, with wages collapsing, capital keeping gains, "
+              "and states leaning on spending cuts.",
         adoption_start=0.05, adoption_end=1.0, n_periods=20,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_lag=10.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.05,
@@ -255,8 +256,7 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="agi-5y", name="Korinek-Suh — AGI in 5 years",
-        blurb="The aggressive transition: full automation at year 5 (kinked path), viewed over a "
-              "10-year fiscal window. The stress case.",
+        blurb="Full automation at year 5, viewed over a 10-year fiscal window.",
         adoption_start=0.20, adoption_end=1.0, n_periods=10, adoption_reach_year=5,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_lag=2.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
@@ -289,8 +289,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="ai-2027", name="AI 2027 — Fast takeoff",
-        blurb="The AI Futures scenario shape: cognition maxes almost immediately, robots ramp in 3 "
-              "years, adoption saturates at year 5, heavy compute investment, 8-year horizon.",
+        blurb="Cognition automated almost immediately, robotics ramping up over 3 years, and "
+              "heavy compute investment.",
         adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.90, robotics_lag=3.0,
                        reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
@@ -325,9 +325,10 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="ai2040-plan-a", name="AI 2040 — Plan A (The Deal)",
-        blurb="AI Futures' managed transition: US-China consortium slows the takeoff; 95% of tasks "
-              "automatable by 2035-36; employment 62%→12% over 2032-2040. World state only — their "
-              "permit-fee/Citizen's-Dividend regime is policy, not modeled here. 14 years (2027-2040).",
+        blurb="A scenario where a US-China consortium slows the takeoff. 95% of tasks "
+              "automatable by 2035-36; employment decreases form 62% to 12% over 2032-2040. "
+              "Their permit-fee/Citizen's-Dividend regime is not modeled here. This plays out"
+              " over a 14 year window.",
         adoption_start=0.05, adoption_end=1.0, n_periods=14, adoption_reach_year=9, start_year=2027,
         adoption_knots=((5, 0.20), (8, 0.85)),   # their published shares: 20% (2032), 85% (2035)
         overrides=dict(cognitive_feasibility=0.95, physical_feasibility=0.95, robotics_lag=9.0,
@@ -376,9 +377,8 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="ai2040-plan-d", name="AI 2040 — Plan D (The Race)",
-        blurb="AI Futures' no-deal branch: full AI R&D automation 2030, superintelligence early "
-              "2031, integration 'as fast as markets allow' — their AI 2027 Race ending on a 2030 "
-              "fuse. 10 years (2027-2036).",
+        blurb="AI Futures' no-deal scenario, so full AI R&D automation by 2030, "
+              "superintelligence in early 2031, integration \"as fast as markets allow.\"",
         adoption_start=0.05, adoption_end=1.0, n_periods=10, adoption_reach_year=7, start_year=2027,
         adoption_knots=((4, 0.05),),   # hold at start until ASI early 2031; integration only after
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.95, robotics_lag=6.0,
@@ -419,9 +419,9 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="karger-rapid", name="Karger et al. — Expert survey, rapid (P≈14%)",
-        blurb="The NBER expert survey's rapid scenario at its elicited 14% probability: strong "
-              "growth, modest displacement that exits the labor force rather than the "
-              "unemployment rolls, and a falling labor share.",
+        blurb="The NBER exper surver's rapid scenario, which sits at a 14% probability. This "
+              "means strong growth, modest displacement that exits the labor force, and a "
+              "falling labor share.",
         adoption_start=0.03, adoption_end=0.16, n_periods=10,
         overrides=dict(cognitive_feasibility=0.60, physical_feasibility=0.15, robotics_lag=8.0,
                        reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
@@ -458,9 +458,9 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="metaculus-2035", name="Metaculus — Crowd median, 2035",
-        blurb="The Labor Automation Hub's community medians: employment ≈7.5% below the no-AI "
-              "baseline by 2035, labor share down ~4pp, survivor wages up — displacement "
-              "without a doom loop.",
+        blurb="The Labor Automation Hub's community medians, which are employment at roughly "
+              "7.5% below the no-AI baseline in 2035, labor share down 4pp, and survivor "
+              "wages up.",
         adoption_start=0.02, adoption_end=0.20, n_periods=10,
         overrides=dict(cognitive_feasibility=0.55, physical_feasibility=0.20, robotics_lag=7.0,
                        reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
@@ -494,9 +494,9 @@ PRESETS: dict[str, Preset] = {p.key: p for p in [
 
     Preset(
         key="openai-transition", name="OpenAI — Jobs transition framework",
-        blurb="Their four archetypes read as a decade of displacement pressure: the 18% "
-              "high-automation-risk cohort plus partial staffing compression where jobs "
-              "reorganize — explicitly a map of pressure, not a job-loss forecast.",
+        blurb="18% of occupations with high automation-risk, plus partial staffinf "
+              "compression where jobs are reorganized. This paper was mapping automation "
+              "pressure",
         adoption_start=0.05, adoption_end=0.20, n_periods=10, adoption_reach_year=7,
         overrides=dict(cognitive_feasibility=0.75, physical_feasibility=0.05, robotics_lag=10.0,
                        reabsorption_rate=0.55, reemployment_haircut=0.12, lfp_exit_rate=0.03,
@@ -586,7 +586,7 @@ class Overlay:
 
 OVERLAYS: dict[str, Overlay] = {o.key: o for o in [
     Overlay("cw-robot-tax", "Robot tax — optimal (Costinot-Werning)",
-            "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic, central).",
+            "2.7% ad-valorem on robot spending (their 1-3.7% sufficient statistic).",
             "Costinot-Werning REStud 2023 (PRESET_EVIDENCE §3); should not scale UP with depth. "
             "Literature caution: robot taxes score worst of nine instruments on Convergence's FIRI "
             "(6/16: base definition, reclassification, arbitrage); the IMF recommends against "
@@ -604,11 +604,13 @@ OVERLAYS: dict[str, Overlay] = {o.key: o for o in [
             "stage-2-appropriate, production-inefficient while labor persists (PRESET_EVIDENCE §1, §7)",
             _parity),
     Overlay("swf", "Sovereign wealth fund — 20% of AI profits",
-            "Government equity share of after-tax automation profit; revenue scales with the shock.",
+            "Government equity share of after-tax automation profit, so revenue scales with"
+            " the shock.",
             "Korinek-Lockwood equity mechanisms; Convergence FIRI resilience 4/4; Feb-2025 US SWF "
             "executive order. 20% is illustrative, not derived (PRESET_EVIDENCE §7)", _swf),
     Overlay("fed-vat", "Federal VAT 5% (Korinek-Lockwood stage 1)",
-            "A new broad consumption tax — their primary post-labor instrument; base erodes as displacement deepens.",
+            "A broad consumption tax, which is Korinek and Lockwood's primary post-labor "
+            "revenue instrument, but the base erodes as displacement increases.",
             "Korinek-Lockwood stage 1; Convergence feasibility 4/4, VAT volatility −40-50%; Karger "
             "policy #1 pairs a 15% VAT with UBI — composes with the UBI overlay (PRESET_EVIDENCE §7)", _vat),
 ]}

@@ -33,20 +33,22 @@ export function StatesSection({ cfg, payload, dispatch }: {
   return (
     <section>
       <div className="col-wide">
-        <h2>The states — where the shock has no shock absorber</h2>
+        <h2>Asymetric fiscal impact on states</h2>
         <p>{PROSE.states_intro}</p>
+        {/* state_resp has no control (removed 2026-07: the cut-share slider covers the
+            continuum and every preset ships 'mix'); old share-URLs setting it still decode. */}
         <div className="panel state-controls">
-          <LeverRow k="state_resp" values={values} dispatch={dispatch} />
           <LeverRow k="state_cut" values={values} dispatch={dispatch} />
           <LeverRow k="rate_cap" values={values} dispatch={dispatch} />
         </div>
         {f.state_gap_B > 1 && (
           <p>
-            Closing the final-year gap with taxes alone would mean raising state taxes roughly{' '}
+            Closign the final-year revenue gap by only by tax increases would mean raising
+            state taxes by roughly{' '}
             <span className="num">{thousands(sc.implied_pct, 1)}%</span> on everyone still
             working. That is what a <span className="num">${thousands(f.state_gap_B)}B</span>{' '}
-            shortfall means against a <span className="num">${thousands(sc.tax_base_B)}B</span>{' '}
-            remaining wage base, and <span className="num">{f.n_states_capped}</span> of 51
+            shortfall would mean against a <span className="num">${thousands(sc.tax_base_B)}B</span>{' '}
+            remaining wage base; <span className="num">{f.n_states_capped}</span> of 51
             states hit the rate-hike cap under the current response.
           </p>
         )}

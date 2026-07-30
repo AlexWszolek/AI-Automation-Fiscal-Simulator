@@ -104,8 +104,9 @@ their policy-response combinations are **precomputed and committed** (`web/publi
 the site browses fully offline; the API serves custom slider values and modified-config
 sensitivity tornados. Everything the TS side knows about the model is **generated** from
 `fiscal_model/app_params.py` (`scripts/gen_web_bundle.py`: widget grid, URL-codec golden
-vectors, scenario bundles) and all user-facing copy is extracted byte-for-byte from the app
-(`scripts/extract_web_copy.py`) — freshness tests fail if either drifts. One Python function
+vectors, scenario bundles) — a freshness test fails if it drifts. User-facing copy is
+hand-maintained in `web/src/content/copy.json` (canonical since copy round 2; the old
+Streamlit extractor is retired). One Python function
 (`fiscal_model/webpayload.py`) produces both the static bundles and every API response, so
 static ≡ live by construction (pinned in `tests/test_api.py`).
 

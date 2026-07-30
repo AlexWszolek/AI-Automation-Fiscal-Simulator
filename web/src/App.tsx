@@ -93,7 +93,7 @@ export default function App() {
           <p>{copy.intro}</p>
           {apiDown && (
             <p className="panel caption">
-              Custom settings need the compute service, which is not reachable — showing the
+              Custom settings need the compute service, which is not reachable; showing the
               closest preset instead. Preset browsing works fully offline.
             </p>
           )}
@@ -170,7 +170,7 @@ export default function App() {
         </footer>
         {failed && !payload && (
           <p className="panel caption col-wide warning">
-            The scenario data could not be loaded — the site's data files are missing or
+            The scenario data could not be loaded; the site's data files are missing or
             unreachable. If this is a fresh deployment, the static bundles under /data were
             not copied.
           </p>
