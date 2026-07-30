@@ -20,6 +20,9 @@ data/interim/*.csv
 !data/interim/benefit_lookup.parquet
 !data/interim/benefit_lookup_meta.parquet
 !data/interim/noc_distribution.csv
+
+# Tester feedback (server-local; may contain contact info — never committed)
+data/feedback/
 !data/interim/ui_params.parquet
 !data/interim/worker_deltas_by_occ_state.parquet
 

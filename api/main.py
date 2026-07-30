@@ -7,18 +7,26 @@ Tests: create_app(backend=(data, deltas)) skips the ~5s data load.
 """
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
+import time
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from api.jobs import TornadoJobs                          # noqa: E402
 from api.scenario import ScenarioService, sanitize        # noqa: E402
+
+# Tester feedback lands here as JSON lines — server-local, gitignored (may contain contact
+# info). Module-level so tests can monkeypatch the path.
+FEEDBACK_PATH = ROOT / "data" / "feedback" / "feedback.jsonl"
+FEEDBACK_COOLDOWN_S = 30.0        # per-client; in-memory, resets on restart — spam brake, not auth
 
 
 def _load_backend():
@@ -76,6 +84,32 @@ def create_app(backend=None) -> FastAPI:
         if j is None:
             raise HTTPException(404, "unknown job")
         return j
+
+    feedback_last: dict[str, float] = {}      # client -> last-accepted timestamp (cooldown)
+
+    @app.post("/api/feedback")
+    def feedback(body: dict, request: Request) -> dict:
+        msg = str(body.get("message", "")).strip()
+        if not msg:
+            raise HTTPException(422, "empty message")
+        if len(msg) > 5000:
+            raise HTTPException(413, "message too long (5,000 characters max)")
+        # behind the reverse proxy request.client is localhost; X-Forwarded-For carries the client
+        client = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+                  or (request.client.host if request.client else "unknown"))
+        now = time.monotonic()
+        if now - feedback_last.get(client, -FEEDBACK_COOLDOWN_S) < FEEDBACK_COOLDOWN_S:
+            raise HTTPException(429, "please wait a moment before sending more feedback")
+        feedback_last[client] = now
+        rec = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+               "message": msg,
+               "contact": str(body.get("contact", "")).strip()[:200],
+               "url": str(body.get("url", ""))[:600],       # the share-URL encodes the config
+               "version": state.get("sha", "unknown")}
+        FEEDBACK_PATH.parent.mkdir(parents=True, exist_ok=True)
+        with FEEDBACK_PATH.open("a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        return {"ok": True}
 
     return app
 

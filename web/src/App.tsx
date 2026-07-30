@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import copy from './content/copy.json'
 import { timeSeries } from './charts/timeSeries'
 import { AboutSection, ShareBox } from './components/AboutModal'
+import { FeedbackSection } from './components/FeedbackModal'
 import { ChartPanel } from './components/ChartPanel'
 import { LeverPanel } from './components/LeverPanel'
 import { MetricGrid } from './components/MetricGrid'
@@ -82,6 +83,7 @@ export default function App() {
           <LeverPanel cfg={cfg} dispatch={dispatch} />
           <ShareBox queryString={qs} />
           <AboutSection />
+          <FeedbackSection />
         </div>
       </aside>
 

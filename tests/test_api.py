@@ -138,3 +138,29 @@ def test_tornado_job_lifecycle(client):
     again = client.post("/api/tornado", json=body).json()
     assert again["status"] == "done"
     assert client.get("/api/tornado/does-not-exist").status_code == 404
+
+
+def test_feedback_roundtrip(client, tmp_path, monkeypatch):
+    from api import main as api_main
+    monkeypatch.setattr(api_main, "FEEDBACK_PATH", tmp_path / "feedback.jsonl")
+    r = client.post("/api/feedback", json={"message": "the tornado bar for UI weeks looks odd",
+                                           "contact": "tester@example.edu",
+                                           "url": "http://localhost/?preset=agi-5y"})
+    assert r.status_code == 200 and r.json() == {"ok": True}
+    rec = json.loads((tmp_path / "feedback.jsonl").read_text().splitlines()[0])
+    assert rec["message"].startswith("the tornado bar")
+    assert rec["contact"] == "tester@example.edu" and "agi-5y" in rec["url"]
+    assert rec["ts"] and rec["version"]
+    # cooldown: an immediate second submission from the same client is rejected, file unchanged
+    r2 = client.post("/api/feedback", json={"message": "again"})
+    assert r2.status_code == 429
+    assert len((tmp_path / "feedback.jsonl").read_text().splitlines()) == 1
+
+
+def test_feedback_rejects_junk(client, tmp_path, monkeypatch):
+    from api import main as api_main
+    monkeypatch.setattr(api_main, "FEEDBACK_PATH", tmp_path / "feedback.jsonl")
+    assert client.post("/api/feedback", json={"message": "   "}).status_code == 422
+    assert client.post("/api/feedback", json={}).status_code == 422
+    assert client.post("/api/feedback", json={"message": "x" * 5001}).status_code == 413
+    assert not (tmp_path / "feedback.jsonl").exists()
