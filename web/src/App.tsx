@@ -129,12 +129,12 @@ export default function App() {
               caption={CAPTIONS[0]}
             />
             <ChartPanel
-              title="Demand feedback — induced layoffs"
+              title="Demand-destruction induced layoffs"
               spec={timeSeries(rows, ['induced_M'], 'millions of workers', startYear, { kind: 'area' })}
               caption={CAPTIONS[3]}
             />
             <ChartPanel
-              title="Federal budget — absolute levels"
+              title="Federal budget"
               spec={timeSeries(rows, ['fed_revenue_B', 'fed_deficit_abs_B'], '$ billions', startYear)}
               caption={CAPTIONS[1]}
             />
@@ -145,7 +145,7 @@ export default function App() {
               caption={WAGE_CAPTION + (reabDynamics ? WAGE_CAPTION_REAB : '')}
             />
             <ChartPanel
-              title="What firms do with the saved wages"
+              title="Corporate saved wages"
               spec={timeSeries(rows, ['retained_profit_B', 'price_reduction_B', 'survivor_gains_B',
                 'automation_spend_B'], '$ billions / year', startYear, { kind: 'bar', stack: true })}
               caption={CAPTIONS[2]}
