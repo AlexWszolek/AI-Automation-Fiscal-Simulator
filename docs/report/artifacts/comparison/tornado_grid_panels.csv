@@ -90,37 +90,37 @@ baseline_growth_rate,final_fed_deficit_B,-0.0139416139416139,Windfall Trust — 
 survivor_raise_ceiling,final_fed_deficit_B,-0.0138951378951378,Windfall Trust — Medium
 cg_realization_rate,final_fed_deficit_B,0.0054665934665934,Windfall Trust — Medium
 productivity_passthrough,final_fed_deficit_B,-0.0036482676482676,Windfall Trust — Medium
-demand_multiplier,final_fed_deficit_B,0.5136347976347976,China-Shock Grind
-adoption_end,final_fed_deficit_B,0.4481043401043401,China-Shock Grind
-mpc,final_fed_deficit_B,0.3736412874073321,China-Shock Grind
-consumption_stickiness,final_fed_deficit_B,0.3257137166392296,China-Shock Grind
-lfp_exit_rate,final_fed_deficit_B,0.2625328185328185,China-Shock Grind
-cognitive_feasibility,final_fed_deficit_B,0.2575389295389295,China-Shock Grind
-survivor_elasticity,final_fed_deficit_B,-0.2311272511272511,China-Shock Grind
-physical_feasibility,final_fed_deficit_B,0.1288671448671448,China-Shock Grind
-reemployment_haircut,final_fed_deficit_B,0.1101724101724101,China-Shock Grind
-reabsorption_rate,final_fed_deficit_B,-0.0989574509574509,China-Shock Grind
-survivor_gains_share,final_fed_deficit_B,-0.0807055647055647,China-Shock Grind
-survivor_raise_ceiling,final_fed_deficit_B,0.0662310062310062,China-Shock Grind
-productivity_passthrough,final_fed_deficit_B,0.0558430158430158,China-Shock Grind
-ssdi_annual,final_fed_deficit_B,0.0519849999849999,China-Shock Grind
-attrition_rate,final_fed_deficit_B,-0.0517151197151197,China-Shock Grind
-ubi_recapture_rate,final_fed_deficit_B,0.0472462792462792,China-Shock Grind
-interest_rate,final_fed_deficit_B,0.0402376722376722,China-Shock Grind
-shareholder_eff_rate,final_fed_deficit_B,-0.0351741111741111,China-Shock Grind
-price_passthrough,final_fed_deficit_B,-0.0284812004812004,China-Shock Grind
-survivor_spillover_to_profit,final_fed_deficit_B,0.02804542004542,China-Shock Grind
-retained_profit_share,final_fed_deficit_B,0.0263260223260223,China-Shock Grind
-compute_effective_rate,final_fed_deficit_B,-0.0254927654927654,China-Shock Grind
-auto_cost,final_fed_deficit_B,0.0249785289785289,China-Shock Grind
-equity_pe_multiple,final_fed_deficit_B,0.0211583131583131,China-Shock Grind
-robotics_lag,final_fed_deficit_B,-0.0185934545934545,China-Shock Grind
-baseline_growth_rate,final_fed_deficit_B,-0.008055704055704,China-Shock Grind
-state_rate_hike_cap,final_fed_deficit_B,0.0076331956331956,China-Shock Grind
-price_reduction_share,final_fed_deficit_B,0.0068424668424668,China-Shock Grind
-equity_taxable_share,final_fed_deficit_B,0.0056253056253056,China-Shock Grind
-cg_realization_rate,final_fed_deficit_B,0.0035909435909435,China-Shock Grind
-ui_weeks,final_fed_deficit_B,0.0007994217891635,China-Shock Grind
+demand_multiplier,final_fed_deficit_B,0.5136347976347976,Autor et al. — China-shock dynamics
+adoption_end,final_fed_deficit_B,0.4481043401043401,Autor et al. — China-shock dynamics
+mpc,final_fed_deficit_B,0.3736412874073321,Autor et al. — China-shock dynamics
+consumption_stickiness,final_fed_deficit_B,0.3257137166392296,Autor et al. — China-shock dynamics
+lfp_exit_rate,final_fed_deficit_B,0.2625328185328185,Autor et al. — China-shock dynamics
+cognitive_feasibility,final_fed_deficit_B,0.2575389295389295,Autor et al. — China-shock dynamics
+survivor_elasticity,final_fed_deficit_B,-0.2311272511272511,Autor et al. — China-shock dynamics
+physical_feasibility,final_fed_deficit_B,0.1288671448671448,Autor et al. — China-shock dynamics
+reemployment_haircut,final_fed_deficit_B,0.1101724101724101,Autor et al. — China-shock dynamics
+reabsorption_rate,final_fed_deficit_B,-0.0989574509574509,Autor et al. — China-shock dynamics
+survivor_gains_share,final_fed_deficit_B,-0.0807055647055647,Autor et al. — China-shock dynamics
+survivor_raise_ceiling,final_fed_deficit_B,0.0662310062310062,Autor et al. — China-shock dynamics
+productivity_passthrough,final_fed_deficit_B,0.0558430158430158,Autor et al. — China-shock dynamics
+ssdi_annual,final_fed_deficit_B,0.0519849999849999,Autor et al. — China-shock dynamics
+attrition_rate,final_fed_deficit_B,-0.0517151197151197,Autor et al. — China-shock dynamics
+ubi_recapture_rate,final_fed_deficit_B,0.0472462792462792,Autor et al. — China-shock dynamics
+interest_rate,final_fed_deficit_B,0.0402376722376722,Autor et al. — China-shock dynamics
+shareholder_eff_rate,final_fed_deficit_B,-0.0351741111741111,Autor et al. — China-shock dynamics
+price_passthrough,final_fed_deficit_B,-0.0284812004812004,Autor et al. — China-shock dynamics
+survivor_spillover_to_profit,final_fed_deficit_B,0.02804542004542,Autor et al. — China-shock dynamics
+retained_profit_share,final_fed_deficit_B,0.0263260223260223,Autor et al. — China-shock dynamics
+compute_effective_rate,final_fed_deficit_B,-0.0254927654927654,Autor et al. — China-shock dynamics
+auto_cost,final_fed_deficit_B,0.0249785289785289,Autor et al. — China-shock dynamics
+equity_pe_multiple,final_fed_deficit_B,0.0211583131583131,Autor et al. — China-shock dynamics
+robotics_lag,final_fed_deficit_B,-0.0185934545934545,Autor et al. — China-shock dynamics
+baseline_growth_rate,final_fed_deficit_B,-0.008055704055704,Autor et al. — China-shock dynamics
+state_rate_hike_cap,final_fed_deficit_B,0.0076331956331956,Autor et al. — China-shock dynamics
+price_reduction_share,final_fed_deficit_B,0.0068424668424668,Autor et al. — China-shock dynamics
+equity_taxable_share,final_fed_deficit_B,0.0056253056253056,Autor et al. — China-shock dynamics
+cg_realization_rate,final_fed_deficit_B,0.0035909435909435,Autor et al. — China-shock dynamics
+ui_weeks,final_fed_deficit_B,0.0007994217891635,Autor et al. — China-shock dynamics
 lfp_exit_rate,final_fed_deficit_B,0.5148924948924949,Korinek-Suh — AGI in 20 years
 demand_multiplier,final_fed_deficit_B,0.3991112551112551,Korinek-Suh — AGI in 20 years
 ssdi_annual,final_fed_deficit_B,0.3789409269409269,Korinek-Suh — AGI in 20 years

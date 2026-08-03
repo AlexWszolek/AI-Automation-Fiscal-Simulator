@@ -36,5 +36,7 @@ echo "==> 6/6  per-worker delta precompute (dynamics cache)"
 .venv/bin/python -m fiscal_model.dynamics >/dev/null
 
 echo
-echo "Done. Run the app:   .venv/bin/streamlit run app/streamlit_app.py"
-echo "      Run the tests: .venv/bin/python -m pytest -q"
+echo "Done. Run the tests:    .venv/bin/python -m pytest -q"
+echo "      Headline scenario: .venv/bin/python -m fiscal_model.dynamics"
+echo "      The site (dev):    cd web && npm install && npm run dev"
+echo "                         .venv/bin/uvicorn api.main:app --port 8000"

@@ -76,7 +76,7 @@ and almost entirely untaxed.
 
 {{tbl:summary_tax:windfall-medium|condensed|Windfall Trust — Medium: fiscal summary ($B, condensed years; the full table and the four-channel decomposition are in Appendix C).}}
 
-## 7.4 China-Shock Grind
+## 7.4 Autor et al. — China-shock dynamics
 
 The displacement here is *smaller* than Windfall-Medium's — 40 percent of a moderately exposed
 economy over fifteen years — but the labor market is the one Autor, Dorn, and Hanson actually

@@ -4,7 +4,7 @@ Stages (composable via --stage; default = all):
   compute      per-preset MC (N draws, seeded) -> parquet/CSVs + overlay recovery runs
   validation   Windfall 3x2 grid, RAND-S3 replication, Acemoglu GDP check
   sensitivity  adoption-shape sensitivity: reported presets re-run under asymmetric-S paths (§10)
-  render       PNGs from the cached CSVs (re-runs without the model)
+  render       PNGs + preset display labels from the cached CSVs (re-runs without the model)
 Outputs land in docs/report/artifacts/; manifest.json (written last, atomically) is the DRIFT
 FIREWALL: the report prose may cite numbers ONLY through {{n:...}} placeholders resolved against
 it, so text and model can never disagree silently.
@@ -30,7 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import numpy as np
 import pandas as pd
 
-from fiscal_model import charts, government, loaders, mc, presets, reabsorption, summary
+from fiscal_model import app_params, charts, government, loaders, mc, presets, reabsorption, summary
 from fiscal_model.dynamics import precompute_worker_deltas
 from fiscal_model.kernel import KernelParams
 from fiscal_model.levers_v2 import DEFAULTS_SHIPPED
@@ -123,6 +123,12 @@ def build_preset(env: Env, key: str, n: int, spread: float, seed: int) -> tuple[
     frag = {
         "name": p.name, "blurb": p.blurb, "n_periods": int(base.n_periods),
         "adoption_start": p.adoption_start, "adoption_end": p.adoption_end,
+        # The exact params these numbers were produced from. Written ONLY here, by the stage that
+        # actually runs the model — tests/test_report_manifest.py compares it against today's
+        # source, so editing a preset's numerics without rebuilding turns the suite red instead of
+        # shipping a report whose prose and model disagree. (Display fields above are refreshed by
+        # --stage render, which is why they are not part of this key.)
+        "cfg_key": app_params.cfg_key(base),
         "final": {
             "employment_drop_pct": round(float(fin["employment_drop_pct"]), 1),
             "fed_deficit_delta_B": round(float(fin["fed_deficit_B"]), 1),
@@ -417,6 +423,27 @@ def build_recovery_matrix(manifest_overlays: dict, names: dict) -> None:
 
 
 # --------------------------------------------------------------------------- render-only stage
+def refresh_labels(manifest: dict) -> list[str]:
+    """Re-copy the presets' DISPLAY metadata (name, blurb) from today's source into the manifest.
+
+    Names reach the docx through the manifest — scripts/build_report_docx.py imports no
+    fiscal_model, by design — so a rename in presets.py otherwise leaves the report calling a
+    scenario something the site no longer calls it. That is display drift, not numeric drift: it is
+    fixed here, from cache, without a model run. `cfg_key` is deliberately untouched, so this
+    cannot disguise stale numbers as fresh ones."""
+    changed = []
+    for key, frag in manifest.get("presets", {}).items():
+        p = presets.PRESETS.get(key)
+        if p is None:                    # preset retired since the build — the gate reports it
+            continue
+        for field in ("name", "blurb"):
+            if frag.get(field) != getattr(p, field):
+                if field == "name":
+                    changed.append(f"{key}: {frag.get(field)!r} → {p.name!r}")
+                frag[field] = getattr(p, field)
+    return changed
+
+
 def render_from_cache() -> None:
     """Re-render every PNG from the committed CSVs — no model, ~30s."""
     for key, p in presets.PRESETS.items():
@@ -459,6 +486,21 @@ def main() -> None:
 
     charts.enable_print_theme()
     if args.stage == "render":
+        path = ART / "manifest.json"
+        if path.exists():
+            manifest = json.loads(path.read_text())
+            for line in refresh_labels(manifest):
+                print(f"  relabel {line}")
+            # Both carry preset names baked into their rows, so they are rebuilt from the cached
+            # per-preset CSVs (no model runs) rather than left holding the old labels.
+            if len(manifest.get("presets", {})) == len(presets.PRESETS):
+                manifest["comparison"] = build_comparison(manifest["presets"])
+                build_recovery_matrix(manifest["overlays"],
+                                      {k: v["name"] for k, v in manifest["presets"].items()})
+            tmp = path.with_suffix(".json.tmp")
+            tmp.write_text(json.dumps(manifest, indent=1))
+            tmp.rename(path)
+            print(f"manifest labels → {path}")
         render_from_cache()
         print("re-rendered from cache")
         return

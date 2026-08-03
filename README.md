@@ -87,15 +87,16 @@ fiscal_delta(worker) =
 - [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
 - [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
 - [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
-- [x] **Website** — `app/streamlit_app.py`, built for AI-safety policy audiences: every headline metric carries a real-world grounding line (CBO baseline, defense budget, Great-Recession jobs — `fiscal_model/grounding.py`); an always-on sensitivity tornado (presets precomputed in `data/app_precomputed/`, modified settings auto-recompute with a debounce); a state choropleth with a selectable budget response; live policy-response readouts ("recovers $X of the gap"); fiscal summary in $B or % of CBO-projected revenue; shareable URLs; and a copy-ready memo paragraph
-- [x] **Scenario presets** — `fiscal_model/presets.py`: 7 literature-anchored world states (Acemoglu → AI-2027) + 4 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
-- [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 7 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.9)
+- [x] **Website v1 (Streamlit prototype — superseded by `web/` + `api/`, see *The website* below)** — `app/streamlit_app.py`, built for AI-safety policy audiences: every headline metric carries a real-world grounding line (CBO baseline, defense budget, Great-Recession jobs — `fiscal_model/grounding.py`); an always-on sensitivity tornado (presets precomputed in `data/app_precomputed/`, modified settings auto-recompute with a debounce); a state choropleth with a selectable budget response; live policy-response readouts ("recovers $X of the gap"); fiscal summary in $B or % of CBO-projected revenue; shareable URLs; and a copy-ready memo paragraph
+- [x] **Scenario presets** — `fiscal_model/presets.py`: 12 literature-anchored world states (Acemoglu → OpenAI) + 6 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity, sovereign wealth fund, federal VAT), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
+- [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 12 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.14)
 
 ### Complete: model backend + website
-`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (320 pytest + 213 vitest).
+`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (365 pytest + 222 vitest).
 
-**Run the Streamlit prototype:**  `.venv/bin/streamlit run app/streamlit_app.py`
+**Run the site (dev):**  `cd web && npm install && npm run dev`  +  `.venv/bin/uvicorn api.main:app --port 8000`
 **Headline scenario (CLI):**  `.venv/bin/python -m fiscal_model.dynamics`
+**Streamlit prototype (retired, still runs):**  `.venv/bin/streamlit run app/streamlit_app.py`
 
 ### The website (`web/` + `api/`)
 The production site is a React/Vite/TS static front end plus a small FastAPI compute service —
@@ -121,7 +122,8 @@ so a fresh clone runs out of the box:
 ```bash
 uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-.venv/bin/streamlit run app/streamlit_app.py
+.venv/bin/python -m pytest -q                    # 365 green = the clone is sound
+.venv/bin/python -m fiscal_model.dynamics        # headline scenario, no npm needed
 ```
 
 To REGENERATE the artifacts from source (after changing the bake, the NOC build, or kernel
@@ -141,8 +143,9 @@ fails the suite if it goes stale).
 https://aifiscalimpacts.alexwszolek.com; the old Streamlit deployment has been deleted.
 `app/redirect_stub.py` remains in the repo — if the app is ever redeployed, point the Cloud
 "Main file path" at it and every old link forwards (full query string; identical URL format).
-`app/streamlit_app.py` stays untouched: it is the source the web copy extractor reads, and
-`.venv/bin/streamlit run app/streamlit_app.py` still works locally.
+`app/streamlit_app.py` stays in the repo as the prototype's record and still runs locally
+(`.venv/bin/streamlit run app/streamlit_app.py`). Nothing generates from it any more — site copy
+moved to `web/src/content/copy.json` in copy round 2 and the extractor was deleted.
 
 **Feedback builds — hiding the sensitivity tornado:** build the front end with
 `VITE_HIDE_TORNADO=1 npx vite build` to drop the "Which assumptions drive this number?"

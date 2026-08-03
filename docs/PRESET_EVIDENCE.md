@@ -142,7 +142,7 @@ haircut 0.30, lfp 0.033/yr (ui 0.03), high-value-capture disposition (0.50/0.50/
 their ETR (0.267 → ui 0.27). The closest thing to a direct comparator run — their Medium/high-capture
 10y total-revenue target is **−2.8%** (low-capture −7.7%).
 
-**④ China-Shock Grind.** A moderate shock met by the labor market ADH actually measured: reabsorption
+**④ Autor et al. — China-shock dynamics.** A moderate shock met by the labor market ADH actually measured: reabsorption
 0.075/yr (decade-scale adjustment), LFP exit dominant (0.10/yr), JLS-severity haircut 0.25, demand
 amplification ≥1 (dm 1.5), 15-year horizon. The pessimist's *mechanism* preset — displacement is
 moderate but nothing heals.
