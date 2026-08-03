@@ -68,3 +68,24 @@ def test_web_pages_fresh():
         "web/public/report.html is stale — re-run scripts/gen_web_pages.py"
     assert mod.build_evidence() == (ROOT / "web" / "public" / "evidence.html").read_text(), \
         "web/public/evidence.html is stale — re-run scripts/gen_web_pages.py"
+
+
+def test_print_edition_covers_every_block_kind():
+    """The PDF/print edition renders the FULL docspec, so a new block kind must not be silently
+    dropped (the web edition filters sections; this one must not). build_report_pdf.build_html
+    exits on an unknown kind — this asserts it survives today's docspec and keeps every section."""
+    spec = importlib.util.spec_from_file_location("build_report_pdf",
+                                                  ROOT / "scripts" / "build_report_pdf.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    if not mod.DOCSPEC.exists():
+        pytest.skip("docspec.json absent — run scripts/build_report_docx.py")
+    docspec = json.loads(mod.DOCSPEC.read_text())
+    html = mod.build_html(docspec)
+
+    n_h1 = sum(1 for b in docspec["blocks"] if b["kind"] == "heading" and b["level"] == 1)
+    assert html.count("<h1") + html.count("<div class='titleblock'>") >= n_h1, \
+        "print edition dropped a top-level section"
+    for b in docspec["blocks"]:
+        if b["kind"] == "figure":
+            assert Path(b["path"]).as_uri() in html, f"figure missing from print edition: {b['path']}"
