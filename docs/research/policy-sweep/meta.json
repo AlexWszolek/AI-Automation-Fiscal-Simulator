@@ -1,0 +1,70 @@
+{
+ "n": 5000,
+ "seed": 0,
+ "regimes": {
+  "no-instruments": {
+   "compute_effective_rate": 0.0,
+   "automation_tax_frac": 0.0,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "status-quo": {
+   "compute_effective_rate": 0.1,
+   "automation_tax_frac": 0.0,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "compute-20": {
+   "compute_effective_rate": 0.2,
+   "automation_tax_frac": 0.0,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "compute-40": {
+   "compute_effective_rate": 0.4,
+   "automation_tax_frac": 0.0,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "auto-25": {
+   "compute_effective_rate": 0.1,
+   "automation_tax_frac": 0.25,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "auto-50": {
+   "compute_effective_rate": 0.1,
+   "automation_tax_frac": 0.5,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  },
+  "max-revenue": {
+   "compute_effective_rate": 0.4,
+   "automation_tax_frac": 1.0,
+   "ubi_annual": 0.0,
+   "ubi_recapture_rate": 0.25,
+   "interest_rate": 0.03,
+   "state_cut_share": 0.0,
+   "state_rate_hike_cap": 1.0
+  }
+ },
+ "invariants_checked": true
+}

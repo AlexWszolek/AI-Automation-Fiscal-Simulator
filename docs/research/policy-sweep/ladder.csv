@@ -1,0 +1,8 @@
+regime,median_deficit_delta_B,pct_worlds_worsen,median_vs_no_instruments_B,median_pct_of_hole_closed,pct_worlds_fully_closed
+no-instruments,413.9,95.2,0.0,0.0,4.8
+status-quo,281.6,90.6,-104.7,26.5,9.4
+compute-20,149.5,78.2,-209.3,53.0,21.8
+compute-40,-40.3,41.7,-418.7,106.1,58.3
+auto-25,197.2,80.4,-204.7,41.6,19.6
+auto-50,129.3,70.6,-273.1,52.7,29.4
+max-revenue,-288.1,17.0,-823.4,167.2,83.0
