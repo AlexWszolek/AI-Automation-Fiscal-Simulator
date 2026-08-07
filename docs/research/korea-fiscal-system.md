@@ -191,6 +191,16 @@ This is the minimum faithful engine for Channel 1: deduction → brackets → cr
 credits beyond the basic deduction (child credit ₩150k+, insurance/medical/card credits) shift
 individual liabilities but are second-order for cell-level means; disclose the simplification.
 
+**Engine vs published aggregates** (`fiscal_model/korea_tax.py` over the 209-cell table, 2025):
+aggregate PIT+local from covered workers ₩57.9tn — the right ballpark of published wage-income-tax
+revenue given ~56% worker coverage skewed to larger firms. Two divergences to disclose, both
+conservative for the argument: the engine's zero-tax share is ~2% against NTS's 33% (no dependents
+or discretionary credits modelled; cell means hide within-cell dispersion), so low-wage income-tax
+losses are *over*stated — i.e. the "low-wage automation hits the funds, not income tax" claim is
+understated, not manufactured. And "top 1% pays 31%" cannot be resolved below cell granularity
+(the top cell holds ~5% of workers; engine: top cell pays 23.3%) — quote NTS for concentration
+facts, never the model.
+
 ### Channel 2 — Social insurance (the payroll engine): the dominant channel
 
 ✓ 2026 rates:
