@@ -102,8 +102,93 @@ class IncomeTax:
                 "total": np.asarray(fed) + np.asarray(st)}
 
 
+@dataclass(frozen=True)
+class PayrollComponent:
+    """One payroll/social-insurance levy on a wage. Three shapes cover the US schedule and, on
+    inspection, Korea's five schemes too:
+
+    - `capped`    rate on wage up to a ceiling      (US OASDI; KR national pension, health)
+    - `flat`      rate on the whole wage            (US Medicare; KR employment, industrial accident)
+    - `surcharge` rate on wage above a threshold    (US Additional Medicare)
+
+    `employee_rate` is stored rather than derived because the split must be applied to the RATE
+    before multiplying — `(r/2)*w` and `0.5*(r*w)` round at different points and can differ in the
+    last bit, and the US bundles are pinned bit-for-bit.
+    """
+    name: str
+    kind: str                       # "capped" | "flat" | "surcharge"
+    rate: float
+    employee_rate: float
+    cap: float = float("inf")       # `capped`
+    threshold: float = 0.0          # `surcharge`, single filers
+    threshold_joint: float = 0.0    # `surcharge`, joint filers
+
+    def levy(self, w: np.ndarray, filing: str, rate: float) -> np.ndarray:
+        if self.kind == "capped":
+            return rate * np.minimum(w, self.cap)
+        if self.kind == "flat":
+            return rate * w
+        thresh = self.threshold_joint if filing == "Married filing jointly" else self.threshold
+        return rate * np.maximum(w - thresh, 0.0)
+
+
+def us_payroll_components(payroll_params: pd.DataFrame) -> tuple:
+    """Parse the US payroll params sheet into components, in the ORDER the legacy engine summed
+    them (OASDI, Medicare, Additional Medicare) — the sum is left-associative, so order is part of
+    the bit-parity contract. The two Additional-Medicare rows (single / MFJ) are one surcharge
+    component with two thresholds."""
+    p = payroll_params
+    oasdi = p[p["component"].str.contains("OASDI")].iloc[0]
+    med = p[p["component"].str.fullmatch(r"Medicare")].iloc[0]
+    addl_s = p[p["component"].str.contains("single", case=False)].iloc[0]
+    addl_m = p[p["component"].str.contains("MFJ")].iloc[0]
+    oasdi_rate, med_rate = float(oasdi["rate"]), float(med["rate"])
+    addl_rate = float(addl_s["rate"])
+    return (
+        PayrollComponent("OASDI", "capped", oasdi_rate, oasdi_rate / 2,
+                         cap=float(oasdi["cap_threshold_usd"])),
+        PayrollComponent("Medicare", "flat", med_rate, med_rate / 2),
+        # employee-only: the employee rate IS the full rate, not half
+        PayrollComponent("Additional Medicare", "surcharge", addl_rate, addl_rate,
+                         threshold=float(addl_s["cap_threshold_usd"]),
+                         threshold_joint=float(addl_m["cap_threshold_usd"])),
+    )
+
+
 class PayrollFICA:
-    """Federal payroll FICA (employer + employee for OASDI/Medicare; employee-only Addl)."""
+    """Payroll/social-insurance levies on a wage, as an ordered component list.
+
+    Country-general: the US passes the OASDI/Medicare/Additional-Medicare triple, Korea would pass
+    its five schemes. Bit-identical to `_PayrollFICALegacy` (the retained reference) on the US
+    component list — same operands, same left-associative sum order — pinned in tests/test_rates.
+    """
+
+    def __init__(self, payroll_params: pd.DataFrame | None = None, components=None):
+        self.components = tuple(components) if components is not None \
+            else us_payroll_components(payroll_params)
+
+    def _total(self, wage, filing: str, employee_only: bool):
+        w = np.asarray(wage, dtype=float)
+        vals = [c.levy(w, filing, c.employee_rate if employee_only else c.rate)
+                for c in self.components]
+        out = vals[0]
+        for v in vals[1:]:                      # left-associative, matching `a + b + c`
+            out = out + v
+        return float(out) if np.isscalar(wage) or np.ndim(wage) == 0 else out
+
+    def fica(self, wage, filing: str):
+        """Total payroll levy (employer + employee) — all revenue that disappears with the job."""
+        return self._total(wage, filing, employee_only=False)
+
+    def employee_fica(self, wage, filing: str):
+        """Employee-side only — what reduces take-home pay (used for the consumption channel)."""
+        return self._total(wage, filing, employee_only=True)
+
+
+class _PayrollFICALegacy:
+    """The original hardcoded-US-schema engine — retained as the bit-parity reference for
+    `PayrollFICA`, the same role `mc.run_mc`, `survivor._delta_loop` and
+    `reabsorption._delta_loop` play. Not used in production; tests compare bit-for-bit."""
 
     def __init__(self, payroll_params: pd.DataFrame):
         p = payroll_params
@@ -119,8 +204,6 @@ class PayrollFICA:
         self.addl_thresh_mfj = float(addl_m["cap_threshold_usd"])
 
     def fica(self, wage, filing: str):
-        """Total FICA (employer + employee for OASDI/Medicare; employee-only Addl Medicare)
-        — all federal revenue that disappears with the job."""
         w = np.asarray(wage, dtype=float)
         oasdi = self.oasdi_rate * np.minimum(w, self.oasdi_cap)
         medicare = self.medicare_rate * w
@@ -130,8 +213,6 @@ class PayrollFICA:
         return float(out) if np.isscalar(wage) or np.ndim(wage) == 0 else out
 
     def employee_fica(self, wage, filing: str):
-        """Employee-side FICA only (half of OASDI + half of Medicare + all Addl Medicare).
-        This is what reduces the worker's take-home pay (used for the consumption channel)."""
         w = np.asarray(wage, dtype=float)
         oasdi = (self.oasdi_rate / 2) * np.minimum(w, self.oasdi_cap)
         medicare = (self.medicare_rate / 2) * w
