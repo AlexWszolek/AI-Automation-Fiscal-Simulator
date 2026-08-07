@@ -492,9 +492,53 @@ change.**
 
 ## 9. Data availability for modelling
 
+### 9.0 Probe results (2026-08-06) — access solved, granularity is the constraint
+
+Attempted acquisition rather than confirmation. Findings:
+
+**Access: SOLVED.** `kosis.kr` deep links redirect to an SSO session handshake and the English
+category tree is a JS accordion that resists scripted navigation. **But MOEL mirrors the same
+tables at `stathtml.moel.go.kr/statHtml/statHtml.do?orgId=118&tblId=<ID>&conn_path=I2` with no
+login, no SSO, and the data rendered as plain scrapeable HTML.** That is the acquisition route —
+no microdata application needed for the aggregate tables.
+
+**Tables located and verified live:**
+
+| Table ID | Content | Vintage | Granularity |
+|---|---|---|---|
+| `DT_118N_PAYN42` | **Industry** × education × age × sex: mean wage + worker count | ✓ 2020–2025, updated 2026-04-30 | 19 industries |
+| `DT_118N_PAYM39` | **Occupation** × sex × **wage bracket** × age: worker count + hours | ✓ 2020–2025, updated 2026-04-30 | **10 occupations × 25 wage brackets** |
+| `DT_118N_PAYM22` | **Occupation** × education × age × sex: mean wage + worker count | ⚠ **2009–2015 only**, last updated 2017 | 10 occupations (KSCO 6th) |
+| `DT_118N_LCE0001` | Employment type × wage/hours | current | by employment type |
+
+**The binding constraint is occupation granularity: the public tables carry only the 10 KSCO
+major groups**, not the 세분류 (minor-group) level assumed in §10. Against the US model's 832 SOC
+cells that is very coarse. Two mitigations:
+
+1. `PAYM39` is **current and gives a joint distribution, not a mean** — 10 occupations × 25 wage
+   brackets × 11 age groups × sex. For a progressive-tax model a wage *distribution* is strictly
+   better than a mean, and 10 × 25 = 250 cells sits above the 50–150 the plan budgeted. Combined
+   with `PAYN42`'s 19 industries this is a workable cell structure.
+2. Finer KSCO requires a **microdata application** (마이크로데이터신청 via `laborstat.moel.go.kr`)
+   — Korean-language process, non-trivial turnaround. **Route via the diplomacy organisation** if
+   finer occupation detail turns out to be necessary.
+
+**2025 totals (from `PAYM39`, for calibration):** 12,413,858 wage workers covered — managers
+120,892; professionals 3,669,625; clerks 3,447,778; service 960,008; sales 561,179; agriculture
+28,684; craft 758,694; machine operators 1,835,977; elementary 1,031,019. Mean monthly wage
+₩4,482k (`PAYN42`). Note this is an **establishment survey**: ~12.4m against roughly 22m wage
+workers nationally, so coverage is partial and skews to larger firms — a caveat to disclose, and
+a second reason the self-employed exclusion (§7) matters.
+
+**Consequence for exposure mapping:** 10 major groups is coarse for scoring AI exposure. This
+raises the value of KDI's routinisation index (built on the Korea Dictionary of Occupations, §6)
+over any crosswalk — but the *join* will still be at major-group level unless microdata lands.
+
+### 9.1 Other sources
+
 ✓ **Occupational employment and wages**: MOEL's 고용형태별근로실태조사 (Survey on Labour Conditions
-by Employment Type), published on KOSIS (orgId 118), classified by **KSCO (한국표준직업분류)**
-including 세분류 (detailed) level, with wage *and* employment. This is a genuine OEWS analogue.
+by Employment Type), published on KOSIS (orgId 118), classified by **KSCO (한국표준직업분류)**,
+with wage *and* employment. The genuine OEWS analogue — see §9.0 for what is actually reachable.
 
 ✓ **AI exposure**: Korea-native measures exist (§6) — KDI's routinisation index on the Korea
 Dictionary of Occupations; the EAER KR–US industry comparison. Prefer these to a SOC crosswalk.
