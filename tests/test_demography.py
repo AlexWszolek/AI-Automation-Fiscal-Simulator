@@ -77,6 +77,27 @@ def test_conservation_holds_under_decline(data, deltas):
     assert (res["max_cell_resid_M"] < 1e-6).all()
 
 
+def test_korea_published_path_conserves(data, deltas):
+    """The real Statistics Korea medium-variant path (fiscal_model/korea_demography.py), not a
+    synthetic decline: the full invariant battery including per-cell C1 holds with automation
+    running, and with automation off the headline still reads zero — a ~10.2% real demographic
+    decline over the horizon must not be booked as displacement."""
+    from fiscal_model.korea_demography import korea_demography_path
+    n = DEFAULTS_V1REDUCTION.n_periods
+    path = list(korea_demography_path(n))
+    p, res = _run(data, deltas, demography_path=path, adoption=0.6,
+                  cognitive_feasibility=0.5)
+    baseline_M = float(res["population_M"].iloc[0])
+    assert_all_invariants(res, p, baseline_M)
+    assert (res["max_cell_resid_M"] < 1e-6).all()
+
+    _, quiet = _run(data, deltas, adoption=0.0, adoption_path=[0.0] * n,
+                    demography_path=path)
+    assert np.abs(quiet["employment_drop_pct"]).max() < 1e-9
+    assert quiet["employed_M"].iloc[-1] == pytest.approx(
+        quiet["employed_M"].iloc[0] * path[-1], rel=1e-6)
+
+
 def test_outflow_is_capped_and_monotone(data, deltas):
     """A path steeper than the workforce can supply must not drive employment negative, and the
     retired stock must never fall (demographic outflow is one-way)."""

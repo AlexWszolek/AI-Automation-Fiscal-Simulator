@@ -383,7 +383,16 @@ local governments face binding within-year balance requirements.
 
 ## 5. Demographics — the counterfactual problem
 
-✓ Statistics Korea, 장래인구추계 2022–2072 (the standard reference projection):
+✓ Statistics Korea, 장래인구추계 2022–2072 (the standard reference projection). **The full
+medium-variant table is now local** (retrieved 2026-08-07 via the e-나라지표 attachment route —
+kosis.kr's SSO bounce loops even with a scripted session, but the press release carries the
+year-by-year statistical tables: `sources/kostat-population-projection-2022-2072-press.pdf`,
+table 7, p. 60). The working-age series is transcribed and pinned in
+`fiscal_model/korea_demography.py`, with `korea_demography_path()` producing the
+`V2Params.demography_path` scale factors (2026 = 1.0; **2035/2026 ≈ 0.898 — a 10.2% decline over
+the model's default horizon**; 2050/2026 ≈ 0.689 for the projector's longer horizons; annual to
+2040, linear between the 5-year knots after). The invariant battery including per-cell C1 passes
+on the real path, and a zero-automation run books none of the decline as displacement.
 
 - Working-age share (15–64): **71.1% (2022) → 66.6% (2030) → 51.9% (2050) → 45.8% (2072)**
 - Working-age population falling **~320k/year in the 2020s, ~500k/year in the 2030s**
