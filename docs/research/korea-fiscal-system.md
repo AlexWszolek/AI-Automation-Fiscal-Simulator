@@ -165,8 +165,31 @@ to a greater degree than America's — and that is the segment most exposed to c
 The income-tax channel carries *less* of the total burden than in the US (19.8% of taxes vs OECD
 23.7% ✓) but is *more* sensitive to which occupations automate.
 
-There is also a local income surtax (지방소득세) stacking on the national tax — ⚠ verify the rate
-and mechanics.
+✓ **The full wage-earner computation, verified 2026-08-07** (NTS 종합소득세 세율 page, primary;
+cross-checked against KOTRA *Taxation in Korea 2025*, local copy in `sources/`). Four stages:
+
+1. **Wage & salary income deduction** (근로소득공제, ceiling ₩20m): 70% of gross up to ₩5m;
+   ₩3.5m + 40% of the excess to ₩15m; ₩7.5m + 15% to ₩45m; ₩12m + 5% to ₩100m; ₩14.75m + 2%
+   above. Then the **basic deduction**: ₩1.5m per taxpayer and per dependent.
+2. **Bracket schedule** (2023–2025 tax years, current law — watch for a 2026 amendment):
+
+   | Tax base | Rate | | Tax base | Rate |
+   |---|---|---|---|---|
+   | ≤ ₩14m | 6% | | ₩150–300m | 38% |
+   | ₩14–50m | 15% | | ₩300–500m | 40% |
+   | ₩50–88m | 24% | | ₩500m–1bn | 42% |
+   | ₩88–150m | 35% | | > ₩1bn | 45% |
+
+3. **Wage-earner tax credit** (근로소득세액공제) against the computed tax: 55% of the first
+   ₩1.3m, ₩715k + 30% beyond — capped by gross wage: ≤₩33m → ₩740k; ₩33–70m →
+   max(₩740k − 0.8%·excess, ₩660k); ₩70–120m → max(₩660k − 50%·excess, ₩500k); >₩120m →
+   max(₩500k − 50%·excess, ₩200k). This credit is what zeroes out a third of wage earners.
+4. ✓ **Local income surtax** (지방소득세): **+10% of the national liability** (resolves the
+   earlier ⚠).
+
+This is the minimum faithful engine for Channel 1: deduction → brackets → credit → +10%. Personal
+credits beyond the basic deduction (child credit ₩150k+, insurance/medical/card credits) shift
+individual liabilities but are second-order for cell-level means; disclose the simplification.
 
 ### Channel 2 — Social insurance (the payroll engine): the dominant channel
 
@@ -191,6 +214,15 @@ against US FICA's flat 15.3%. Every point of it is levied on labour.
 ✓ **The pension base is capped.** Standard monthly income (기준소득월액) ceiling is **₩6.59m from
 July 2026** (₩6.17m previously, up from ₩5.90m in 2024); floor ₩410k. The ceiling is reset annually
 by MOHW each March, effective July, tracking the 3-year average income growth of subscribers.
+
+✓ **The NHI base is also bounded, but inertly so** (verified 2026-08-07, 「2026 대한민국 사회보험」
+fn. 275): the monthly contribution ceiling is 30× the year-before-last average workplace
+contribution — **₩9,183,480/month in 2026 including the employer share**, i.e. a salary-equivalent
+of ≈ ₩127.7m/month at 7.19%; floor ₩20,160/month. That ceiling sits ~14× above the model's top
+cell wage and cannot bind — so in the engine the pension is `capped` and health is `flat`, and
+"which institution takes the hit" turns on the **pension** cap alone. (The pension floor —
+₩410k/month — binds only below the bottom bracket midpoint; effect ≤ ~₩1k/month/worker,
+disclosed and not modelled.)
 
 **This ceiling generates a real asymmetry.** It binds at roughly twice median earnings, so:
 
@@ -735,7 +767,8 @@ Verified this session. Korean-language sources noted.
 
 **Tax system**
 - [OECD *Revenue Statistics 2025*](https://www.oecd.org/en/publications/2025/12/revenue-statistics-2025_07ca0a8e.html)
-- [KOTRA — *Taxation in Korea 2025*](https://www.investkorea.org/file/ik-en/252025Taxation_in_Korea.pdf)
+- [KOTRA — *Taxation in Korea 2025*](https://www.investkorea.org/file/ik-en/252025Taxation_in_Korea.pdf) — local copy `sources/kotra-taxation-in-korea-2025.pdf`
+- [국세청 — 종합소득세 세율 (2017~2025 귀속)](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2227&cntntsId=7667) (KR) — bracket schedule incl. 누진공제
 - [한국경제 — 면세자 비율 33%](https://www.hankyung.com/article/2025100455487) (KR)
 - [서울신문 — 상위 1%가 소득세의 31% 부담](https://www.seoul.co.kr/news/economy/policy/2024/10/09/20241009500105) (KR)
 - [세계일보 — 연령대별 면세자 비율](https://www.segye.com/newsView/20250314509959) (KR)

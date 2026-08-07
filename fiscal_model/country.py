@@ -107,7 +107,39 @@ US = Country(
     baseline_deficit_bn=1833.0,            # government.BASELINE_FED_DEFICIT_BUSD (CBO FY2024)
 )
 
-REGISTRY = {US.key: US}
+# Every number below is pinned to docs/research/korea-fiscal-system.md (✓-verified) or derived
+# from a primary document in docs/research/sources/ by arithmetic stated in the comment.
+KOREA = Country(
+    key="kr",
+    name="South Korea",
+    raw_files=(
+        "korea/DT_118N_PAYM39.xml.gz",         # occupation × sex × wage bracket × age
+        "korea/DT_118N_PAYN42.xml.gz",         # industry × education × sex × age, 14 items
+    ),
+    currency_code="KRW",
+    currency_symbol="₩",
+    money_unit_label="₩tn",
+    payroll_components=rates.korea_payroll_components,
+    # Local government is majority-funded by statutory shares of national internal taxes:
+    # 19.24% Local Share Tax + 20.79% Local Education Subsidy = 40.03%. One elasticity,
+    # no decision anywhere — the mechanism `close_state_gaps` must NOT run for Korea.
+    subnational_mode=SUBNATIONAL_FORMULA_TRANSFER,
+    subnational_label="local government",
+    subnational_transfer_share=0.4003,
+    # Populated when the Korean transfer formulas land (Basic Pension, EITC, EI benefit —
+    # national formulas, no 51-state archetype bake needed).
+    transfer_programs=(),
+    # 2025 nominal GDP, derived from NABO Focus 92: national debt ₩1,270.4tn = 47.8% of GDP.
+    va_baseline=1_270.4e12 / 0.478,
+    # The automation base = survey-covered labour compensation: mean total monthly wage
+    # ₩4,482k (PAYN42, 2025) × 12 × 12,413,858 covered wage workers ≈ ₩667.7tn. The ~9.6m
+    # wage workers outside the establishment survey are outside the model, disclosed.
+    comp_total=4_482_000.0 * 12.0 * 12_413_858,
+    # 관리재정수지 (managed fiscal balance) 2025: −₩85.5tn (NABO Focus 92, Table 1).
+    baseline_deficit_bn=85.5,
+)
+
+REGISTRY = {US.key: US, KOREA.key: KOREA}
 
 
 def get(key: str = "us") -> Country:

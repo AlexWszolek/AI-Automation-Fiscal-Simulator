@@ -155,6 +155,39 @@ def us_payroll_components(payroll_params: pd.DataFrame) -> tuple:
     )
 
 
+def korea_payroll_components(payroll_params: pd.DataFrame | None = None) -> tuple:
+    """Korea's five social-insurance schemes at the legislated 2026 rates, as components on the
+    ANNUAL wage. Sources: 보건복지부/NPS notices and NABO 「2026 대한민국 사회보험」
+    (docs/research/korea-fiscal-system.md §3 Channel 2; docs/research/sources/). The argument is
+    accepted and ignored so the builder is call-compatible with `Country.payroll_components`.
+
+    Order is pinned (pension, health, long-term care, employment, industrial accident) — the sum
+    is left-associative, so order is part of the Korean bit-parity contract from day one.
+
+    What is deliberately NOT here, and why (all documented in the research doc):
+    - the pension phase-in (9.5% → 13% by 2033): the kernel prices year-0 law; the legislated
+      rate path lives in the published fund projections the depletion projector scales;
+    - the NHI contribution ceiling (₩9,183,480/month contribution in 2026 ≈ ₩127.7m/month
+      salary): ~14× the model's top cell wage, cannot bind — health is `flat` here;
+    - the pension floor (₩410k/month standard income): binds only below the bottom bracket
+      midpoint (₩400k), a per-worker effect of at most ~₩1k/month on the smallest cells;
+    - EI's employer-only employment-stabilisation/vocational levies (0.25–0.85% by firm size):
+      excluded from the 1.8% unemployment-benefit rate, as in the research doc's 20.9% headline.
+    """
+    krw_month = 12.0                             # statutory amounts are ₩/month; wages are ₩/year
+    pension, health = 0.095, 0.0719
+    ltc = 0.009448                               # 13.14% of the NHI contribution, levied on wage
+    employment, accident = 0.018, 0.0147         # accident: employer-only, industry-rated average
+    return (
+        PayrollComponent("NPS pension", "capped", pension, pension / 2,
+                         cap=6_590_000.0 * krw_month),
+        PayrollComponent("NHI health", "flat", health, health / 2),
+        PayrollComponent("LTC long-term care", "flat", ltc, ltc / 2),
+        PayrollComponent("EI unemployment benefit", "flat", employment, employment / 2),
+        PayrollComponent("IACI industrial accident", "flat", accident, 0.0),
+    )
+
+
 class PayrollFICA:
     """Payroll/social-insurance levies on a wage, as an ordered component list.
 
