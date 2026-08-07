@@ -10,6 +10,13 @@ marked ✓ were verified this session with a citable source. Figures marked ⚠ 
 verification and must not appear in an external artifact until pulled from the issuing institution.
 Nothing here is model output.
 
+**Update 2026-08-07.** The three headline primary documents were retrieved directly from NABO
+(PDFs + provenance in `sources/README.md`). §2.1, §2.3 and §5.0 were corrected against them:
+health baseline depletion is **2031** (not 2030), the EI statutory reserve bands are **per
+account** (not fund-wide), and the long-term scenario variants are pinned at 163.2%–181.9%.
+Year-by-year NHI paths (2026–2035) and the official EI baseline (2026–2029) are now in hand —
+these are the fund-projector inputs.
+
 **Standing scope decision.** Any Korea model is **national-only** and **wage-employee-only**,
 stated openly. See §7 — this excludes roughly a quarter of Korean employment and that exclusion is
 a headline caveat, not a footnote.
@@ -53,15 +60,25 @@ The most useful framing for a policy audience. All three draw on the same erodin
 
 ### 2.1 Health insurance — the near-term deadline
 
-✓ NABO projects NHI moves into **deficit in 2026** with cumulative reserves **depleted by 2030**
-under current policy. Reflecting the government's medical-reform commitments (수가 increases,
-tertiary-hospital restructuring, regional and essential-care support), depletion arrives **two years
-earlier, in 2029**, with annual balances of −₩5.2tn (2026), −₩8.0tn (2027), −₩9.4tn (2028),
-−₩8.7tn (2029), and a ten-year cumulative deficit worsening by **₩27.8tn**.
+✓ **Primary: NABO Focus No. 162 (2026-06-09)**, 「의료개혁 1·2차 실행방안을 반영한 건강보험
+재정 재추계」 (`sources/nabo-focus-162-nhi-reestimate-2026-2035.pdf`). NHI moves into **deficit
+in 2026**; cumulative reserves are **depleted in 2031** on the natural-trend baseline, and **2029
+— two years earlier — once the medical-reform investment plans (1st ’24.8.30, 2nd ’25.3.19) are
+included**: annual balances −₩5.2tn (2026), −₩8.0tn (2027), −₩9.4tn (2028), −₩8.7tn (2029),
+ten-year cumulative deficit worse by **₩27.8tn** versus baseline.
+
+*Correction against the primary:* earlier press-derived drafts of this section said "2030 baseline";
+the primary says 2031 → 2029. And the source is Focus 162 — **not** the dedicated 「2023~2032
+건강보험 재정전망」 report, which is an October 2023 vintage with superseded results (deficit from
+2024, depletion 2028; kept in `sources/` for its methodology and policy scenarios only).
+
+**Focus 162 also publishes the full year-by-year paths 2026–2035** — revenue, expenditure, annual
+balance, cumulative reserve, for both baseline and reform variants, with the contribution-rate
+assumptions stated (1.43%/yr increases ’27–28, 2.05% from ’29, the statutory 8% rate cap binding
+from 2032). This is the NHI input to the fund-depletion projector, verbatim.
 
 **This is the number to lead with.** A senior official in 2026 discounts 2064 heavily; 2029 is
-inside the planning horizon. NABO publishes a dedicated 2023–2032 health and long-term-care
-financial projection — pull it directly (⚠ currently sourced via press coverage of NABO releases).
+inside the planning horizon.
 
 ### 2.2 National pension — the structural case
 
@@ -73,6 +90,14 @@ financial projection — pull it directly (⚠ currently sourced via press cover
 - Projected depletion moves from **~2056** to **~2064** — roughly **8 years bought**. Some estimates
   reach 2071 if the fund's average annual return rises from 4.5% to 5.5%.
 - Fund AUM **over ₩1,200tn**.
+
+✓ **Vintage discipline for any NPS depletion date.** NABO's long-term projection (Focus No. 92,
+published 2025-02-27 — *three weeks before the reform passed*) shows the **pre-reform** path: NPS
+balance negative from 2040, fund peak 2039, **depletion 2057** (and 사학연금, the private-school
+pension, depleting 2042; combined post-depletion cumulative deficit 63.3% of GDP by 2072). The
+~2064 figure is the **post-reform** estimate from the reform-analysis documents. Cite whichever
+matches the counterfactual being discussed, never mix them; the projector's published pension path
+must be a post-reform one.
 
 The framing this unlocks:
 
@@ -86,17 +111,30 @@ That is the question the model answers, in a unit the audience already reasons i
 
 This may be the strongest single finding in this document.
 
-✓ Employment Insurance (고용보험) figures as reported for the most recent year:
+✓ **Primary: NABO 결산분석시리즈 IV, FY2025 settlement analysis (labor-committee volume)** and
+**「2026 대한민국 사회보험」 [표 149]** — the latter citing MOEL's own 「2025회계연도 고용보험기금
+결산보고서」 (2026-06). Both in `sources/`. FY2025 figures:
 
-- Unemployment benefit payouts exceeded **₩17 trillion for the first time** — a record.
-- The fund ran a **₩592bn deficit**.
-- Nominal year-end reserves were ₩7.8tn, but **net of borrowings from the Public Capital
-  Management Fund the real reserve is ₩79.6bn**. The unemployment-benefit account alone shows
-  ₩1.73tn nominal but **a ₩5.99tn deficit net of borrowing**.
-- The Employment Insurance Act requires reserves of **1.5–2× annual unemployment benefit spending**
-  as a buffer against mass unemployment or recession. The actual ratio was **0.1×** — and the fund
-  has fallen short of the statutory level for **16 consecutive years**.
+- **Whole fund:** revenue ₩20.35tn, expenditure ₩20.94tn → **balance −₩592bn**. Year-end reserves
+  **₩7.80tn nominal, ₩79.6bn net** of accumulated borrowings from the Public Capital Management
+  Fund (공공자금관리기금).
+- **Unemployment-benefit account:** spending **₩17.46tn** — a record, past ₩17tn for the first
+  time; balance −₩1.78tn; reserves **₩1.73tn nominal, −₩5.99tn net of borrowings**; reserve ratio
+  **0.1×** (−0.3× net). Settlement history 2021–2025: ratios 0.3 / 0.3 / 0.3 / 0.2 / 0.1.
+- ✓ *Refinement against the primary:* the Employment Insurance Act (고용보험법 §84, quoted in the
+  annual) sets reserve bands **per account**, not fund-wide: **1.5–2× of annual spending for the
+  unemployment-benefit account**, 1–1.5× for the employment-stabilization/vocational account. The
+  stabilization account is at **1.7×** (above its band, +₩1.2tn balance, ₩5.9tn reserves) — it is
+  precisely **the account that pays displacement benefits** that sits at 0.1×. Sharper than the
+  press version, and stronger for the argument.
+- ⚠ "Short of the statutory level for **16 consecutive years**" remains press-sourced (한국경제);
+  the 2021–25 settlement ratios above are consistent with it but only cover five years.
 - ✓ The stated cause: **employment fell, so contribution revenue fell, while benefit spending rose.**
+- ✓ The official near-term baseline exists: NABO's mid-term projection ([표 151] in the annual,
+  Oct 2025, from 2024 actuals) shows whole-fund reserves rebuilt to ₩21.8tn by 2029 — but via
+  planned PCMF borrowings (₩750bn more into the benefit account in 2026) and the stabilization
+  account's surplus, not the benefit account healing; and FY2025's outturn already undershot it.
+  This is the published path the projector erodes for EI.
 
 Note what that last line is. It is *this model's mechanism*, already running in Korea for
 demographic and cyclical reasons, before AI displacement at scale. The argument writes itself:
@@ -104,9 +142,9 @@ demographic and cyclical reasons, before AI displacement at scale. The argument 
 > The fund that would pay for AI displacement holds one-tenth of its legally required reserves, and
 > the reason is that Korea already has fewer workers paying in and more people drawing out.
 
-⚠ 2026 EI and Industrial Accident (산재보험) contribution rates were not yet officially notified
-when searched. ⚠ The figures above come from press coverage of MOEL/fund accounts — pull the fund's
-own statement before external use.
+(Resolved 2026-08-07: the 2026 EI and Industrial Accident rates are confirmed in §3 Channel 2, and
+the fund figures above are now primary-sourced — the earlier press-coverage caveat no longer
+applies.)
 
 ---
 
@@ -305,10 +343,15 @@ pressures this model prices.
 - **Debt-to-GDP 47.8% (2025) → 173.0% (2072).**
 - The potential growth rate falls toward **0.3%** by 2072.
 
-⚠ The report contains alternative discretionary-spending scenarios producing lower paths; I saw
-secondary figures around 99.3%–161.9% attached to 2070 without a reliable scenario mapping. **Quote
-the 173.0% baseline, and pull the primary PDF before using any scenario variant.** This projection
-is the baseline any Korean result should be expressed as a delta against.
+✓ **Scenario variants pinned from the primary** (NABO Focus No. 92, 2025-02-27,
+`sources/nabo-focus-92-longterm-2025-2072.pdf`): 2072 debt-to-GDP is **181.9%** under the *low*
+population variant (+9.0pp vs baseline), **163.2%** under *high* (−9.7pp), and **176.6%** if
+discretionary spending grows faster than the government's fiscal-management plan (+3.7pp). The
+99.3%–161.9% figures seen earlier in secondary coverage do not appear in the primary and are
+dropped. Focus 92 also tabulates the full aggregates (revenue, mandatory/discretionary spending,
+consolidated and managed balances, social-security-fund balance) at 2025/30/40/50/60/72. **Quote
+the 173.0% baseline; this projection is the baseline any Korean result should be expressed as a
+delta against.**
 
 **Model implication — this is the one genuine mechanism change.** `dynamics_v2.py` holds
 `baseline_emp = v1.emp0.sum()` as a scalar, and the C1 conservation gate pins per-cell totals to
@@ -602,33 +645,51 @@ Closed 2026-08-06: Basic Pension, elderly poverty, Employment Insurance fund sta
 industrial-accident rate, NABO long-term projection baseline, corporate tax brackets, local income
 surtax, EITC parameters, public social spending vs OECD.
 
-**Remaining, in priority order — all are "pull the primary document," not "find the fact":**
+**Closed 2026-08-07 — the three headline primary documents, retrieved directly from NABO**
+(`sources/README.md` has provenance and retrieval mechanics; the "PDF fetching defeated the
+tooling" finding from 08-06 was wrong for NABO — a browser User-Agent suffices):
 
-1. **Employment Insurance fund accounts from MOEL / the fund's own statement** (§2.3). This is now a
-   headline claim resting on press coverage. It must have a primary citation before it goes in front
-   of Korean officials.
-2. **NABO 2025–2072 long-term projection PDF** — to pin the scenario variants around the 173.0%
-   baseline (§5.0).
-3. **NABO 2023–2032 health and long-term-care projection PDF** (§2.1) — same reason: the 2029–2030
-   depletion date is a headline claim currently sourced via press.
-4. National Basic Livelihood Security components; NHI government subsidy; EITC total cost and
-   recipient count.
-5. VAT exemption and zero-rating structure; the simplified-taxpayer regime.
-6. Self-employed pension treatment (지역가입자) and the scale of income under-reporting (§7.4).
-7. Basic Pension increase toward ₩400,000 for low-income elderly — status and phasing.
-8. KOSIS extract licensing, English access, and the occupation × wage cross-tab granularity (§9).
+1. ~~Employment Insurance fund accounts~~ → NABO FY2025 settlement analysis (labor-committee
+   volume) + 「2026 대한민국 사회보험」 citing MOEL's FY2025 fund settlement report. §2.3 corrected
+   (statutory bands are per-account) and now primary-sourced throughout.
+2. ~~NABO 2025–2072 long-term projection~~ → Focus No. 92: scenario variants pinned (§5.0);
+   pre-reform NPS depletion 2057 noted (§2.2). The full report PDF remains optional nice-to-have.
+3. ~~NABO health projection~~ → Focus No. 162 (2026-06-09), which supersedes the 2023–2032 report:
+   §2.1 corrected (baseline depletion 2031, not 2030), year-by-year 2026–2035 paths in hand.
 
-**Note the pattern.** Every one of the three headline claims — EI exhaustion, health depletion
-2029–30, pension 2064 — currently rests on secondary sources. The facts are almost certainly right
-(multiple independent outlets, consistent figures), but this audience will check. Pulling those
-three primary documents is the single highest-value remaining research task, and it is a morning's
-work, not a project.
+**Remaining, in priority order:**
+
+1. National Basic Livelihood Security components; NHI government subsidy; EITC total cost and
+   recipient count. (The 「2026 대한민국 사회보험」 annual in `sources/` likely covers the NHI
+   subsidy — check before searching elsewhere.)
+2. The "16 consecutive years below the statutory reserve level" claim (§2.3) — still press-only;
+   five years of settlement ratios confirm the recent tail.
+3. VAT exemption and zero-rating structure; the simplified-taxpayer regime.
+4. Self-employed pension treatment (지역가입자) and the scale of income under-reporting (§7.4).
+5. Basic Pension increase toward ₩400,000 for low-income elderly — status and phasing.
+6. KOSIS extract licensing, English access, and the occupation × wage cross-tab granularity (§9).
+7. Optional: full 2025–2072 long-term report PDF; NABO Focus No. 163 (2026-06-11) on comparative
+   NHI revenue structures — directly relevant to the VAT/funding-mix argument.
+
+**The pattern has inverted.** All three headline claims — EI exhaustion, health depletion 2029/31,
+the long-run debt path — now rest on the issuing institution's own documents, and two of them carry
+the published fund paths the depletion projector needs as inputs. What remains is parameter-level
+verification, not headline-level.
 
 ---
 
 ## Sources
 
 Verified this session. Korean-language sources noted.
+
+**Primary documents retrieved 2026-08-07** — PDFs in `sources/`, provenance and download FIDs in
+`sources/README.md` (all KR):
+- NABO Focus 제92호 — 2025~2072년 NABO 장기재정전망 (2025-02-27)
+- NABO Focus 제162호 — 의료개혁 1·2차 실행방안을 반영한 건강보험 재정 재추계 (2026-06-09)
+- NABO Focus 제84호 — 의료개혁과 비상진료대책을 반영한 건강보험 재정전망 (2024-12-20)
+- NABO — 2023~2032년 건강보험 재정전망 (full report, 2023-10; superseded, kept for methodology)
+- NABO 결산분석시리즈 IV — 2025회계연도 결산 위원회별 분석 [기후에너지환경노동위원회] (2026)
+- NABO — 2026 대한민국 사회보험 (annual, 452 pp)
 
 **Pension reform and NPS**
 - [Korea Herald — Assembly passes pension bill](https://www.koreaherald.com/article/10446290)
