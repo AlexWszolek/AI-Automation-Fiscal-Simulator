@@ -86,6 +86,16 @@ class WorkerStocks:
         self.induced = self.induced + jobs
         return jobs
 
+    # -- demographic outflow: the year-0 cohort ages out of employment on the country's published
+    #    population path. Routed to the SAME delta-neutral `retired` bucket as baseline attrition —
+    #    the baseline twin aged out too, so this carries no standing fiscal loss. C1-preserving
+    #    (both buckets are in total()), per-cell, and capped at the employed remaining. --
+    def retire_demographic(self, jobs: np.ndarray) -> np.ndarray:
+        jobs = np.minimum(jobs, self.employed)   # cannot retire more than remain employed
+        self.employed = self.employed - jobs
+        self.retired = self.retired + jobs
+        return jobs
+
     # -- coherence fix (level-targeting demand): when the standing withdrawal FALLS (stimulus, recovery),
     #    the induced stock tracks its target DOWN — demand-displaced workers are re-hired. C1-exact. --
     def release_induced(self, jobs: np.ndarray) -> np.ndarray:

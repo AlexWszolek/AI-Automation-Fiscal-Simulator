@@ -190,6 +190,14 @@ class DynamicModelV2:
                 raise ValueError(f"{_n}={_v} must be finite and ≥ 0")
         if params.ssdi_annual < 0.0:
             raise ValueError("ssdi_annual must be ≥ 0")
+        if params.demography_path is not None:
+            _dp = np.asarray(params.demography_path, float)
+            # scale factors relative to year 0. A zero would make the period's counterfactual
+            # workforce zero and every per-capita ratio undefined; a country with no working-age
+            # population is not a scenario. Above 1 is allowed — populations can grow.
+            if _dp.size == 0 or not np.isfinite(_dp).all() or (_dp <= 0.0).any():
+                raise ValueError("demography_path must be non-empty, finite and strictly positive "
+                                 "(scale factors relative to year 0)")
         if params.robotics_lag < 0.0:
             raise ValueError("robotics_lag must be ≥ 0 (years of capacity build-out)")
         if not 1.0 <= params.robotics_base <= 5.0:
@@ -301,7 +309,9 @@ class DynamicModelV2:
             inc_surch_st = corp_surch_st = cons_surch_st = None
             surch_state = None
         debt = 0.0
-        baseline_emp = v1.emp0.sum()
+        baseline_emp = v1.emp0.sum()                      # year-0 workforce (the C1 population)
+        demo_path = v2p.demography_path                   # None = flat baseline (US, and the default)
+        demo_retired = np.zeros(len(v1.wage))             # cumulative demographic outflow, per cell
         baseline_rev = None
         slack_prev = 0.0                                  # t−1 labour-market slack (J.1); 0 at t=0
         withdrawal_prev = 0.0                             # t−1 standing net income withdrawal (J.1)
@@ -316,6 +326,22 @@ class DynamicModelV2:
         out = []
 
         for t in range(p.n_periods):
+            # --- step 0: DEMOGRAPHIC outflow (off by default — `demography_path is None` skips this
+            #     block entirely, so the US path is literally untouched). The year-0 cohort ages out
+            #     on the country's published population path, employed → the delta-neutral `retired`
+            #     bucket: the baseline twin aged out too, so no standing fiscal loss is booked. This
+            #     fixes the COUNTERFACTUAL, not a mechanism — holding employment flat while the
+            #     working-age population falls measures demographics as if it were automation.
+            #     C1 is untouched: both buckets are inside st.total(). ---
+            if demo_path is None:
+                baseline_emp_t = baseline_emp
+            else:
+                scale_t = float(demo_path[min(t, len(demo_path) - 1)])
+                # cumulative target, so a period capped by available employed catches up later
+                demo_retired += st.retire_demographic(
+                    np.maximum(v1.emp0 * (1.0 - scale_t) - demo_retired, 0.0))
+                baseline_emp_t = baseline_emp * scale_t
+
             # --- steps 1-2: diffusion + displacement (cumulative diffusion ceiling — fix 1). The robot
             #     channel ramps over `robotics_lag` years (AI-built industrial capacity — coherence C6);
             #     lag==0 uses v1.g_cell verbatim (the bit-identical C8 fast path). ---
@@ -493,7 +519,7 @@ class DynamicModelV2:
             #     clawback + means-tested crowd-out — the coherence fix: UBI now has a recipient side);
             #     the robot tax recovers revenue on the automated comp bill, PAID from retained profit
             #     (its corp-deductibility already shrank the corporate offset via disp_factor). ---
-            ubi_outlay = p.ubi_annual * baseline_emp                    # gross: per-worker UBI × workforce
+            ubi_outlay = p.ubi_annual * baseline_emp_t                  # gross: per-worker UBI × workforce
             ubi_recapture = v2p.ubi_recapture_rate * ubi_outlay
             automation_tax = v2p.automation_tax_rate * disp.saved_bill  # X% of the automated comp bill
             # Sovereign-wealth-fund equity share of AFTER-corporate-tax automation profit
@@ -549,7 +575,7 @@ class DynamicModelV2:
             # base must collapse to v1's wage_bill exactly (W_surv=1, no reabsorbed earnings term).
             ubi_base = wage_bill * W_surv + ((st.reabsorbed * self._reab_wage * W_reab).sum()
                                              if v2p.reabsorption_rung == 1 else 0.0)
-            ubi_rate = ((p.ubi_annual * baseline_emp * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
+            ubi_rate = ((p.ubi_annual * baseline_emp_t * (1.0 - v2p.ubi_recapture_rate)) / ubi_base
                         if (p.ubi_annual > 0 and ubi_base > 0) else 0.0)
 
             # --- step 9: LEVEL-TARGETING demand (coherence fix, replaces the flow ratchet). The induced
@@ -623,7 +649,9 @@ class DynamicModelV2:
                 # C1 PER-CELL: the worst per-cell mass residual (the aggregate population_M can hide a
                 # per-cell leak that nets to zero across the 33k cells).
                 "max_cell_resid_M": float(np.abs(st.total() - v1.emp0).max()) / 1e6,
-                "employment_drop_pct": 100 * (1 - st.employed.sum() / baseline_emp),
+                # against the PERIOD's baseline: with a declining population this measures AI
+                # displacement, not demographics (pure decline reports ~0 — pinned in tests)
+                "employment_drop_pct": 100 * (1 - st.employed.sum() / baseline_emp_t),
                 "revenue_lost_B": rev_lost / 1e9,
                 "revenue_lost_pct": 100 * rev_lost / baseline_rev if baseline_rev else 0.0,
                 "transfers_added_B": (ch["transfer_fed"].sum() + ch["transfer_state"].sum()

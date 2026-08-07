@@ -33,6 +33,12 @@ class V2Params:
     robotics_maturity: float = 0.0
     adoption: float = 1.0
     adoption_path: Optional[list] = None
+    # Working-age population SCALE FACTORS relative to year 0, one per period (e.g. Statistics
+    # Korea's 장래인구추계). None = a flat baseline, today's behaviour and the exact US path.
+    # STRUCTURAL, not a lever: it fixes the counterfactual rather than tuning a mechanism. Holding
+    # employment flat while the working-age population falls (Korea: ~−35% by 2050) makes the no-AI
+    # baseline a world that cannot happen and mis-scales every delta measured against it.
+    demography_path: Optional[list] = None
     # ---------------- diffusion (NEW v2 levers; off = v1) ----------------
     robotics_cognitive_coupling: float = 0.0   # 0 = physical_feasibility used directly (v1)
     robotics_lag: float = 0.0                  # LIVE (coherence C6): years for robotic capacity to build —

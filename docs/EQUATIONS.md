@@ -40,6 +40,32 @@ the loop (`fiscal_model/kernel.py`, `rates.py`, `integrate.py`):
 
 ## Part 1 — The within-period sequence (period t)
 
+### Step 0 · Demographic outflow — the declining baseline  (`workers.retire_demographic`)
+**Off by default** (`demography_path is None` ⇒ the block is skipped entirely and every US number
+is untouched). Where a national statistics office projects the working-age population to fall — the
+motivating case is Korea, roughly −35% by 2050 — a flat counterfactual is a world that cannot
+happen, and every delta measured against it is mis-scaled.
+
+`demography_path[t]` is the working-age population **scale factor relative to year 0** (strictly
+positive; >1 is allowed, populations can grow). The year-0 cohort ages out of employment on that
+path, into the same delta-neutral `retired` bucket as baseline attrition — the baseline twin aged
+out too, so no standing fiscal loss is booked:
+```
+scale_t   = demography_path[min(t, len−1)]
+flow_t    = min( max(emp0·(1 − scale_t) − demo_retired, 0), employed )   # cumulative target, capped
+employed −= flow_t ;  retired += flow_t                                  # C1-preserving, per-cell
+base_t    = emp0.sum() · scale_t                                         # the period's counterfactual
+```
+This is a **counterfactual correction, not a mechanism**: it adds no free parameter (the path is
+published data) and it does not touch C1, because both buckets are inside `total()`. The period
+baseline `base_t` replaces the year-0 scalar in `employment_drop_pct` and the UBI outlay/rate — so
+under pure demographic decline with zero automation the headline reads **0**, not the demographic
+fall. Labour force `lf = emp0.sum() − retired` needs no change: the outflow is already in `retired`.
+
+Note what this does **not** claim: it represents shrinkage of the year-0 cohort, not an inflow of
+smaller youth cohorts (the model is a closed cohort). Over a 10–20 year horizon ageing-out is the
+dominant and representable margin.
+
 ### Step 1–2 · Diffusion & displacement  (`levers.py`, `workers.py`)
 Per-occupation exposure→displacement fraction. The ROBOT channel ramps over `robotics_lag` years
 (physical automation needs AI-built industrial capacity; ramp=1 when lag=0):
