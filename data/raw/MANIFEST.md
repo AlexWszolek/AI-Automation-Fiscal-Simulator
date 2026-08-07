@@ -18,3 +18,19 @@ on disk — they are normalized in `loaders.py`. See `docs/PROJECT_BRIEFING_v2.m
 **Not copied into the repo** (too large; external inputs handled later):
 - ACS PUMS 1-year 2024 extracts (`~/Downloads/ACSPUMS1Y2024_*.xlsx`) — source for the NOC
   (number-of-children) cross-tab used by the PolicyEngine transfer bake.
+
+## Korea (`data/raw/korea/`)
+
+Fetched 2026-08-07 from the MOEL statHtml mirror of KOSIS (`stathtml.moel.go.kr`, orgId 118,
+고용형태별근로실태조사 — Survey on Labour Conditions by Employment Type, an **establishment
+survey**: ~12.4m of ~22m wage workers, skewed to larger firms; no section O public
+administration). `scripts/fetch_korea_tables.py` automates the site's bulk export; the
+`.xml.gz` files are the raw SpreadsheetML byte-for-byte as served (canonical), `.meta.json`
+records the dimension code→label maps, and the `.tidy.csv` files are regenerable offline
+(`--parse-only`, gitignored). The fetch validates 2025 anchors against
+`docs/research/korea-fiscal-system.md` §9.0 before writing.
+
+| File | Content | Units | Vintage |
+|---|---|---|---|
+| `DT_118N_PAYM39.xml.gz` | occupation (KSCO 6th major, 9+total) × sex × wage bracket (24+total) × age (10+total): worker count, hours | persons; hours/month; brackets in ₩1,000/month | 2020–2025 |
+| `DT_118N_PAYN42.xml.gz` | industry (18 KSIC sections+total) × education (4+total) × sex × age: 14 items incl. 월임금총액 (total monthly wage), 정액/초과/특별급여 split, tenure, hours, worker count | ₩1,000/month; persons | 2020–2025 |

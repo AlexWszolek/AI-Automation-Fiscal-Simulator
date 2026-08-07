@@ -39,3 +39,7 @@ docs/research/policy-sweep/*.parquet
 # Report print edition: regenerable intermediate (scripts/build_report_pdf.py --html-only)
 docs/report/report_print.html
 docs/report/report.pdf
+
+# Korea tables: tidy CSVs are regenerable from the committed raw exports
+# (scripts/fetch_korea_tables.py --parse-only)
+data/raw/korea/*.tidy.csv
