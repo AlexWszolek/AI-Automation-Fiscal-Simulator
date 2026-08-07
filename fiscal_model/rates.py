@@ -222,9 +222,13 @@ class _PayrollFICALegacy:
         return float(out) if np.isscalar(wage) or np.ndim(wage) == 0 else out
 
 
-def build_engines(data: loaders.FiscalData):
+def build_engines(data: loaders.FiscalData, payroll_components=None):
+    """`payroll_components` is a country's `payroll_params -> components` builder (see
+    `country.Country.payroll_components`); the default is the US schedule. Passed as a callable
+    rather than a `Country` because `country` imports this module."""
+    build = payroll_components or us_payroll_components
     return (IncomeTax(data.fed_brackets, data.state_brackets, data.state_no_wage_tax),
-            PayrollFICA(data.payroll_params))
+            PayrollFICA(components=build(data.payroll_params)))
 
 
 def state_slot_matrices(income: IncomeTax, state_arr: np.ndarray, state_masks: dict) -> dict:
