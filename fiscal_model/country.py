@@ -126,9 +126,9 @@ KOREA = Country(
     subnational_mode=SUBNATIONAL_FORMULA_TRANSFER,
     subnational_label="local government",
     subnational_transfer_share=0.4003,
-    # Populated when the Korean transfer formulas land (Basic Pension, EITC, EI benefit —
-    # national formulas, no 51-state archetype bake needed).
-    transfer_programs=(),
+    # National formulas in korea_transfers.py — no 51-state archetype bake needed. NBLSS is
+    # deliberately deferred (components still ⚠ in the research doc).
+    transfer_programs=("ei_unemployment_benefit", "kr_eitc", "basic_pension"),
     # 2025 nominal GDP, derived from NABO Focus 92: national debt ₩1,270.4tn = 47.8% of GDP.
     va_baseline=1_270.4e12 / 0.478,
     # The automation base = survey-covered labour compensation: mean total monthly wage

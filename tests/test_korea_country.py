@@ -66,6 +66,18 @@ def test_employee_share_excludes_industrial_accident():
     assert employee == pytest.approx(50e6 * (0.095 + 0.0719 + 0.009448 + 0.018) / 2)
 
 
+def test_korea_transfer_programs_have_formula_implementations():
+    """Every declared programme maps to a formula in korea_transfers.py — the tuple is a
+    contract, not a wish list. NBLSS is deferred until its parameters verify."""
+    from fiscal_model import korea_transfers as kt
+    impl = {"ei_unemployment_benefit": kt.ei_spell_benefit,
+            "kr_eitc": kt.kr_eitc,
+            "basic_pension": kt.basic_pension_year}
+    assert set(KR.transfer_programs) == set(impl)
+    for fn in impl.values():
+        assert callable(fn)
+
+
 def test_korea_raw_files_exist_in_the_repo():
     from pathlib import Path
     raw = Path(country.__file__).resolve().parent.parent / "data" / "raw"

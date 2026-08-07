@@ -146,6 +146,20 @@ demographic and cyclical reasons, before AI displacement at scale. The argument 
 the fund figures above are now primary-sourced — the earlier press-coverage caveat no longer
 applies.)
 
+✓ **The benefit rules (구직급여), for the outlay side** — verified from the annual with statute
+citations (고용보험법 §45–46, §50), implemented in `fiscal_model/korea_transfers.py`:
+
+- Daily benefit = **60% of the calendar-day average wage**, clipped to a floor of **80% of the
+  8-hour minimum wage** (2026 minimum wage ✓ ₩10,320/h → floor **₩66,048/day**) and a cap set by
+  decree (**₩68,100/day in 2026**, raised from 66,000).
+- **The floor and cap are within 3.2% of each other** — the benefit is effectively a flat
+  ≈₩2.0m/month across the wage scale. Per-worker outlay therefore scales with *headcount and
+  duration*, not wages: exactly the right shape for displacement arithmetic, and worth saying in
+  the room.
+- Duration (소정급여일수): 120/150/180/210/240 days by insured years (<1, 1–3, 3–5, 5–10, 10+);
+  **120–270 for age 50+ and disabled**. Eligibility: 180 insured days in the prior 18 months.
+- Scale anchor: a floor-wage worker at 50+ with 10+ years draws ≈ **₩17.8m over one spell**.
+
 ---
 
 ## 3. Channel-by-channel map to the model
@@ -305,16 +319,22 @@ three times the OECD level, and the highest in the OECD. This single number expl
 Pension exists, why it grows automatically with the 65+ population, and why §7.3 matters: the
 informal old-age safety net is doing work the formal system does not.
 
-**Earned Income Tax Credit (근로장려금)** ✓ — 2026 parameters:
+**Earned Income Tax Credit (근로장려금)** ✓ — the full statutory schedule (조세특례제한법
+§100조의5, as amended 2024-12-31, pulled from the statute text 2026-08-07; implemented in
+`fiscal_model/korea_transfers.py`):
 
-| Household type | Max credit | Income ceiling |
-|---|---|---|
-| Single | **₩1.65m** | ₩22m |
-| Single-earner | **₩2.85m** | ₩32m |
-| Dual-earner | **₩3.30m** | ₩44m |
+| Household type | Phase-in (× max/end) | Plateau | Phase-out to zero | Max credit |
+|---|---|---|---|---|
+| Single (단독) | < ₩4m | ₩4–9m | ₩9–22m | **₩1.65m** |
+| Single-earner (홑벌이) | < ₩7m | ₩7–14m | ₩14–32m | **₩2.85m** |
+| Dual-earner (맞벌이) | < ₩8m | ₩8–17m | ₩17–44m | **₩3.30m** |
 
-Asset test: household total under **₩240m**; between ₩170m and ₩240m only **50%** is paid. Regular
-application window 1–31 May 2026. ⚠ Total cost and recipient count still to confirm.
+Phase-in is linear (income × max/phase-in-end); phase-out is linear to zero at the ceiling.
+Asset test (§100조의3/§100조의5 ④): assets ≥ **₩240m** → ineligible; **₩170–240m → 50%** paid;
+late application → 95%. Spouses' incomes are summed for the 총급여액 등 test. The credit
+requires earned income — **displacement zeroes it**, which partially offsets the outlay side of a
+displacement in the marginal object. Regular application window 1–31 May 2026. ⚠ Total cost and
+recipient count still to confirm.
 
 **Public social spending** ✓ — the structural context for everything above: Korea spent
 **₩337.4tn, 15.2% of GDP (2021)**, ranking **34th of 38 OECD countries** against an OECD average of
@@ -760,6 +780,8 @@ Verified this session. Korean-language sources noted.
 - [서울신문 — 사회복지지출 GDP의 15.2%, OECD 최하위권](https://m.go.seoul.co.kr/news/society/2025/04/09/20250409500247?cp=go) (KR)
 - [무역뉴스 — 복지지출 OECD 최하위권, 증가속도는 최상위](https://www.kita.net/cmmrcInfo/cmmrcNews/cmmrcNews/cmmrcNewsDetail.do?nIndex=62235) (KR)
 - [위기브 — 2026년 근로장려금 자격 요건](https://www.wegive.co.kr/wezine/detail/1651) (KR)
+- [법제처 — 조세특례제한법 제100조의5 (근로장려금의 산정)](https://www.law.go.kr/법령/조세특례제한법/제100조의5) (KR) — the statutory trapezoids
+- [국세청 — 근로장려금 소개 / 심사 및 지급](https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2450&cntntsId=7781) (KR)
 
 **Social insurance rates**
 - [MOEL — 2026년 평균 산재보험료율 1.47% 유지](https://www.moel.go.kr/news/enews/report/enewsView.do?news_seq=18810) (KR)
