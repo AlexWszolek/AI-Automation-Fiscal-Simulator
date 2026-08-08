@@ -503,11 +503,20 @@ cancellation. Keep the two separate.
 
 ## 6. Existing Korean research — and the gap this work fills
 
-- **KDI**, 「인공지능으로 인한 노동시장의 변화와 정책방향」 (English edition published; user is
-  preparing a translation — not summarised here deliberately). Reported findings include ~12% of
-  jobs (3.41m) at high replacement risk, ~38.8% of jobs with >70% of tasks automatable as of 2023,
-  and an estimate of ~256k jobs/year over a decade. KDI builds a **routinisation index on the 2020
-  Korea Dictionary of Occupations (한국직업사전)**, scoring occupations 0–2 on data/people/objects.
+- **KDI**, 「인공지능으로 인한 노동시장의 변화와 정책방향」 (한요셉/Joseph Han, Research Monograph
+  2023-03; **both editions now local**: `sources/kdi-monograph-2023-03-ai-labor-{en,kr}.pdf`,
+  retrieved 2026-08-07). ✓ First-hand corrections to this section's earlier press-derived summary:
+  **the methodology is NOT a Dictionary-of-Occupations routinisation index** — it scores
+  **44 업무수행능력 (work abilities)** via expert interviews (2023) and a parallel GPT-4
+  assessment, joined to KNOW occupational ability requirements at the 세분류 level. ✓ KDI's own
+  headline results: at expert-assessed **2023** technology, **38.8% of jobs have >70% of tasks
+  automatable** (20.5% >80%, 7.5% >90%); at expert-forecast **2030** technology this reaches
+  ~**99%** (>70% threshold) — the report's own framing is that near-term *technical* automatability
+  is close to universal, and realized automation is gated by adoption, not technology. ⚠→✓
+  *Attribution fix:* the "~12% of employment in the top-20% AI-exposure occupations, including many
+  high-income occupations" figure is **한지우·오삼일 (Bank of Korea, 2023)**, Webb-patent-based,
+  *cited by* KDI — not a KDI result. The monograph publishes top-20 automation-risk lists at
+  세분류 level (표 3-5/3-6) but **no complete occupation-level score vector**.
 - **OECD**, *Artificial Intelligence and the Labour Market in Korea* (Oct 2025). Most-exposed
   occupations are white-collar — IT, business, managerial, science/engineering. Observed negative
   employment effects in Korea concentrate among **younger, low- to medium-skilled** workers.
@@ -523,6 +532,15 @@ cancellation. Keep the two separate.
 exist on Korean occupational classifications. Using a Korean-authored measure is also far better
 rhetorically than importing US O*NET/SOC scores — it removes the most obvious line of attack. A
 KSCO→ISCO→SOC crosswalk becomes a fallback, not the critical path.
+
+**(a′) Exposure-join sourcing status (2026-08-07).** The join design is settled — scores at KSCO
+major-group level applied to all wage-bracket cells of the group (KSCO majors correspond 1:1 to
+ISCO-08 majors except ISCO 5 splitting into KSCO 4+5) — but **no fetched source publishes the
+complete group-level numeric vector**: the KDI monograph gives lists and aggregates only, and the
+three candidates that do publish usable numbers are bot-walled to scripts (OECD report incl. its
+StatLink data files; 한지우·오삼일 BOK 이슈노트; IMF SIP 2025/013). Per the necessity/provenance
+discipline the vector will NOT be hand-rolled; it is a human-download item in
+`korea-primary-docs-request.md`. One of OECD-StatLink or the BOK note suffices.
 
 **(b) The gap is the fiscal channel.** This body of work addresses **jobs, wages and skills**. None
 of it addresses **the tax base**. KDI has told Korean policymakers what happens to employment.

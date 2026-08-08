@@ -15,6 +15,10 @@ published fund paths that feed the fund-depletion projector.
 | `nabo-settlement-fy2025-labor-committee.pdf` | 결산분석시리즈 IV: FY2025 settlement analysis, labor committee volume | 33319415 | **The EI headline.** Unemployment-benefit account FY2021–25 settlement: FY2025 spend ₩17.46tn, balance −₩1.78tn, reserves ₩1.73tn nominal / **−₩5.99tn net of PCMF borrowings, ratio 0.1×** (p. ~200) |
 | `nabo-social-insurance-2026.pdf` | 2026 대한민국 사회보험 (NABO annual, 452 pp) | 33319376 | Whole-EI-fund [표 149]: FY2025 balance **−₩592bn**, reserves ₩7.8tn nominal / **₩79.6bn net** — citing MOEL's own 「2025회계연도 고용보험기금 결산보고서」 (2026-06). Statutory bands per account (고용보험법 §84: benefit account 1.5–2×, stabilization 1–1.5×). [표 151] EI baseline path 2026–29. Reference for all five schemes' 2026 rates and fund structures |
 
+| `kdi-monograph-2023-03-ai-labor-en.pdf` / `-kr.pdf` | KDI Research Monograph 2023-03 (한요셉/Joseph Han), both editions | KDI atch_no route | The Korean AI-labor reference the audience knows. Own results: 38.8%/20.5%/7.5% of jobs above 70/80/90% task-automatability at 2023 tech; ~99% at 2030 expert forecast. Methodology: 44 work abilities × expert + GPT-4 assessment × KNOW requirements (NOT a routinisation index — corrects §6). Publishes top-20 lists only, no full occupation score vector |
+| `kotra-taxation-in-korea-2025.pdf` | KOTRA, *2025 Taxation in Korea* (Jan 2025) | investkorea.org direct | Cross-check for the wage-earner tax chain: deduction schedule, brackets, wage-earner credit caps, 10% local surtax, premium deductibility |
+| `kostat-population-projection-2022-2072-press.pdf` | Statistics Korea 장래인구추계 press release (2023-12) with full statistical tables | e-나라지표 attachment (kosis.kr SSO loops even scripted) | The 15–64 medium-variant series behind `fiscal_model/korea_demography.py` (table 7, p. 60) |
+
 Notes:
 - NABO Focus 162 footnote: Focus No. 163 (2026-06-11) covers comparative NHI revenue structures
   ("보험료만으로 지속 가능한가") — relevant to the VAT/funding-mix argument, not yet pulled.

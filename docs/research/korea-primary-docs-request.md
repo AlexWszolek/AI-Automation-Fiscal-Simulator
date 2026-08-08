@@ -14,6 +14,22 @@ needed.** All three were retrieved directly from NABO the same morning (browser 
 The Aug-14 re-scope tripwire is therefore **cleared on the document front** — the model-backed
 version of the presentation is unblocked as far as inputs go.
 
+## NEW ask (2026-08-07, blocks the exposure join — Phase 5)
+
+The model needs a published **AI-exposure vector at occupation major-group level**. The KDI
+monograph (now in `sources/`) publishes lists and aggregates but no full vector, and the three
+sources that do are behind bot-walls our tooling cannot pass. **Any ONE of these, in order of
+preference:**
+
+1. **OECD, *Artificial Intelligence and the Labour Market in Korea* (Oct 2025)** — the PDF *and,
+   more importantly, the StatLink data files* (each figure in OECD reports carries a `stat.link`
+   URL serving the underlying numbers as Excel). The exposure-by-occupation figure's data file is
+   exactly what we need. https://doi.org/10.1787/68ab1a5a-en
+2. **한지우·오삼일, 「AI와 노동시장 변화」, 한국은행 BOK 이슈노트 제2023-30호** — the PDF (its
+   exposure-by-occupation figures/appendix). Search "BOK 이슈노트 AI와 노동시장" on bok.or.kr.
+3. IMF Selected Issues Paper 2025/013, *Transforming the Future: The Impact of AI in Korea*
+   (https://www.elibrary.imf.org/view/journals/018/2025/013/article-A001-en.xml).
+
 ## Residual asks (low priority, none blocking)
 
 1. **Post-reform NPS fund path** (annual contributions/outlays/reserves under the 2025 reform, to
