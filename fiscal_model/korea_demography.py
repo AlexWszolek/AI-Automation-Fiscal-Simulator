@@ -5,8 +5,9 @@ table 7 「생산연령인구(15-64세) 및 구성비」, **medium variant (중�
 reference projection NABO's long-term outlook also uses. Local copy:
 `docs/research/sources/kostat-population-projection-2022-2072-press.pdf` (table at p. 60).
 
-The published table is annual through 2040 and 5-yearly to 2072; between the 5-year knots we
-interpolate linearly (disclosed; the model's default 10-period horizon never needs it).
+The published table is annual through 2040, then 5-yearly knots to 2070 plus a final 2072
+value; between knots we interpolate linearly (disclosed; the model's default 10-period
+horizon never needs it).
 Anchors that reconcile with the research doc: 36,743k is 71.1% of the 51,673k 2022 total;
 the press headline "332만 decline in ten years" is 36,743 − 33,426 (2022→2032); the 2030
 value 34,166k matches the quoted 3,417만.
@@ -47,5 +48,7 @@ def working_age_k(year: int) -> float:
 def korea_demography_path(n_periods: int = 10, base_year: int = MODEL_BASE_YEAR) -> tuple:
     """Scale factors for `V2Params.demography_path`: period t is (base_year + t) relative to
     base_year, so path[0] == 1.0 by construction."""
+    if n_periods < 1:
+        raise ValueError("n_periods must be ≥ 1")
     base = working_age_k(base_year)
     return tuple(working_age_k(base_year + t) / base for t in range(n_periods))

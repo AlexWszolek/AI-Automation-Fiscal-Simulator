@@ -203,8 +203,18 @@ SS = "{urn:schemas-microsoft-com:office:spreadsheet}"
 
 
 def tidy_rows(raw: bytes, tbl_id: str, years: list[str]):
-    """SpreadsheetML -> long-format rows. Yields header first, then data rows."""
-    text = raw.decode("euc-kr")
+    """SpreadsheetML -> long-format rows. Yields header first, then data rows.
+
+    Encoding note (verified 2026-08-07): the export declares encoding="EUC-KR" but with a
+    LEADING TAB before <?xml ...?>, so lxml never honours the declaration — feeding it the
+    raw bytes yields mojibake. Decoding ourselves (cp949, the superset codec Korean sites
+    actually emit) and re-encoding UTF-8 is the path that round-trips correctly; the stale
+    declaration is then ignored for the same leading-tab reason. Positional cell indexing
+    is safe only while the exporter materialises every cell: the ss:Index tripwire below
+    fails loud if that ever changes."""
+    assert b"ss:Index" not in raw, \
+        f"{tbl_id}: export uses ss:Index cell skipping — positional parsing would misalign"
+    text = raw.decode("cp949")
     root = etree.fromstring(text.encode("utf-8"),
                             parser=etree.XMLParser(recover=True, huge_tree=True))
     rows = []
@@ -231,6 +241,8 @@ def tidy_rows(raw: bytes, tbl_id: str, years: list[str]):
             val = r[j].strip() if j < len(r) else ""
             yield r[:item_col] + [r[item_col], r[unit_col], y, val]
             n_data += 1
+    if n_data == 0:
+        raise RuntimeError(f"{tbl_id}: export parsed to zero data cells — truncated download?")
     print(f"[{tbl_id}] parsed {n_data:,} data cells across {len(dim_names)} dimensions")
 
 

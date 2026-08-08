@@ -30,23 +30,35 @@ def test_published_depletion_years_match_nabo():
     assert first_negative_year(EI_BASELINE.reserves, 2026) is None
 
 
-def test_fractional_depletion_dates():
-    assert depletion_date(NHI_BASELINE.reserves, 2026) == pytest.approx(2030 + 6.9 / 11.1)
-    assert depletion_date(NHI_REFORM.reserves, 2026) == pytest.approx(2028 + 7.6 / 8.7)
+def test_fractional_depletion_dates_floor_to_nabo_years():
+    """Calendar-decimal convention: the crossing happens DURING the first-negative year, so
+    floor(fractional date) must equal NABO's published phrasing (adversarial-pass fix: the
+    original convention was a year low)."""
+    base = depletion_date(NHI_BASELINE.reserves, 2026)
+    reform = depletion_date(NHI_REFORM.reserves, 2026)
+    assert base == pytest.approx(2031 + 6.9 / 11.1)
+    assert reform == pytest.approx(2029 + 7.6 / 8.7)
+    assert int(base) == first_negative_year(NHI_BASELINE.reserves, 2026) == 2031
+    assert int(reform) == first_negative_year(NHI_REFORM.reserves, 2026) == 2029
     assert depletion_date(EI_BASELINE.reserves, 2026) is None
 
 
 # ------------------------------------------------------------------ shift mechanics
 def test_erosion_pulls_depletion_forward_monotonically():
     n = len(NHI_REFORM.revenue)
-    dates = [depletion_shift(NHI_REFORM, np.full(n, e))["eroded_date"]
+    dates = [depletion_shift(NHI_REFORM, np.full(n, e), wage_linked_share=1.0)["eroded_date"]
              for e in (0.0, 0.02, 0.05, 0.10)]
     assert dates[0] == pytest.approx(depletion_date(NHI_REFORM.reserves, 2026))
     assert all(b < a for a, b in zip(dates, dates[1:]))
-    shift = depletion_shift(NHI_REFORM, np.full(n, 0.05))
+    shift = depletion_shift(NHI_REFORM, np.full(n, 0.05), wage_linked_share=1.0)
     assert shift["years_pulled_forward"] == pytest.approx(
         shift["base_date"] - shift["eroded_date"])
     assert shift["years_pulled_forward"] > 0
+
+
+def test_depletion_shift_requires_the_full_horizon():
+    with pytest.raises(AssertionError, match="full-horizon"):
+        depletion_shift(NHI_REFORM, np.zeros(4), wage_linked_share=1.0)
 
 
 def test_wage_linked_share_scales_the_erosion():
@@ -110,7 +122,11 @@ def test_losses_reconcile_with_the_payroll_engine(cells):
     assert scheme_sum == pytest.approx(float(engine.fica(w, "Single") @ emp))
 
 
-def test_local_passthrough_is_the_statutory_share(cells):
+def test_local_passthrough_is_a_memo_item_not_part_of_the_partition(cells):
+    """The 40.03% line is an allocation OF the national loss — labelled memo so nobody sums
+    it into the institutional partition (adversarial-pass fix: double-count hazard)."""
     losses = contribution_losses(0.01 * cells["emp"].to_numpy(), cells=cells)
-    assert losses["local share of national tax (40.03%)"] == pytest.approx(
+    assert losses["memo: local share of national tax (40.03%)"] == pytest.approx(
         0.4003 * losses["income tax (national)"])
+    non_memo = {k: v for k, v in losses.items() if not k.startswith("memo:")}
+    assert len(non_memo) == 7           # 5 schemes + national income tax + local surtax

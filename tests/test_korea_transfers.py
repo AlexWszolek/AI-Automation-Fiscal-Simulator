@@ -63,6 +63,15 @@ def test_eitc_asset_halving():
     assert c[0] == pytest.approx(825_000.0)
 
 
+def test_eitc_never_negative_and_duration_rejects_garbage():
+    """Adversarial-pass guards: negative income must not produce a negative credit, and
+    negative/NaN insured-years must fail loud instead of index-wrapping to 240/270 days."""
+    assert kt.kr_eitc(np.array([-1_000_000.0]), "single")[0] == 0.0
+    for bad in (np.array([-0.5]), np.array([np.nan])):
+        with pytest.raises(AssertionError, match="insured_years"):
+            kt.ei_duration_days(bad)
+
+
 def test_eitc_displacement_delta_is_the_lost_credit():
     d = kt.kr_eitc_delta_on_displacement(np.array([9e6]), residual_income=0.0)
     assert d[0] == pytest.approx(-1_650_000.0)

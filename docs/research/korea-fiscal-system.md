@@ -175,6 +175,14 @@ Inputs in hand: NHI 2026–2035 both variants (Focus 162); the EI whole-fund bas
 ([표 151]). **NPS is deliberately absent — no placeholder numbers** — until a post-reform
 published path lands (top residual ask).
 
+Known one-sidedness, disclosed (adversarial pass 2026-08-07): the shift is **revenue-side
+only**. It ignores (a) the *outlay* side — displacement raises EI benefit spending, computable
+from `ei_spell_benefit` × displaced headcount and planned as part of scenario wiring, so the EI
+erosion effect is understated by construction; and (b) forgone investment income on the eroded
+reserves, a compounding second-order understatement at long horizons. Both biases run
+conservative. Fractional depletion dates use calendar decimals whose floor equals NABO's
+published year (the crossing happens *during* the first-negative year).
+
 Two calibration observations, recorded to prevent over-promising:
 
 - **The depletion-date shift is small for NHI, by construction:** the fund is nearly dead
@@ -235,6 +243,11 @@ cross-checked against KOTRA *Taxation in Korea 2025*, local copy in `sources/`).
 This is the minimum faithful engine for Channel 1: deduction → brackets → credit → +10%. Personal
 credits beyond the basic deduction (child credit ₩150k+, insurance/medical/card credits) shift
 individual liabilities but are second-order for cell-level means; disclose the simplification.
+One omission worth naming specifically (adversarial pass): the **standard tax credit
+(표준세액공제, ₩130k)** for non-itemizers — the engine models the special income deduction for
+insurance premiums instead, which statutorily precludes it, but at the lowest wages the standard
+credit would have been the better choice, so bottom-end liabilities are overstated by up to
+~₩143k/worker incl. surtax. Same conservative direction as the other bottom-end simplifications.
 
 **Engine vs published aggregates** (`fiscal_model/korea_tax.py` over the 209-cell table, 2025):
 aggregate PIT+local from covered workers ₩57.9tn — the right ballpark of published wage-income-tax

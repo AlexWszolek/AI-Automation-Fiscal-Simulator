@@ -71,6 +71,9 @@ def korea_income_tax(gross_wage: np.ndarray, employee_social: np.ndarray) -> dic
     """
     gross = np.asarray(gross_wage, dtype=float)
     social = np.asarray(employee_social, dtype=float)
+    # negative wages would index-wrap the piecewise helpers into the top segments
+    assert np.isfinite(gross).all() and (gross >= 0.0).all(), "annual wages must be finite ≥ 0"
+    assert np.isfinite(social).all() and (social >= 0.0).all()
     base = gross - _wage_salary_deduction(gross) - BASIC_DEDUCTION - social
     base = np.maximum(base, 0.0)
     computed = _bracket_tax(base)

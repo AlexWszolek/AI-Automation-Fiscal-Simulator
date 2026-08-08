@@ -132,10 +132,16 @@ KOREA = Country(
     # 2025 nominal GDP, derived from NABO Focus 92: national debt ₩1,270.4tn = 47.8% of GDP.
     va_baseline=1_270.4e12 / 0.478,
     # The automation base = survey-covered labour compensation: mean total monthly wage
-    # ₩4,482k (PAYN42, 2025) × 12 × 12,413,858 covered wage workers ≈ ₩667.7tn. The ~9.6m
-    # wage workers outside the establishment survey are outside the model, disclosed.
+    # ₩4,482k (PAYN42, 2025) × 12 × 12,413,858 covered wage workers ≈ ₩667.7tn — same
+    # survey for both factors. The ~9.6m wage workers outside the establishment survey are
+    # outside the model, disclosed. CAUTION: this and va_baseline cover DIFFERENT
+    # populations (survey-covered comp vs whole-economy GDP), so comp/va ≈ 25% is NOT the
+    # labour share (~45–47% on national accounts). Any consumer needing an economy-wide
+    # compensation total must source 피용자보수 from the BOK national accounts first.
     comp_total=4_482_000.0 * 12.0 * 12_413_858,
     # 관리재정수지 (managed fiscal balance) 2025: −₩85.5tn (NABO Focus 92, Table 1).
+    # NOTE the field's "_bn" suffix is a US-ism: the unit is money_unit_label — ₩tn here,
+    # $B for the US. 85.5 means ₩85.5tn, never billions.
     baseline_deficit_bn=85.5,
 )
 

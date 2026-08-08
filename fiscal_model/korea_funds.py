@@ -61,6 +61,9 @@ class FundPath:
     reserves: tuple              # published year-end cumulative reserves, ₩tn
     source: str
 
+    def __post_init__(self):
+        assert len(self.revenue) == len(self.reserves) > 0, self.name
+
     @property
     def years(self) -> tuple:
         return tuple(self.base_year + t for t in range(len(self.revenue)))
@@ -93,8 +96,8 @@ def shifted_reserves(fund: FundPath, erosion, wage_linked_share: float = 1.0) ->
     `wage_linked_share` is the share of published revenue that scales with that base
     (contributions from wage employees vs subsidies, investment income, other subscribers)."""
     e = np.asarray(erosion, dtype=float)
-    assert e.ndim == 1 and len(e) <= len(fund.revenue), \
-        f"erosion path longer than {fund.name}'s published horizon ({len(fund.revenue)})"
+    assert e.ndim == 1 and 0 < len(e) <= len(fund.revenue), \
+        f"erosion path empty or longer than {fund.name}'s published horizon ({len(fund.revenue)})"
     assert np.isfinite(e).all() and (e >= 0.0).all() and (e <= 1.0).all()
     assert 0.0 <= wage_linked_share <= 1.0
     n = len(e)
@@ -111,19 +114,30 @@ def first_negative_year(reserves, base_year: int):
 
 
 def depletion_date(reserves, base_year: int):
-    """Fractional crossing date via linear interpolation between year-ends, for shift
-    arithmetic finer than whole years. None if no crossing."""
+    """Fractional crossing date in calendar-decimal terms: the year-end reserve of calendar
+    year Y sits at coordinate Y+1.0 (1 January of Y+1), so a crossing between the Y−1 and Y
+    year-ends happens DURING calendar year Y and floor(date) equals `first_negative_year` —
+    NABO's own phrasing. Linear interpolation between year-ends; None if no crossing."""
     r = np.asarray(reserves, dtype=float)
     if r[0] < 0.0:
-        return float(base_year)
+        return float(base_year)                          # already negative at the first year-end
     for t in range(1, len(r)):
         if r[t] < 0.0:
-            return base_year + t - 1 + r[t - 1] / (r[t - 1] - r[t])
+            return base_year + t + r[t - 1] / (r[t - 1] - r[t])
     return None
 
 
-def depletion_shift(fund: FundPath, erosion, wage_linked_share: float = 1.0) -> dict:
-    """The headline object: how far erosion pulls the fund's depletion forward."""
+def depletion_shift(fund: FundPath, erosion, wage_linked_share: float) -> dict:
+    """The headline object: how far erosion pulls the fund's depletion forward.
+
+    `wage_linked_share` is deliberately required — the share of published revenue that
+    scales with the wage-employee contribution base is a per-fund calibration decision, not
+    a default. The erosion path must cover the fund's full published horizon so the base and
+    eroded dates are compared over the same window. For a fund whose published path never
+    crosses (EI), `years_pulled_forward` is None even when erosion CREATES a crossing —
+    check `eroded_date` for that case."""
+    assert len(np.asarray(erosion)) == len(fund.revenue), \
+        f"depletion_shift needs a full-horizon erosion path ({len(fund.revenue)} years)"
     base = depletion_date(fund.reserves, fund.base_year)
     eroded_path = shifted_reserves(fund, erosion, wage_linked_share)
     eroded = depletion_date(eroded_path, fund.base_year)
@@ -160,7 +174,10 @@ def contribution_losses(emp_loss: np.ndarray, cells=None) -> dict:
     tax = korea_income_tax(w, _ENGINE.employee_fica(w, "Single"))
     out["income tax (national)"] = float(tax["national"] @ loss)
     out["local income surtax"] = float(tax["local"] @ loss)
-    out["local share of national tax (40.03%)"] = (
+    # memo item, NOT additive: the statutory local-transfer slice OF the national loss
+    # above. Summing the non-memo entries partitions the total loss; including this
+    # would double-count 40.03% of the income-tax line.
+    out["memo: local share of national tax (40.03%)"] = (
         KOREA.subnational_transfer_share * out["income tax (national)"])
     return out
 

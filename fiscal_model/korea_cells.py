@@ -72,9 +72,14 @@ def load_korea_cells(year: str = "2025") -> KoreaCells:
         rdr = csv.reader(f)
         header = next(rdr)
         assert header[:4] == ["직종별", "성별", "임금계층별", "연령"], header
-        for occ, sex, br, age, item, _unit, yr, val in rdr:
+        for occ, sex, br, age, item, unit, yr, val in rdr:
             if yr != year or sex != TOTAL or age != TOTAL or val in ("", "-"):
                 continue
+            # the whole downstream contract hangs on these units — fail loud, not 1000× off
+            if item == WORKERS:
+                assert unit == "명", f"근로자수 unit changed: {unit!r} (expected 명/persons)"
+            elif item == HOURS:
+                assert unit == "시간", f"근로시간 unit changed: {unit!r} (expected 시간/hours)"
             if occ == TOTAL_OCC and br == TOTAL and item == WORKERS:
                 total_workers = float(val)
             if occ == TOTAL_OCC or br == TOTAL:

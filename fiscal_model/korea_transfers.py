@@ -17,10 +17,11 @@ are statute-level formulas (all ✓-verified 2026-08-07, docs/research/korea-fis
 
 Alignment with the US seam: the US kernel consumes (a) UI as residual income during the
 displacement window and (b) a marginal means-tested transfer delta. Korea's (a) is
-`ei_monthly_benefit` × the duration from `ei_duration_days`; Korea's (b) is, in v1, the
-EITC alone: `kr_eitc(wage) - kr_eitc(residual)` — a displaced worker LOSES an in-work
-credit, so the delta partially offsets the outlay increase. NBLSS (생계급여 etc.) is
-deliberately deferred: its components are still ⚠ in the research doc.
+`ei_spell_benefit` (daily benefit × entitlement days — NOT monthly × days); Korea's (b) is,
+in v1, the EITC alone via `kr_eitc_delta_on_displacement`, which returns
+credit(after) − credit(before): NEGATIVE for a worker who loses the in-work credit, exactly
+the sign the seam's marginal object carries. Use the functions, not a re-derivation. NBLSS
+(생계급여 etc.) is deliberately deferred: its components are still ⚠ in the research doc.
 """
 from __future__ import annotations
 
@@ -52,8 +53,10 @@ def ei_monthly_benefit(wage_year_won: np.ndarray) -> np.ndarray:
 
 
 def ei_duration_days(insured_years: np.ndarray, age_50_plus=False) -> np.ndarray:
-    i = np.searchsorted(_EI_TENURE_KNOTS, np.asarray(insured_years, dtype=float),
-                        side="right") - 1
+    yrs = np.asarray(insured_years, dtype=float)
+    # negative or NaN input would silently index-wrap to the MAXIMUM entitlement
+    assert np.isfinite(yrs).all() and (yrs >= 0.0).all(), "insured_years must be finite ≥ 0"
+    i = np.searchsorted(_EI_TENURE_KNOTS, yrs, side="right") - 1
     table = _EI_DAYS_50_PLUS if age_50_plus else _EI_DAYS_UNDER_50
     return table[i]
 
@@ -85,6 +88,9 @@ def kr_eitc(annual_income: np.ndarray, household: str = "single",
         [y < lo, y < mid, y < hi],
         [y * (mx / lo), np.full_like(y, mx), mx - (y - mid) * (mx / (hi - mid))],
         default=0.0)
+    # the phase-in branch fires for y < 0 too (business losses, data errors) — the credit
+    # requires positive earned income, never a negative payment
+    credit = np.maximum(credit, 0.0)
     return credit * (0.5 if asset_halved else 1.0)
 
 
@@ -104,5 +110,7 @@ BASIC_PENSION_THRESHOLD_COUPLE = 3_952_000.0
 
 
 def basic_pension_year() -> float:
-    """Annual outlay per eligible 65+ recipient (₩)."""
+    """Annual outlay per eligible 65+ recipient (₩). An upper bound per recipient: the
+    statutory reductions (couple reduction, National-Pension-linked reduction) are not
+    modelled — outlay-side scenarios should treat this as the standard-rate ceiling."""
     return BASIC_PENSION_MONTH * 12.0
