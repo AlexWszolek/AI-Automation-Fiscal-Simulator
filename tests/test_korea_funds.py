@@ -1,0 +1,116 @@
+"""The fund projector and institution routing. The load-bearing test is the first one: with
+zero erosion the projector must reproduce NABO's published reserve paths and depletion years
+IDENTICALLY — the module adds arithmetic to primary sources, never a competing projection."""
+import numpy as np
+import pytest
+
+from fiscal_model.korea_cells import PAYM39_CSV, load_korea_cells
+from fiscal_model.korea_funds import (
+    EI_BASELINE, NHI_BASELINE, NHI_REFORM, contribution_losses, depletion_date,
+    depletion_shift, erosion_fractions, first_negative_year, shifted_reserves)
+
+pytestmark = pytest.mark.skipif(
+    not PAYM39_CSV.exists(),
+    reason="Korea tidy CSV not built — scripts/fetch_korea_tables.py --parse-only")
+
+
+# ------------------------------------------------------------------ the anchor
+def test_zero_erosion_reproduces_the_published_paths_identically():
+    for fund in (NHI_BASELINE, NHI_REFORM, EI_BASELINE):
+        z = np.zeros(len(fund.revenue))
+        assert np.array_equal(shifted_reserves(fund, z), np.asarray(fund.reserves))
+
+
+def test_published_depletion_years_match_nabo():
+    """Focus 162's own statements: baseline depleted 2031, reform 2029 — two years earlier.
+    The EI whole-fund baseline never crosses within its horizon (reserves rebuilt via
+    planned borrowing); its story is the 0.1× benefit account, not a depletion date."""
+    assert first_negative_year(NHI_BASELINE.reserves, 2026) == 2031
+    assert first_negative_year(NHI_REFORM.reserves, 2026) == 2029
+    assert first_negative_year(EI_BASELINE.reserves, 2026) is None
+
+
+def test_fractional_depletion_dates():
+    assert depletion_date(NHI_BASELINE.reserves, 2026) == pytest.approx(2030 + 6.9 / 11.1)
+    assert depletion_date(NHI_REFORM.reserves, 2026) == pytest.approx(2028 + 7.6 / 8.7)
+    assert depletion_date(EI_BASELINE.reserves, 2026) is None
+
+
+# ------------------------------------------------------------------ shift mechanics
+def test_erosion_pulls_depletion_forward_monotonically():
+    n = len(NHI_REFORM.revenue)
+    dates = [depletion_shift(NHI_REFORM, np.full(n, e))["eroded_date"]
+             for e in (0.0, 0.02, 0.05, 0.10)]
+    assert dates[0] == pytest.approx(depletion_date(NHI_REFORM.reserves, 2026))
+    assert all(b < a for a, b in zip(dates, dates[1:]))
+    shift = depletion_shift(NHI_REFORM, np.full(n, 0.05))
+    assert shift["years_pulled_forward"] == pytest.approx(
+        shift["base_date"] - shift["eroded_date"])
+    assert shift["years_pulled_forward"] > 0
+
+
+def test_wage_linked_share_scales_the_erosion():
+    n = len(NHI_REFORM.revenue)
+    e = np.full(n, 0.10)
+    full = shifted_reserves(NHI_REFORM, e, wage_linked_share=1.0)
+    half = shifted_reserves(NHI_REFORM, e, wage_linked_share=0.5)
+    published = np.asarray(NHI_REFORM.reserves)
+    assert np.allclose(published - half, (published - full) / 2.0)
+
+
+def test_erosion_path_longer_than_horizon_is_rejected():
+    with pytest.raises(AssertionError, match="published horizon"):
+        shifted_reserves(EI_BASELINE, np.zeros(10))
+
+
+# ------------------------------------------------------------------ institution routing
+@pytest.fixture(scope="module")
+def cells():
+    return load_korea_cells("2025").cells
+
+
+def test_uniform_loss_erodes_every_institution_equally(cells):
+    frac = erosion_fractions(0.01 * cells["emp"].to_numpy(), cells=cells)
+    for k, v in frac.items():
+        assert v == pytest.approx(0.01), k
+
+
+def test_high_wage_loss_routes_to_the_general_account(cells):
+    """The composition asymmetry, made testable: automate only the top wage bracket and the
+    pension (capped) erodes proportionally LESS than the flat schemes, while the income-tax
+    base (concentrated at the top) erodes the most. Which institution takes the hit depends
+    on which cells automate — the claim a finance ministry can act on."""
+    top = cells["bracket_hi_k"].isna().to_numpy()
+    loss = np.where(top, 0.5 * cells["emp"].to_numpy(), 0.0)
+    f = erosion_fractions(loss, cells=cells)
+    assert f["NPS pension"] < f["NHI health"] == pytest.approx(f["LTC long-term care"])
+    assert f["income tax (national)"] > f["NHI health"] > f["NPS pension"]
+
+
+def test_low_wage_loss_routes_to_the_funds(cells):
+    """The mirror image: automate the bottom brackets and the funds take the hit while the
+    income-tax loss is negligible — and the PENSION erodes proportionally hardest, because
+    the cap compresses top earners' weight in its base, leaving it relatively bottom-heavy.
+    Low-wage automation is a pension-fund event; high-wage automation is a general-account
+    event. Sharper than the research doc's symmetric phrasing, same direction."""
+    bottom = (cells["bracket_hi_k"] <= 2000.0).to_numpy()
+    loss = np.where(bottom, 0.5 * cells["emp"].to_numpy(), 0.0)
+    f = erosion_fractions(loss, cells=cells)
+    assert f["income tax (national)"] < f["NHI health"] / 5.0
+    assert f["NPS pension"] > f["NHI health"] > f["income tax (national)"]
+
+
+def test_losses_reconcile_with_the_payroll_engine(cells):
+    """Scheme losses for the whole workforce must equal the engine's total payroll take."""
+    from fiscal_model import rates
+    engine = rates.PayrollFICA(components=rates.korea_payroll_components())
+    losses = contribution_losses(cells["emp"].to_numpy(), cells=cells)
+    w, emp = cells["wage_year_won"].to_numpy(), cells["emp"].to_numpy()
+    scheme_sum = sum(losses[c.name] for c in rates.korea_payroll_components())
+    assert scheme_sum == pytest.approx(float(engine.fica(w, "Single") @ emp))
+
+
+def test_local_passthrough_is_the_statutory_share(cells):
+    losses = contribution_losses(0.01 * cells["emp"].to_numpy(), cells=cells)
+    assert losses["local share of national tax (40.03%)"] == pytest.approx(
+        0.4003 * losses["income tax (national)"])

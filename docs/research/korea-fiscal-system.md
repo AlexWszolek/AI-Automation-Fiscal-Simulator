@@ -160,6 +160,37 @@ citations (고용보험법 §45–46, §50), implemented in `fiscal_model/korea_
   **120–270 for age 50+ and disabled**. Eligibility: 180 insured days in the prior 18 months.
 - Scale anchor: a floor-wage worker at 50+ with 10+ years draws ≈ **₩17.8m over one spell**.
 
+### 2.4 The depletion projector (built 2026-08-07, `fiscal_model/korea_funds.py`)
+
+Design: the projector **shifts each fund's published year-end reserve path** down by the
+cumulative eroded contribution revenue (`reserve'_t = published_t − Σ revenue_s · share ·
+erosion_s`) rather than re-accumulating from balances. Verified rationale: NHI's published
+reserves chain from its balances to ≤0.1 rounding, but the EI whole-fund path also moves with
+planned PCMF borrowing flows — published paths embed the financing assumptions, and our claim is
+only about the contribution side. **Zero erosion reproduces the published paths identically**
+(the anchor test), and the published depletion years (2031 baseline / 2029 reform / EI no
+crossing) fall out of the encoded series.
+
+Inputs in hand: NHI 2026–2035 both variants (Focus 162); the EI whole-fund baseline 2026–2029
+([표 151]). **NPS is deliberately absent — no placeholder numbers** — until a post-reform
+published path lands (top residual ask).
+
+Two calibration observations, recorded to prevent over-promising:
+
+- **The depletion-date shift is small for NHI, by construction:** the fund is nearly dead
+  already. A mechanical 0→6%-over-a-decade contribution erosion pulls the reform-variant date
+  forward only ~0.3–0.6 years. For NHI, automation's sharper expression is **post-depletion
+  deficit widening** (the −₩136tn cumulative by 2035 deepening), which `eroded_reserves`
+  yields directly. The *"N years pulled forward"* framing will do its real work on the
+  **pension's** decades-long horizon — one more reason the post-reform NPS path is the top ask.
+- **The pension base is relatively bottom-heavy** (model-derived, from the routing arithmetic —
+  not an external ✓ fact): the ₩6.59m/month cap compresses top earners' weight in the NPS base,
+  so a bottom-bracket displacement pattern erodes the pension base proportionally *hardest*
+  (e.g. ~1.35% vs NHI's ~1.19% for the same bottom-heavy loss), while a top-bracket pattern
+  barely touches it and lands on income tax instead. Sharper than §3 Channel 2's symmetric
+  phrasing, same direction: **low-wage automation is a pension-fund event; high-wage automation
+  is a general-account event.**
+
 ---
 
 ## 3. Channel-by-channel map to the model
