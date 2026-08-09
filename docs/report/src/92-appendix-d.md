@@ -5,7 +5,7 @@ model repository. To reproduce from a clean checkout:
 
 ```
 bash scripts/bootstrap.sh                                   # data artifacts (one-time)
-.venv/bin/python -m pytest -q                               # 245 tests, all green
+.venv/bin/python -m pytest -q                               # 434 tests, all green
 .venv/bin/python scripts/report_artifacts.py                # ~40 min: 7×N=1000 MC + validation
 .venv/bin/python scripts/build_report_docx.py               # assembles this document
 ```
@@ -16,10 +16,12 @@ build resolves every number in the prose from that manifest and fails on any unr
 so the text cannot cite a number the model did not produce. The footer of every page carries the
 git commit and generation timestamp of the manifest this copy was built from.
 
-Interactive exploration of every scenario, overlay, and lever in this report — including the
-Monte Carlo — is available in the repository's application (`streamlit run app/streamlit_app.py`),
-and a headless runner (`scripts/monte_carlo.py --preset <key> --overlay <key>`) reproduces any
-scenario × policy cell from the command line.
+Every scenario, overlay, and lever in this report, including the Monte Carlo, can be explored
+interactively at <https://aifiscalimpacts.alexwszolek.com>, or locally by running the front end and
+the compute service together (`cd web && npm install && npm run dev`, alongside
+`.venv/bin/uvicorn api.main:app --port 8000`). A headless runner
+(`scripts/monte_carlo.py --preset <key> --overlay <key>`) reproduces any scenario × policy cell from
+the command line without either.
 
 # References
 

@@ -1,26 +1,52 @@
 # AI Automation Fiscal Model
 
-An **interactive, user-driven model of the fiscal effects of AI/automation** on the U.S.
-economy — federal *and* state-and-local. A user sets levers (how much of each
-occupation/industry is automated, how fast, reabsorption rate, state budget response,
-optional UBI) and sees the downstream consequences: lost tax revenue, rising transfer
-outlays, deficits, and distributional/structural shifts.
+A bottom-up accounting model of what AI-driven labor displacement does to United States public
+finances, federal and state-and-local. Live at <https://aifiscalimpacts.alexwszolek.com>, with the
+full technical report at `docs/report/report.docx`.
 
-**Design philosophy:** every assumption is a *user-set lever*, never baked in. Credibility
-comes from the *accounting being correct*. The chain — automation → lost compensation → lost
-income tax → lost demand → second-round effects — is inspectable, with offsets (reabsorption,
-capital-income recirculation, productivity) shown at the same prominence as costs:
-**cost, offset, net**.
+The question is narrower than what AI will do to the economy, as that question is too large to
+answer and too vague to test. If AI automates some share of the work Americans currently do, what
+happens to the public finances that depend on that work being done by taxed humans? The United
+States raises roughly $5.0 trillion of federal revenue and $3.5 trillion of state and local revenue
+against a $15.0 trillion compensation base, and eighty-four percent of federal receipts come from
+individual income and payroll taxes, which are taxes on people being employed.
 
-**Thesis the accounting surfaces:** under serious automation the tax base **migrates from
-labor to capital**. Labor income is taxed at a high, top-heavy effective rate; capital income
-lower. Because the most AI-exposed work is high-wage cognitive work, **revenue can fall faster
-than employment**, while automatic-stabilizer outlays rise and **states must balance their
-budgets** (a contractionary amplifier the federal government doesn't face).
+When a job is automated the wage leaves that base, but the value the job produced does not leave
+with it. It re-emerges as corporate profit, as lower prices, or as capital income, each taxed at a
+different and usually lower effective rate, and sometimes at no rate at all. The fiscal question is
+therefore an accounting question about base migration, which is why this is built as an accounting
+machine first: every dollar of displaced compensation is tracked to a destination, every destination
+has a tax treatment, and the books are forced to balance by construction.
 
-See `docs/PROJECT_BRIEFING_v2.md` for the full briefing and data dictionary.
+## What it finds
 
-## The fiscal kernel — division of labor (kept separate & additive, each lever inspectable)
+Three results hold across twelve differently-anchored scenarios.
+
+The tax base migrates from labor to capital faster than output falls. Every destination of the saved
+wage bill is taxed below the 25 to 40 percent combined marginal wedge on the wages it replaces, and
+the largest leak is price reductions, which reach consumers and are recovered at roughly two cents
+on the dollar through state consumption taxes.
+
+Revenue falls faster than employment, as AI exposure concentrates in above-median-wage occupations,
+so the workers displaced first carry more than their per-capita share of income tax and progressive
+schedules do the rest.
+
+The states are an asymmetric amplifier. The federal government meets lost revenue with deficits and
+the states cannot, as nearly all must close their gaps within the year by raising rates on a
+shrinking base or cutting spending, and both withdraw demand from the same economy that is shedding
+jobs.
+
+Two things about the scenario set are worth knowing before reading any single number. Five of the
+twelve end with the federal balance better than baseline, so the fiscal problem is not automatic.
+And what separates the good outcomes from the bad ones is mostly not how much work is automated but
+what the labor market and the firms do with it, which matters for policy because the displacement
+share is largely not a policy variable while the disposition of the saved bill largely is.
+
+## The fiscal kernel
+
+The kernel answers one question exactly: if this worker, in this occupation and this state, loses
+this wage, what happens to every level of government? Five additive channels, each an independently
+inspectable ledger line.
 
 ```
 fiscal_delta(worker) =
@@ -31,146 +57,158 @@ fiscal_delta(worker) =
   + consumption channel      eff. sales/excise rate × spending cut                 # taxable_consumption_base_by_state.xlsx
 ```
 
-- **Taxes** are hand-rolled from `tax_side_schedule.xlsx` (the transparent baseline the website
-  shows). PolicyEngine's tax output is used **only** to cross-check this sheet (agree within a
-  few %), never added — no double counting.
-- **Transfers** (EITC, refundable CTC, SNAP, Medicaid w/ expansion status, ACA subsidies, TANF,
-  SSI) are computed with **PolicyEngine-US run offline** into a static lookup table; the marginal
-  object is `transfers(without) − transfers(with)` so the EITC hump, SNAP phase-out, and Medicaid
-  cliffs interact correctly. Never called live from the site.
+Taxes are hand-rolled from `tax_side_schedule.xlsx`, which is the transparent baseline the site
+shows. PolicyEngine's tax output cross-checks that sheet, agreeing within a few percent, and is
+never added to it, as adding it would double-count.
 
-## Confirmed modeling decisions
+Transfers (EITC, refundable CTC, SNAP, Medicaid with expansion status, ACA subsidies, TANF, SSI) are
+computed with PolicyEngine-US run offline into a static lookup, never called live. The marginal
+object is `transfers(without) − transfers(with)`, so the EITC hump, the SNAP phase-out, and the
+Medicaid cliff interact correctly rather than being averaged over.
 
-1. **Integrate over the within-cell income distribution**, not the cell mean. The household file
-   gives a *mean* household income per occupation×state×filing; the tax and transfer deltas are
-   sharply nonlinear (EITC hump, SNAP phase-out, Medicaid cliff), so we scale OEWS wage percentiles
-   to the household mean (§3.7) and integrate across a few percentile points per cell.
-2. **Model both UI phases.** Means-tested benefits key off current income and UI counts as income,
-   so the transfer delta is computed at two residual points: household income *including UI* (during
-   the ~26-week window) and with the worker at $0 (post-exhaustion). The Medicaid/SNAP step-up
-   happens at UI *exhaustion*, not at displacement.
-3. **NOC granularity = by filing-status × state**, derived from ACS PUMS NOC (robust vs noisy
-   occupation-level small cells; state matters for benefit rules).
+Three modeling decisions carry most of the accuracy. The kernel integrates over the within-cell
+income distribution rather than evaluating at the cell mean, as the tax and transfer deltas are
+sharply nonlinear and the at-mean shortcut understates transfer deltas by a factor of 2.7 to 7.8 in
+cells that straddle an eligibility threshold. It models both UI phases, computing the transfer delta
+at household income including UI during the statutory window and with the worker at zero after
+exhaustion, because the Medicaid and SNAP step-up mostly arrives at exhaustion rather than at
+displacement. And the children distribution is resolved by filing status and state rather than by
+occupation, as occupation-level cells are small and noisy while benefit rules are set by state.
 
-## Architecture (build order)
+## Architecture
 
 | Module | Purpose |
 |---|---|
-| `fiscal_model/loaders.py` | Load the 8 files → tidy DataFrames keyed by SOC/sector/state, units normalized. Assert control totals on load (fail loud). |
-| `fiscal_model/rates.py` | §5 schedules from `tax_side_schedule.xlsx` — federal income by filing, payroll w/ caps, state brackets; corporate by sector; consumption by state. |
-| `fiscal_model/kernel.py` | `fiscal_delta(...)` — pure, deterministic, unit-tested vs control totals & quintile incidence. **Built to exactness first.** |
-| `fiscal_model/levers.py` | exposure → feasibility → adoption transform → per-occupation displacement flows. Two **independent** exposure channels — cognitive (Yale PCA) and robot (Webb 2020), combined multiplicatively. |
-| `fiscal_model/dynamics.py` | stock-flow loop: cohorts, UI exhaustion, deficit accumulation, state balanced-budget. |
-| `fiscal_model/validate.py` | reconciliation: control totals, quintile incidence (T43), PolicyEngine aggregates. |
+| `fiscal_model/loaders.py` | Load the raw files into tidy frames keyed by SOC, sector, and state, units normalized. Control totals asserted on load; a load that does not reconcile fails before anything is computed. |
+| `fiscal_model/rates.py` | Tax schedules from `tax_side_schedule.xlsx`: federal income by filing, payroll with caps, state brackets. Payroll is an ordered component list, so a second country supplies its own schemes without touching the engine. |
+| `fiscal_model/kernel.py` | `fiscal_delta(...)`, pure and deterministic, unit-tested against control totals and quintile incidence. Built to exactness first. |
+| `fiscal_model/levers.py` | Exposure → feasibility → adoption. Two independent exposure channels, cognitive (Yale PCA) and robotic (Webb 2020), combined multiplicatively. |
+| `fiscal_model/dynamics_v2.py` | The stock-flow loop: seven worker states, disposition router, compute pool, survivor wages, shareholder channel, federal ledger, fifty-one-state closure, lagged demand. |
+| `fiscal_model/invariants.py` | The nine conservation identities, asserted every period of every run. |
+| `fiscal_model/presets.py` | Twelve literature-anchored scenarios and six composable policy overlays, with per-lever provenance. |
+| `fiscal_model/country.py` | The facts that vary between national fiscal systems, with the US as the reference implementation. |
 
-> Build and test **`kernel.py` to exactness first** (one period, no dynamics), then wrap in
-> dynamics — a dynamics bug is otherwise indistinguishable from an accounting bug.
+Build order matters here: `kernel.py` was built to exactness on one period before any dynamics were
+wrapped around it, as a dynamics bug is otherwise indistinguishable from an accounting bug.
 
-## Control totals (BEA 2024 — asserted on load)
+## Correctness
 
-- Employment grand total **163,223k** (observed 163,218k — 0.003% gap, to confirm)
-- Compensation **$15,049,121m** · Value added (GDP) **$29,298,075m**
-- Corp profits before tax **$3,721,572m** · Nonfarm proprietors **$1,652,676m**
+Two mechanisms, both enforced at runtime rather than in review.
 
-## Status
+Nine conservation identities hold on every period of every run, including every Monte Carlo draw:
+worker headcounts partition the baseline per cell, the disposition of the saved bill sums exactly,
+the federal deficit reconciles to its nineteen labeled components, state gaps close to numerical
+residual zero. A run that violates any of them raises rather than reporting a number, and a new
+fiscal flow that is not added to the reconciliation breaks the build, which is the point.
 
-- [x] Project scaffold, canonical data files copied to `data/raw/`
-- [x] Data reconnaissance + cross-file join-key checks (8 file specs + 3 join checks)
-- [x] `loaders.py` — all 8 files, units normalized, **control-total assertions pass**
-- [x] `rates.py` — tax engine from params, **reproduces the baked schedules to ±$0.5**
-- [x] `tests/` — 37 regression tests green (`pytest`)
-- [x] `kernel.py` skeleton — tax + **corporate** + **consumption** channels, fed/state split, cost/offset/net, transfer seam (`set_transfer_lookup`)
-- [x] **Part A** — `noc.py`: P(children \| filing, state, income band) from raw 2024 ACS PUMS (`csv_hus`), WGTP-weighted, cell-size fallback ladder → `data/interim/noc_distribution.csv`
-- [x] **Part B** — `scripts/bake_benefits.py` (PolicyEngine, offline in `.venv`) → `data/interim/benefit_lookup.parquet` (138k rows); `transfers.py` interpolates + differences it, splits fed/state, wired into the kernel seam
-- [x] **Part C** — `integrate.py`: within-cell expectation over income × NOC × residual phase; **kink acceptance test passes** (integrated transfer Δ is 2.7–7.8× the at-mean Δ for cliff-straddling cells)
-- [x] **Part B.6** — tax cross-check ✓ (PE vs `tax_side_schedule` within 2.5% = the 2024/2025 bracket vintage gap; payroll exact ex-state-SDI). Aggregate reconciliation run (`scripts/validate_transfers.py`) — interpretive, see simplifications
-- [x] `levers.py` — exposure→feasibility→adoption transform; two **independent** channels combined multiplicatively: cognitive (Yale PCA) and robot (Webb 2020 robot-patent exposure, `data/raw/robot_exposure_by_soc.xlsx`)
-- [x] `dynamics.py` — stock-flow loop: precomputed per-worker deltas (occ×state, cached) + cohorts, UI exhaustion, reabsorption, demand multiplier, federal debt w/ interest, **state balanced-budget**, UBI required-rate; demo reproduces both theses (revenue falls faster than employment; federal cushioned by capital recapture, states bear an unfinanceable gap)
-- [x] **66 regression tests green** (incl. numeric anchors for the consumption/corporate channels, worker-conservation, lognormal quadrature, and the Medicaid-cliff driver)
-- [x] **Website v1 (Streamlit prototype — superseded by `web/` + `api/`, see *The website* below)** — `app/streamlit_app.py`, built for AI-safety policy audiences: every headline metric carries a real-world grounding line (CBO baseline, defense budget, Great-Recession jobs — `fiscal_model/grounding.py`); an always-on sensitivity tornado (presets precomputed in `data/app_precomputed/`, modified settings auto-recompute with a debounce); a state choropleth with a selectable budget response; live policy-response readouts ("recovers $X of the gap"); fiscal summary in $B or % of CBO-projected revenue; shareable URLs; and a copy-ready memo paragraph
-- [x] **Scenario presets** — `fiscal_model/presets.py`: 12 literature-anchored world states (Acemoglu → OpenAI) + 6 composable policy overlays (robot taxes at the literature optimum, UBI, compute parity, sovereign wealth fund, federal VAT), fetch-verified anchors in `docs/PRESET_EVIDENCE.md`; every preset passes the conservation battery
-- [x] **Technical report + global screening** — `docs/report/report.docx` (data → equations → findings across the 12 scenarios; every prose number resolved from a generated `manifest.json` so text and model can't drift) built by `scripts/report_artifacts.py` + `scripts/build_report_docx.py`; `scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full 26-lever space (invariants on every point, global tornado, fiscal regime map — report §7.14)
+With every behavioral lever at its off value, the full multi-actor system reproduces the static
+kernel bit for bit. Not approximately: the test is exact float equality, and it is differential, so
+a shared re-base cannot mask a divergence. That anchor is what lets complexity be added lever by
+lever without losing the ability to check the base case by hand.
 
-### Complete: model backend + website
-`loaders → rates → kernel (5 channels) → transfers → integrate → levers → dynamics → app`, all tested (365 pytest + 222 vitest).
+The suite is 434 pytest plus 222 vitest.
 
-**Run the site (dev):**  `cd web && npm install && npm run dev`  +  `.venv/bin/uvicorn api.main:app --port 8000`
-**Headline scenario (CLI):**  `.venv/bin/python -m fiscal_model.dynamics`
-**Streamlit prototype (retired, still runs):**  `.venv/bin/streamlit run app/streamlit_app.py`
+## Setup
 
-### The website (`web/` + `api/`)
-The production site is a React/Vite/TS static front end plus a small FastAPI compute service —
-display-grade for policy briefings, replacing the Streamlit prototype at cutover. Presets and
-their policy-response combinations are **precomputed and committed** (`web/public/data/`), so
-the site browses fully offline; the API serves custom slider values and modified-config
-sensitivity tornados. Everything the TS side knows about the model is **generated** from
-`fiscal_model/app_params.py` (`scripts/gen_web_bundle.py`: widget grid, URL-codec golden
-vectors, scenario bundles) — a freshness test fails if it drifts. User-facing copy is
-hand-maintained in `web/src/content/copy.json` (canonical since copy round 2; the old
-Streamlit extractor is retired). One Python function
-(`fiscal_model/webpayload.py`) produces both the static bundles and every API response, so
-static ≡ live by construction (pinned in `tests/test_api.py`).
-
-**Dev:**  `cd web && npm install && npm run dev`  +  `.venv/bin/uvicorn api.main:app --port 8000`
-**Deploy:** see `deploy/` (nginx/Caddy + systemd examples).
-
-## Setup (fresh clone)
-The five runtime artifacts the model loads (NOC distribution, PolicyEngine benefit lookup +
-meta, UI params, per-worker delta cache — ~5.6 MB under `data/interim/`) ship WITH the repo,
-so a fresh clone runs out of the box:
+The runtime artifacts the model loads (NOC distribution, PolicyEngine benefit lookup and meta, UI
+params, per-worker delta cache, roughly 5.6 MB under `data/interim/`) ship with the repo, so a fresh
+clone runs out of the box.
 
 ```bash
 uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -r requirements.txt
-.venv/bin/python -m pytest -q                    # 365 green = the clone is sound
+.venv/bin/python -m pytest -q                    # 434 green = the clone is sound
 .venv/bin/python -m fiscal_model.dynamics        # headline scenario, no npm needed
 ```
 
-To REGENERATE the artifacts from source (after changing the bake, the NOC build, or kernel
-params), one idempotent command rebuilds everything (downloads ~251 MB of ACS PUMS on first run):
+To regenerate the artifacts from source, after changing the bake, the NOC build, or kernel params,
+one idempotent command rebuilds everything and downloads roughly 251 MB of ACS PUMS on first run:
 
 ```bash
 bash scripts/bootstrap.sh
 ```
 
-Two more committed data artifacts the app reads: `data/raw/cbo_baseline_2026.csv` (CBO Feb-2026
-baseline, extracted by `scripts/extract_cbo_baseline.py` from the published workbook) and
-`data/app_precomputed/mc_tornado.json` (the presets' sensitivity tornados, N=200 seed 0 —
-regenerate with `scripts/precompute_app_mc.py` after ANY preset/lever change; a freshness test
-fails the suite if it goes stale).
+Two further committed artifacts the app reads: `data/raw/cbo_baseline_2026.csv`, the CBO Feb-2026
+baseline extracted by `scripts/extract_cbo_baseline.py`, and `data/app_precomputed/mc_tornado.json`,
+the presets' sensitivity tornados at N=200 seed 0. Regenerate the latter with
+`scripts/precompute_app_mc.py` after any preset or lever change; a freshness test fails the suite if
+it goes stale.
 
-**Streamlit Community Cloud (deleted):** the production site is
-https://aifiscalimpacts.alexwszolek.com; the old Streamlit deployment has been deleted.
-`app/redirect_stub.py` remains in the repo — if the app is ever redeployed, point the Cloud
-"Main file path" at it and every old link forwards (full query string; identical URL format).
-`app/streamlit_app.py` stays in the repo as the prototype's record and still runs locally
-(`.venv/bin/streamlit run app/streamlit_app.py`). Nothing generates from it any more — site copy
-moved to `web/src/content/copy.json` in copy round 2 and the extractor was deleted.
-
-**Feedback builds — hiding the sensitivity tornado:** build the front end with
-`VITE_HIDE_TORNADO=1 npx vite build` to drop the "Which assumptions drive this number?"
-section entirely (no tornado.json fetch, no API jobs); a plain `npx vite build` restores it.
-
-Step by step: `uv venv --python 3.12 .venv` → `uv pip install --python .venv/bin/python -r requirements.txt`
-→ download PUMS into `data/external/` → `python -m fiscal_model.noc` →
-`uv pip install --python .venv/bin/python -r requirements-bake.txt && python scripts/bake_benefits.py`
-→ `python -m fiscal_model.dynamics` (precompute). Core deps live in `requirements.txt`; the heavy,
-offline PolicyEngine bake is pinned separately in `requirements-bake.txt`.
-
-> The full test suite needs these artifacts; without them ~5 modules skip and `pytest` prints a
-> **MISSING-ARTIFACT SKIPS** summary, so a green run with hidden skips is obvious.
+The full test suite needs these artifacts. Without them roughly five modules skip and `pytest`
+prints a MISSING-ARTIFACT SKIPS summary, so a green run with hidden skips is obvious rather than
+silent.
 
 ## Environment
-- Main code runs in **`.venv` (Python 3.12, via `uv`)** — system Python 3.14 lacks wheels for
-  `pyarrow`/`policyengine-us`. Use `.venv/bin/python` for everything.
-- **PolicyEngine** is used **offline only** (`scripts/bake_benefits.py`) to produce the static
-  `benefit_lookup`; `fiscal_model` never imports it. Raw PUMS in `data/external/` (gitignored).
 
-### Known v1 simplifications to revisit
-- Pass-through (proprietor) capital tax is routed **federal-only**; individual income tax is really fed+state, so this overstates the federal offset / understates state recapture.
-- Corporate channel assumes lost compensation converts to operating surplus at `surplus_capture` (default 1.0 = most generous offset, per "steelman the optimistic case").
-- **UI params**: national defaults (45% replacement, 26 wks, $20k cap) — needs real per-state DOL data.
-- **Transfer fed/state split**: flat shares (Medicaid 65/35, TANF 50/50, SNAP/EITC/CTC/ACA federal, SSI 95/5); Medicaid FMAP actually varies 50–77% by state.
-- **Benefit values are entitlement/eligibility amounts** (PE = eligibility × per-enrollee value, per plan Part B) — the right object for the marginal "what becomes available on displacement," but they overstate *actual* program spending where take-up < 100% (esp. ACA PTC). A take-up lever would reconcile aggregate levels.
-- **B.6 aggregate reconciliation undershoots actual program totals** because (a) the bake models working-age, non-disabled representative households, so Medicaid/SSI/SNAP — dominated by aged/disabled/LTC — are under-represented, and (b) benefits are looked up by total household income (HINCP) rather than earned income, understating aggregate EITC. The marginal *mechanics* are validated (kink test + tax cross-check); reconciling *levels* needs an earned-income axis + take-up adjustment.
-- **Robotics is anchored to the *current* robot-patent stock** (Webb 2020 `pct_robot`), so even `physical_feasibility=1` leaves dexterity/care/performance jobs (barbers, surgeons, actors) near zero — a current-technology floor that *understates* a true post-AGI scenario. The `robotics_maturity` lever (inert in v1) is the hook to interpolate toward a physical-task-content ceiling (O*NET) when that data is wired.
+Everything runs in `.venv` (Python 3.12, via `uv`), as system Python 3.14 lacks wheels for `pyarrow`
+and `policyengine-us`. Use `.venv/bin/python` for all of it.
+
+PolicyEngine is used offline only, in `scripts/bake_benefits.py`, to produce the static benefit
+lookup. `fiscal_model` never imports it. Raw PUMS lives in `data/external/` and is gitignored.
+
+## The website
+
+The production site is a React/Vite/TypeScript static front end plus a small FastAPI compute
+service. Presets and their policy-response combinations are precomputed and committed under
+`web/public/data/`, so the site browses fully offline, and the API serves custom slider values and
+modified-config sensitivity tornados.
+
+Everything the TypeScript side knows about the model is generated from `fiscal_model/app_params.py`
+by `scripts/gen_web_bundle.py`, covering the widget grid, URL-codec golden vectors, and scenario
+bundles, with a freshness test that fails if it drifts. One Python function,
+`fiscal_model/webpayload.py`, produces both the static bundles and every API response, so static and
+live agree by construction rather than by discipline. User-facing copy is hand-maintained in
+`web/src/content/copy.json`.
+
+```bash
+cd web && npm install && npm run dev          # front end
+.venv/bin/uvicorn api.main:app --port 8000    # compute service
+```
+
+Deployment examples (nginx/Caddy plus systemd) are in `deploy/`. Building with
+`VITE_HIDE_TORNADO=1 npx vite build` drops the sensitivity section entirely, with no tornado.json
+fetch and no API jobs; a plain `npx vite build` restores it.
+
+The Streamlit prototype at `app/streamlit_app.py` predates the site and still runs locally, but
+nothing generates from it any more and its deployment has been deleted. `app/redirect_stub.py`
+remains so that old links forward with their full query string if it is ever redeployed.
+
+## Reproducing the report
+
+Every number, table, and figure in `docs/report/report.docx` is generated by a seeded pipeline. The
+prose cites numbers only through `{{n:...}}` placeholders resolved against a generated
+`manifest.json`, and the build fails on any unresolved reference, so the text cannot cite a number
+the model did not produce.
+
+```bash
+.venv/bin/python scripts/report_artifacts.py     # ~40 min: 12 scenarios at N=1000, validation, screening
+.venv/bin/python scripts/build_report_docx.py    # assembles the document
+```
+
+`scripts/global_screening.py` sweeps a 10,000-point Latin hypercube over the full lever space,
+asserting the conservation battery at every sampled point and producing the global tornado and
+fiscal regime map reported in §7.14.
+
+## Known simplifications
+
+The report's Section 10 carries the full table with a direction of bias for each. The ones most
+worth knowing before using any number:
+
+- The corporate channel books full conversion of saved compensation into taxable surplus, which is a
+  deliberate steelman of the recovery and therefore **understates** the fiscal gap.
+- Robotics is anchored to the current robot-patent stock, so even at full physical feasibility the
+  dexterity, care, and performance occupations sit near zero. This is a current-technology floor
+  that **understates** a true post-AGI scenario.
+- Capital income does not spend: retained profit reaches the economy only through tax, never through
+  shareholder consumption or investment.
+- There is no task creation. Displaced workers re-enter only through a fixed re-employment rate into
+  a finite set of low-exposure occupations, so automation never endogenously creates new kinds of
+  work.
+- Benefits are entitlement values rather than take-up-adjusted spending, and are looked up by total
+  household income rather than earned income, which overstates transfer outlays and understates EITC
+  deltas respectively.
+- UI parameters are national defaults rather than per-state DOL schedules, and transfer federal-state
+  splits are flat rather than following the actual FMAP range.
+
+The first two cut against the model's own thesis, which is the more demanding test: correcting either
+in the direction the evidence points would widen the gap rather than narrow it.

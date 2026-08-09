@@ -6,17 +6,16 @@
 that this model makes. First, capital income does not spend: retained profit reaches the economy
 only as tax — corporate tax, and for the undistributed remainder the shareholder realization
 channel of Section 4.5 — and never as shareholder consumption or investment, with the latter likely
-being a significant source of economic growth. Second, there is no task
-creation: displaced workers re-enter only through a fixed re-employment rate into a finite set of
-low-exposure occupations; automation never endogenously creates new kinds of work. Both of these
-decisions are deliberate. The history of automation shows that offsets will eventually arrive, but
-this model asks what the fiscal impacts will be if the offsets arrive late or never. Fiscal
-authorities will still need to be able to respond to this scenario, but consider the numbers to be
-in a world with no offsets.
+being a significant source of economic growth. Second, there is no task creation: displaced workers
+re-enter only through a fixed re-employment rate into a finite set of low-exposure occupations;
+automation never endogenously creates new kinds of work. Both of these decisions are deliberate.
+The history of automation shows that offsets will eventually arrive, but this model asks what the
+fiscal impacts will be if the offsets arrive late or never. Fiscal authorities will still need to be
+able to respond to this scenario, but consider the numbers to be in a world with no offsets.
 
-Following the practice we admired in the Windfall Trust's paper, every known simplification is
-listed with its direction of bias on the headline (the federal fiscal gap). "Overstates" means the
-true gap is likely smaller than modeled; "understates" means larger.
+Beyond those two, every known simplification is listed below with its direction of bias on the
+headline, which is the federal fiscal gap. The practice is borrowed from the Windfall Trust's paper.
+"Overstates" means the true gap is likely smaller than modeled, and "understates" means larger.
 
 | Simplification | Direction of bias on the fiscal gap |
 |---|---|
@@ -41,6 +40,9 @@ true gap is likely smaller than modeled; "understates" means larger.
 | Reabsorption is rationed by refuge capacity (inflow), but already-reabsorbed workers are never re-displaced (no outflow churn) | understates AGI scenarios modestly — the inflow choke already carries most of the effect |
 | Reabsorbed wage dynamics (Baumol pull, crowding pressure) ship at zero in every preset | direction depends on which force dominates; both are exposed as levers |
 
-Two of these deserve emphasis because they cut *against* the model's thesis: the corporate
+Two of these deserve emphasis because they cut against the model's own thesis. The corporate
 steelman and the robotics floor both make the modeled fiscal gap smaller than the mechanism
-implies. The headline findings survive their correction in the wrong-for-the-thesis direction.
+implies, as the first books the most generous possible recapture and the second holds physical
+automation to the occupations today's patent stock can reach. Correcting either in the direction
+the evidence points would widen the gap rather than narrow it, so the headline findings survive
+their correction in the wrong-for-the-thesis direction, which is the more demanding test.
