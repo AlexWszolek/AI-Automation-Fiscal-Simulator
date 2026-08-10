@@ -29,9 +29,11 @@ published revenue paths, so the kernel needs no time-varying payroll rates; the 
 supplies erosion *fractions* of the wage-linked base, which are rate-invariant to first
 order.
 
-**NPS is intentionally absent** until a post-reform published path lands (the top residual
-ask in korea-primary-docs-request.md). No placeholder numbers: a fund with invented inputs
-in front of Korean officials is worse than no fund.
+**NPS joined 2026-08-10** via NABO's own post-reform projection ([표 25] of the June-2025
+reform analysis, `sources/nabo-pension-reform-analysis-2025.pdf`): published knots
+interpolated annually, contribution revenue as its own column so erosion applies to the
+right base. NABO's post-reform depletion is **2065** (deficit transition 2047; pre-reform
+2057 per Focus 92 — the reform bought eight years on NABO's own numbers).
 """
 from __future__ import annotations
 
@@ -190,3 +192,47 @@ def erosion_fractions(emp_loss: np.ndarray, cells=None) -> dict:
     baseline = contribution_losses(c["emp"].to_numpy(), cells=c)
     losses = contribution_losses(emp_loss, cells=c)
     return {k: losses[k] / baseline[k] for k in losses}
+
+
+# ------------------------------------------------------------- NPS (post-reform), NABO 표 25
+# NABO 현안보고서 「2025년 국민연금법 개정의 재정 및 정책효과 분석」 (2025-06), [표 25]:
+# the post-reform projection (contribution rate 13% + replacement 43% + credit expansion).
+# Stated in the text above the table: deficit transition 2047, FUND DEPLETION 2065 — NABO's
+# own post-reform date (the ministry-attributed "~2064" in press coverage is a different
+# estimate; quote NABO's 2065 now that the primary is in hand). Pre-reform NABO: 2057
+# (Focus 92) — the reform bought eight years on NABO's own numbers.
+# Columns kept: 보험료 (contribution revenue — erosion applies to THIS, not total revenue,
+# which is investment-income-heavy pre-depletion) and 적립금 경상 (nominal reserves).
+# Units ₩tn. Published at knot years; interpolated annually below, disclosed.
+NPS_REFORM_KNOTS = {
+    #      contributions  reserves(nominal)
+    2025: (62.5, 1_285.3),
+    2030: (88.2, 1_715.6),
+    2040: (109.9, 2_653.7),
+    2047: (111.6, 2_895.8),
+    2050: (112.2, 2_830.5),
+    2060: (108.5, 1_495.3),
+    2065: (109.3, -133.8),
+}
+
+
+def _interp_annual(knots: dict, col: int, base_year: int, end_year: int) -> tuple:
+    years = sorted(knots)
+    out = []
+    for y in range(base_year, end_year + 1):
+        lo = max(k for k in years if k <= y)
+        hi = min(k for k in years if k >= y)
+        if lo == hi:
+            out.append(knots[lo][col])
+        else:
+            f = (y - lo) / (hi - lo)
+            out.append(knots[lo][col] + f * (knots[hi][col] - knots[lo][col]))
+    return tuple(round(v, 2) for v in out)
+
+
+NPS_REFORM = FundPath(
+    "NPS (post-2025-reform: 13% rate, 43% replacement, credits)", 2026,
+    _interp_annual(NPS_REFORM_KNOTS, 0, 2026, 2065),
+    _interp_annual(NPS_REFORM_KNOTS, 1, 2026, 2065),
+    "NABO 현안보고서 2025-06, [표 25] (sources/nabo-pension-reform-analysis-2025.pdf), "
+    "annual by linear interpolation between the published knots")

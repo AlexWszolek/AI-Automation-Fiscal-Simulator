@@ -20,6 +20,7 @@ published fund paths that feed the fund-depletion projector.
 | `bok-issue-note-2025-2-ai-korean-economy.pdf` | BOK 이슈노트 2025-2 「AI와 한국경제」 (오삼일·이수민·이하민) | delivered by Alex 2026-08-10 | **The exposure vector source**: <그림 9> 직업별 AI 노출도·보완도 (Felten × Pizzinelli on 지역별고용조사) — figure-read into `fiscal_model/korea_exposure.py`, reconciled to the note's published 24%/27% aggregates |
 | `imf-sip-2025-013-ai-korea.pdf` | IMF Selected Issues Paper 2025/013, *Transforming the Future: The Impact of AI in Korea* | delivered by Alex 2026-08-10 | Confirms the BOK vector (Fig. 7, same authors'-calculation data); transition/reemployment evidence (Fig. 10–12: 31% of HELC leavers move up; older workers barely transition) for reabsorption calibration |
 | `oecd-ai-labour-market-korea-2025.pdf` | OECD/KLI, *Artificial Intelligence and the Labour Market in Korea* (2025) | delivered by Alex 2026-08-10 | 31% SME adoption vs >50% DEU now first-hand (Box 2.1); Lane-2024 exposure top/bottom-5 (Fig. 2.1); adoption-curve anchor for Korea presets |
+| `nabo-pension-reform-analysis-2025.pdf` | NABO 현안보고서 「2025년 국민연금법 개정의 재정 및 정책효과 분석」 (2025-06) | fetched 2026-08-10 via the KDI-aggregator's NABO link (body text is CID-garbled; tables read from page renders) | **The NPS projector input**: [표 25] post-reform path (13%/43%/credits) — deficit 2047, depletion 2065; [표 7] pre-reform; [표 26] return-assumption sensitivity |
 
 Notes:
 - NABO Focus 162 footnote: Focus No. 163 (2026-06-11) covers comparative NHI revenue structures

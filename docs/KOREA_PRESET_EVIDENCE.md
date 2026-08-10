@@ -18,8 +18,9 @@ provenance discipline is structural, not retrofitted.
 | Demography path | 2026=1.0 → 2035=0.898 → 2050=0.689 (medium variant) | ✓ | Statistics Korea 장래인구추계 (press-release tables, local) |
 | NHI fund path | 2026–35 both variants; depletion 2031 / 2029 | ✓ | NABO Focus 162 |
 | EI fund path | 2026–29 whole-fund baseline (embeds planned PCMF borrowing) | ✓ | 「2026 대한민국 사회보험」 [표 151] |
-| NPS fund path | — | **absent by design** | post-reform path = top document ask |
+| NPS fund path | 표 25 knots 2025–2065, annual-interpolated; deficit 2047, **depletion 2065** (pre-reform 2057 → 8 bought years) | ✓ | NABO 현안보고서 2025-06 (`nabo-pension-reform-analysis-2025.pdf`), fetched via the KDI-aggregator link |
 | `wage_linked_share` (EI) | 0.9297 (= ₩18.92tn / ₩20.35tn, FY2025) | ✓ | annual [표 146]/[표 149] |
+| `wage_linked_share` (NPS) | band **0.75–0.95**, no central (revenue column is already contributions-only) | ⚠ workplace share of contribution revenue pending (NPS yearbook) | NABO 표 25 |
 | `wage_linked_share` (NHI) | band **0.65–0.97**, no central | ⚠ workplace share of contributions pending (NHIS statistics); contributions/revenue 84.9% ✓ and subsidy-tracks-contributions rule ✓ | annual [표 202]/[표 203] |
 | **Exposure vector** | within-group HELC shares: clerical 1.00, sales 0.356, professionals 0.218, service 0.107, managers/manual 0 (AI-cognitive channel) | ✓ **figure-read, reconciled** — read from BOK 이슈노트 2025-2 <그림 9> (±0.5pp/segment), accepted because it reconciles with the note's published 24/27/~49 aggregates; IMF SIP Fig. 7 confirms every segment | `fiscal_model/korea_exposure.py`; sources: `bok-issue-note-2025-2-ai-korean-economy.pdf`, `imf-sip-2025-013-ai-korea.pdf` |
 
@@ -67,3 +68,10 @@ NHI wage-linked band edges × exposure read-error ±0.5pp — 18 runs, `korea_he
   live in the what-if decompositions (white-collar-only vs elementary-only), not the central.
 - Still absent from headlines: NPS (no post-reform published path) — the fund where the
   "years pulled forward" framing has decades to work with.
+
+### NPS pension headline added (2026-08-10, same session)
+
+40-year horizon, adoption ramp to 2035 then flat (conservative on a 2065 horizon, disclosed),
+NPS share band edges: **automation gives back 0.20–0.98 of the reform's eight bought years**
+(central preset: 0.40–0.50). Zero-erosion anchor reproduces 표 25 exactly; NABO's own
+post-reform depletion is **2065** (quote NABO's 2065, not the ministry-attributed ~2064).

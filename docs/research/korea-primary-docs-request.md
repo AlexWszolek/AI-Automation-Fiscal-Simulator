@@ -32,10 +32,9 @@ preference:**
 
 ## Residual asks (low priority, none blocking)
 
-1. **Post-reform NPS fund path** (annual contributions/outlays/reserves under the 2025 reform, to
-   ~2064). The reform-analysis documents (KDI, 보건복지부) quote the depletion year; the projector
-   would ideally erode a year-by-year path. If a published table exists in the government's
-   reform-impact materials, it saves us interpolating.
+1. ~~Post-reform NPS fund path~~ **RESOLVED 2026-08-10 by fetch**: NABO 현안보고서 「2025년
+   국민연금법 개정의 재정 및 정책효과 분석」 (June 2025), [표 25] — knots 2025–2095 incl. a
+   separate contributions column; deficit 2047, depletion **2065**. In `sources/`.
 2. **Full 「2025~2072년 장기재정전망」 report PDF** — the Focus 92 brief pins every number we
    quote; the full report adds year-by-year detail only.
 3. **MOEL microdata application** (마이크로데이터신청, `laborstat.moel.go.kr`) for sub-major-group

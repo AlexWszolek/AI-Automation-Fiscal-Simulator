@@ -32,8 +32,8 @@ import numpy as np
 
 from .korea_cells import load_korea_cells
 from .korea_exposure import EXPOSURE_HEHC, EXPOSURE_HELC
-from .korea_funds import (EI_BASELINE, NHI_BASELINE, NHI_REFORM, depletion_shift,
-                          erosion_fractions)
+from .korea_funds import (EI_BASELINE, NHI_BASELINE, NHI_REFORM, NPS_REFORM,
+                          depletion_shift, erosion_fractions)
 
 # ---------------------------------------------------------------- the exposure seam
 # occ_code (KSCO 6th major, 1..9) -> displacement-prone fraction of the group's jobs: the
@@ -87,6 +87,14 @@ WAGE_LINKED_SHARE = {
         value=None, low=0.65, high=0.97,
         status="band only — workplace share of contributions pending (NHIS statistics)",
         source="「2026 대한민국 사회보험」 [표 202]/[표 203], FY2025"),
+    # NPS_REFORM.revenue is already CONTRIBUTIONS ONLY (표 25's 보험료 column), so this band
+    # covers one thing: the workplace-subscriber share of contribution revenue (지역가입자
+    # pay their own full contributions on non-wage income). Pending the NPS statistical
+    # yearbook split; scenarios choose inside the band and disclose.
+    "nps": WageLinkedShare(
+        value=None, low=0.75, high=0.95,
+        status="band only — workplace share of contribution revenue pending (NPS yearbook)",
+        source="NABO 표 25 gives contributions separately; split not yet primary-sourced"),
 }
 
 
@@ -119,7 +127,8 @@ def korea_erosion_paths(adoption_path, exposure: dict | None = None, cells=None)
 
 def korea_fund_headlines(adoption_path, nhi_wage_linked_share: float,
                          exposure: dict | None = None, cells=None,
-                         nhi_variant=NHI_REFORM) -> dict:
+                         nhi_variant=NHI_REFORM,
+                         nps_wage_linked_share: float | None = None) -> dict:
     """Depletion shifts for the funds with published paths, from one adoption scenario.
 
     The NHI share must be chosen explicitly from `WAGE_LINKED_SHARE["nhi"]`'s band (and
@@ -137,13 +146,24 @@ def korea_fund_headlines(adoption_path, nhi_wage_linked_share: float,
         f"adoption path shorter than the NHI horizon ({len(nhi_variant.revenue)} years)"
     assert len(ei_erosion) >= len(EI_BASELINE.revenue), \
         f"adoption path shorter than the EI horizon ({len(EI_BASELINE.revenue)} years)"
-    return {
+    out = {
         "nhi": depletion_shift(nhi_variant, nhi_erosion[:len(nhi_variant.revenue)],
                                wage_linked_share=nhi_wage_linked_share),
         "ei": depletion_shift(EI_BASELINE, ei_erosion[:len(EI_BASELINE.revenue)],
                               wage_linked_share=WAGE_LINKED_SHARE["ei"].value),
         "erosion_paths": paths,
     }
+    if nps_wage_linked_share is not None:
+        lo_n, hi_n = WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high
+        assert lo_n <= nps_wage_linked_share <= hi_n, \
+            f"nps_wage_linked_share outside the documented band [{lo_n}, {hi_n}]"
+        nps_erosion = paths["NPS pension"]
+        n = len(NPS_REFORM.revenue)
+        assert len(nps_erosion) >= n, \
+            f"adoption path shorter than the NPS horizon ({n} years — pass n_periods={n})"
+        out["nps"] = depletion_shift(NPS_REFORM, nps_erosion[:n],
+                                     wage_linked_share=nps_wage_linked_share)
+    return out
 
 
 # ---------------------------------------------------------------- Korea presets (direct chain)

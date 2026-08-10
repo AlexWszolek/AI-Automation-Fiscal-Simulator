@@ -130,3 +130,34 @@ def test_local_passthrough_is_a_memo_item_not_part_of_the_partition(cells):
         0.4003 * losses["income tax (national)"])
     non_memo = {k: v for k, v in losses.items() if not k.startswith("memo:")}
     assert len(non_memo) == 7           # 5 schemes + national income tax + local surtax
+
+
+def test_nps_reform_path_reproduces_nabo_published_values():
+    """The NPS anchor: zero erosion reproduces NABO's 표 25 — knot years hit the published
+    contribution and reserve values exactly, and depletion lands in NABO's stated 2065
+    (deficit transition 2047, pre-reform 2057 → the reform's eight bought years)."""
+    from fiscal_model.korea_funds import NPS_REFORM, NPS_REFORM_KNOTS
+    z = np.zeros(len(NPS_REFORM.revenue))
+    assert np.array_equal(shifted_reserves(NPS_REFORM, z, 1.0),
+                          np.asarray(NPS_REFORM.reserves))
+    for year, (contrib, reserve) in NPS_REFORM_KNOTS.items():
+        if year < 2026:
+            continue
+        t = year - 2026
+        assert NPS_REFORM.revenue[t] == pytest.approx(contrib)
+        assert NPS_REFORM.reserves[t] == pytest.approx(reserve)
+    assert first_negative_year(NPS_REFORM.reserves, 2026) == 2065
+    d = depletion_date(NPS_REFORM.reserves, 2026)
+    assert 2065.0 < d < 2066.0
+
+
+def test_nps_headline_composes_with_the_band():
+    from fiscal_model.korea_scenarios import KOREA_PRESETS, korea_fund_headlines
+    from fiscal_model.presets import build_adoption_path
+    a = build_adoption_path(KOREA_PRESETS["korea-central"], 40)
+    r = korea_fund_headlines(a, nhi_wage_linked_share=0.85, nps_wage_linked_share=0.85)
+    assert 0.0 < r["nps"]["years_pulled_forward"] < 2.0
+    with pytest.raises(AssertionError, match="documented band"):
+        korea_fund_headlines(a, nhi_wage_linked_share=0.85, nps_wage_linked_share=0.5)
+    with pytest.raises(AssertionError, match="NPS horizon"):
+        korea_fund_headlines(a[:10], nhi_wage_linked_share=0.85, nps_wage_linked_share=0.85)
