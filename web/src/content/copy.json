@@ -1,4 +1,54 @@
 {
+ "korea": {
+  "title": "[copy: Alex — page title (h1)]",
+  "intro": "[copy: Alex — what this page is: Korea port of the model, three funds, results as depletion-date shifts; register of the US intro]",
+  "ceiling_note": "[copy: Alex — one-sentence disclosure: displacement is a ceiling, gross of re-employment; every number quoted as a range]",
+  "sections": {
+   "nps": "[copy: Alex — National Pension chart title]",
+   "nhi": "[copy: Alex — Health Insurance chart title]",
+   "ei": "[copy: Alex — Employment Insurance chart title]",
+   "composition": "[copy: Alex — composition chart title]",
+   "contrast": "[copy: Alex — decomposition chart title]",
+   "sources": "Sources",
+   "disclosures": "[copy: Alex — scope & limits heading]"
+  },
+  "captions": {
+   "nps": "[copy: Alex — NPS caption: reform bought 8 years (2057→2065, NABO); band = what automation takes back]",
+   "nhi": "[copy: Alex — NHI caption: depletion 2029 published; automation pulls it forward within the band]",
+   "ei": "[copy: Alex — EI caption: the published rebuild relies on planned borrowing; erosion vs the plan]",
+   "composition": "[copy: Alex — central case: clerical epicentre spreads damage evenly, slight general-account tilt]",
+   "contrast": "[copy: Alex — the asymmetry: high-wage automation → general account; low-wage → the funds, pension hardest]"
+  },
+  "series": {
+   "published": "Published projection",
+   "eroded": "With automation (central)",
+   "band": "Automation band"
+  },
+  "metrics": {
+   "nps": "[copy: Alex — NPS hero label, e.g. 'Of the pension reform's 8 bought years, automation takes back']",
+   "nhi": "[copy: Alex — NHI hero label]",
+   "ei": "[copy: Alex — EI hero label]",
+   "contrast_a": "White-collar automation only",
+   "contrast_b": "Elementary automation only"
+  },
+  "institutions": {
+   "NPS pension": "National Pension (capped)",
+   "NHI health": "Health Insurance",
+   "LTC long-term care": "Long-Term Care",
+   "EI unemployment benefit": "Employment Insurance",
+   "IACI industrial accident": "Industrial Accident",
+   "income tax (national)": "Income tax (national)",
+   "local income surtax": "Local income surtax"
+  },
+  "disclosures": [
+   "[copy: Alex — wage employees only, ~76% of employment; self-employment qualitative]",
+   "[copy: Alex — establishment survey: 12.4m of ~22m wage workers, larger firms, no public administration]",
+   "[copy: Alex — 9 occupation groups × 24 wage brackets; deliberately coarse, transparently so]",
+   "[copy: Alex — displacement ceiling: gross of re-employment (overstates); revenue-side-only projector (understates)]",
+   "[copy: Alex — exposure figure-read from BOK's published chart, reconciled to its printed aggregates]",
+   "[copy: Alex — NHI/NPS wage-linked shares shown as bands pending two statistical splits]"
+  ]
+ },
  "about": "This is a bottom-up accounting model of what AI automation does to US public finances. Note that all models are wrong, but some are useful; ideally this model is useful to some.\n\n**How it works.** The model prices every displaced worker's taxes and benefits at the occupation-by-state level (33,369 cells against BLS, BEA, Census, and other data), then follows the wages firms stop paying to where they end up going: profit, lower prices, raises for the remaining staff, and compute costs. Then each destination is taxed at its real rate. However, wages are taxed at roughly 25-30%, while their replacements are taxed far less. All 51 states must balance their budgets every year, and the lost paychecks and state austerity cause demand destruction, leading to further layoffs. \n\n**What it isn't.** This is not a forecast, but rather is a scenario calculator and simulator. The presets are based on published forecasts (Acemoglu, Korinek, AI 2027, AI 2040, etc), whose projections are translated into lever positions. Every result is a change against a no-AI baseline, with the deficits the CBO already projects coming first.\n\n**Deliberate simplifications of this model.** There are two significant structural decisions that this model makes. First, capital income does not spend, with retained profit only impacting the economy through corporate taxes; there is no shareholder-consumption or investment channel, with the latter likely being a significant source of economic growth. Second, there is no task creation: displaced workers re-enter only through a fixed re-employment rate into a finite set of low-exposure occupations; automation never endogenously creates new kinds of work. These simplifications are deliberate. The history of automation shows that offsets will eventually arrive, but this model asks what the fiscal impacts will be if the offsets arrive late or never. Fiscal authorities will still need to be able to respond to this scenario, but consider the numbers to be in a world with no offsets.\n\n**Why trust the model.** The code is open source and machine-checked: around 350 automated tests, including eight accounting identities re-verified in every period of every run, so workers and dollars cannot multiply or vanish. With every lever switched off the system reproduces the static calculation bit-exact, and the results triangulate against three independent external models (Acemoglu, Windfall Trust, RAND). Claude Fable 5 and Opus 4.8 wrote the code in this project under those checks and constraints.\n\n**Acknowledgements.** Sincere appreciation to Princeton's Summer Social Impact Internship Fund for funding my internship at Constellation Institute. Further thanks to Jeff Alstott for mentoring and guiding me on this project.\n\n[Source code](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator) · [Technical report](https://aifiscalimpacts.alexwszolek.com/report.html) · [Preset evidence](https://aifiscalimpacts.alexwszolek.com/evidence.html)\"",
  "captions": [
   "Every worker out of the 154M modeled workers is in exactly one band each year. Displacement moves people down the stack, while reabsorption and attrition move them out of limbo.",
