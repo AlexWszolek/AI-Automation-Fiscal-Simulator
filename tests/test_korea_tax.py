@@ -125,3 +125,13 @@ def test_zero_and_empty_inputs():
     assert r["national"][0] == 0.0 and r["total"][0] == 0.0
     r2 = _tax([])
     assert r2["national"].size == 0
+
+
+def test_hand_computed_anchor_w32m_unbound_credit_slope():
+    """₩32m/yr — the ONLY region where the credit's 30% branch is active and unbound by its
+    cap (mutation T4 survived until this test): WSD 10.05m; social 3,109,568; base
+    17,340,432 → 15% bracket → 1,341,064.8; credit 715k + 30%×41,064.8 = 727,319.44 (under
+    the ₩740k cap); national 613,745.36."""
+    r = _tax([32_000_000.0])
+    assert r["national"][0] == pytest.approx(613_745.36)
+    assert r["total"][0] == pytest.approx(613_745.36 * 1.1)

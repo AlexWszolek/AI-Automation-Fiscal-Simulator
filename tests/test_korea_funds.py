@@ -6,7 +6,7 @@ import pytest
 
 from fiscal_model.korea_cells import PAYM39_CSV, load_korea_cells
 from fiscal_model.korea_funds import (
-    EI_BASELINE, NHI_BASELINE, NHI_REFORM, contribution_losses, depletion_date,
+    EI_BASELINE, NHI_BASELINE, NHI_REFORM, NHI_REVENUE, contribution_losses, depletion_date,
     depletion_shift, erosion_fractions, first_negative_year, shifted_reserves)
 
 pytestmark = pytest.mark.skipif(
@@ -243,3 +243,22 @@ def test_fundpath_rejects_mismatched_series():
         FundPath("bad", 2026, (1.0, 2.0), (1.0,), "test")
     with pytest.raises(AssertionError):
         FundPath("empty", 2026, (), (), "test")
+
+
+def test_published_series_pinned_against_independent_literals():
+    """Anti-tautology pins (mutations F4/F6 survived until this test): the published series
+    must equal literals carried HERE, transcribed independently from Focus 162 / 표 151 /
+    표 25 — comparing a module constant to itself proves nothing."""
+    from fiscal_model.korea_funds import NPS_REFORM_KNOTS
+    assert NHI_REVENUE == (107.6, 113.0, 118.7, 126.2, 133.8,
+                           141.7, 149.5, 155.1, 160.7, 166.4)
+    assert NHI_BASELINE.reserves == (29.8, 26.8, 21.1, 14.7, 6.9,
+                                     -4.2, -19.5, -42.2, -70.8, -108.3)
+    assert NHI_REFORM.reserves == (25.0, 17.0, 7.6, -1.1, -10.9,
+                                   -24.0, -41.3, -66.0, -96.6, -136.1)
+    assert EI_BASELINE.revenue == (21.6, 22.6, 23.6, 24.7)
+    assert EI_BASELINE.reserves == (10.9, 14.4, 18.0, 21.8)
+    assert NPS_REFORM_KNOTS == {
+        2025: (62.5, 1_285.3), 2030: (88.2, 1_715.6), 2040: (109.9, 2_653.7),
+        2047: (111.6, 2_895.8), 2050: (112.2, 2_830.5), 2060: (108.5, 1_495.3),
+        2065: (109.3, -133.8)}

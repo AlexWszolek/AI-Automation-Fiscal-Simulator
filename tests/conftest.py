@@ -1,3 +1,4 @@
+from pathlib import Path
 import pytest
 
 from fiscal_model import loaders
@@ -61,3 +62,23 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
     tr.write_line("  .venv/bin/python -m fiscal_model.dynamics   # per-worker delta precompute")
     for r in artifact_skips:
         tr.write_line(f"  - {r.nodeid}")
+
+
+# The Korea tidy CSVs are gitignored (regenerable from the committed raw exports). Without
+# this, a fresh checkout would silently SKIP the entire Korea suite and stay green — the
+# vacuous-suite failure mode. Build them offline here; the skipif guards in the Korea test
+# files then only fire if even the committed raw files are absent.
+def _ensure_korea_tidy_csvs():
+    import subprocess
+    import sys
+    root = Path(__file__).resolve().parent.parent
+    raw = root / "data" / "raw" / "korea"
+    if (raw / "DT_118N_PAYM39.tidy.csv").exists():
+        return
+    if not (raw / "DT_118N_PAYM39.xml.gz").exists():
+        return                                    # no raw either: genuine skip territory
+    subprocess.run([sys.executable, str(root / "scripts" / "fetch_korea_tables.py"),
+                    "--parse-only"], check=True, cwd=root)
+
+
+_ensure_korea_tidy_csvs()
