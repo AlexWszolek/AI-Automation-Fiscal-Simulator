@@ -15,8 +15,12 @@ pytestmark = pytest.mark.skipif(
 UNIFORM = {k: 0.30 for k in range(1, 10)}
 
 
-def test_exposure_seam_refuses_to_run_unsourced():
-    """The discipline, enforced by construction: no published vector wired, no headline."""
+def test_exposure_seam_default_is_the_published_vector(monkeypatch):
+    """The seam now defaults to the BOK-published HELC vector — and still refuses to run if
+    the wired vector were absent (the discipline survives the wiring)."""
+    from fiscal_model import korea_exposure, korea_scenarios
+    assert require_exposure(None) == korea_exposure.EXPOSURE_HELC
+    monkeypatch.setattr(korea_scenarios, "EXPOSURE_BY_OCC", None)
     with pytest.raises(RuntimeError, match="korea-primary-docs-request"):
         require_exposure(None)
     with pytest.raises(AssertionError, match="KSCO majors"):

@@ -14,7 +14,7 @@ needed.** All three were retrieved directly from NABO the same morning (browser 
 The Aug-14 re-scope tripwire is therefore **cleared on the document front** — the model-backed
 version of the presentation is unblocked as far as inputs go.
 
-## NEW ask (2026-08-07, blocks the exposure join — Phase 5)
+## ~~NEW ask~~ RESOLVED 2026-08-10 — Alex delivered all three (exposure join unblocked)
 
 The model needs a published **AI-exposure vector at occupation major-group level**. The KDI
 monograph (now in `sources/`) publishes lists and aggregates but no full vector, and the three

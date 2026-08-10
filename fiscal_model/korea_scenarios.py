@@ -7,11 +7,11 @@ This is the bridge from the model's units to the presentation's headline unit. T
     →  korea_funds.erosion_fractions per year  →  per-fund erosion paths
     →  korea_funds.depletion_shift  →  "pulled forward by N years"
 
-**The exposure seam refuses to run unsourced.** `EXPOSURE_BY_OCC` is None until a published
-occupation-level vector lands (the top ask in docs/research/korea-primary-docs-request.md —
-OECD StatLink / BOK 이슈노트 2023-30 / IMF SIP 2025/013). Passing exposure explicitly is for
-tests and sensitivity work; the discipline is that no Korea headline is produced from an
-invented vector.
+**The exposure seam is now WIRED to a published vector**: the within-group high-exposure/
+low-complementarity shares from BOK 이슈노트 2025-2 <그림 9> (confirmed by IMF SIP 2025/013
+Fig. 7) — see korea_exposure.py for provenance and the figure-read disclosure. The seam still
+refuses any run without a vector; passing exposure explicitly remains for tests and
+sensitivity work.
 
 **Adoption reuses the existing preset machinery** (`presets.Preset` + `build_adoption_path`)
 — no new dynamics, per the necessity test. Korean calibration anchors for the eventual
@@ -31,14 +31,17 @@ from dataclasses import dataclass
 import numpy as np
 
 from .korea_cells import load_korea_cells
+from .korea_exposure import EXPOSURE_HEHC, EXPOSURE_HELC
 from .korea_funds import (EI_BASELINE, NHI_BASELINE, NHI_REFORM, depletion_shift,
                           erosion_fractions)
 
 # ---------------------------------------------------------------- the exposure seam
-# occ_code (KSCO 6th major, 1..9) -> fraction of the group's jobs technically automatable.
-# None until a PUBLISHED vector lands. Do not hand-roll: an invented exposure vector is a
-# free parameter calibrated against nothing, and it carries the whole composition story.
-EXPOSURE_BY_OCC: dict | None = None
+# occ_code (KSCO 6th major, 1..9) -> displacement-prone fraction of the group's jobs: the
+# within-group high-exposure/LOW-complementarity share from BOK 이슈노트 2025-2 <그림 9>
+# (IMF SIP 2025/013 Fig. 7 confirms; full provenance and the figure-read disclosure in
+# korea_exposure.py). The manual groups' zeros are the AI-cognitive channel only — their
+# automation runs through the physical channel, gated by robotics_lag.
+EXPOSURE_BY_OCC: dict | None = dict(EXPOSURE_HELC)
 
 
 def require_exposure(exposure: dict | None = None) -> dict:
@@ -141,3 +144,78 @@ def korea_fund_headlines(adoption_path, nhi_wage_linked_share: float,
                               wage_linked_share=WAGE_LINKED_SHARE["ei"].value),
         "erosion_paths": paths,
     }
+
+
+# ---------------------------------------------------------------- Korea presets (direct chain)
+# Adoption semantics in this chain: adoption_path[t] = cumulative share of the DISPLACEMENT-
+# PRONE (HELC) jobs actually displaced by period t. Anchors per field in the provenance dicts
+# and docs/KOREA_PRESET_EVIDENCE.md. `blurb` strings are PLACEHOLDERS — user-facing preset
+# copy is Alex's voice and gets written before any UI exposure, never here.
+from .presets import Preset, build_adoption_path  # noqa: E402
+
+KOREA_PRESETS = {
+    "korea-slow": Preset(
+        key="korea-slow", name="Korea — slow diffusion", blurb="[copy TBD — not model-authored]",
+        adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides={},
+        provenance={
+            "adoption_start": "US realized canaries ~0.01–0.03 at year 3, discounted: Korea "
+                              "is EARLIER on the curve (31% SME adoption vs >50% DEU, OECD "
+                              "2025 first-hand)",
+            "adoption_end": "China-shock-grind analogue: SME-laggard persistence holds "
+                            "realized displacement of HELC jobs to ~10% by 2035",
+        }),
+    "korea-central": Preset(
+        key="korea-central", name="Korea — central", blurb="[copy TBD — not model-authored]",
+        adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides={},
+        provenance={
+            "adoption_start": "US canaries lower bound; OECD 31%-SME Korea discount",
+            "adoption_end": "Acemoglu/Svanberg-class ~23% of exposed work profitably "
+                            "automatable within 10y → 0.20 with the Korea adoption lag",
+        }),
+    "korea-fast": Preset(
+        key="korea-fast", name="Korea — fast catch-up", blurb="[copy TBD — not model-authored]",
+        adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides={},
+        provenance={
+            "adoption_start": "US canaries upper bound",
+            "adoption_end": "Windfall-Medium-class half-of-feasible with Korea ICT-readiness "
+                            "catch-up → 0.40 of HELC jobs by 2035",
+        }),
+}
+
+
+def korea_headline_band(cells=None) -> dict:
+    """The parametric uncertainty band over the direct chain: adoption preset ×
+    NHI wage-linked band edges × exposure figure-read error (±0.5pp on each HELC segment,
+    renormalized within group). Returns per-fund ranges of the headline.
+
+    This is the September vehicle if the assembled-V2 route stays gated; every axis of the
+    band is a SOURCED uncertainty (preset anchors, the NHIS pending split, the figure read),
+    not a free parameter."""
+    from .korea_exposure import FIG9_SHARES
+
+    def _exposure_variant(delta_pp: float) -> dict:
+        out = {}
+        for g, (le, hehc, helc) in FIG9_SHARES.items():
+            total = le + hehc + helc
+            if total == 0.0:
+                out[g] = 0.0
+                continue
+            helc_v = min(max(helc + delta_pp if helc > 0 else helc, 0.0), total)
+            out[g] = helc_v / total
+        return out
+
+    results: dict[str, dict] = {}
+    for pkey, preset in KOREA_PRESETS.items():
+        adoption = build_adoption_path(preset, 10)
+        for share_edge, share in (("nhi-share-low", WAGE_LINKED_SHARE["nhi"].low),
+                                  ("nhi-share-high", WAGE_LINKED_SHARE["nhi"].high)):
+            for ekey, delta in (("exp-low", -0.5), ("exp-central", 0.0), ("exp-high", 0.5)):
+                run = korea_fund_headlines(adoption, nhi_wage_linked_share=share,
+                                           exposure=_exposure_variant(delta), cells=cells)
+                results[f"{pkey}|{share_edge}|{ekey}"] = {
+                    "nhi_years_forward": run["nhi"]["years_pulled_forward"],
+                    "nhi_eroded_date": run["nhi"]["eroded_date"],
+                    "ei_reserve_2029_shortfall_tn": float(
+                        21.8 - run["ei"]["eroded_reserves"][-1]),
+                }
+    return results

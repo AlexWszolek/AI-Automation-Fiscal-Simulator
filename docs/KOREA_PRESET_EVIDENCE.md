@@ -21,7 +21,7 @@ provenance discipline is structural, not retrofitted.
 | NPS fund path | — | **absent by design** | post-reform path = top document ask |
 | `wage_linked_share` (EI) | 0.9297 (= ₩18.92tn / ₩20.35tn, FY2025) | ✓ | annual [표 146]/[표 149] |
 | `wage_linked_share` (NHI) | band **0.65–0.97**, no central | ⚠ workplace share of contributions pending (NHIS statistics); contributions/revenue 84.9% ✓ and subsidy-tracks-contributions rule ✓ | annual [표 202]/[표 203] |
-| **Exposure vector** | — | **BLOCKED — refuses to run** (`korea_scenarios.require_exposure`) | one of OECD StatLink / BOK 이슈노트 2023-30 / IMF SIP — top ask in `research/korea-primary-docs-request.md` |
+| **Exposure vector** | within-group HELC shares: clerical 1.00, sales 0.356, professionals 0.218, service 0.107, managers/manual 0 (AI-cognitive channel) | ✓ **figure-read, reconciled** — read from BOK 이슈노트 2025-2 <그림 9> (±0.5pp/segment), accepted because it reconciles with the note's published 24/27/~49 aggregates; IMF SIP Fig. 7 confirms every segment | `fiscal_model/korea_exposure.py`; sources: `bok-issue-note-2025-2-ai-korean-economy.pdf`, `imf-sip-2025-013-ai-korea.pdf` |
 
 ## Adoption calibration anchors (for the eventual Korea presets)
 
@@ -51,3 +51,19 @@ evidence pins:
   displacement from an assembled V2 run.
 - NHI headline sensitivity must show the `wage_linked_share` band edges until the NHIS split
   lands.
+
+## First sourced run (2026-08-10) — model output, direct chain
+
+Config: BOK HELC exposure × `KOREA_PRESETS` adoption (slow/central/fast, linear 10y) ×
+NHI wage-linked band edges × exposure read-error ±0.5pp — 18 runs, `korea_headline_band()`.
+**Gross-of-reabsorption ceiling, disclosed.**
+
+- **NHI (reform variant, published-equivalent depletion 2029.87):** pulled forward
+  **0.24–0.95 years** (central preset: 0.44–0.60 depending on the NHI share edge).
+- **EI:** the planned rebuild to ₩21.8tn by 2029 falls **₩0.7–3.1tn short** (central ₩1.5tn).
+- **Composition (central, 2035):** erosion ≈ 8% across institutions — income tax 8.57%,
+  flat schemes 8.05%, pension 7.93%. The clerical epicentre (mid-wage, 17.4% of employment)
+  spreads damage EVENLY with a slight general-account tilt; the sharp institutional splits
+  live in the what-if decompositions (white-collar-only vs elementary-only), not the central.
+- Still absent from headlines: NPS (no post-reform published path) — the fund where the
+  "years pulled forward" framing has decades to work with.
