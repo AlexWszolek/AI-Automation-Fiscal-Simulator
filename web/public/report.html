@@ -223,41 +223,32 @@ loop gain ρ = k · d̄ ≈ 0.22 · demand_multiplier &lt; 1            # assert
 <p>The artifact build is seeded (seed 0, N = 1000 draws per scenario, spread 0.15); re-running it produces a byte-identical <code>manifest.json</code>. The document build resolves every number in the prose from that manifest and fails on any unresolved reference, so the text cannot cite a number the model did not produce. The footer of every page carries the git commit and generation timestamp of the manifest this copy was built from.</p>
 <p>Every scenario, overlay, and lever in this report, including the Monte Carlo, can be explored interactively at &lt;https://aifiscalimpacts.alexwszolek.com&gt;, or locally by running the front end and the compute service together (<code>cd web &amp;&amp; npm install &amp;&amp; npm run dev</code>, alongside <code>.venv/bin/uvicorn api.main:app --port 8000</code>). A headless runner (<code>scripts/monte_carlo.py --preset &lt;key&gt; --overlay &lt;key&gt;</code>) reproduces any scenario × policy cell from the command line without either.</p>
 <h1>References</h1>
-<p><strong>Scenario and calibration sources</strong> (each anchor fetch-verified; verbatim quotes and URLs in <code>docs/research/preset-evidence-raw.json</code>):</p>
-<ul><li>Acemoglu, D. (2024). "The Simple Macroeconomics of AI." NBER WP 32487.</li><li>Autor, D., Dorn, D., and Hanson, G. (2016). "The China Shock: Learning from Labor-Market</li></ul>
-<p>Adjustment to Large Changes in Trade." Annual Review of Economics.</p>
-<ul><li>Brynjolfsson, E., Chandar, B., and Chen, R. (2025). "Canaries in the Coal Mine? Six Facts about</li></ul>
-<p>the Recent Employment Effects of Artificial Intelligence." Stanford Digital Economy Lab.</p>
-<ul><li>Brynjolfsson, E., Li, D., and Raymond, L. (2025). "Generative AI at Work." Quarterly Journal of</li></ul>
-<p>Economics 140(2).</p>
-<ul><li>Brynjolfsson, E., Rock, D., and Syverson, C. (2021). "The Productivity J-Curve." AEJ: Macro.</li><li>Costinot, A., and Werning, I. (2023). "Robots, Trade, and Luddism: A Sufficient Statistic</li></ul>
-<p>Approach to Optimal Technology Regulation." Review of Economic Studies.</p>
-<ul><li>Davidson, T. (2023). "What a Compute-Centric Framework Says About Takeoff Speeds." Open</li></ul>
-<p>Philanthropy.</p>
-<ul><li>Davis, S., and von Wachter, T. (2011). "Recessions and the Costs of Job Loss." Brookings Papers</li></ul>
-<p>on Economic Activity.</p>
-<ul><li>Eloundou, T., Manning, S., Mishkin, P., and Rock, D. (2023). "GPTs are GPTs: An Early Look at</li></ul>
-<p>the Labor Market Impact Potential of Large Language Models." arXiv:2303.10130.</p>
-<ul><li>Epoch AI (2025). "GATE: An Integrated Assessment Model for AI Automation." arXiv:2503.04941.</li><li>Farber, H. (2015). "Job Loss in the Great Recession and its Aftermath: U.S. Evidence from the</li></ul>
-<p>Displaced Workers Survey." NBER WP 21216.</p>
-<ul><li>Felten, E., Raj, M., and Seamans, R. (2023). "How Will Language Modelers like ChatGPT Affect</li></ul>
-<p>Occupations and Industries?" arXiv:2303.01157.</p>
-<ul><li>Guerreiro, J., Rebelo, S., and Teles, P. (2022). "Should Robots Be Taxed?" Review of Economic</li></ul>
-<p>Studies 89(1).</p>
-<ul><li>Holtmann, S., Braun, A. S., Cho, J., Koch, R., and Langenmayr, D. (2025). "Investment Effects of</li></ul>
-<p>a Quasi-Robot Tax: Evidence from South Korea." arqus Discussion Paper.</p>
-<ul><li>Ieong, T., Saputra, A., Maniar, A., and Cheng, D. (2026). "Mapping Tax Risks From</li></ul>
-<p>Labour-Displacing AI." Windfall Trust.</p>
-<ul><li>Jacobson, L., LaLonde, R., and Sullivan, D. (1993). "Earnings Losses of Displaced Workers."</li></ul>
-<p>American Economic Review 83(4).</p>
-<ul><li>Korinek, A., and Lockwood, L. (2026). "Public Finance in the Age of AI: A Primer." NBER WP 34873.</li><li>Korinek, A., and Stiglitz, J. (2019). "Artificial Intelligence and Its Implications for Income</li></ul>
-<p>Distribution and Unemployment." NBER chapter.</p>
-<ul><li>Korinek, A., and Suh, D. (2024). "Scenarios for the Transition to AGI." NBER WP 32255.</li><li>Kokotajlo, D., Alexander, S., Larsen, T., Lifland, E., et al. (2025). "AI 2027." AI Futures</li></ul>
-<p>Project.</p>
-<ul><li>MacAskill, W., and Moorhouse, F. (2025). "Preparing for the Intelligence Explosion." Forethought.</li><li>Price, C., and Suresh, A. (2025). "Federal Revenue When AI Replaces Labor." RAND WRA4443-1.</li><li>Thuemmel, U. (2023). "Optimal Taxation of Robots." Journal of the European Economic Association</li></ul>
-<p>21(3).</p>
-<ul><li>Webb, M. (2020). "The Impact of Artificial Intelligence on the Labor Market." SSRN 3482150.</li><li>Chodorow-Reich, G. (2019). "Geographic Cross-Sectional Fiscal Spending Multipliers: What Have We</li></ul>
-<p>Learned?" AEJ: Economic Policy.</p>
+<p><strong>Scenario and calibration sources</strong></p>
+<p>Acemoglu, D. (2024). "The Simple Macroeconomics of AI." NBER WP 32487.</p>
+<p>Autor, D., Dorn, D., and Hanson, G. (2016). "The China Shock: Learning from Labor-Market Adjustment to Large Changes in Trade." Annual Review of Economics.</p>
+<p>Brynjolfsson, E., Chandar, B., and Chen, R. (2025). "Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence." Stanford Digital Economy Lab.</p>
+<p>Brynjolfsson, E., Li, D., and Raymond, L. (2025). "Generative AI at Work." Quarterly Journal of Economics 140(2).</p>
+<p>Brynjolfsson, E., Rock, D., and Syverson, C. (2021). "The Productivity J-Curve." AEJ: Macro.</p>
+<p>Chodorow-Reich, G. (2019). "Geographic Cross-Sectional Fiscal Spending Multipliers: What Have We Learned?" AEJ: Economic Policy.</p>
+<p>Costinot, A., and Werning, I. (2023). "Robots, Trade, and Luddism: A Sufficient Statistic Approach to Optimal Technology Regulation." Review of Economic Studies.</p>
+<p>Davidson, T. (2023). "What a Compute-Centric Framework Says About Takeoff Speeds." Open Philanthropy.</p>
+<p>Davis, S., and von Wachter, T. (2011). "Recessions and the Costs of Job Loss." Brookings Papers on Economic Activity.</p>
+<p>Eloundou, T., Manning, S., Mishkin, P., and Rock, D. (2023). "GPTs are GPTs: An Early Look at the Labor Market Impact Potential of Large Language Models." arXiv:2303.10130.</p>
+<p>Epoch AI (2025). "GATE: An Integrated Assessment Model for AI Automation." arXiv:2503.04941.</p>
+<p>Farber, H. (2015). "Job Loss in the Great Recession and its Aftermath: U.S. Evidence from the Displaced Workers Survey." NBER WP 21216.</p>
+<p>Felten, E., Raj, M., and Seamans, R. (2023). "How Will Language Modelers like ChatGPT Affect Occupations and Industries?" arXiv:2303.01157.</p>
+<p>Guerreiro, J., Rebelo, S., and Teles, P. (2022). "Should Robots Be Taxed?" Review of Economic Studies 89(1).</p>
+<p>Holtmann, S., Braun, A. S., Cho, J., Koch, R., and Langenmayr, D. (2025). "Investment Effects of a Quasi-Robot Tax: Evidence from South Korea." arqus Discussion Paper.</p>
+<p>Ieong, T., Saputra, A., Maniar, A., and Cheng, D. (2026). "Mapping Tax Risks From Labour-Displacing AI." Windfall Trust.</p>
+<p>Jacobson, L., LaLonde, R., and Sullivan, D. (1993). "Earnings Losses of Displaced Workers." American Economic Review 83(4).</p>
+<p>Kokotajlo, D., Alexander, S., Larsen, T., Lifland, E., et al. (2025). "AI 2027." AI Futures Project.</p>
+<p>Korinek, A., and Lockwood, L. (2026). "Public Finance in the Age of AI: A Primer." NBER WP 34873.</p>
+<p>Korinek, A., and Stiglitz, J. (2019). "Artificial Intelligence and Its Implications for Income Distribution and Unemployment." NBER chapter.</p>
+<p>Korinek, A., and Suh, D. (2024). "Scenarios for the Transition to AGI." NBER WP 32255.</p>
+<p>MacAskill, W., and Moorhouse, F. (2025). "Preparing for the Intelligence Explosion." Forethought.</p>
+<p>Price, C., and Suresh, A. (2025). "Federal Revenue When AI Replaces Labor." RAND WRA4443-1.</p>
+<p>Thuemmel, U. (2023). "Optimal Taxation of Robots." Journal of the European Economic Association 21(3).</p>
+<p>Webb, M. (2020). "The Impact of Artificial Intelligence on the Labor Market." SSRN 3482150.</p>
 <p><strong>Data sources</strong>: BLS Occupational Employment and Wage Statistics (2024; May 2025 state files); BEA National Income and Product Accounts (2024); Census ACS PUMS (2024); Yale Budget Lab AI exposure index; PolicyEngine-US (offline bake); federal tax schedules (2025) and state schedules (2026).</p>
 </div>
 </body>
