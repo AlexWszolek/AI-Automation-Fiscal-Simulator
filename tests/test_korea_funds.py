@@ -161,3 +161,85 @@ def test_nps_headline_composes_with_the_band():
         korea_fund_headlines(a, nhi_wage_linked_share=0.85, nps_wage_linked_share=0.5)
     with pytest.raises(AssertionError, match="NPS horizon"):
         korea_fund_headlines(a[:10], nhi_wage_linked_share=0.85, nps_wage_linked_share=0.85)
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_shifted_reserves_matches_a_manual_loop():
+    """Closed-form cumsum vs an explicit year-by-year loop — the shift arithmetic itself."""
+    e = np.array([0.01, 0.03, 0.02, 0.05])
+    got = shifted_reserves(EI_BASELINE, e, wage_linked_share=0.9)
+    cum = 0.0
+    for t in range(4):
+        cum += EI_BASELINE.revenue[t] * 0.9 * e[t]
+        assert got[t] == pytest.approx(EI_BASELINE.reserves[t] - cum)
+
+
+def test_full_erosion_removes_exactly_the_cumulative_revenue():
+    e = np.ones(len(NHI_REFORM.revenue))
+    got = shifted_reserves(NHI_REFORM, e, wage_linked_share=1.0)
+    expect = np.asarray(NHI_REFORM.reserves) - np.cumsum(NHI_REFORM.revenue)
+    assert np.allclose(got, expect)
+
+
+def test_date_conventions_agree_on_synthetic_paths():
+    """floor(fractional date) must equal first_negative_year for any path that starts
+    non-negative — including non-monotone paths, where only the FIRST crossing counts."""
+    paths = [(5.0, 3.0, 1.0, -1.0), (5.0, -1.0, 2.0, -3.0), (0.0, 0.0, -0.5, -1.0),
+             (10.0, 2.0, -0.1, -5.0), (1.0, 0.5, 0.25, 0.1)]
+    for p in paths:
+        fn = first_negative_year(p, 2030)
+        d = depletion_date(p, 2030)
+        if fn is None:
+            assert d is None
+        else:
+            assert int(d) == fn, p
+
+
+def test_depletion_date_first_crossing_only():
+    assert depletion_date((5.0, -1.0, 2.0, -3.0), 2030) == pytest.approx(2031 + 5.0 / 6.0)
+
+
+def test_contribution_losses_is_linear_and_zero_at_zero(cells):
+    x = 0.004 * cells["emp"].to_numpy()
+    one = contribution_losses(x, cells=cells)
+    two = contribution_losses(2 * x, cells=cells)
+    for k in one:
+        assert two[k] == pytest.approx(2 * one[k], rel=1e-12), k
+    zero = contribution_losses(np.zeros(len(cells)), cells=cells)
+    assert all(v == 0.0 for v in zero.values())
+
+
+def test_contribution_losses_rejects_bad_inputs(cells):
+    emp = cells["emp"].to_numpy()
+    with pytest.raises(AssertionError):
+        contribution_losses(np.zeros(len(cells) - 1), cells=cells)      # wrong shape
+    bad = np.zeros(len(cells)); bad[0] = -1.0
+    with pytest.raises(AssertionError):
+        contribution_losses(bad, cells=cells)                            # negative
+    with pytest.raises(AssertionError):
+        contribution_losses(emp * 1.01, cells=cells)                     # exceeds employment
+
+
+def test_full_workforce_erosion_is_exactly_one(cells):
+    f = erosion_fractions(cells["emp"].to_numpy(), cells=cells)
+    for k, v in f.items():
+        assert v == pytest.approx(1.0, rel=1e-12), k
+
+
+def test_nps_interpolation_between_knots():
+    from fiscal_model.korea_funds import NPS_REFORM
+    t2035 = 2035 - 2026
+    assert NPS_REFORM.revenue[t2035] == pytest.approx(88.2 + (109.9 - 88.2) / 2, abs=0.01)
+    assert NPS_REFORM.reserves[t2035] == pytest.approx(1715.6 + (2653.7 - 1715.6) / 2, abs=0.01)
+    # reserves peak at the 2047 knot (deficit transition), then decline monotonically
+    r = np.asarray(NPS_REFORM.reserves)
+    assert int(np.argmax(r)) == 2047 - 2026
+    assert (np.diff(r[2047 - 2026:]) < 0).all()
+
+
+def test_fundpath_rejects_mismatched_series():
+    from fiscal_model.korea_funds import FundPath
+    with pytest.raises(AssertionError):
+        FundPath("bad", 2026, (1.0, 2.0), (1.0,), "test")
+    with pytest.raises(AssertionError):
+        FundPath("empty", 2026, (), (), "test")

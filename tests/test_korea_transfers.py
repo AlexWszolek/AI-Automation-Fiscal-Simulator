@@ -86,3 +86,74 @@ def test_basic_pension_constants():
     assert kt.basic_pension_year() == pytest.approx(4_196_400.0)
     assert kt.BASIC_PENSION_COVERAGE == 0.70
     assert kt.BASIC_PENSION_THRESHOLD_SINGLE == 2_470_000.0
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_ei_floor_and_cap_crossover_wages_exact():
+    """The 60% band is open only between annual wages ₩40,179,200 (floor binds below) and
+    ₩41,427,500 (cap binds above) — computed from the statutory constants."""
+    w_floor = 66_048.0 * 365.0 / 0.6
+    w_cap = 68_100.0 * 365.0 / 0.6
+    assert w_floor == pytest.approx(40_179_200.0)
+    assert w_cap == pytest.approx(41_427_500.0)
+    b = kt.ei_daily_benefit(np.array([w_floor - 1.0, w_floor + 1.0, w_cap - 1.0, w_cap + 1.0]))
+    assert b[0] == pytest.approx(kt.EI_DAILY_FLOOR)
+    assert kt.EI_DAILY_FLOOR < b[1] < b[2] < kt.EI_DAILY_CAP
+    assert b[3] == pytest.approx(kt.EI_DAILY_CAP)
+
+
+def test_ei_benefit_monotone_and_bounded():
+    w = np.linspace(1e6, 2e8, 400)
+    b = kt.ei_daily_benefit(w)
+    assert (np.diff(b) >= 0.0).all()
+    assert (b >= kt.EI_DAILY_FLOOR).all() and (b <= kt.EI_DAILY_CAP).all()
+    assert kt.ei_monthly_benefit(w) == pytest.approx(b * 365.0 / 12.0)
+
+
+def test_ei_duration_boundaries_are_lower_bound_inclusive():
+    """Statute brackets are 'N년 이상': exactly 1/3/5/10 years land in the UPPER bucket."""
+    yrs = np.array([0.999, 1.0, 2.999, 3.0, 4.999, 5.0, 9.999, 10.0])
+    assert kt.ei_duration_days(yrs).tolist() == [120, 150, 150, 180, 180, 210, 210, 240]
+    assert kt.ei_duration_days(yrs, age_50_plus=True).tolist() == \
+        [120, 180, 180, 210, 210, 240, 240, 270]
+
+
+def test_ei_spell_bounds():
+    w = np.linspace(1e6, 2e8, 50)
+    lo = kt.ei_spell_benefit(w, np.zeros(50))
+    hi = kt.ei_spell_benefit(w, np.full(50, 30.0), age_50_plus=True)
+    assert (lo >= 120 * kt.EI_DAILY_FLOOR - 1e-9).all()
+    assert (hi <= 270 * kt.EI_DAILY_CAP + 1e-9).all()
+
+
+def test_eitc_slopes_are_the_statutory_ratios():
+    """Numerical derivatives inside each region must equal the statute's ratios exactly:
+    phase-in mx/lo, plateau 0, phase-out −mx/(hi−mid)."""
+    for hh, (lo, mid, hi, mx) in kt.EITC_SCHEDULE.items():
+        d = 1000.0
+        y = np.array([lo * 0.5, (lo + mid) / 2, (mid + hi) / 2])
+        c0 = kt.kr_eitc(y, hh)
+        c1 = kt.kr_eitc(y + d, hh)
+        slopes = (c1 - c0) / d
+        assert slopes[0] == pytest.approx(mx / lo), hh
+        assert slopes[1] == pytest.approx(0.0, abs=1e-12), hh
+        assert slopes[2] == pytest.approx(-mx / (hi - mid)), hh
+
+
+def test_eitc_continuous_everywhere():
+    for hh in kt.EITC_SCHEDULE:
+        y = np.arange(0.0, 50_000_000.0, 5_000.0)
+        c = kt.kr_eitc(y, hh)
+        assert np.abs(np.diff(c)).max() < 5_000.0 * 0.45   # ≤ steepest slope × step
+
+
+def test_eitc_delta_in_each_region():
+    """Residual income in the phase-in keeps part of the credit; residual on the plateau
+    keeps ALL of it (delta 0 for a plateau worker); residual past the ceiling keeps none."""
+    w = np.array([9e6])
+    assert kt.kr_eitc_delta_on_displacement(w, residual_income=6e6)[0] == \
+        pytest.approx(0.0)                                   # plateau -> plateau
+    assert kt.kr_eitc_delta_on_displacement(w, residual_income=25e6)[0] == \
+        pytest.approx(-1_650_000.0)                          # past the ceiling: all lost
+    d = kt.kr_eitc_delta_on_displacement(np.array([2e6]), residual_income=1e6)
+    assert d[0] == pytest.approx(-1e6 * 165 / 400)           # phase-in to phase-in

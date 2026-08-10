@@ -38,3 +38,24 @@ def test_clerical_is_the_single_biggest_exposed_block():
     assert FIG9_SHARES[3] == (0.0, 0.0, 17.4)
     helc_blocks = {g: v[2] for g, v in FIG9_SHARES.items()}
     assert max(helc_blocks, key=helc_blocks.get) == 3
+
+
+def test_within_group_fractions_partition_each_group():
+    """HELC + HEHC + low-exposure fractions must sum to exactly 1 within every populated
+    group — the within-group conversion may not leak employment."""
+    for g, (le, hehc, helc) in FIG9_SHARES.items():
+        total = le + hehc + helc
+        assert total > 0.0, g
+        le_frac = le / total
+        assert EXPOSURE_HELC[g] + EXPOSURE_HEHC[g] + le_frac == pytest.approx(1.0), g
+        assert 0.0 <= EXPOSURE_HELC[g] <= 1.0 and 0.0 <= EXPOSURE_HEHC[g] <= 1.0
+
+
+def test_seam_default_is_a_copy_not_an_alias():
+    """Mutating the wired seam dict must not corrupt the source-of-truth constants."""
+    from fiscal_model import korea_scenarios
+    korea_scenarios.EXPOSURE_BY_OCC[3] = 0.5
+    try:
+        assert EXPOSURE_HELC[3] == 1.0
+    finally:
+        korea_scenarios.EXPOSURE_BY_OCC[3] = EXPOSURE_HELC[3]

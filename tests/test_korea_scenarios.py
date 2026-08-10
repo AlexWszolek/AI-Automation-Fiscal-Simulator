@@ -76,3 +76,60 @@ def test_adoption_must_be_cumulative_and_long_enough():
         korea_erosion_paths([0.3, 0.2], exposure=UNIFORM)
     with pytest.raises(AssertionError, match="NHI horizon"):
         korea_fund_headlines([0.1] * 4, nhi_wage_linked_share=0.8, exposure=UNIFORM)
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_preset_paths_ramp_to_2035_then_hold():
+    """REGRESSION for the bug this suite caught: without adoption_reach_year the 40-year run
+    silently became a 40-year ramp to 2065. The documented semantics — end value reached at
+    period 9 (calendar 2035), flat after — must hold at every horizon."""
+    from fiscal_model.korea_scenarios import KOREA_PRESETS
+    from fiscal_model.presets import build_adoption_path
+    for p in KOREA_PRESETS.values():
+        for n in (10, 25, 40):
+            a = build_adoption_path(p, n)
+            assert len(a) == n
+            assert a[0] == pytest.approx(p.adoption_start)
+            assert a[9] == pytest.approx(p.adoption_end)
+            assert all(v == pytest.approx(p.adoption_end) for v in a[9:])
+            assert all(b >= x for x, b in zip(a, a[1:]))
+
+
+def test_erosion_paths_bounded_monotone_and_deterministic():
+    adoption = [0.0, 0.05, 0.1, 0.2, 0.2]
+    p1 = korea_erosion_paths(adoption, exposure=UNIFORM)
+    p2 = korea_erosion_paths(adoption, exposure=UNIFORM)
+    for k in p1:
+        assert np.array_equal(p1[k], p2[k]), k
+        assert (p1[k] >= 0.0).all() and (p1[k] <= 1.0).all()
+        assert (np.diff(p1[k]) >= -1e-15).all()      # cumulative adoption → cumulative erosion
+
+
+def test_erosion_is_linear_in_adoption():
+    a1 = korea_erosion_paths([0.04], exposure=UNIFORM)
+    a2 = korea_erosion_paths([0.08], exposure=UNIFORM)
+    for k in a1:
+        assert a2[k][0] == pytest.approx(2 * a1[k][0], rel=1e-12), k
+
+
+def test_full_displacement_is_the_identity():
+    every = {k: 1.0 for k in range(1, 10)}
+    p = korea_erosion_paths([1.0], exposure=every)
+    for k, v in p.items():
+        assert v[0] == pytest.approx(1.0, rel=1e-12), k
+
+
+def test_nhi_variant_switch_uses_the_baseline_path():
+    from fiscal_model.korea_funds import NHI_BASELINE
+    a = list(np.linspace(0.0, 0.2, 10))
+    r = korea_fund_headlines(a, nhi_wage_linked_share=0.85, nhi_variant=NHI_BASELINE)
+    assert r["nhi"]["published_depletion"] == 2031
+
+
+def test_band_covers_all_axes():
+    from fiscal_model.korea_scenarios import KOREA_PRESETS, korea_headline_band
+    band = korea_headline_band()
+    assert len(band) == len(KOREA_PRESETS) * 2 * 3          # presets × share edges × read error
+    for key, v in band.items():
+        assert v["nhi_years_forward"] > 0.0, key
+        assert v["ei_reserve_2029_shortfall_tn"] > 0.0, key

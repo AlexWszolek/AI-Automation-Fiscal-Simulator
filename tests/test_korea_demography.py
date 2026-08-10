@@ -54,3 +54,26 @@ def test_v2params_accepts_the_path():
     p = V2Params(demography_path=list(korea_demography_path(10)))
     dp = np.asarray(p.demography_path, float)
     assert dp.size == 10 and np.isfinite(dp).all() and (dp > 0).all()
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_every_knot_is_returned_exactly():
+    for y, v in WORKING_AGE_K.items():
+        assert working_age_k(y) == float(v)
+
+
+def test_interpolation_is_piecewise_linear_in_the_late_segments():
+    assert working_age_k(2041) == pytest.approx(29_029 + (26_654 - 29_029) / 5)
+    assert working_age_k(2044) == pytest.approx(29_029 + (26_654 - 29_029) * 4 / 5)
+    assert working_age_k(2071) == pytest.approx((17_111 + 16_575) / 2)
+    for y in range(2041, 2072):
+        lo = max(k for k in WORKING_AGE_K if k < y)
+        hi = min(k for k in WORKING_AGE_K if k > y)
+        assert min(WORKING_AGE_K[hi], WORKING_AGE_K[lo]) <= working_age_k(y) \
+            <= max(WORKING_AGE_K[hi], WORKING_AGE_K[lo])
+
+
+def test_single_period_path_and_bad_n():
+    assert korea_demography_path(1) == (1.0,)
+    with pytest.raises(ValueError, match="n_periods"):
+        korea_demography_path(0)

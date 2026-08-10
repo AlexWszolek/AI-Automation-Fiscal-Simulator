@@ -177,6 +177,7 @@ KOREA_PRESETS = {
     "korea-slow": Preset(
         key="korea-slow", name="Korea — slow diffusion", blurb="[copy TBD — not model-authored]",
         adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides={},
+        adoption_reach_year=9,
         provenance={
             "adoption_start": "US realized canaries ~0.01–0.03 at year 3, discounted: Korea "
                               "is EARLIER on the curve (31% SME adoption vs >50% DEU, OECD "
@@ -187,6 +188,7 @@ KOREA_PRESETS = {
     "korea-central": Preset(
         key="korea-central", name="Korea — central", blurb="[copy TBD — not model-authored]",
         adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides={},
+        adoption_reach_year=9,
         provenance={
             "adoption_start": "US canaries lower bound; OECD 31%-SME Korea discount",
             "adoption_end": "Acemoglu/Svanberg-class ~23% of exposed work profitably "
@@ -195,6 +197,7 @@ KOREA_PRESETS = {
     "korea-fast": Preset(
         key="korea-fast", name="Korea — fast catch-up", blurb="[copy TBD — not model-authored]",
         adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides={},
+        adoption_reach_year=9,
         provenance={
             "adoption_start": "US canaries upper bound",
             "adoption_end": "Windfall-Medium-class half-of-feasible with Korea ICT-readiness "

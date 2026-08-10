@@ -69,9 +69,14 @@ NHI wage-linked band edges × exposure read-error ±0.5pp — 18 runs, `korea_he
 - Still absent from headlines: NPS (no post-reform published path) — the fund where the
   "years pulled forward" framing has decades to work with.
 
-### NPS pension headline added (2026-08-10, same session)
+### NPS pension headline (2026-08-10; corrected same day by the test pass)
 
-40-year horizon, adoption ramp to 2035 then flat (conservative on a 2065 horizon, disclosed),
-NPS share band edges: **automation gives back 0.20–0.98 of the reform's eight bought years**
-(central preset: 0.40–0.50). Zero-erosion anchor reproduces 표 25 exactly; NABO's own
-post-reform depletion is **2065** (quote NABO's 2065, not the ministry-attributed ~2064).
+**Correction:** the first run was misdescribed — the presets lacked `adoption_reach_year`, so
+the 40-year run ramped linearly to 2065 instead of the documented "ramp to 2035 then flat".
+Fixed (`adoption_reach_year=9`; a regression test pins the path shape) and recomputed. The
+10-year NHI/EI results were identical under both shapes and stand unchanged.
+
+40-year horizon, ramp to 2035 then flat, NPS share band edges: **automation gives back
+0.34–1.64 of the reform's eight bought years** (central preset: **0.67–0.84**). Zero-erosion
+anchor reproduces 표 25 exactly; NABO's own post-reform depletion is **2065** (quote NABO's
+2065, not the ministry-attributed ~2064).

@@ -64,3 +64,49 @@ def test_bracket_boundaries_partition_the_wage_axis(kc):
 def test_wages_are_annualised_in_won(kc):
     assert (kc.cells["wage_year_won"] == kc.cells["wage_month_k"] * 12_000.0).all()
     assert kc.cells["wage_year_won"].min() == pytest.approx(4_800_000.0)
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_parse_bracket_shapes_directly():
+    from fiscal_model.korea_cells import _parse_bracket
+    assert _parse_bracket("800.0 ~ 899.9") == (800.0, 900.0)
+    assert _parse_bracket("~799.9천원") == (0.0, 800.0)
+    assert _parse_bracket("6000.0천원~") == (6000.0, None)
+    assert _parse_bracket("2000.0 ~ 2199.9") == (2000.0, 2200.0)
+    with pytest.raises(AssertionError, match="unparseable"):
+        _parse_bracket("garbage label")
+
+
+def test_only_2025_is_loadable_and_says_so(kc):
+    """MEAN_WAGE_K pins the top-bracket anchor per year; other vintages must fail loud, not
+    silently reuse 2025's anchor."""
+    with pytest.raises(KeyError):
+        load_korea_cells("2024")
+
+
+def test_every_closed_cell_wage_sits_inside_its_bracket(kc):
+    closed = kc.cells[kc.cells["bracket_hi_k"].notna()]
+    assert (closed["wage_month_k"] > closed["bracket_lo_k"]).all()
+    assert (closed["wage_month_k"] < closed["bracket_hi_k"]).all()
+    top = kc.cells[kc.cells["bracket_hi_k"].isna()]
+    assert (top["wage_month_k"] == kc.top_bracket_mean_k).all()
+    assert (top["bracket_lo_k"] == 6000.0).all()
+
+
+def test_occ_codes_are_exactly_the_nine_ksco_majors(kc):
+    assert sorted(kc.cells["occ_code"].unique()) == list(range(1, 10))
+    for code, grp in kc.cells.groupby("occ_code"):
+        assert grp["occ_label"].nunique() == 1
+        assert grp["occ_label"].iloc[0].endswith(f"({code})")
+
+
+def test_loading_is_deterministic(kc):
+    again = load_korea_cells("2025")
+    assert again.cells.equals(kc.cells)
+    assert again.top_bracket_mean_k == kc.top_bracket_mean_k
+
+
+def test_hours_are_plausible_monthly_hours(kc):
+    hours = kc.cells["hours_month"].dropna()
+    assert len(hours) == len(kc.cells)          # every populated cell reports hours
+    assert (hours > 20).all() and (hours < 250).all()

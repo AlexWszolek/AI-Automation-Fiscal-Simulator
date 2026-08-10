@@ -63,3 +63,65 @@ def test_no_negative_tax_at_the_bottom():
     r = _tax([1_000_000.0, 4_000_000.0, 8_000_000.0])
     assert (r["national"] >= 0.0).all()
     assert r["national"][0] == 0.0                  # fully absorbed by deductions
+
+
+# ------------------------------------------------------------- extensive correctness additions
+def test_hand_computed_anchor_w200m_top_cap_floor():
+    """₩200m/yr, worked by hand: WSD 16.75m; social 13,691,100 (pension CAPPED at 3,756,300 +
+    flat 4.9674%×200m); base 168,058,900 → 38% bracket → 43,922,382; credit floored at the
+    >₩120m minimum ₩200,000; national 43,722,382, +10% local."""
+    r = _tax([200_000_000.0])
+    assert r["national"][0] == pytest.approx(43_722_382.0)
+    assert r["total"][0] == pytest.approx(43_722_382.0 * 1.1)
+
+
+def test_no_discontinuities_anywhere():
+    """₩10k steps over ₩0–500m: every liability step is bounded — piecewise-linear chains
+    with floors/caps/credits must never JUMP (the class of bug a mistranscribed 누진공제
+    would create)."""
+    w = np.arange(0.0, 500_000_000.0, 10_000.0)
+    t = _tax(w)["total"]
+    steps = np.diff(t)
+    assert (steps >= -1e-6).all()               # liability never falls in wage
+    assert steps.max() < 10_000.0 * 1.05 + 1.0  # local marginal never exceeds ~105%
+
+
+def test_effective_rate_asymptote_is_shaved_by_deductible_social():
+    """The true supremum is NOT the statutory 49.5% (45% × 1.1): deductible employee social
+    contributions (4.9674% flat above the pension cap) shave the base forever, so the
+    effective rate approaches 0.495 × (1 − 0.049674) ≈ 47.04% from below."""
+    asymptote = 0.495 * (1.0 - 0.049674)
+    w = np.array([1e8, 1e9, 1e10, 1e11])
+    eff = _tax(w)["total"] / w
+    assert (eff < asymptote).all()
+    assert eff[-1] == pytest.approx(asymptote, abs=1e-3)
+    assert (np.diff(eff) > 0).all()              # …monotonically from below
+
+
+def test_liability_monotone_nonincreasing_in_social_contributions():
+    from fiscal_model.korea_tax import korea_income_tax
+    w = np.full(50, 80_000_000.0)
+    social = np.linspace(0.0, 10_000_000.0, 50)
+    nat = korea_income_tax(w, social)["national"]
+    assert (np.diff(nat) <= 1e-9).all()
+
+
+def test_wsd_ceiling_binds_above_362_5m():
+    from fiscal_model.korea_tax import _wage_salary_deduction
+    assert _wage_salary_deduction(np.array([362_500_000.0]))[0] == pytest.approx(20_000_000.0)
+    assert _wage_salary_deduction(np.array([1e9]))[0] == 20_000_000.0
+    assert _wage_salary_deduction(np.array([362_400_000.0]))[0] < 20_000_000.0
+
+
+def test_wsd_continuity_at_every_knot():
+    from fiscal_model.korea_tax import _wage_salary_deduction
+    for knot in (5e6, 15e6, 45e6, 100e6):
+        lo, hi = _wage_salary_deduction(np.array([knot - 0.01, knot]))
+        assert hi - lo < 0.011
+
+
+def test_zero_and_empty_inputs():
+    r = _tax([0.0])
+    assert r["national"][0] == 0.0 and r["total"][0] == 0.0
+    r2 = _tax([])
+    assert r2["national"].size == 0
