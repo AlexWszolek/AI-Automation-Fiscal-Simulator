@@ -15,6 +15,7 @@ export default defineConfig({
         // track (graduates to the default Korea entry when it lands).
         korea: resolve(__dirname, 'korea.html'),
         koreaApp: resolve(__dirname, 'korea-app.html'),
+        koreaSlides: resolve(__dirname, 'korea-slides.html'),
       },
     },
   },

@@ -87,9 +87,25 @@ function tooltipHandler(_handler: unknown, event: MouseEvent, _item: unknown, va
   el.style.top = `${y + window.scrollY}px`
 }
 
-/** Render a spec into el. Returns the embed result for later .finalize(). */
+/** Render a spec into el. Returns the embed result for later .finalize().
+ * A spec-level `config` overlays the design system's per section (axis/legend/text…) —
+ * the slide deck uses this for presentation-scale type; specs without one are unchanged. */
 export function mount(el: HTMLElement, spec: VisualizationSpec): Promise<Result> {
-  return vegaEmbed(el, { ...spec, config: BASE_CONFIG } as VisualizationSpec, {
+  const overlay = (spec as { config?: Record<string, unknown> }).config
+  const base = BASE_CONFIG as unknown as Record<string, unknown>
+  const config = overlay
+    ? Object.fromEntries(
+        [...new Set([...Object.keys(base), ...Object.keys(overlay)])].map((k) => {
+          const b = base[k]
+          const o = overlay[k]
+          const merged = b && o && typeof b === 'object' && typeof o === 'object'
+            ? { ...(b as object), ...(o as object) }
+            : (o ?? b)
+          return [k, merged]
+        }),
+      )
+    : BASE_CONFIG
+  return vegaEmbed(el, { ...spec, config } as VisualizationSpec, {
     actions: false,
     renderer: 'svg',
     tooltip: tooltipHandler,

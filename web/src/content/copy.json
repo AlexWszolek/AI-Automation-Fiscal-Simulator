@@ -15,7 +15,8 @@
    "wages": "[copy: Alex — wages chart title]",
    "budget": "[copy: Alex — budget chart title]",
    "ei_outlay": "[copy: Alex — EI benefit outlay chart title]",
-   "tornado": "[copy: Alex — sensitivity section title]"
+   "tornado": "[copy: Alex — sensitivity section title]",
+   "scenarios": "[copy: Alex — scenarios slide title (diffusion family + fast worlds)]"
   },
   "captions": {
    "nps": "[copy: Alex — NPS caption: reform bought 8 years (2057→2065, NABO); band = what automation takes back]",

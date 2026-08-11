@@ -1,0 +1,37 @@
+/* The 16:9 slide stage. Slides are laid out at exactly 1920x1080 and scaled to fit the
+   window in preview; ?slide=N renders unscaled for the headless export. Type is the site's
+   system, enlarged to presentation scale. */
+.deck { display: flex; flex-direction: column; align-items: center; padding: 1rem; }
+.deck-help { margin: 0 0 0.75rem; }
+.slide-stage { overflow: hidden; }
+.slide {
+  position: relative; background: #fcfbf8; transform-origin: top left;
+  border: 1px solid rgba(43, 40, 34, 0.12); box-sizing: border-box;
+  padding: 72px 96px 96px; display: flex; flex-direction: column;
+}
+.slide.export { border: none; }
+.slide h1 { font-size: 64px; line-height: 1.15; margin: 0 0 24px; }
+.slide h2 { font-size: 44px; line-height: 1.2; margin: 0 0 20px; }
+.slide-intro { font-size: 28px; max-width: 1400px; }
+.slide .caption { font-size: 22px; line-height: 1.45; }
+.slide-center { margin: auto 0; }
+.slide-chart { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.slide-chart .panel { border: none; padding: 0; }
+.slide-heroes { margin: 40px 0 24px; }
+.slide-hero .metric-value { font-size: 72px; }
+.slide-hero .metric-label { font-size: 24px; }
+.slide-hero .metric-ground { font-size: 20px; }
+.slide-note { margin-top: 20px; max-width: 1500px; }
+.slide-cols { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; align-items: start; }
+.slide-table { border-collapse: collapse; margin: 24px 0; font-size: 28px; }
+.slide-table th, .slide-table td { padding: 14px 36px 14px 0; text-align: left;
+  border-bottom: 1px solid rgba(43, 40, 34, 0.15); }
+.slide-table th { font-size: 22px; font-weight: 600; }
+.slide-table .scenario-name { font-family: inherit; }
+.slide-table .agi-row td { color: #8c2f28; }
+.slide-list { font-size: 24px; line-height: 1.6; max-width: 1500px; padding-left: 1.2em; }
+.slide-list li { margin-bottom: 10px; }
+.slide-footer {
+  position: absolute; left: 96px; right: 96px; bottom: 32px;
+  display: flex; justify-content: space-between; font-size: 18px; opacity: 0.7;
+}
