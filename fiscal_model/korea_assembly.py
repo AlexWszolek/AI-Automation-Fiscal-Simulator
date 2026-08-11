@@ -369,19 +369,12 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
             "ei_outlay_bn": np.asarray(ei_outlay)}
 
 
-def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
-                     data=None, deltas=None, **param_overrides) -> dict:
-    """One assembled Korea run, end to end: preset → V2 params under the Korea conventions
-    (cognitive channel only, Korean demography, no closure) → DynamicModelV2 → the funds
-    bridge. This is the single entrypoint the bundle/MC/tornado layers drive — the Korea
-    conventions live HERE, once, so a sweep can never half-apply them. `param_overrides`
-    lets sensitivity work vary any V2Params field on top of the preset.
-
-    Pass `data`/`deltas` to amortize the CSV loads across a sweep; `n_periods` defaults to
-    the preset's native horizon (NPS needs 40 — the demography projections reach 2072)."""
+def korea_preset_params(key: str, n_periods: int | None = None, **param_overrides):
+    """The V2 params for a Korea preset under the Korea conventions (cognitive channel
+    only, Korean demography, no closure). The conventions live HERE, once, so a sweep can
+    never half-apply them; MC samples around exactly this object."""
     from dataclasses import replace
 
-    from .dynamics_v2 import DynamicModelV2
     from .korea_demography import korea_demography_path
     from .korea_scenarios import KOREA_PRESETS
     from .levers_v2 import DEFAULTS_SHIPPED
@@ -401,12 +394,24 @@ def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
         rp = fields.get("retained_profit_share", DEFAULTS_SHIPPED.retained_profit_share)
         pr = fields.get("price_reduction_share", DEFAULTS_SHIPPED.price_reduction_share)
         fields["survivor_gains_share"] = max(0.0, 1.0 - rp - pr)
-    params = replace(DEFAULTS_SHIPPED,
-                     adoption=preset.adoption_end,
-                     adoption_path=build_adoption_path(preset, n),
-                     n_periods=n,
-                     demography_path=list(korea_demography_path(n)),
-                     **fields)
+    return replace(DEFAULTS_SHIPPED,
+                   adoption=preset.adoption_end,
+                   adoption_path=build_adoption_path(preset, n),
+                   n_periods=n,
+                   demography_path=list(korea_demography_path(n)),
+                   **fields)
+
+
+def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
+                     data=None, deltas=None, **param_overrides) -> dict:
+    """One assembled Korea run, end to end: korea_preset_params → DynamicModelV2 → the
+    funds bridge. The single entrypoint the bundle/MC/tornado layers drive.
+
+    Pass `data`/`deltas` to amortize the CSV loads across a sweep; `n_periods` defaults to
+    the preset's native horizon (NPS needs 40 — the demography projections reach 2072)."""
+    from .dynamics_v2 import DynamicModelV2
+
+    params = korea_preset_params(key, n_periods, **param_overrides)
     data = data if data is not None else build_korea_data(year)
     deltas = deltas if deltas is not None else build_korea_deltas(year)
     model = DynamicModelV2(data, deltas, params)
