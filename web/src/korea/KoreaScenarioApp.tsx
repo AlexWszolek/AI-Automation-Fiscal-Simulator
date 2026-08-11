@@ -15,6 +15,7 @@ import {
   KOREA_GROUPS, KOREA_PRESETS, leverCopy, presetMeta, queryStringFor,
   type KoreaConfig,
 } from './config'
+import { KoreaTornadoSection } from './KoreaTornadoSection'
 import { useKoreaScenarioData, type KoreaFundJson } from './useKoreaScenarioData'
 
 const KO = (copy as any).korea
@@ -235,6 +236,8 @@ export default function KoreaScenarioApp() {
                 caption={KO.captions.ei_outlay}
               />
             </div>
+
+            <KoreaTornadoSection cfg={cfg} />
 
             <div className="col-wide panel korea-sources">
               <h2>{KO.sections.disclosures}</h2>

@@ -38,7 +38,13 @@ from .korea_funds import EI_BASELINE, NPS_REFORM
 from .korea_scenarios import WAGE_LINKED_SHARE
 
 KOREA_PINNED = ("cognitive_feasibility", "physical_feasibility", "robotics_lag",
-                "state_cut_share", "state_rate_hike_cap")
+                "state_cut_share", "state_rate_hike_cap",
+                # US transfer/shareholder levers: they reach only the US-ledger deficit
+                # lines, never the fund headlines this MC targets — sampling them adds
+                # pure-noise tornado rows (SSDI/UBI-recapture/equity bars at |ρ|≈n^-1/2)
+                "ubi_annual", "ubi_recapture_rate", "ssdi_annual",
+                "equity_pe_multiple", "equity_taxable_share", "cg_realization_rate",
+                "shareholder_eff_rate", "swf_profit_share", "fed_vat_rate")
 EXPOSURE_DELTAS = (-0.5, 0.0, 0.5)
 HEADLINES = ("nhi_years_forward", "nps_given_back", "ei_shortfall_tn",
              "employment_drop_pct", "nhi_erosion_2035")
@@ -68,18 +74,34 @@ def _headline_row(model, res, deltas, nhi_s: float, nps_s: float) -> dict:
 
 def run_korea_mc(n: int = 400, spread: float = 0.15, seed: int = 0,
                  preset: str = "korea-central", invariant_every: int = 20,
-                 progress=None) -> KoreaMCResult:
+                 progress=None, base_params=None, base_axes: dict | None = None,
+                 deltas=None, data_pool: dict | None = None,
+                 ctx_pool: dict | None = None) -> KoreaMCResult:
     """Serial and deterministic: one lever-draw stream (mc.sample_draws, `seed`), one
     Korea-axes stream (`seed`+1 — separate so adding a lever never reshuffles the share
     draws), fixed draw order. Every `invariant_every`-th draw runs the full conservation
-    battery (country="kr")."""
+    battery (country="kr").
+
+    `base_params` overrides the preset's V2Params as the sampling centre (the live-tornado
+    path: sample around the user's modified config). Sampling of the Korea AXES is always
+    the full documented band/grid — a user's point choice doesn't shrink the uncertainty —
+    but the reference `base` row uses `base_axes` (exposure_delta/nhi_share/nps_share) so
+    it reflects the user's own configuration. `deltas`/`data_pool`/`ctx_pool` amortize
+    construction across calls (shared with the webpayload pools — same structural shape)."""
     horizon = len(NPS_REFORM.revenue)
-    base = korea_preset_params(preset, horizon)
-    deltas = build_korea_deltas()
-    contexts = {
-        d: mc.ScenarioContext(
-            build_korea_data(exposure=exposure_variant(d) if d else None), deltas, base)
-        for d in EXPOSURE_DELTAS}
+    base = base_params if base_params is not None else korea_preset_params(preset, horizon)
+    deltas = deltas if deltas is not None else build_korea_deltas()
+    if data_pool is None:
+        data_pool = {}
+    if ctx_pool is None:
+        ctx_pool = {}
+    for d in EXPOSURE_DELTAS:
+        if d not in data_pool:
+            data_pool[d] = build_korea_data(exposure=exposure_variant(d) if d else None)
+        if d not in ctx_pool:
+            ctx_pool[d] = mc.ScenarioContext(
+                data_pool[d], deltas, korea_preset_params("korea-central", horizon))
+    contexts = ctx_pool
 
     lever_draws = mc.sample_draws(base, n, spread, seed)
     pin = {k: getattr(base, k) for k in KOREA_PINNED}
@@ -91,10 +113,13 @@ def run_korea_mc(n: int = 400, spread: float = 0.15, seed: int = 0,
                                             WAGE_LINKED_SHARE["nps"].high))}
             for _ in range(n)]
 
-    base_model, base_res = contexts[0.0].run_model(base)
     nhi_mid = round((WAGE_LINKED_SHARE["nhi"].low + WAGE_LINKED_SHARE["nhi"].high) / 2, 2)
     nps_mid = round((WAGE_LINKED_SHARE["nps"].low + WAGE_LINKED_SHARE["nps"].high) / 2, 2)
-    base_row = _headline_row(base_model, base_res, deltas, nhi_mid, nps_mid)
+    b_axes = {"exposure_delta": 0.0, "nhi_share": nhi_mid, "nps_share": nps_mid,
+              **(base_axes or {})}
+    base_model, base_res = contexts[b_axes["exposure_delta"]].run_model(base)
+    base_row = _headline_row(base_model, base_res, deltas,
+                             b_axes["nhi_share"], b_axes["nps_share"])
 
     rows = []
     for i, d in enumerate(lever_draws):

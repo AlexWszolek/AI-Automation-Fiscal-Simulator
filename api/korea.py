@@ -12,7 +12,7 @@ import threading
 from collections import OrderedDict
 
 from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
-                                           sanitize_korea_config)
+                                           korea_mc_tornado, sanitize_korea_config)
 
 
 class KoreaScenarioService:
@@ -29,6 +29,21 @@ class KoreaScenarioService:
             self.pools = {"data_pool": {}, "deltas": build_korea_deltas(),
                           "ctx_pool": {}}
         return self.pools
+
+    def tornado(self, body: dict, n: int) -> dict:
+        cfg = sanitize_korea_config(body)
+        rep = "tornado:" + str(n) + ":" + json.dumps(cfg, sort_keys=True)
+        with self.lock:
+            hit = self.payloads.get(rep)
+            if hit is not None:
+                self.payloads.move_to_end(rep)
+                return hit
+            pools = self._ensure_pools()
+            out = korea_mc_tornado(cfg, n=n, **pools)
+            self.payloads[rep] = out
+            while len(self.payloads) > 16:
+                self.payloads.popitem(last=False)
+        return out
 
     def run(self, body: dict) -> dict:
         cfg = sanitize_korea_config(body)

@@ -5,7 +5,7 @@
   "seed": 0,
   "preset": "korea-central",
   "demography": "FROZEN (published medium variant)",
-  "runtime_s": 4.1
+  "runtime_s": 4.0
  },
  "base": {
   "nhi_years_forward": 0.5009,
@@ -37,11 +37,11 @@
    "p90": 6.7773
   },
   "employment_drop_pct": {
-   "p10": 13.7356,
+   "p10": 13.7357,
    "p25": 15.0189,
    "p50": 16.4287,
-   "p75": 17.8306,
-   "p90": 19.3932
+   "p75": 17.8307,
+   "p90": 19.3933
   },
   "nhi_erosion_2035": {
    "p10": 0.0753,
@@ -78,20 +78,20 @@
     "spearman": -0.0968
    },
    {
-    "input": "equity_pe_multiple",
-    "spearman": -0.092
-   },
-   {
-    "input": "ssdi_annual",
-    "spearman": 0.0781
-   },
-   {
     "input": "price_reduction_share",
     "spearman": 0.0681
    },
    {
-    "input": "ubi_recapture_rate",
-    "spearman": 0.0679
+    "input": "attrition_rate",
+    "spearman": 0.0662
+   },
+   {
+    "input": "interest_rate",
+    "spearman": 0.0659
+   },
+   {
+    "input": "productivity_passthrough",
+    "spearman": -0.0553
    }
   ],
   "employment_drop_pct": [
@@ -109,15 +109,11 @@
    },
    {
     "input": "reemployment_haircut",
-    "spearman": -0.1601
+    "spearman": -0.16
    },
    {
     "input": "survivor_gains_share",
     "spearman": -0.1574
-   },
-   {
-    "input": "equity_pe_multiple",
-    "spearman": -0.1211
    },
    {
     "input": "retained_profit_share",
@@ -128,12 +124,16 @@
     "spearman": 0.0733
    },
    {
-    "input": "ssdi_annual",
-    "spearman": 0.0644
-   },
-   {
     "input": "survivor_elasticity",
     "spearman": 0.0485
+   },
+   {
+    "input": "consumption_stickiness",
+    "spearman": 0.0481
+   },
+   {
+    "input": "productivity_passthrough",
+    "spearman": -0.0428
    }
   ],
   "nhi_erosion_2035": [
@@ -158,10 +158,6 @@
     "spearman": -0.1649
    },
    {
-    "input": "equity_pe_multiple",
-    "spearman": -0.1265
-   },
-   {
     "input": "demand_multiplier",
     "spearman": 0.0999
    },
@@ -174,8 +170,12 @@
     "spearman": -0.0504
    },
    {
-    "input": "cg_realization_rate",
-    "spearman": 0.0493
+    "input": "survivor_elasticity",
+    "spearman": -0.0436
+   },
+   {
+    "input": "price_reduction_share",
+    "spearman": 0.0407
    }
   ],
   "nhi_years_forward": [
@@ -204,20 +204,20 @@
     "spearman": -0.126
    },
    {
-    "input": "ubi_recapture_rate",
-    "spearman": 0.1159
-   },
-   {
-    "input": "equity_pe_multiple",
-    "spearman": -0.1013
-   },
-   {
-    "input": "ssdi_annual",
-    "spearman": 0.0848
-   },
-   {
     "input": "mpc",
     "spearman": -0.0596
+   },
+   {
+    "input": "compute_effective_rate",
+    "spearman": -0.0592
+   },
+   {
+    "input": "nps_share",
+    "spearman": 0.0585
+   },
+   {
+    "input": "baseline_growth_rate",
+    "spearman": -0.0543
    }
   ],
   "nps_given_back": [
@@ -250,16 +250,16 @@
     "spearman": 0.1197
    },
    {
-    "input": "equity_pe_multiple",
-    "spearman": -0.0879
-   },
-   {
     "input": "survivor_spillover_to_profit",
     "spearman": -0.0632
    },
    {
     "input": "survivor_elasticity",
     "spearman": -0.0553
+   },
+   {
+    "input": "nhi_share",
+    "spearman": 0.0376
    }
   ]
  }

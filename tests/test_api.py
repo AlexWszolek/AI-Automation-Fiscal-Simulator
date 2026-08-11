@@ -201,3 +201,12 @@ def test_korea_lever_request_moves_and_caches(client, korea_ready):
     assert a["config"]["modified_fields"] == ["ui_weeks"]
     assert a["final"]["ei_shortfall_tn"] > 7.0
     assert client.post("/api/korea/run", json=body).json() == a
+
+
+def test_korea_tornado_static_equals_live(client, korea_ready):
+    live = client.post("/api/korea/tornado", json={"preset": "korea-central", "n": 400}).json()
+    static = json.loads((ROOT / "web" / "public" / "data" / "korea" / "tornado"
+                         / "korea-central.json").read_text(encoding="utf-8"))
+    assert live == static
+    junk = client.post("/api/korea/tornado", json={"n": "lots", "levers": {"x": 1}})
+    assert junk.status_code == 200 and junk.json()["config"]["n"] == 150

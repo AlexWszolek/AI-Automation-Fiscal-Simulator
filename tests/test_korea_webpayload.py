@@ -111,3 +111,33 @@ def test_committed_scenario_bundles_match_fresh_generation(pools):
         fresh = json.loads(json.dumps(
             build_korea_scenario_payload(sanitize_korea_config({"preset": key}), **pools)))
         assert fresh == committed, f"stale bundle for {key} — scripts/gen_korea_scenarios.py"
+
+
+def test_tornado_is_deterministic_and_tracks_the_config(pools):
+    from fiscal_model.korea_webpayload import korea_mc_tornado, sanitize_korea_config
+    a = korea_mc_tornado(sanitize_korea_config({}), n=50, **pools)
+    b = korea_mc_tornado(sanitize_korea_config({}), n=50, **pools)
+    assert a == b
+    assert set(a["targets"]) == {"nhi_years_forward", "nps_given_back", "ei_shortfall_tn",
+                                 "employment_drop_pct", "nhi_erosion_2035"}
+    # sampling never reaches the pinned conventions
+    for rows in a["targets"].values():
+        assert not {r["lever"] for r in rows} & {"cognitive_feasibility",
+                                                 "physical_feasibility", "robotics_lag"}
+    # a modified config moves the base row the tornado is anchored to
+    m = korea_mc_tornado(sanitize_korea_config({"levers": {"ui_weeks": 39}}), n=50, **pools)
+    assert m["base"]["ei_shortfall_tn"] > a["base"]["ei_shortfall_tn"] + 1.0
+
+
+def test_committed_tornado_bundles_match_fresh_generation(pools):
+    import json
+    from pathlib import Path
+
+    from fiscal_model.korea_webpayload import korea_mc_tornado, sanitize_korea_config
+    root = Path(__file__).resolve().parent.parent
+    path = root / "web" / "public" / "data" / "korea" / "tornado" / "korea-central.json"
+    assert path.exists(), "missing tornado bundle — scripts/gen_korea_scenarios.py"
+    committed = json.loads(path.read_text(encoding="utf-8"))
+    fresh = json.loads(json.dumps(korea_mc_tornado(
+        sanitize_korea_config({"preset": "korea-central"}), n=400, **pools)))
+    assert fresh == committed, "stale tornado bundle — scripts/gen_korea_scenarios.py"

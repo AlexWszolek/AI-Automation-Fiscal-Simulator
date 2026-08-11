@@ -179,3 +179,33 @@ export function contrastBars(
     },
   } as VisualizationSpec
 }
+
+export function koreaTornado(
+  rows: { lever: string; spearman: number }[],
+  labelFor: (lever: string) => string,
+  axisTitle: string,
+  opts: { top?: number; stale?: boolean } = {},
+): VisualizationSpec {
+  // the US tornado's encoding (signed horizontal bars, red = raising the lever worsens
+  // the headline), with Korea's own lever labels
+  const top = [...rows]
+    .sort((a, b) => Math.abs(b.spearman) - Math.abs(a.spearman))
+    .slice(0, opts.top ?? 12)
+    .map((t) => ({ lever: labelFor(t.lever), spearman: t.spearman }))
+  return {
+    data: { values: top },
+    mark: { type: 'bar', opacity: opts.stale ? 0.35 : 1.0 },
+    encoding: {
+      y: { field: 'lever', type: 'nominal', sort: null, title: null,
+           axis: { labelLimit: 0 } },
+      x: { field: 'spearman', type: 'quantitative', title: axisTitle },
+      color: {
+        condition: { test: 'datum.spearman > 0', value: ERODED_COLOR },
+        value: PUBLISHED_COLOR,
+        legend: null,
+      },
+    },
+    width: 'container',
+    height: Math.max(180, top.length * 24),
+  } as VisualizationSpec
+}

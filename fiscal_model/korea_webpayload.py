@@ -202,3 +202,30 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                      "the CURRENT lever settings (12 projections over 3 runs); preset "
                      "spread lives in the preset picker, not this envelope",
     }
+
+
+def korea_mc_tornado(cfg: dict, n: int = 150, seed: int = 0,
+                     data_pool: dict | None = None, deltas=None,
+                     ctx_pool: dict | None = None) -> dict:
+    """The tornado behind the site's sensitivity section: Spearman rank correlations from a
+    Korea MC sampled around THIS config (the US site's form, served synchronously — the
+    Korea engine is fast enough to skip the job queue). The axes always sweep their full
+    documented bands; the base row reflects the user's own settings."""
+    from .korea_mc import HEADLINES, run_korea_mc
+
+    preset_key, levers = cfg["preset"], cfg["levers"]
+    base_axes = {k: levers[k] for k in ("exposure_delta", "nhi_share", "nps_share")
+                 if k in levers}
+    r = run_korea_mc(n=n, spread=0.15, seed=seed, preset=preset_key,
+                     base_params=_korea_v2p(preset_key, levers), base_axes=base_axes,
+                     deltas=deltas, data_pool=data_pool, ctx_pool=ctx_pool,
+                     invariant_every=0)
+    return {
+        "config": {"preset": preset_key, "levers": levers, "n": n, "seed": seed,
+                   "spread": 0.15},
+        "base": {k: round(float(v), 4) for k, v in r.base.items()},
+        "targets": {
+            h: [{"lever": row.input, "spearman": round(float(row.spearman), 4)}
+                for row in r.tornado[r.tornado.headline == h].itertuples()]
+            for h in HEADLINES},
+    }

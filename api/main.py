@@ -78,6 +78,12 @@ def create_app(backend=None) -> FastAPI:
     def korea_run(body: dict) -> dict:
         return state["korea"].run(body)
 
+    @app.post("/api/korea/tornado")
+    def korea_tornado(body: dict) -> dict:
+        n = body.get("n")
+        n = int(n) if isinstance(n, (int, float)) and 50 <= int(n) <= 400 else 150
+        return state["korea"].tornado(body, n)
+
     @app.post("/api/tornado")
     def tornado(body: dict) -> dict:
         n = body.get("n")
