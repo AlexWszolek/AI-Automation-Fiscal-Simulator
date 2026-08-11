@@ -164,3 +164,40 @@ def test_feedback_rejects_junk(client, tmp_path, monkeypatch):
     assert client.post("/api/feedback", json={}).status_code == 422
     assert client.post("/api/feedback", json={"message": "x" * 5001}).status_code == 413
     assert not (tmp_path / "feedback.jsonl").exists()
+
+
+KOREA_SCENARIOS = ROOT / "web" / "public" / "data" / "korea" / "scenarios"
+
+
+@pytest.fixture(scope="module")
+def korea_ready():
+    from fiscal_model.korea_cells import PAYM39_CSV
+    if not PAYM39_CSV.exists():
+        pytest.skip("Korea tidy CSV not built")
+
+
+def test_korea_static_equals_live_for_pristine_presets(client, korea_ready):
+    """The same anti-drift gate for Korea: /api/korea/run of a pristine preset must equal
+    its committed bundle exactly — both sides are build_korea_scenario_payload."""
+    for key in ("korea-central", "korea-agi-5y"):
+        live = client.post("/api/korea/run", json={"preset": key}).json()
+        static = json.loads((KOREA_SCENARIOS / f"{key}.json").read_text(encoding="utf-8"))
+        assert live == static, f"stale Korea bundle for {key} — scripts/gen_korea_scenarios.py"
+
+
+def test_korea_junk_request_never_500s(client, korea_ready):
+    for body in ({"preset": "acemoglu-modest"},                  # US preset key
+                 {"levers": {"ui_weeks": 1e9, "mpc": "NaN", "x": None}},
+                 {"levers": "not-a-dict"},
+                 {}):
+        r = client.post("/api/korea/run", json=body)
+        assert r.status_code == 200
+        assert "funds" in r.json()
+
+
+def test_korea_lever_request_moves_and_caches(client, korea_ready):
+    body = {"preset": "korea-central", "levers": {"ui_weeks": 39}}
+    a = client.post("/api/korea/run", json=body).json()
+    assert a["config"]["modified_fields"] == ["ui_weeks"]
+    assert a["final"]["ei_shortfall_tn"] > 7.0
+    assert client.post("/api/korea/run", json=body).json() == a

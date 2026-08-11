@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from api.jobs import TornadoJobs                          # noqa: E402
+from api.korea import KoreaScenarioService                # noqa: E402
 from api.scenario import ScenarioService, sanitize        # noqa: E402
 
 # Tester feedback lands here as JSON lines — server-local, gitignored (may contain contact
@@ -55,6 +56,7 @@ def create_app(backend=None) -> FastAPI:
         data, deltas = backend if backend is not None else _load_backend()
         state["scenarios"] = ScenarioService(data, deltas)
         state["jobs"] = TornadoJobs(data, deltas)
+        state["korea"] = KoreaScenarioService()           # lazy: builds on first request
         state["sha"] = _git_sha()
         state["ready"] = True
         yield
@@ -71,6 +73,10 @@ def create_app(backend=None) -> FastAPI:
     @app.post("/api/run")
     def run(body: dict) -> dict:
         return state["scenarios"].run(body)
+
+    @app.post("/api/korea/run")
+    def korea_run(body: dict) -> dict:
+        return state["korea"].run(body)
 
     @app.post("/api/tornado")
     def tornado(body: dict) -> dict:
