@@ -30,15 +30,17 @@ formatted to paste directly into a footnote.
 ## 3. What automation does — the model's contribution (all with bands)
 
 Config for every row: BOK-published exposure × three anchored adoption presets (ramp to 2035,
-flat after) × the documented wage-linked-share band edges. **Displacement ceiling disclosed:
-gross of re-employment** — the model overstates displacement on this axis (see §6 for the
-axes running the other way). Test-pinned in `tests/test_korea_integration.py`.
+flat after) × the documented wage-linked-share band edges, run through the **assembled V2
+model** — net displacement (re-employment, survivor raises, demand destruction) with **EI
+benefit outlays included**. Matches `web/public/data/korea.json` (parity-tested); the bridge
+is pinned in `tests/test_korea_assembly.py`.
 
 | Claim | Number | Source | Caveat / note |
 |---|---|---|---|
-| Automation pulls the health fund's depletion forward | **0.24–0.95 years** across the full band (central preset: 0.44–0.60) | Model: published NHI path (Focus 162) × direct erosion chain | Small BY CONSTRUCTION — the fund is nearly dead already; automation's sharper NHI expression is post-depletion deficit widening |
-| Automation takes back part of what the pension reform bought | **0.34–1.64 of the eight bought years** (central preset: **0.67–0.84**) | Model: published post-reform NPS path ([표 25]) × direct erosion chain | The unit the audience already reasons in; adoption held flat after 2035 (conservative on a 2065 horizon) |
-| The EI fund's planned rebuild falls short | Planned reserves of ₩21.8tn by 2029 fall **₩0.7–3.1tn short** (central ≈ ₩1.5tn) | Model: NABO mid-term EI baseline ([표 151]) × erosion | The published rebuild itself relies on planned public-fund borrowing, not the benefit account healing |
+| Automation pulls the health fund's depletion forward | **0.23–0.90 years** across the full band (central preset: 0.42–0.57) | Model: published NHI path (Focus 162) × assembled erosion | Small BY CONSTRUCTION — the fund is nearly dead already; automation's sharper NHI expression is post-depletion deficit widening |
+| Automation takes back part of what the pension reform bought | **0.49–2.44 of the eight bought years** (central preset: **0.96–1.30**) | Model: published post-reform NPS path ([표 25]) × assembled erosion | The unit the audience already reasons in; adoption held flat after 2035 (conservative on a 2065 horizon) |
+| The EI fund's planned rebuild falls short | Planned reserves of ₩21.8tn by 2029 fall **₩2.6–11.4tn short** (central ≈ ₩5.5tn) | Model: NABO mid-term EI baseline ([표 151]) × assembled erosion + benefit outlays | The outlay side dominates (revenue-only central was ≈₩1.5tn); the published rebuild itself relies on planned public-fund borrowing |
+| A fast AI world is qualitatively different | Korinek-Suh translations: AGI-in-20y pulls NHI **1.25y** forward, gives back **3.82** bought pension years, EI shortfall **₩17.1tn**; AGI-in-5y: **2.14y / 6.59 years / ₩59.2tn** (vs ₩21.8tn planned) | Model: `korea-agi-*` presets, mid shares | Cognitive channel only — **understates** manual-occupation displacement; separate scenario rows, never inside the band |
 | Even the optimistic AI scenario breaks the fiscal path | Structural: contributions are levied per employed worker, not on output | Argument, not model output (research doc §5.1) | Cancellation acts on output; the fiscal problem acts on the tax base. No model needed — say it verbally |
 
 ## 4. Which institution takes the hit — composition
@@ -47,7 +49,7 @@ axes running the other way). Test-pinned in `tests/test_korea_integration.py`.
 |---|---|---|---|
 | Korea's AI-cognitive displacement wave is clerical-centred | 사무 종사자 = **17.4% of all employment**, and under the BOK classification **wholly high-exposure / low-complementarity** (displacement-prone) | BOK 이슈노트 2025-2 「AI와 한국경제」, <그림 9> (figure-read, reconciled to the note's published 24%/27% aggregates; confirmed by IMF SIP 2025/013 Fig. 7) (`bok-issue-note-2025-2-ai-korean-economy.pdf`) | The complementarity split respects exposure ≠ displacement: professionals are mostly the augmentation case (16.0 of 21.6pp high-complementarity) |
 | Which occupations automate determines which institution pays | Pension contributions capped at ₩6.59m/month (~2× median): high-wage automation → income-tax loss (general account); low-wage automation → full-proportional fund loss — and the **pension base is relatively bottom-heavy**, so low-wage automation erodes NPS proportionally hardest | Cap: NPS notice (기준소득월액 상·하한, 2026-07); asymmetry: model-derived, test-pinned (`test_korea_funds.py`) | Label the asymmetry as model arithmetic on the statutory cap, not an external estimate |
-| In the central scenario the damage spreads evenly | ≈8% erosion across institutions by 2035 (income tax 8.6%, funds 8.0–8.1%) | Model, central preset | The clerical epicentre is mid-wage — the sharp splits appear under concentrated what-ifs, not the central case |
+| In the central scenario the damage spreads evenly | ≈9% erosion across institutions by 2035 (funds 9.1%, capped NPS slightly worst at 9.2%, income tax 9.1%) | Model, central preset (assembled) | The clerical epicentre is mid-wage — the sharp splits appear under concentrated what-ifs, not the central case. Survivor raises recover progressive income tax slightly faster than the capped pension base — the cap asymmetry survives assembly |
 
 ## 5. Context numbers that may earn a place on the sheet
 
@@ -68,8 +70,9 @@ axes running the other way). Test-pinned in `tests/test_korea_integration.py`.
 | Coverage | Wage employees only, ~**76% of employment** (self-employment 23.9%, 6th-highest OECD — treated qualitatively; it is Korea's de facto old-age safety net and already the fastest-automating sector) |
 | Data frame | Establishment survey: **12.4m of ~22m wage workers**, larger firms over-represented, no public administration |
 | Granularity | 9 occupation groups × 24 wage brackets (**deliberately coarse, transparently so**) — the public-data ceiling; wage distribution beats per-cell means for progressive taxes |
-| Displacement | **Ceiling**: gross of re-employment (overstates displacement) |
-| Erosion | **Revenue-side only**: ignores benefit-outlay increases and forgone investment income (both understate the damage) |
+| Displacement | **Net**: the assembled model re-employs into the finite service floor, pays survivor raises, and propagates demand destruction — the direct gross ceiling is retained only for structural what-ifs, labeled as such |
+| Erosion | Revenue side plus **EI benefit outlays**; still ignores NHI/NPS outlay responses and forgone investment income (both understate the damage) |
+| AGI scenarios | Cognitive channel only — no published Korean robot-exposure vector; understates manual-occupation displacement (disclosed wherever shown) |
 | Exposure | Figure-read from BOK's published chart, accepted only because it reconciles with the note's printed aggregates; ±0.5pp read error carried into the band |
 | Shares | NHI and NPS wage-linked revenue shares shown as bands (0.65–0.97 / 0.75–0.95) pending two statistical splits — the bands are IN the headline ranges |
 | Net direction | Biases run in both directions and are stated; the presentation quotes ranges, not points |

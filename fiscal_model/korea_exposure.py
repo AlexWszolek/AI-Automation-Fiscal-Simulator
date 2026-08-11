@@ -66,3 +66,19 @@ assert abs(_le + _hehc + _helc - _PUBLISHED["TOTAL"]) < _TOL, "figure read does 
 # within-group fractions — frame-consistent (numerator and denominator from the same figure)
 EXPOSURE_HELC = {g: (v[2] / sum(v) if sum(v) else 0.0) for g, v in FIG9_SHARES.items()}
 EXPOSURE_HEHC = {g: (v[1] / sum(v) if sum(v) else 0.0) for g, v in FIG9_SHARES.items()}
+
+
+def exposure_variant(delta_pp: float) -> dict:
+    """The figure-read error axis: shift each nonzero HELC bar by ±delta_pp of employment
+    (the read tolerance), renormalized within the group. delta_pp=0 reproduces
+    EXPOSURE_HELC exactly; the manual groups' zeros stay zero (their automation is the
+    physical channel, not a read error)."""
+    out = {}
+    for g, v in FIG9_SHARES.items():
+        helc = v[2]
+        # sum(v), not chained adds: 3.12's compensated sum() differs by 1 ulp, and the
+        # delta_pp=0 ↔ EXPOSURE_HELC identity is asserted by a test
+        total = sum(v)
+        helc_v = min(max(helc + delta_pp if helc > 0 else helc, 0.0), total)
+        out[g] = helc_v / total if total else 0.0
+    return out

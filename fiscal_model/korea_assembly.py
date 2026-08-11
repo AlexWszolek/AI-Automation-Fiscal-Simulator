@@ -92,8 +92,11 @@ _ENGINE = rates.PayrollFICA(components=rates.korea_payroll_components())
 KR_CORP_EFF_RATE = 0.242
 
 
-def build_cells_frames(year: str = "2025") -> tuple:
-    """The cell table in engine shapes: (oews, exposure_occ, matrices_sector)."""
+def build_cells_frames(year: str = "2025", exposure: dict | None = None) -> tuple:
+    """The cell table in engine shapes: (oews, exposure_occ, matrices_sector).
+
+    `exposure` (KSCO major → displacement-prone share) defaults to the published BOK read;
+    pass `korea_exposure.exposure_variant(±0.5)` for the figure-read error axis of the band."""
     kc = load_korea_cells(year)
     c = kc.cells.copy()
     c["soc_code"] = [f"{o}:{int(lo):04d}" for o, lo in zip(c["occ_code"], c["bracket_lo_k"])]
@@ -109,7 +112,8 @@ def build_cells_frames(year: str = "2025") -> tuple:
     exposure_occ = pd.DataFrame({
         "soc_code": c["soc_code"],
         "ai_pca_score": np.nan,
-        "cognitive_share": c["occ_code"].map(EXPOSURE_HELC).astype(float),
+        "cognitive_share": c["occ_code"].map(exposure if exposure is not None
+                                             else EXPOSURE_HELC).astype(float),
     })
 
     # occupation × industry: ILOSTAT shares allocate each cell's employment/comp over
@@ -186,12 +190,12 @@ def build_korea_deltas(year: str = "2025", kp=None) -> pd.DataFrame:
 
 
 
-def build_korea_data(year: str = "2025") -> KoreaFiscalData:
+def build_korea_data(year: str = "2025", exposure: dict | None = None) -> KoreaFiscalData:
     """The full data shim. Units note: `amount_busd` carries ₩bn (won/1e9) so every place
     the engine multiplies by 1e9 lands back in won; headline formatting divides to ₩tn."""
     from .country import KOREA
 
-    oews, exposure_occ, matrices_sector = build_cells_frames(year)
+    oews, exposure_occ, matrices_sector = build_cells_frames(year, exposure)
     deltas = build_korea_deltas(year)
     emp = deltas["employed"].to_numpy()
     pit_national = float(deltas["after_inc_fed"].to_numpy() @ emp) / 1e9      # ₩bn
@@ -335,7 +339,15 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
     from .korea_assembly import KoreaReabsorptionEngine
     w_reab = np.maximum(w * (1.0 - haircut), KoreaReabsorptionEngine.SERVICE_FLOOR_WON)
 
+    # the two income-tax lines of the composition, same convention as contribution_losses:
+    # korea_income_tax at the (survivor-adjusted / destination) wage with the employee's own
+    # contributions at that wage deducted — caps and credits re-evaluated, not scaled
+    _tax = lambda wage: korea_income_tax(wage, _ENGINE.employee_fica(wage, "Single"))
+    tax0, tax_reab = _tax(w), _tax(w_reab)
+    _PIT_LINES = ("income tax (national)", "local income surtax")
+
     erosion: dict[str, list] = {c.name: [] for c in _COMPONENTS}
+    erosion.update({k: [] for k in _PIT_LINES})
     ei_outlay = []
     for t, tr in enumerate(model.cell_trace):
         scale = demo[min(t, len(demo) - 1)]
@@ -344,6 +356,12 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
             actual = float(c.levy(w * W[t], "Single", c.rate) @ tr["employed"]
                            + c.levy(w_reab, "Single", c.rate) @ tr["reabsorbed"])
             erosion[c.name].append(max(0.0, 1.0 - actual / base) if base > 0 else 0.0)
+        tax_t = _tax(w * W[t])
+        for key, part in zip(_PIT_LINES, ("national", "local")):
+            base = float(tax0[part] @ (emp0 * scale))
+            actual = float(tax_t[part] @ tr["employed"]
+                           + tax_reab[part] @ tr["reabsorbed"])
+            erosion[key].append(max(0.0, 1.0 - actual / base) if base > 0 else 0.0)
         # match the model's own UI accounting: the annual rate prorated by the window share
         # (ui_weeks/52) — the same convention as dynamics_v2's ui_outlay_fed line
         ei_outlay.append(float(ui_rate @ tr["on_ui"]) * model._v1.ui_share / 1e9)   # ₩bn/yr
@@ -395,3 +413,41 @@ def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
     res = model.run()
     bridge = korea_erosion_from_run(model, res, deltas)
     return {"res": res, "bridge": bridge, "params": params, "model": model, "deltas": deltas}
+
+
+def korea_project_funds(bridge: dict, nhi_share: float, nps_share: float) -> dict:
+    """Bridge → the three fund projections. Wage-linked shares enter HERE, not in the run —
+    erosion is share-independent, so a band over share edges reuses one assembled run.
+    EI always uses its verified share and carries the outlay side (₩tn/yr)."""
+    from .korea_funds import EI_BASELINE, NHI_REFORM, NPS_REFORM, depletion_shift
+    from .korea_scenarios import WAGE_LINKED_SHARE
+    er = bridge["erosion"]
+    return {
+        "nhi": depletion_shift(NHI_REFORM, er["NHI health"][:len(NHI_REFORM.years)],
+                               wage_linked_share=nhi_share),
+        "nps": depletion_shift(NPS_REFORM, er["NPS pension"][:len(NPS_REFORM.years)],
+                               wage_linked_share=nps_share),
+        "ei": depletion_shift(
+            EI_BASELINE, er["EI unemployment benefit"][:len(EI_BASELINE.years)],
+            wage_linked_share=WAGE_LINKED_SHARE["ei"].value,
+            extra_outlays_tn=bridge["ei_outlay_bn"][:len(EI_BASELINE.years)] / 1000.0),
+    }
+
+
+def korea_assembled_band(horizon: int | None = None, year: str = "2025") -> dict:
+    """The assembled band grid: one V2 run per (diffusion preset × exposure read ±0.5pp),
+    nine runs total. Returns {(preset_key, delta_pp): bridge}. Share edges are applied
+    downstream by korea_project_funds — see the band note at KOREA_BAND_KEYS for why the
+    AGI presets are absent."""
+    from .korea_exposure import exposure_variant
+    from .korea_funds import NPS_REFORM
+    from .korea_scenarios import KOREA_BAND_KEYS
+    n = int(horizon) if horizon is not None else len(NPS_REFORM.revenue)
+    deltas = build_korea_deltas(year)
+    out = {}
+    for delta in (-0.5, 0.0, 0.5):
+        data = build_korea_data(year, exposure=exposure_variant(delta) if delta else None)
+        for pkey in KOREA_BAND_KEYS:
+            run = run_korea_preset(pkey, n_periods=n, data=data, deltas=deltas)
+            out[(pkey, delta)] = run["bridge"]
+    return out

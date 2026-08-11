@@ -13,7 +13,7 @@ const KO = (copy as unknown as { korea: KoreaCopy }).korea
 interface KoreaCopy {
   title: string
   intro: string
-  ceiling_note: string
+  disclosure_note: string
   sections: Record<string, string>
   captions: Record<string, string>
   series: { published: string; eroded: string; band: string }
@@ -50,7 +50,7 @@ export default function KoreaApp() {
           </p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
-          <p className="panel caption">{KO.ceiling_note}</p>
+          <p className="panel caption">{KO.disclosure_note}</p>
         </div>
 
         {failed && (

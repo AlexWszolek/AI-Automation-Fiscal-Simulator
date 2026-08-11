@@ -55,17 +55,20 @@ NBLSS — the outlay side of the same budget.
 
 ## 6. "How wrong could the model be?"
 
-**Short:** The biases run both directions and are printed, not hidden. Overstating damage:
-displacement is a ceiling (gross of re-employment). Understating damage: the projector
-erodes revenue only (benefit outlays rise with displacement, and eroded reserves forgo
-investment income); bottom-end income-tax losses are overstated only in a direction that
-weakens our own composition claim. That is why every headline is quoted as a range across
-adoption presets, revenue-share bands, and the figure-read error — never a point.
+**Short:** The biases run both directions and are printed, not hidden. The headline chain is
+the assembled model — displacement is NET (re-employment into the finite service floor,
+survivor raises, demand destruction) and EI benefit outlays are counted. Still understating
+damage: NHI/NPS outlay responses and forgone investment income are ignored, and the AGI
+scenarios carry only the cognitive channel (no published Korean robot-exposure vector — the
+manual occupations' automation is absent from those rows). That is why every headline is
+quoted as a range across adoption presets, revenue-share bands, and the figure-read error —
+never a point.
 
 ## 7. "Why is the pension effect so small?" / "Why is the health effect so small?"
 
 **Short (health):** Because the fund is nearly dead already — there is almost no runway left
 to shorten. The sharper health expression is the post-depletion deficit widening.
-**Short (pension):** It is not small: at central assumptions automation takes back most of a
-year of the eight that a 44% contribution-rate increase — the first in 28 years, 18 years of
-deadlock — just bought. Priced in reform-effort units, that is the point.
+**Short (pension):** It is not small: at central assumptions automation takes back roughly a
+year (0.96–1.30) of the eight that a 44% contribution-rate increase — the first in 28 years,
+18 years of deadlock — just bought; the fast worlds take back four to six and a half. Priced
+in reform-effort units, that is the point.

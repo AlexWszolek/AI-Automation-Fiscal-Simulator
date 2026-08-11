@@ -82,3 +82,21 @@ def test_composition_block_is_the_seven_institutions(bundle):
         c["white_collar_only"]["NPS pension"]
     assert c["elementary_only"]["NPS pension"] > \
         c["elementary_only"]["income tax (national)"]
+
+
+def test_agi_scenarios_are_separate_and_dominate(bundle):
+    """The fast worlds ride ABOVE the diffusion band, not inside it: their fund paths exist
+    for every fund at full length, erode at least as fast as the band's central line, and
+    their headline shifts exceed the band's hi edge (that's why they must never be folded
+    into the envelope — they'd swamp it)."""
+    h = bundle["headlines"]
+    agi20, agi5 = h["agi"]["korea-agi-20y"], h["agi"]["korea-agi-5y"]
+    assert agi5["nhi_years_forward"] > agi20["nhi_years_forward"] \
+        > h["nhi"]["years_forward_hi"]
+    assert agi5["nps_given_back"] > agi20["nps_given_back"] > h["nps"]["given_back_hi"]
+    assert agi5["ei_shortfall_tn"] > agi20["ei_shortfall_tn"] > h["ei"]["shortfall_hi_tn"]
+    for key, f in bundle["funds"].items():
+        for scen in ("korea-agi-20y", "korea-agi-5y"):
+            path = np.asarray(f["scenarios"][scen])
+            assert len(path) == len(f["years"]), (key, scen)
+            assert (path <= np.asarray(f["eroded_central"]) + 1e-9).all(), (key, scen)
