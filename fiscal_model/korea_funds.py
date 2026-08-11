@@ -90,7 +90,8 @@ EI_BASELINE = FundPath(
     "NABO 2025~2029 mid-term projection via 「2026 대한민국 사회보험」 [표 151]")
 
 
-def shifted_reserves(fund: FundPath, erosion, wage_linked_share: float = 1.0) -> np.ndarray:
+def shifted_reserves(fund: FundPath, erosion, wage_linked_share: float = 1.0,
+                     extra_outlays_tn=None) -> np.ndarray:
     """The published reserve path under a contribution-erosion path.
 
     `erosion[t]` is the fraction of the fund's wage-linked contribution base gone in year
@@ -104,6 +105,10 @@ def shifted_reserves(fund: FundPath, erosion, wage_linked_share: float = 1.0) ->
     assert 0.0 <= wage_linked_share <= 1.0
     n = len(e)
     lost = np.asarray(fund.revenue[:n]) * wage_linked_share * e
+    if extra_outlays_tn is not None:
+        x = np.asarray(extra_outlays_tn, dtype=float)[:n]
+        assert x.shape == (n,) and (x >= 0.0).all()
+        lost = lost + x                      # the OUTLAY side (e.g. EI benefit spending)
     return np.asarray(fund.reserves[:n]) - np.cumsum(lost)
 
 
@@ -129,7 +134,8 @@ def depletion_date(reserves, base_year: int):
     return None
 
 
-def depletion_shift(fund: FundPath, erosion, wage_linked_share: float) -> dict:
+def depletion_shift(fund: FundPath, erosion, wage_linked_share: float,
+                    extra_outlays_tn=None) -> dict:
     """The headline object: how far erosion pulls the fund's depletion forward.
 
     `wage_linked_share` is deliberately required — the share of published revenue that
@@ -141,7 +147,7 @@ def depletion_shift(fund: FundPath, erosion, wage_linked_share: float) -> dict:
     assert len(np.asarray(erosion)) == len(fund.revenue), \
         f"depletion_shift needs a full-horizon erosion path ({len(fund.revenue)} years)"
     base = depletion_date(fund.reserves, fund.base_year)
-    eroded_path = shifted_reserves(fund, erosion, wage_linked_share)
+    eroded_path = shifted_reserves(fund, erosion, wage_linked_share, extra_outlays_tn)
     eroded = depletion_date(eroded_path, fund.base_year)
     return {
         "fund": fund.name,

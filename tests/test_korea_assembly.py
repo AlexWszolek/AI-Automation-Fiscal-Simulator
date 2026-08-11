@@ -65,3 +65,45 @@ def test_korea_refuge_is_the_zero_helc_occupations(korea_run):
     low = reabsorption.low_exposure_socs(data)
     assert len(low) > 50                            # manual groups' cells populate the refuge
     assert all(code.split(":")[0] in {"1", "6", "7", "8", "9"} for code in low)
+
+
+def test_run_bridge_zero_adoption_is_inert(korea_run):
+    """The counterfactual property carried into the funds bridge: pure demographic decline
+    (zero automation) produces ZERO erosion and ZERO added EI outlay."""
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+    from fiscal_model.korea_assembly import korea_erosion_from_run
+    from fiscal_model.levers_v2 import DEFAULTS_SHIPPED
+    data, deltas, korea = korea_run
+    quiet = dict(korea, adoption=0.0, adoption_path=[0.0] * 10)
+    params = replace(DEFAULTS_SHIPPED, **quiet)
+    model = DynamicModelV2(data, deltas, params)
+    res = model.run()
+    bridge = korea_erosion_from_run(model, res, deltas)
+    for k, v in bridge["erosion"].items():
+        assert (v < 1e-9).all(), k
+    assert (bridge["ei_outlay_bn"] < 1e-6).all()
+
+
+def test_run_bridge_full_dynamics_worsens_the_funds(korea_run):
+    """The assembled numbers vs the direct chain: demand destruction and the EI outlay side
+    both bite. Pinned so the bundle regeneration and evidence docs move together."""
+    import numpy as np
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+    from fiscal_model.korea_assembly import korea_erosion_from_run
+    from fiscal_model.korea_funds import EI_BASELINE, NHI_REFORM, depletion_shift
+    from fiscal_model.korea_scenarios import WAGE_LINKED_SHARE
+    from fiscal_model.levers_v2 import DEFAULTS_SHIPPED
+    data, deltas, korea = korea_run
+    params = replace(DEFAULTS_SHIPPED, **korea)
+    model = DynamicModelV2(data, deltas, params)
+    res = model.run()
+    bridge = korea_erosion_from_run(model, res, deltas)
+    assert bridge["erosion"]["NHI health"][-1] == pytest.approx(0.091, abs=0.005)
+    nhi = depletion_shift(NHI_REFORM, bridge["erosion"]["NHI health"], wage_linked_share=0.81)
+    assert nhi["years_pulled_forward"] == pytest.approx(0.50, abs=0.03)
+    ei = depletion_shift(EI_BASELINE, bridge["erosion"]["EI unemployment benefit"][:4],
+                         wage_linked_share=WAGE_LINKED_SHARE["ei"].value,
+                         extra_outlays_tn=bridge["ei_outlay_bn"][:4] / 1000.0)
+    shortfall = 21.8 - ei["eroded_reserves"][-1]
+    assert shortfall > 4.0                       # outlays dominate the revenue-only 1.5
+    assert (np.diff(ei["eroded_reserves"]) < np.diff(EI_BASELINE.reserves)).all()

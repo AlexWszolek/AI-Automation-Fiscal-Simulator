@@ -309,3 +309,43 @@ class KoreaReabsorptionEngine:
                 "net_takehome_loss": disp_loss - (tr_fed + tr_state)}
 
     _delta_loop = delta
+
+
+def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
+    """Per-scheme contribution-base erosion paths from an ASSEMBLED run — the honest
+    replacement for the direct chain's gross ceiling. Uses the model's own per-cell stocks:
+    employed contribute at survivor-adjusted wages (raises GROW the uncapped bases),
+    reabsorbed contribute at their floor-bounded destination wages, and everyone else
+    contributes nothing. The baseline is the demography-scaled no-AI workforce at baseline
+    wages — so pure demographic decline yields zero erosion (the counterfactual property,
+    same as the headline). Also returns the EI OUTLAY side: added benefit spending from the
+    actual UI-window stock at the statutory (tax-exempt, near-flat) benefit rate.
+
+    Returns {"erosion": {scheme: np.ndarray}, "ei_outlay_bn": np.ndarray (₩bn per year)}."""
+    from .korea_funds import _COMPONENTS
+    w = deltas["worker_wage"].to_numpy(float)
+    emp0 = deltas["employed"].to_numpy(float)
+    ui_rate = deltas["ui_benefit"].to_numpy(float)
+    v2p = getattr(model, "v2p", None) or getattr(model, "params", None)
+    dp = getattr(v2p, "demography_path", None)
+    demo = (list(dp) if dp is not None else [1.0] * len(res))
+    W = res["W_survivor"].to_numpy(float)
+    haircut = float(getattr(model, "_reab_haircut", 0.0)) if hasattr(model, "_reab_haircut") \
+        else 0.0
+    from .korea_assembly import KoreaReabsorptionEngine
+    w_reab = np.maximum(w * (1.0 - haircut), KoreaReabsorptionEngine.SERVICE_FLOOR_WON)
+
+    erosion: dict[str, list] = {c.name: [] for c in _COMPONENTS}
+    ei_outlay = []
+    for t, tr in enumerate(model.cell_trace):
+        scale = demo[min(t, len(demo) - 1)]
+        for c in _COMPONENTS:
+            base = float(c.levy(w, "Single", c.rate) @ (emp0 * scale))
+            actual = float(c.levy(w * W[t], "Single", c.rate) @ tr["employed"]
+                           + c.levy(w_reab, "Single", c.rate) @ tr["reabsorbed"])
+            erosion[c.name].append(max(0.0, 1.0 - actual / base) if base > 0 else 0.0)
+        # match the model's own UI accounting: the annual rate prorated by the window share
+        # (ui_weeks/52) — the same convention as dynamics_v2's ui_outlay_fed line
+        ei_outlay.append(float(ui_rate @ tr["on_ui"]) * model._v1.ui_share / 1e9)   # ₩bn/yr
+    return {"erosion": {k: np.asarray(v) for k, v in erosion.items()},
+            "ei_outlay_bn": np.asarray(ei_outlay)}

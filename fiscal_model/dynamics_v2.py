@@ -341,6 +341,7 @@ class DynamicModelV2:
         induced_flow_pending = np.zeros(len(v1.wage))     # SIGNED level-controller flow for t+1; 0 at t=0
         auto_disp = np.zeros(len(v1.wage))                # cumulative automation-displaced stock (fix 1)
         out = []
+        self.cell_trace = []          # non-US: per-period per-cell stocks for the funds bridge
 
         for t in range(p.n_periods):
             # --- step 0: DEMOGRAPHIC outflow (off by default — `demography_path is None` skips this
@@ -665,6 +666,10 @@ class DynamicModelV2:
             led_fed = self._ledger.federal(net_fed / 1e9, fed_rev_delta_B, ngdp)
             led_state = self._ledger.state(state_gap_total / 1e9, close.recovered.sum() / 1e9)
 
+            if self._country != "us":
+                self.cell_trace.append({
+                    "employed": st.employed.copy(), "on_ui": st.on_ui.copy(),
+                    "reabsorbed": st.reabsorbed.copy()})
             out.append({
                 "period": t, "adoption": adopt,
                 "employed_M": st.employed.sum() / 1e6,
