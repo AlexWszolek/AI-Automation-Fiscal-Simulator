@@ -33,4 +33,5 @@ records the dimension code→label maps, and the `.tidy.csv` files are regenerab
 | File | Content | Units | Vintage |
 |---|---|---|---|
 | `DT_118N_PAYM39.xml.gz` | occupation (KSCO 6th major, 9+total) × sex × wage bracket (24+total) × age (10+total): worker count, hours | persons; hours/month; brackets in ₩1,000/month | 2020–2025 |
+| `ilostat_eco_ocu.csv` | ILOSTAT `EMP_TEMP_ECO_OCU_NB_A` (KOR, 2022–24): employment by ISIC rev.4 section × ISCO-08 major — the occupation×industry JOINT matrix the domestic public tables lack. LFS frame (all employed): supplies allocation shares, not levels; validated to reconcile with its own totals per year | thousands of persons | 2022–2024 |
 | `DT_118N_PAYN42.xml.gz` | industry (18 KSIC sections+total) × education (4+total) × sex × age: 14 items incl. 월임금총액 (total monthly wage), 정액/초과/특별급여 split, tenure, hours, worker count | ₩1,000/month; persons | 2020–2025 |
