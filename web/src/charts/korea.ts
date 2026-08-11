@@ -209,3 +209,67 @@ export function koreaTornado(
     height: Math.max(180, top.length * 24),
   } as VisualizationSpec
 }
+
+export interface KoreaRegionRow {
+  key: string
+  short: string
+  region: string
+  col: number
+  row: number
+  emp_k: number
+  helc_share: number
+}
+
+export function koreaTileMap(rows: KoreaRegionRow[],
+                             opts: { height?: number } = {}): VisualizationSpec {
+  // tile cartogram, not a choropleth: 17 units read better as equal tiles than as land
+  // area (경기 is mid-sized land but 7.8m workers), and it needs no external geometry.
+  // Sequential single hue (site blue, light→dark) — magnitude job, per the color rules;
+  // tile labels switch to surface-white past the midpoint for contrast.
+  const tiles = rows.filter((r) => r.col >= 0)
+  const vals = tiles.map((t) => t.helc_share)
+  const mid = (Math.min(...vals) + Math.max(...vals)) / 2
+  const data = tiles.map((t) => ({ ...t, pct: t.helc_share, dark: t.helc_share > mid }))
+  const xEnc = { field: 'col', type: 'ordinal' as const, axis: null, sort: 'ascending' as const }
+  const yEnc = { field: 'row', type: 'ordinal' as const, axis: null, sort: 'ascending' as const }
+  return {
+    width: 'container', height: opts.height ?? 420, background: 'transparent',
+    layer: [
+      {
+        data: { values: data },
+        mark: { type: 'rect', stroke: '#fcfbf8', strokeWidth: 3, cornerRadius: 4 },
+        encoding: {
+          x: xEnc, y: yEnc,
+          color: {
+            field: 'pct', type: 'quantitative', title: null,
+            scale: { range: ['#e9eff6', '#2a5480'] },
+            legend: { orient: 'bottom', format: '.0%', gradientLength: 220 },
+          },
+          tooltip: [
+            { field: 'region', type: 'nominal', title: 'Region' },
+            { field: 'pct', type: 'quantitative', title: 'Displacement-prone share', format: '.1%' },
+            { field: 'emp_k', type: 'quantitative', title: 'Employed (thousands)', format: ',.0f' },
+          ],
+        },
+      },
+      {
+        data: { values: data },
+        mark: { type: 'text', dy: -9, fontSize: 13, fontWeight: 600 },
+        encoding: {
+          x: xEnc, y: yEnc,
+          text: { field: 'short' },
+          color: { condition: { test: 'datum.dark', value: '#fcfbf8' }, value: TOKENS.ink },
+        },
+      },
+      {
+        data: { values: data },
+        mark: { type: 'text', dy: 10, fontSize: 12, font: TOKENS.mono },
+        encoding: {
+          x: xEnc, y: yEnc,
+          text: { field: 'pct', format: '.1%' },
+          color: { condition: { test: 'datum.dark', value: '#fcfbf8' }, value: TOKENS.ink2 },
+        },
+      },
+    ],
+  } as VisualizationSpec
+}

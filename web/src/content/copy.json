@@ -16,7 +16,8 @@
    "budget": "[copy: Alex — budget chart title]",
    "ei_outlay": "[copy: Alex — EI benefit outlay chart title]",
    "tornado": "[copy: Alex — sensitivity section title]",
-   "scenarios": "[copy: Alex — scenarios slide title (diffusion family + fast worlds)]"
+   "scenarios": "[copy: Alex — scenarios slide title (diffusion family + fast worlds)]",
+   "map": "[copy: Alex — provincial exposure map title]"
   },
   "captions": {
    "nps": "[copy: Alex — NPS caption: reform bought 8 years (2057→2065, NABO); band = what automation takes back]",
@@ -28,7 +29,8 @@
    "wages": "[copy: Alex — survivor wage index caption (KR)]",
    "budget": "[copy: Alex — national budget chart caption (KR): revenue loss + widening, ₩bn]",
    "ei_outlay": "[copy: Alex — EI benefit outlay chart caption]",
-   "tornado": "[copy: Alex — tornado caption: Spearman rank correlation across the joint MC; red = raising the lever worsens the headline]"
+   "tornado": "[copy: Alex — tornado caption: Spearman rank correlation across the joint MC; red = raising the lever worsens the headline]",
+   "map": "[copy: Alex — map caption: all-employed occupation mix (지역별고용조사 2025H1) × BOK within-occupation HELC; descriptive — no provincial fiscal claims]"
   },
   "series": {
    "published": "Published projection",

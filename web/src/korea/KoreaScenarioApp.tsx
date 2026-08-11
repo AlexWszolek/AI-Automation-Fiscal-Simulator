@@ -4,7 +4,7 @@
 // ALL user-facing text is provisional until Alex's copy pass (copy.json → "korea").
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import copy from '../content/copy.json'
-import { fundBand, compositionBars } from '../charts/korea'
+import { fundBand, compositionBars, koreaTileMap } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
@@ -93,6 +93,11 @@ export default function KoreaScenarioApp() {
     [payload],
   )
   const instLabel = (k: string) => KO.institutions[k] ?? k
+  const [regions, setRegions] = useState<import('../charts/korea').KoreaRegionRow[] | null>(null)
+  useEffect(() => {
+    fetch('/data/korea.json').then((r) => (r.ok ? r.json() : null))
+      .then((b) => setRegions(b?.regions ?? null)).catch(() => setRegions(null))
+  }, [])
 
   return (
     <div className="shell">
@@ -265,6 +270,13 @@ export default function KoreaScenarioApp() {
                 spec={compositionBars(payload.composition_2035, instLabel)}
                 caption={KO.captions.composition}
               />
+              {regions && (
+                <ChartPanel
+                  title={KO.sections.map}
+                  spec={koreaTileMap(regions)}
+                  caption={KO.captions.map}
+                />
+              )}
               <ChartPanel
                 title={KO.sections.ei_outlay}
                 spec={timeSeries(outlayRows, ['ei_outlay_tn'], '₩ trillions / year', startYear,

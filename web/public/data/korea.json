@@ -512,6 +512,170 @@
    "local income surtax": 0.0067
   }
  },
+ "regions": [
+  {
+   "key": "Sejong",
+   "short": "세종",
+   "region": "세종특별자치시",
+   "col": 1,
+   "row": 2,
+   "emp_k": 214.3,
+   "helc_share": 0.3843
+  },
+  {
+   "key": "Seoul",
+   "short": "서울",
+   "region": "서울특별시",
+   "col": 1,
+   "row": 0,
+   "emp_k": 5180.6,
+   "helc_share": 0.3296
+  },
+  {
+   "key": "Busan",
+   "short": "부산",
+   "region": "부산광역시",
+   "col": 3,
+   "row": 4,
+   "emp_k": 1709.2,
+   "helc_share": 0.2911
+  },
+  {
+   "key": "Gyeonggi",
+   "short": "경기",
+   "region": "경기도",
+   "col": 1,
+   "row": 1,
+   "emp_k": 7849.2,
+   "helc_share": 0.2907
+  },
+  {
+   "key": "Incheon",
+   "short": "인천",
+   "region": "인천광역시",
+   "col": 0,
+   "row": 1,
+   "emp_k": 1712.0,
+   "helc_share": 0.2896
+  },
+  {
+   "key": "Daejeon",
+   "short": "대전",
+   "region": "대전광역시",
+   "col": 2,
+   "row": 2,
+   "emp_k": 811.4,
+   "helc_share": 0.2778
+  },
+  {
+   "key": "national",
+   "short": "전국",
+   "region": "전국",
+   "col": -1,
+   "row": -1,
+   "emp_k": 28886.9,
+   "helc_share": 0.2717
+  },
+  {
+   "key": "Gwangju",
+   "short": "광주",
+   "region": "광주광역시",
+   "col": 1,
+   "row": 3,
+   "emp_k": 771.6,
+   "helc_share": 0.2609
+  },
+  {
+   "key": "Jeju",
+   "short": "제주",
+   "region": "제주특별자치도",
+   "col": 0,
+   "row": 5,
+   "emp_k": 399.4,
+   "helc_share": 0.258
+  },
+  {
+   "key": "Daegu",
+   "short": "대구",
+   "region": "대구광역시",
+   "col": 3,
+   "row": 2,
+   "emp_k": 1222.5,
+   "helc_share": 0.2516
+  },
+  {
+   "key": "Gyeongnam",
+   "short": "경남",
+   "region": "경상남도",
+   "col": 2,
+   "row": 3,
+   "emp_k": 1793.8,
+   "helc_share": 0.2314
+  },
+  {
+   "key": "Chungnam",
+   "short": "충남",
+   "region": "충청남도",
+   "col": 0,
+   "row": 2,
+   "emp_k": 1310.8,
+   "helc_share": 0.229
+  },
+  {
+   "key": "Chungbuk",
+   "short": "충북",
+   "region": "충청북도",
+   "col": 2,
+   "row": 1,
+   "emp_k": 984.0,
+   "helc_share": 0.2289
+  },
+  {
+   "key": "Jeonbuk",
+   "short": "전북",
+   "region": "전북특별자치도",
+   "col": 0,
+   "row": 3,
+   "emp_k": 977.1,
+   "helc_share": 0.2206
+  },
+  {
+   "key": "Ulsan",
+   "short": "울산",
+   "region": "울산광역시",
+   "col": 3,
+   "row": 3,
+   "emp_k": 581.0,
+   "helc_share": 0.2134
+  },
+  {
+   "key": "Gangwon",
+   "short": "강원",
+   "region": "강원특별자치도",
+   "col": 2,
+   "row": 0,
+   "emp_k": 877.4,
+   "helc_share": 0.2095
+  },
+  {
+   "key": "Gyeongbuk",
+   "short": "경북",
+   "region": "경상북도",
+   "col": 3,
+   "row": 1,
+   "emp_k": 1485.0,
+   "helc_share": 0.2009
+  },
+  {
+   "key": "Jeonnam",
+   "short": "전남",
+   "region": "전라남도",
+   "col": 0,
+   "row": 4,
+   "emp_k": 1007.9,
+   "helc_share": 0.1832
+  }
+ ],
  "sources": [
   {
    "name": "NHI path",
@@ -532,6 +696,10 @@
   {
    "name": "Demography",
    "cite": "Statistics Korea 장래인구추계 2022~2072, medium variant (press-release tables)"
+  },
+  {
+   "name": "Regional mix",
+   "cite": "국가데이터처 「2025년 상반기 지역별고용조사」 취업자의 산업 및 직업별 특성, 통계표 4 (시도 직업별 취업자, 2025.1/2) — all-employed occupation mix × BOK within-occupation HELC shares; descriptive, no provincial fiscal claims"
   },
   {
    "name": "AGI scenarios",

@@ -35,6 +35,7 @@ from fiscal_model.korea_assembly import (build_korea_data, build_korea_deltas,
                                          run_korea_preset)
 from fiscal_model.korea_funds import (EI_BASELINE, NHI_REFORM, NPS_REFORM,
                                       first_negative_year)
+from fiscal_model.korea_region import region_exposure
 from fiscal_model.korea_scenarios import WAGE_LINKED_SHARE, korea_erosion_paths
 
 OUT = Path(__file__).resolve().parent.parent / "web" / "public" / "data" / "korea.json"
@@ -165,6 +166,14 @@ def main() -> None:
             "white_collar_only": comp_wc,
             "elementary_only": comp_el,
         },
+        # workstream D: descriptive — the geography of exposure, no provincial fiscal
+        # claims. All-employed occupation mix (LAFS) × national within-occupation HELC.
+        "regions": [
+            {"key": r.key, "short": r.short, "region": r.region,
+             "col": int(r.col), "row": int(r.row),
+             "emp_k": round(float(r.emp_k), 1),
+             "helc_share": round(float(r.helc_share), 4)}
+            for r in region_exposure().itertuples()],
         "sources": [
             {"name": "NHI path", "cite": NHI_REFORM.source},
             {"name": "NPS path", "cite": NPS_REFORM.source},
@@ -174,6 +183,10 @@ def main() -> None:
              "confirms)"},
             {"name": "Demography", "cite": "Statistics Korea 장래인구추계 2022~2072, medium "
              "variant (press-release tables)"},
+            {"name": "Regional mix", "cite": "국가데이터처 「2025년 상반기 지역별고용조사」 "
+             "취업자의 산업 및 직업별 특성, 통계표 4 (시도 직업별 취업자, 2025.1/2) — "
+             "all-employed occupation mix × BOK within-occupation HELC shares; "
+             "descriptive, no provincial fiscal claims"},
             {"name": "AGI scenarios", "cite": "Korinek & Suh — translated presets "
              "(docs/PRESET_EVIDENCE §1); cognitive channel only for Korea"},
         ],

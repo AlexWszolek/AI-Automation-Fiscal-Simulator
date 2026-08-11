@@ -5,7 +5,7 @@
 // "korea"); the draft banner stays until that lands.
 import copy from '../content/copy.json'
 import { ChartPanel } from '../components/ChartPanel'
-import { compositionBars, contrastBars, fundBand } from '../charts/korea'
+import { compositionBars, contrastBars, fundBand, koreaTileMap } from '../charts/korea'
 import { useKoreaData } from '../state/useKoreaData'
 
 const KO = (copy as unknown as { korea: KoreaCopy }).korea
@@ -103,6 +103,13 @@ export default function KoreaApp() {
                 spec={compositionBars(bundle.composition.central_2035, label)}
                 caption={KO.captions.composition}
               />
+              {bundle.regions && (
+                <ChartPanel
+                  title={KO.sections.map}
+                  spec={koreaTileMap(bundle.regions)}
+                  caption={KO.captions.map}
+                />
+              )}
               <ChartPanel
                 title={KO.sections.contrast}
                 spec={contrastBars(

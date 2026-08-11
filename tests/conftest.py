@@ -81,4 +81,19 @@ def _ensure_korea_tidy_csvs():
                     "--parse-only"], check=True, cwd=root)
 
 
+def _ensure_korea_region_csv():
+    import subprocess
+    import sys
+    root = Path(__file__).resolve().parent.parent
+    raw = root / "data" / "raw" / "korea"
+    if (raw / "region_occupation.tidy.csv").exists():
+        return
+    if not (raw / "lafs_region_occupation_2017_2025.xlsx").exists():
+        return                                    # no raw either: genuine skip territory
+    subprocess.run([sys.executable,
+                    str(root / "scripts" / "fetch_korea_region_occupation.py"),
+                    "--parse-only"], check=True, cwd=root)
+
+
 _ensure_korea_tidy_csvs()
+_ensure_korea_region_csv()

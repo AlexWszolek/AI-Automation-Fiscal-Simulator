@@ -11,7 +11,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { VisualizationSpec } from 'vega-embed'
 import copy from '../content/copy.json'
-import { compositionBars, fundBand, koreaTornado } from '../charts/korea'
+import { compositionBars, fundBand, koreaTileMap, koreaTornado } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
@@ -163,6 +163,13 @@ export default function KoreaSlides() {
           <h2>{KO.sections.composition}</h2>
           <ChartPanel spec={slideSpec(compositionBars(central!.composition_2035, instLabel,
             { height: 560 }))} caption={KO.captions.composition} />
+        </div>
+      ) },
+      { key: 'map', body: (
+        <div className="slide-chart">
+          <h2>{KO.sections.map}</h2>
+          <ChartPanel spec={slideSpec(koreaTileMap((bundle as any).regions ?? [],
+            { height: 620 }))} caption={KO.captions.map} />
         </div>
       ) },
       { key: 'sensitivity', body: (

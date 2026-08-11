@@ -21,7 +21,7 @@ WEB = ROOT / "web"
 OUT = ROOT / "docs" / "research" / "korea-slides-pack" / "slides"
 PORT = 5197
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-SLIDES = ["headline", "nps", "nhi", "ei", "scenarios", "composition", "sensitivity", "scope"]
+SLIDES = ["headline", "nps", "nhi", "ei", "scenarios", "composition", "map", "sensitivity", "scope"]
 
 
 def wait_for(url: str, timeout: float = 30.0) -> None:

@@ -21,6 +21,7 @@ export interface KoreaBundle {
     white_collar_only: Record<string, number>
     elementary_only: Record<string, number>
   }
+  regions?: import('../charts/korea').KoreaRegionRow[]
   sources: { name: string; cite: string }[]
 }
 
