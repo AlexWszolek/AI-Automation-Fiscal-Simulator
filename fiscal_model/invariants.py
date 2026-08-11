@@ -17,7 +17,7 @@ def _rel(a, b, rtol=1e-9, atol=1e-6):
     return np.allclose(np.asarray(a, float), np.asarray(b, float), rtol=rtol, atol=atol)
 
 
-def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
+def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float, country: str = "us"):
     """The full conservation battery on one run. Each identity is read off the output columns."""
     # C1 / C-headcount: the seven worker states partition the baseline population, every period —
     # at the AGGREGATE and PER-CELL (a per-cell leak that nets to zero in aggregate would slip past).
@@ -84,13 +84,22 @@ def assert_all_invariants(res: pd.DataFrame, v2p, baseline_M: float):
                    - res["income_surcharge_state_B"] - res["corp_surcharge_state_B"]
                    - res["cons_surcharge_state_B"])
     assert _rel(state_recon, res["state_net_total_B"]), "C6-state composition"
-    # C7: the close is exact — recovered + spending_cut covers the gap, residual ~0, every state balances.
-    assert (res["state_rate_hike_B"] + res["state_spending_cut_B"]
-            >= res["state_gap_B"] - 1e-6).all(), "C7 gap covered"
-    assert (res["state_close_residual_B"].abs()
-            <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all(), "C7 residual"
-    assert res["state_balanced"].all(), "C7 balanced flag"
+    if country == "us":
+        # C7: the close is exact — recovered + spending_cut covers the gap, residual ~0,
+        # every state balances.
+        assert (res["state_rate_hike_B"] + res["state_spending_cut_B"]
+                >= res["state_gap_B"] - 1e-6).all(), "C7 gap covered"
+        assert (res["state_close_residual_B"].abs()
+                <= 1e-9 * res["state_gap_B"].clip(lower=1.0)).all(), "C7 residual"
+        assert res["state_balanced"].all(), "C7 balanced flag"
+    else:
+        # C7-KR (the mirror): balanced-budget closure is a US mechanism — outside it the
+        # shortfall must be REPORTED and never closed by austerity or rate hikes.
+        assert (res["state_rate_hike_B"] == 0.0).all(), "C7-KR: no rate hikes"
+        assert (res["state_spending_cut_B"] == 0.0).all(), "C7-KR: no austerity"
 
     # absolute ledger: the absolute federal deficit is exactly the baseline anchor + the modeled delta.
-    assert _rel(res["fed_deficit_abs_B"] - res["fed_deficit_B"], government.BASELINE_FED_DEFICIT_BUSD), \
+    _anchor = (government.BASELINE_FED_DEFICIT_BUSD if country == "us"
+               else float((res["fed_deficit_abs_B"] - res["fed_deficit_B"]).iloc[0]))
+    assert _rel(res["fed_deficit_abs_B"] - res["fed_deficit_B"], _anchor), \
         "absolute ledger anchor"

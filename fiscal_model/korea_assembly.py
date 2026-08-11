@@ -78,6 +78,9 @@ class KoreaFiscalData:
     consumption: pd.DataFrame
     receipts: pd.DataFrame = field(default_factory=pd.DataFrame)
     base_linkage: pd.DataFrame = field(default_factory=pd.DataFrame)
+    baseline_deficit_busd: float = 0.0        # headline units / 1e9 (₩bn for Korea)
+    va_baseline: float = 0.0                  # nominal GDP anchor (won for Korea)
+    comp_total: float = 0.0                   # automation base = covered wage bill (won)
 
 
 _ENGINE = rates.PayrollFICA(components=rates.korea_payroll_components())
@@ -181,3 +184,128 @@ def build_korea_deltas(year: str = "2025", kp=None) -> pd.DataFrame:
     df["undist_per_worker"] = (1.0 - KR_CORP_EFF_RATE) * w
     return df
 
+
+
+def build_korea_data(year: str = "2025") -> KoreaFiscalData:
+    """The full data shim. Units note: `amount_busd` carries ₩bn (won/1e9) so every place
+    the engine multiplies by 1e9 lands back in won; headline formatting divides to ₩tn."""
+    from .country import KOREA
+
+    oews, exposure_occ, matrices_sector = build_cells_frames(year)
+    deltas = build_korea_deltas(year)
+    emp = deltas["employed"].to_numpy()
+    pit_national = float(deltas["after_inc_fed"].to_numpy() @ emp) / 1e9      # ₩bn
+    pit_local = float(deltas["after_inc_state"].to_numpy() @ emp) / 1e9
+    payroll_total = float(deltas["after_payroll_fed"].to_numpy() @ emp) / 1e9
+    wage_bill = float(deltas["worker_wage"].to_numpy() @ emp)
+
+    # Federal rows must sum to total national revenue (NABO Focus 92 Table 1, 2025 총수입
+    # ₩650.6tn) for the ledger's absolute line; surcharge bases carry ONLY the sourced Labor
+    # row — corporate/consumption surcharge overlays stay disabled for Korea until their
+    # revenue bases are primary-sourced (no invented bases).
+    total_revenue = 650_600.0
+    receipts = pd.DataFrame([
+        {"level": "Federal", "maps_to_base": "Labor income", "amount_busd": pit_national},
+        {"level": "Federal", "maps_to_base": "Social insurance (payroll)",
+         "amount_busd": payroll_total},
+        {"level": "Federal", "maps_to_base": "Other (residual to NABO 총수입)",
+         "amount_busd": total_revenue - pit_national - payroll_total},
+        {"level": "State & local", "maps_to_base": "Labor income (local surtax)",
+         "amount_busd": pit_local},
+    ])
+    base_linkage = pd.DataFrame([
+        {"tax_stream": "Individual income tax", "avg_effective_rate":
+            (pit_national + pit_local) * 1e9 / wage_bill},
+        {"tax_stream": "Payroll (social insurance)", "avg_effective_rate": 0.209048},
+        {"tax_stream": "Corporate income tax", "avg_effective_rate": KR_CORP_EFF_RATE},
+    ])
+    consumption = pd.DataFrame([{"state": "KR", "total_taxable_pce_musd": 1.0}])
+
+    return KoreaFiscalData(
+        country="kr", oews=oews, exposure_occ=exposure_occ,
+        matrices_sector=matrices_sector, consumption=consumption,
+        receipts=receipts, base_linkage=base_linkage,
+        baseline_deficit_busd=KOREA.baseline_deficit_bn * 1000.0,
+        va_baseline=KOREA.va_baseline, comp_total=KOREA.comp_total)
+
+
+class KoreaSurvivorEngine:
+    """The SurvivorEngine contract (`delta(W_cell)` → per-worker tax increments, gains
+    positive) with the Korean engines. EXACT and simple where the US needs approximation:
+    individual taxation → no filing weights, no household archetypes — one re-evaluation of
+    the actual chain (payroll → deductible employee share → income tax → local surtax) at
+    the scaled wage. W == 1 → zeros identically."""
+
+    def __init__(self, deltas: pd.DataFrame):
+        d = deltas.reset_index(drop=True)
+        self.worker_wage = d["worker_wage"].to_numpy(float)
+        self._base = self._eval(self.worker_wage)
+
+    @staticmethod
+    def _eval(w: np.ndarray) -> dict:
+        employee = _ENGINE.employee_fica(w, "Single")
+        tax = korea_income_tax(w, employee)
+        return {"inc_fed": tax["national"], "inc_state": tax["local"],
+                "payroll": _ENGINE.fica(w, "Single")}
+
+    def delta(self, W_cell) -> dict:
+        W = np.asarray(W_cell, float)
+        cur = self._eval(self.worker_wage * W)
+        return {k: cur[k] - self._base[k] for k in self._base}
+
+    @staticmethod
+    def employee_fica_pw(wage: np.ndarray) -> np.ndarray:
+        """Per-worker EMPLOYEE-side contributions (the demand-withdrawal basis)."""
+        return np.asarray(_ENGINE.employee_fica(np.asarray(wage, float), "Single"), float)
+
+    # parity alias: dynamics_v2 tests exercise _delta_loop on the US engine; the Korean
+    # engine's fast path IS the reference (single construction, no split code paths)
+    _delta_loop = delta
+
+
+class KoreaReabsorptionEngine:
+    """The ReabsorptionEngine contract with the Korean engines — exact re-evaluation of the
+    re-employed at the destination wage. Losses positive; `transfer_*` are GAINED outlays
+    (the Korean cross-threshold effect: a service-floor destination wage re-enters the EITC
+    trapezoid, partially cushioning the scar — the same economics as the US means-tested
+    cliffs, computed from the statute instead of an interp table).
+
+    Korea-native service floor: the STATUTORY full-time minimum wage (2026 ₩10,320/h on the
+    209-hour monthly basis → ₩25.88m/yr) — better anchored than the US percentile floor and
+    exactly the going wage of the low-exposure service work the refuge argument describes."""
+
+    SERVICE_FLOOR_WON = 10_320.0 * 209.0 * 12.0
+
+    def __init__(self, deltas: pd.DataFrame, kp):
+        d = deltas.reset_index(drop=True)
+        self.worker_wage = d["worker_wage"].to_numpy(float)
+        self.service_floor = np.full(len(d), self.SERVICE_FLOOR_WON)
+        self._kp = kp
+
+    @staticmethod
+    def _takehome(w: np.ndarray) -> tuple:
+        employee = _ENGINE.employee_fica(w, "Single")
+        tax = korea_income_tax(w, employee)
+        return tax, employee, w - tax["total"] - employee
+
+    def delta(self, haircut: float, mpc: float, stickiness: float,
+              wage_index: float = 1.0) -> dict:
+        from .korea_transfers import kr_eitc
+        w_o = self.worker_wage
+        w_d = np.maximum(w_o * (1.0 - haircut), self.service_floor)
+        if wage_index != 1.0:
+            w_d = w_d * wage_index
+        tax_o, efica_o, th_o = self._takehome(w_o)
+        tax_d, efica_d, th_d = self._takehome(w_d)
+        inc_fed = tax_o["national"] - tax_d["national"]
+        inc_state = tax_o["local"] - tax_d["local"]
+        payroll = _ENGINE.fica(w_o, "Single") - _ENGINE.fica(w_d, "Single")
+        tr_fed = kr_eitc(w_d) - kr_eitc(w_o)          # regained in-work credit (gain +)
+        tr_state = np.zeros_like(w_o)
+        disp_loss = th_o - th_d                        # SIGNED take-home loss
+        cons = mpc * stickiness * disp_loss * 0.10     # VAT channel, same construction
+        return {"inc_fed": inc_fed, "inc_state": inc_state, "payroll_fed": payroll,
+                "cons_state": cons, "transfer_fed": tr_fed, "transfer_state": tr_state,
+                "net_takehome_loss": disp_loss - (tr_fed + tr_state)}
+
+    _delta_loop = delta

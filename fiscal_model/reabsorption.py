@@ -102,9 +102,12 @@ def low_exposure_socs(data: loaders.FiscalData) -> set:
     """The refuge occupations: SOC codes at/below the national EXPOSURE_PCTILE AI-PCA cut. This is
     the work the service floor prices AND the destination the reabsorbed implicitly move into, so
     it is also the base for the finite-refuge capacity check in dynamics_v2."""
-    exp = data.exposure_occ[["soc_code", "ai_pca_score"]].dropna()
-    cut = exp["ai_pca_score"].quantile(EXPOSURE_PCTILE)
-    return set(exp.loc[exp["ai_pca_score"] <= cut, "soc_code"])
+    # country seam: data-carried [0,1] shares (Korea) vs the US PCA scores — same rule,
+    # the refuge is the low-exposure tail of whichever measure the data carries
+    col = "cognitive_share" if "cognitive_share" in data.exposure_occ.columns else "ai_pca_score"
+    exp = data.exposure_occ[["soc_code", col]].dropna()
+    cut = exp[col].quantile(EXPOSURE_PCTILE)
+    return set(exp.loc[exp[col] <= cut, "soc_code"])
 
 
 def service_floor_by_state(data: loaders.FiscalData, pctile: float = 0.30):

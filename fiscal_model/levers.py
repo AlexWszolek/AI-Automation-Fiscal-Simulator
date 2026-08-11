@@ -94,8 +94,18 @@ def channel_shares(exposure_occ: pd.DataFrame, params: LeverParams,
     """The two per-occupation exposure channels as Series indexed by soc_code:
     (cognitive share in [0,1], robot share in [0,1]). The seam the robotics-lag lever needs — a
     time-varying ramp on the PHYSICAL channel requires recombining the channels per period."""
-    df = exposure_occ.dropna(subset=["ai_pca_score"])
-    cog = cognitive_exposure(df["ai_pca_score"].to_numpy(), params)
+    if "cognitive_share" in exposure_occ.columns:
+        # country seam: the exposure file already carries [0,1] channel shares (Korea's
+        # BOK-published displacement-prone fractions) — no PCA transform. US files do not
+        # have this column, so the US path below is untouched.
+        df = exposure_occ.dropna(subset=["cognitive_share"])
+        cog = df["cognitive_share"].to_numpy(dtype=float)
+        if robot_exposure is None and "robot_share" in df.columns:
+            robot_exposure = pd.Series(df["robot_share"].to_numpy(dtype=float),
+                                       index=df["soc_code"].values)
+    else:
+        df = exposure_occ.dropna(subset=["ai_pca_score"])
+        cog = cognitive_exposure(df["ai_pca_score"].to_numpy(), params)
     if robot_exposure is None:
         robot_exposure = load_robot_exposure()
     robot = df["soc_code"].map(robot_exposure).fillna(0.0).to_numpy()

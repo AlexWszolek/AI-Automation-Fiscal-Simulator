@@ -39,16 +39,18 @@ def productivity_index(automated_comp_fraction: float, v2p) -> float:
     return 1.0 + v2p.productivity_passthrough * automated_comp_fraction
 
 
-def price_level(price_reduction_usd: float, productivity: float, v2p) -> float:
+def price_level(price_reduction_usd: float, productivity: float, v2p,
+                va0: float = VA_BASELINE_USD) -> float:
     """P_t: a LEVEL pinned to the current automated stock's annual price reduction relative to real
-    GDP (not compounding). P=1 when price_passthrough=0 or there is no price reduction."""
-    real_gdp = VA_BASELINE_USD * productivity
+    GDP (not compounding). P=1 when price_passthrough=0 or there is no price reduction.
+    `va0` is the country's nominal value-added base (country seam; default = US)."""
+    real_gdp = va0 * productivity
     if real_gdp <= 0:
         return 1.0
     deflation = v2p.price_passthrough * (price_reduction_usd / real_gdp)
     return 1.0 - deflation
 
 
-def nominal_gdp(productivity: float, price: float) -> float:
-    """Nominal GDP = real GDP (VA_base · Y) × price level P."""
-    return VA_BASELINE_USD * productivity * price
+def nominal_gdp(productivity: float, price: float, va0: float = VA_BASELINE_USD) -> float:
+    """Nominal GDP = real GDP (VA_base · Y) × price level P. `va0`: country seam."""
+    return va0 * productivity * price

@@ -44,7 +44,8 @@ class RevenueLedger:
         r = data.receipts
         self.fed_revenue0 = float(r.loc[r["level"] == "Federal", "amount_busd"].sum())          # ≈ 4982.8
         self.state_revenue0 = float(r.loc[r["level"] == "State & local", "amount_busd"].sum())   # ≈ 3514.9
-        self.fed_deficit0 = BASELINE_FED_DEFICIT_BUSD
+        # country seam: non-US data carries its own baseline deficit (headline units/1e9)
+        self.fed_deficit0 = getattr(data, "baseline_deficit_busd", BASELINE_FED_DEFICIT_BUSD)
 
     def federal(self, net_fed_busd: float, fed_revenue_delta_busd: float, ngdp_usd: float) -> dict:
         """net_fed_busd = the modeled deficit INCREASE ($B); fed_revenue_delta_busd = the revenue-side

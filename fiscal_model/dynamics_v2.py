@@ -77,15 +77,24 @@ class DynamicModelV2:
 
         # Phase 4: the survivor channel (decision A) — exact income+payroll re-eval of the still-employed
         # at a scaled wage. Construction is lever-free (data + deltas only).
-        self._survivor = survivor.SurvivorEngine(data, deltas)
+        if getattr(data, "country", "us") == "us":
+            self._survivor = survivor.SurvivorEngine(data, deltas)
+        else:
+            from .korea_assembly import KoreaSurvivorEngine     # country seam
+            self._survivor = KoreaSurvivorEngine(deltas)
         # Reabsorption: rung 0 = legacy flat haircut (the C8 anchor); rung 1 = the unified LIVE engine.
         # The ENGINE is retained (structural: kernel params + floor pctile); the haircut-dependent
         # 6-channel delta is computed per bind via engine.delta(...).
         self._reab_eng = None
         if params.reabsorption_rung == 1:
             from .transfers import TransferLookup
-            self._reab_eng = reabsorption.ReabsorptionEngine(
-                data, deltas, TransferLookup(), params.kernel_params(), params.reabsorption_floor_pctile)
+            if getattr(data, "country", "us") == "us":
+                self._reab_eng = reabsorption.ReabsorptionEngine(
+                    data, deltas, TransferLookup(),
+                    params.kernel_params(), params.reabsorption_floor_pctile)
+            else:
+                from .korea_assembly import KoreaReabsorptionEngine   # country seam
+                self._reab_eng = KoreaReabsorptionEngine(deltas, params.kernel_params())
             # FINITE REFUGE (rung-1 semantics, not a lever): the reabsorbed move into low-exposure
             # service work — the same occupation set the service floor prices. As automation reaches
             # THOSE cells the refuge shrinks, so the effective reabsorption rate scales by the
@@ -116,10 +125,12 @@ class DynamicModelV2:
         self._st_inc_base = _base("State & local", "Labor")
         self._st_corp_base = _base("State & local", "Corporate profits")
         self._st_cons_base = _base("State & local", "Consumption")
-        for _v, _exp in ((self._fed_inc_base, 2403.2e9), (self._fed_corp_base, 491.7e9),
-                         (self._fed_cons_base, 101.6e9), (self._st_inc_base, 536.2e9),
-                         (self._st_corp_base, 172.0e9), (self._st_cons_base, 873.7e9)):
-            assert abs(_v - _exp) < 1e6, f"receipts surcharge base drifted: {_v} != {_exp}"
+        self._country = getattr(data, "country", "us")     # country seam: US data has no tag
+        if self._country == "us":
+            for _v, _exp in ((self._fed_inc_base, 2403.2e9), (self._fed_corp_base, 491.7e9),
+                             (self._fed_cons_base, 101.6e9), (self._st_inc_base, 536.2e9),
+                             (self._st_corp_base, 172.0e9), (self._st_cons_base, 873.7e9)):
+                assert abs(_v - _exp) < 1e6, f"receipts surcharge base drifted: {_v} != {_exp}"
         _v1 = self._v1
         _n_st = len(_v1.uniq_states)
         _wb = np.bincount(_v1.state_of_cell, weights=_v1.emp0 * _v1.wage, minlength=_n_st)
@@ -134,13 +145,19 @@ class DynamicModelV2:
         v1 = self._v1
         self._inc_after_pw = v1.arr["after"]["inc_fed"] + v1.arr["after"]["inc_state"]
         self._tr_after_pw = v1.arr["after"]["transfer_fed"] + v1.arr["after"]["transfer_state"]
-        self._emp_fica_pw = sum(self._survivor.weight[f]
-                                * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
-                                for f in ("Married filing jointly", "Head of household", "Single"))
+        if self._country == "us":
+            self._emp_fica_pw = sum(self._survivor.weight[f]
+                                    * np.asarray(self._survivor.fica.employee_fica(v1.wage, f), float)
+                                    for f in ("Married filing jointly", "Head of household", "Single"))
+        else:
+            self._emp_fica_pw = self._survivor.employee_fica_pw(v1.wage)
         # Value-added per worker — the divisor turning a $ demand shortfall into a job count (decision I).
         # A direct-requirements (Type-I) divisor: it OMITS the Type-II output/employment multiplier
         # (~1.5–2×), so it under-counts induced jobs; `demand_multiplier` absorbs that calibration.
-        self._va_per_worker = macro.VA_BASELINE_USD / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
+        # country seam: macro anchors ride the data tag (US data has neither attribute)
+        self._va0 = getattr(data, "va_baseline", macro.VA_BASELINE_USD)
+        self._comp0 = getattr(data, "comp_total", macro.COMP_TOTAL_USD)
+        self._va_per_worker = self._va0 / baseline_emp if (baseline_emp := v1.emp0.sum()) else 0.0
         # Structural fields frozen into the shared arrays/engines — _bind_params refuses a mismatch.
         self._built_structural = (params.reabsorption_rung, params.reabsorption_floor_pctile,
                                   params.consumption_scale, params.exposure_mapping,
@@ -485,10 +502,10 @@ class DynamicModelV2:
             # --- step 6: macro update. P deflates reporting only (A2: never the nominal fiscal);
             #     Y is the real-GDP/productivity index for the denominator. The dividend is OUTPUT-weighted
             #     (fix 3): the automated share of the COMP bill (saved_bill / total comp), not headcount. ---
-            automated_comp_fraction = disp.saved_bill / macro.COMP_TOTAL_USD
+            automated_comp_fraction = disp.saved_bill / self._comp0
             Y = macro.productivity_index(automated_comp_fraction, v2p)
-            P = macro.price_level(price_reduction_total, Y, v2p)
-            ngdp = macro.nominal_gdp(Y, P) * (1.0 + v2p.baseline_growth_rate) ** t
+            P = macro.price_level(price_reduction_total, Y, v2p, va0=self._va0)
+            ngdp = macro.nominal_gdp(Y, P, va0=self._va0) * (1.0 + v2p.baseline_growth_rate) ** t
             # ^ baseline trend growth g scales the %-GDP DENOMINATORS only (coherence fix: r>g=0 used to
             #   invert the long-horizon debt/GDP dynamics). Nominal dollar columns are unchanged.
 
@@ -512,7 +529,17 @@ class DynamicModelV2:
                                        weights=employed_post * v1.wage * W_surv
                                        + st.reabsorbed * self._reab_wage * W_reab,
                                        minlength=len(v1.uniq_states))
-            close = government.close_state_gaps(state_net, taxable_base, v2p)
+            if self._country == "us":
+                close = government.close_state_gaps(state_net, taxable_base, v2p)
+            else:
+                # country seam: no balanced-budget closure outside the US — Korean local
+                # government is funded by statutory formula transfers (Country.subnational_
+                # mode), so the shortfall is REPORTED, never closed via austerity/rate hikes.
+                _z = np.zeros_like(state_net)
+                close = government.StateCloseResult(
+                    recovered=_z.copy(), spending_cut=_z.copy(),
+                    capped=np.zeros_like(state_net, dtype=bool), residual=_z.copy(),
+                    gap=np.maximum(state_net, 0.0), contraction=_z.copy())
             state_gap_total = close.gap.sum()                           # pre-close magnitude (= v1)
 
             # --- step 8.5: federal policy flows. UBI is a real outlay NET of recapture (income-tax
@@ -534,7 +561,7 @@ class DynamicModelV2:
             # withdrawal (and grows when UBI/raises inject) — the same J.1 lag the market wage
             # term uses. Nominal dollars never see trend growth (A2 rule). Exactly 0.0 at rate 0.
             fed_vat = (v2p.fed_vat_rate
-                       * max(0.0, (2.0 / 3.0) * macro.VA_BASELINE_USD
+                       * max(0.0, (2.0 / 3.0) * self._va0
                              - p.kernel_params.mpc * p.kernel_params.consumption_stickiness
                              * withdrawal_prev)
                        if v2p.fed_vat_rate > 0 else 0.0)
