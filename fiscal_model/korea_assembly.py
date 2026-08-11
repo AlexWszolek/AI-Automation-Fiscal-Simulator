@@ -349,3 +349,49 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
         ei_outlay.append(float(ui_rate @ tr["on_ui"]) * model._v1.ui_share / 1e9)   # ₩bn/yr
     return {"erosion": {k: np.asarray(v) for k, v in erosion.items()},
             "ei_outlay_bn": np.asarray(ei_outlay)}
+
+
+def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
+                     data=None, deltas=None, **param_overrides) -> dict:
+    """One assembled Korea run, end to end: preset → V2 params under the Korea conventions
+    (cognitive channel only, Korean demography, no closure) → DynamicModelV2 → the funds
+    bridge. This is the single entrypoint the bundle/MC/tornado layers drive — the Korea
+    conventions live HERE, once, so a sweep can never half-apply them. `param_overrides`
+    lets sensitivity work vary any V2Params field on top of the preset.
+
+    Pass `data`/`deltas` to amortize the CSV loads across a sweep; `n_periods` defaults to
+    the preset's native horizon (NPS needs 40 — the demography projections reach 2072)."""
+    from dataclasses import replace
+
+    from .dynamics_v2 import DynamicModelV2
+    from .korea_demography import korea_demography_path
+    from .korea_scenarios import KOREA_PRESETS
+    from .levers_v2 import DEFAULTS_SHIPPED
+    from .presets import build_adoption_path
+
+    preset = KOREA_PRESETS[key]
+    n = int(n_periods) if n_periods is not None else preset.n_periods
+    fields = dict(cognitive_feasibility=1.0, physical_feasibility=0.0)
+    fields.update(preset.overrides)
+    fields.update(param_overrides)
+    # survivor_gains_share is DERIVED, never set (presets.to_params has the same expression;
+    # it can't be reused here because it requires both disposition fields in the overrides).
+    # Without this, an AGI preset's retained=0.80 lands on the shipped survivor 0.2 and the
+    # disposition simplex guard rejects the run.
+    if ({"retained_profit_share", "price_reduction_share"} & set(fields)) \
+            and "survivor_gains_share" not in fields:
+        rp = fields.get("retained_profit_share", DEFAULTS_SHIPPED.retained_profit_share)
+        pr = fields.get("price_reduction_share", DEFAULTS_SHIPPED.price_reduction_share)
+        fields["survivor_gains_share"] = max(0.0, 1.0 - rp - pr)
+    params = replace(DEFAULTS_SHIPPED,
+                     adoption=preset.adoption_end,
+                     adoption_path=build_adoption_path(preset, n),
+                     n_periods=n,
+                     demography_path=list(korea_demography_path(n)),
+                     **fields)
+    data = data if data is not None else build_korea_data(year)
+    deltas = deltas if deltas is not None else build_korea_deltas(year)
+    model = DynamicModelV2(data, deltas, params)
+    res = model.run()
+    bridge = korea_erosion_from_run(model, res, deltas)
+    return {"res": res, "bridge": bridge, "params": params, "model": model, "deltas": deltas}

@@ -203,7 +203,86 @@ KOREA_PRESETS = {
             "adoption_end": "Windfall-Medium-class half-of-feasible with Korea ICT-readiness "
                             "catch-up → 0.40 of HELC jobs by 2035",
         }),
+
+    # ---- fast worlds: the US Korinek-Suh AGI presets translated onto Korean data.
+    # These are forecast-literature scenarios, NOT Korea-calibrated diffusion: capability-
+    # driven adoption overrides the SME-laggard discount, so the adoption numbers carry over
+    # from presets.py unchanged. Three US override fields are deliberately DROPPED, not
+    # ported: state_cut_share/state_rate_hike_cap (Korea has no state closure — the gap is
+    # reported, never closed, by construction) and compute_effective_rate (the US GRT rate;
+    # Korea's deltas carry the 24.2% effective corporate rate directly). robotics_lag is
+    # also dropped and physical_feasibility pinned at 0.0: Korea has no published robot-
+    # exposure vector wired, so the physical channel maps to zero and AGI displacement here
+    # is the COGNITIVE channel only — an understatement for manual occupations, disclosed
+    # wherever these scenarios are shown. A test enforces the pin so wiring a robot vector
+    # later forces a conscious revisit.
+    "korea-agi-20y": Preset(
+        key="korea-agi-20y", name="Korinek-Suh — AGI in 20 years",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.05, adoption_end=1.0, n_periods=20, adoption_reach_year=19,
+        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
+                       reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.05,
+                       retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.15,
+                       survivor_elasticity=-0.50, productivity_passthrough=0.90,
+                       price_passthrough=0.50, demand_multiplier=1.00,
+                       baseline_growth_rate=0.06, interest_rate=0.04),
+        provenance=dict(
+            adoption="Korinek-Suh baseline AGI: linear to full automation of exposed work "
+                     "over 20y (§1); Korea lag overridden — capability drives diffusion",
+            cognitive_feasibility="all cognitive tasks automatable within 20y (§1)",
+            physical_feasibility="HELD AT ZERO for Korea: no published robot-exposure vector "
+                                 "— cognitive channel only; understates AGI displacement in "
+                                 "manual occupations (korea_exposure.py disclosure)",
+            reabsorption_rate="no recovery in their AGI scenarios: wages stay collapsed (§1)",
+            reemployment_haircut="wage-collapse mapped onto re-employment (§2⑤)",
+            lfp_exit_rate="elevated permanent exit (§2⑤)",
+            retained_profit_share="capital share → 1 as labor share collapses "
+                                  "(Korinek-Lockwood) (§1)",
+            price_reduction_share="0.80/0.15/0.05 split (§2⑤)",
+            auto_cost="sustained compute build-out (§1)",
+            survivor_elasticity="wage collapse ~3y before full automation → lever max -0.50 (§1)",
+            productivity_passthrough="near lever ceiling in AGI scenarios (§1)",
+            price_passthrough="strong deflation channel (§2⑤)",
+            demand_multiplier="no-offset regime (§1)",
+            baseline_growth_rate="upper band that keeps denominators interpretable (§1)",
+            interest_rate="Korinek-Lockwood discount-rate anchor ~4% (§1)"),
+    ),
+    "korea-agi-5y": Preset(
+        key="korea-agi-5y", name="Korinek-Suh — AGI in 5 years",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.20, adoption_end=1.0, n_periods=10, adoption_reach_year=5,
+        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
+                       reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
+                       retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.20,
+                       survivor_elasticity=-0.50, productivity_passthrough=0.90,
+                       price_passthrough=0.50, demand_multiplier=1.50,
+                       baseline_growth_rate=0.08, interest_rate=0.04),
+        provenance=dict(
+            adoption="Korinek-Suh aggressive AGI: full automation of exposed work at year 5, "
+                     "flat after (§1); Korea lag overridden — capability drives diffusion",
+            cognitive_feasibility="5 years to full cognitive automation (§1)",
+            physical_feasibility="HELD AT ZERO for Korea: no published robot-exposure vector "
+                                 "— cognitive channel only; understates AGI displacement in "
+                                 "manual occupations (korea_exposure.py disclosure)",
+            reabsorption_rate="no recovery (§1)",
+            reemployment_haircut="wage collapse (§2⑥)",
+            lfp_exit_rate="mass permanent exit (§2⑥)",
+            retained_profit_share="capital keeps the gains (§1)",
+            price_reduction_share="0.80/0.15/0.05 split (§2⑥)",
+            auto_cost="peak build-out compute share (§1)",
+            survivor_elasticity="collapse: lever max -0.50 (§1)",
+            productivity_passthrough="near ceiling (§1)",
+            price_passthrough="strong deflation (§2⑥)",
+            demand_multiplier="no-offset crisis regime (§1)",
+            baseline_growth_rate="MacAskill-Moorhouse explosion band 0.06-0.08 (§1)",
+            interest_rate="Korinek-Lockwood ~4% (§1)"),
+    ),
 }
+
+# The uncertainty band sweeps the Korea-calibrated diffusion family ONLY. The AGI presets
+# are separate scenario rows (shown as their own lines/columns), never band edges — folding
+# a full-automation world into the band would swamp the calibrated range it exists to show.
+KOREA_BAND_KEYS = ("korea-slow", "korea-central", "korea-fast")
 
 
 def korea_headline_band(cells=None) -> dict:
@@ -228,7 +307,8 @@ def korea_headline_band(cells=None) -> dict:
         return out
 
     results: dict[str, dict] = {}
-    for pkey, preset in KOREA_PRESETS.items():
+    for pkey in KOREA_BAND_KEYS:
+        preset = KOREA_PRESETS[pkey]
         adoption = build_adoption_path(preset, 10)
         for share_edge, share in (("nhi-share-low", WAGE_LINKED_SHARE["nhi"].low),
                                   ("nhi-share-high", WAGE_LINKED_SHARE["nhi"].high)):

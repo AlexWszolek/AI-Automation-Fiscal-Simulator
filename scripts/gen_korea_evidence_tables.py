@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from fiscal_model.korea_funds import (EI_BASELINE, NHI_REFORM, NPS_REFORM,
                                       first_negative_year)
-from fiscal_model.korea_scenarios import (KOREA_PRESETS, WAGE_LINKED_SHARE,
+from fiscal_model.korea_scenarios import (KOREA_BAND_KEYS, KOREA_PRESETS, WAGE_LINKED_SHARE,
                                           korea_fund_headlines)
 from fiscal_model.presets import build_adoption_path
 
@@ -29,8 +29,8 @@ def main() -> None:
 
     rows = []
     agg = {"nhi": [], "ei": [], "nps": []}
-    for pkey, preset in KOREA_PRESETS.items():
-        a = build_adoption_path(preset, len(NPS_REFORM.revenue))
+    for pkey in KOREA_BAND_KEYS:
+        a = build_adoption_path(KOREA_PRESETS[pkey], len(NPS_REFORM.revenue))
         for nhi_s in (nhi_lo, nhi_hi):
             for nps_s in (nps_lo, nps_hi):
                 r = korea_fund_headlines(a, nhi_wage_linked_share=nhi_s,

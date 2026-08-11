@@ -83,9 +83,10 @@ def test_preset_paths_ramp_to_2035_then_hold():
     """REGRESSION for the bug this suite caught: without adoption_reach_year the 40-year run
     silently became a 40-year ramp to 2065. The documented semantics — end value reached at
     period 9 (calendar 2035), flat after — must hold at every horizon."""
-    from fiscal_model.korea_scenarios import KOREA_PRESETS
+    from fiscal_model.korea_scenarios import KOREA_BAND_KEYS, KOREA_PRESETS
     from fiscal_model.presets import build_adoption_path
-    for p in KOREA_PRESETS.values():
+    for k in KOREA_BAND_KEYS:
+        p = KOREA_PRESETS[k]
         for n in (10, 25, 40):
             a = build_adoption_path(p, n)
             assert len(a) == n
@@ -93,6 +94,49 @@ def test_preset_paths_ramp_to_2035_then_hold():
             assert a[9] == pytest.approx(p.adoption_end)
             assert all(v == pytest.approx(p.adoption_end) for v in a[9:])
             assert all(b >= x for x, b in zip(a, a[1:]))
+
+
+def test_every_preset_reaches_then_holds_at_any_horizon():
+    """The same regression, generalized: EVERY Korea preset must carry a reach year, and the
+    end value must hold flat past it at every horizon (the 40-year NPS run is the hazard)."""
+    from fiscal_model.korea_scenarios import KOREA_PRESETS
+    from fiscal_model.presets import build_adoption_path
+    for p in KOREA_PRESETS.values():
+        r = p.adoption_reach_year
+        assert r is not None, f"{p.key}: missing adoption_reach_year (silent horizon-stretch)"
+        a = build_adoption_path(p, 40)
+        assert a[r] == pytest.approx(p.adoption_end)
+        assert all(v == pytest.approx(p.adoption_end) for v in a[r:])
+
+
+def test_agi_presets_translate_cleanly():
+    """The Korinek-Suh translations: every override is a real V2Params field, the three
+    US-only fields are NOT ported (no state closure / no US GRT rate / robotics inert), and
+    physical_feasibility is pinned at 0.0 — Korea has no robot-exposure vector wired, so the
+    physical channel maps to zero. Wiring one later must consciously revisit these presets."""
+    import dataclasses
+
+    from fiscal_model.korea_scenarios import KOREA_BAND_KEYS, KOREA_PRESETS
+    from fiscal_model.levers_v2 import V2Params
+    fields = {f.name for f in dataclasses.fields(V2Params)}
+    agi_keys = set(KOREA_PRESETS) - set(KOREA_BAND_KEYS)
+    assert agi_keys == {"korea-agi-20y", "korea-agi-5y"}
+    for k in agi_keys:
+        p = KOREA_PRESETS[k]
+        assert set(p.overrides) <= fields, f"{k}: unknown V2Params field"
+        assert not set(p.overrides) & {"state_cut_share", "state_rate_hike_cap",
+                                       "compute_effective_rate", "robotics_lag"}, \
+            f"{k}: US-only override ported by mistake"
+        assert p.overrides["physical_feasibility"] == 0.0, \
+            f"{k}: physical channel opened without a Korean robot-exposure vector"
+        assert p.adoption_end == 1.0
+        assert set(p.overrides) <= set(p.provenance), f"{k}: override without provenance"
+    # the aggressive world reaches full automation at year 5 and holds
+    from fiscal_model.presets import build_adoption_path
+    a5 = build_adoption_path(KOREA_PRESETS["korea-agi-5y"], 40)
+    assert a5[5] == 1.0 and all(v == 1.0 for v in a5[5:])
+    a20 = build_adoption_path(KOREA_PRESETS["korea-agi-20y"], 40)
+    assert a20[19] == 1.0 and all(v == 1.0 for v in a20[19:])
 
 
 def test_erosion_paths_bounded_monotone_and_deterministic():
@@ -127,9 +171,12 @@ def test_nhi_variant_switch_uses_the_baseline_path():
 
 
 def test_band_covers_all_axes():
-    from fiscal_model.korea_scenarios import KOREA_PRESETS, korea_headline_band
+    from fiscal_model.korea_scenarios import KOREA_BAND_KEYS, korea_headline_band
     band = korea_headline_band()
-    assert len(band) == len(KOREA_PRESETS) * 2 * 3          # presets × share edges × read error
+    # band presets × share edges × read error — the AGI presets are scenario rows, NOT band
+    # edges (a full-automation world would swamp the calibrated diffusion range)
+    assert len(band) == len(KOREA_BAND_KEYS) * 2 * 3
+    assert not any("agi" in key for key in band)
     for key, v in band.items():
         assert v["nhi_years_forward"] > 0.0, key
         assert v["ei_reserve_2029_shortfall_tn"] > 0.0, key

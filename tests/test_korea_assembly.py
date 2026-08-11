@@ -107,3 +107,36 @@ def test_run_bridge_full_dynamics_worsens_the_funds(korea_run):
     shortfall = 21.8 - ei["eroded_reserves"][-1]
     assert shortfall > 4.0                       # outlays dominate the revenue-only 1.5
     assert (np.diff(ei["eroded_reserves"]) < np.diff(EI_BASELINE.reserves)).all()
+
+
+def test_run_korea_preset_is_the_same_run(korea_run):
+    """The driver must reproduce the hand-assembled central run exactly — if the Korea
+    conventions in run_korea_preset drift from what these pins were derived on, the bundle
+    and the slides silently fork from the tested model."""
+    from fiscal_model.korea_assembly import run_korea_preset
+    data, deltas, _ = korea_run
+    out = run_korea_preset("korea-central", data=data, deltas=deltas)
+    assert out["params"].n_periods == 10
+    assert out["bridge"]["erosion"]["NHI health"][-1] == pytest.approx(0.091, abs=0.005)
+    assert out["res"]["employment_drop_pct"].iloc[-1] == pytest.approx(8.95, abs=0.1)
+
+
+def test_run_korea_preset_agi_worlds_bite_harder(korea_run):
+    """The fast worlds must dominate the calibrated central on every fund-relevant output,
+    stay inside [0, 1], and preserve the no-closure property. Cognitive channel only —
+    full automation of exposed work, not of all work — so erosion stays well below 1."""
+    import numpy as np
+    from fiscal_model.korea_assembly import run_korea_preset
+    data, deltas, _ = korea_run
+    central = run_korea_preset("korea-central", data=data, deltas=deltas)
+    agi5 = run_korea_preset("korea-agi-5y", data=data, deltas=deltas)
+    for scheme, path in agi5["bridge"]["erosion"].items():
+        assert np.isfinite(path).all() and (0.0 <= path).all() and (path <= 1.0).all()
+        assert path[-1] > central["bridge"]["erosion"][scheme][-1] * 2.0, scheme
+    assert agi5["bridge"]["ei_outlay_bn"].max() > central["bridge"]["ei_outlay_bn"].max()
+    assert (agi5["res"]["state_rate_hike_B"] == 0).all()
+    assert (agi5["res"]["state_spending_cut_B"] == 0).all()
+    # the 40-year horizon the NPS projector needs runs clean, adoption flat after year 5
+    agi40 = run_korea_preset("korea-agi-5y", n_periods=40, data=data, deltas=deltas)
+    assert len(agi40["bridge"]["erosion"]["NPS pension"]) == 40
+    assert agi40["params"].adoption_path[5] == 1.0 == agi40["params"].adoption_path[-1]

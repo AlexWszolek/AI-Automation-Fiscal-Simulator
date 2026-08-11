@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from fiscal_model.korea_exposure import FIG9_SHARES
 from fiscal_model.korea_funds import (EI_BASELINE, NHI_REFORM, NPS_REFORM,
                                       first_negative_year)
-from fiscal_model.korea_scenarios import (KOREA_PRESETS, WAGE_LINKED_SHARE,
+from fiscal_model.korea_scenarios import (KOREA_BAND_KEYS, KOREA_PRESETS, WAGE_LINKED_SHARE,
                                           korea_erosion_paths, korea_fund_headlines)
 from fiscal_model.presets import build_adoption_path
 
@@ -50,8 +50,8 @@ def _exposure_variant(delta_pp: float) -> dict:
 def run_grid():
     """Every run in the band grid, with its eroded reserve paths per fund."""
     horizon = len(NPS_REFORM.revenue)
-    for pkey, preset in KOREA_PRESETS.items():
-        adoption = build_adoption_path(preset, horizon)
+    for pkey in KOREA_BAND_KEYS:
+        adoption = build_adoption_path(KOREA_PRESETS[pkey], horizon)
         for nhi_s in (WAGE_LINKED_SHARE["nhi"].low, WAGE_LINKED_SHARE["nhi"].high):
             for nps_s in (WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high):
                 for delta in (-0.5, 0.0, 0.5):
