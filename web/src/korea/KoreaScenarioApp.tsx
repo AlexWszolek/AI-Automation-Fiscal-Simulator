@@ -9,7 +9,7 @@ import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
 import { ShareBox } from '../components/AboutModal'
-import { SelectControl, SliderControl } from '../components/controls'
+import { CheckboxControl, SelectControl, SliderControl } from '../components/controls'
 import {
   configFromLocation, effectiveKoreaLevers, groupTitle, INITIAL_KOREA, KOREA_GRID,
   KOREA_GROUPS, KOREA_PRESETS, leverCopy, presetMeta, queryStringFor,
@@ -24,11 +24,19 @@ const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a
 type Action =
   | { type: 'setPreset'; preset: string }
   | { type: 'setLever'; key: string; value: number }
+  | { type: 'toggleOverlay'; key: string }
   | { type: 'reset' }
 
 function reducer(cfg: KoreaConfig, a: Action): KoreaConfig {
-  if (a.type === 'setPreset') return { preset: a.preset, levers: {} }
-  if (a.type === 'reset') return { ...cfg, levers: {} }
+  if (a.type === 'setPreset') return { preset: a.preset, levers: {}, overlays: cfg.overlays }
+  if (a.type === 'reset') return { ...cfg, levers: {}, overlays: [] }
+  if (a.type === 'toggleOverlay')
+    return {
+      ...cfg,
+      overlays: cfg.overlays.includes(a.key)
+        ? cfg.overlays.filter((o) => o !== a.key)
+        : [...cfg.overlays, a.key].sort(),
+    }
   return { ...cfg, levers: { ...cfg.levers, [a.key]: a.value } }
 }
 
@@ -116,6 +124,14 @@ export default function KoreaScenarioApp() {
               {isAgi && <p className="caption">{KO.rail.agi_disclosure}</p>}
             </div>
           </details>
+          <details className="group" open>
+            <summary>{KO.overlays.heading}</summary>
+            {(['kr-vat', 'kr-nps-mandate'] as const).map((k) => (
+              <CheckboxControl key={k} label={KO.overlays[k].label} help={KO.overlays[k].help}
+                               value={cfg.overlays.includes(k)}
+                               onChange={() => dispatch({ type: 'toggleOverlay', key: k })} />
+            ))}
+          </details>
           {KOREA_GROUPS.map((g) => (
             <details key={g} className="group" open={g === 'Automation & adoption'}>
               <summary>{groupTitle(g)}</summary>
@@ -187,6 +203,26 @@ export default function KoreaScenarioApp() {
                 />
               </div>
             </div>
+
+            {payload.overlay_readouts.length > 0 && (
+              <div className="col-wide panel">
+                {payload.overlay_readouts.map((r) => r.key === 'kr-vat' ? (
+                  <p key={r.key} className="caption">
+                    <strong>{KO.overlays['kr-vat'].label}</strong> — ₩{r.revenue_final_tn?.toFixed(1)}tn/yr
+                    by the final year{r.coverage_pct != null &&
+                      <> · covers {r.coverage_pct.toFixed(0)}% of the ₩{r.deficit_widening_final_tn?.toFixed(1)}tn widening</>}.
+                    {' '}<span className="modified-note">{KO.overlays.vat_readout}</span>
+                  </p>
+                ) : (
+                  <p key={r.key} className="caption">
+                    <strong>{KO.overlays['kr-nps-mandate'].label}</strong> — ₩{r.flow_final_tn?.toFixed(1)}tn/yr
+                    into the fund · buys back {r.years_bought_back?.toFixed(2)} of the {r.given_back_base?.toFixed(2)} given-back
+                    years (depletion {r.eroded_date_with_mandate ?? '—'}).
+                    {' '}<span className="modified-note">{KO.overlays.nps_readout}</span>
+                  </p>
+                ))}
+              </div>
+            )}
 
             <div className="col-wide chart-grid">
               <ChartPanel

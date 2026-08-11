@@ -25,6 +25,7 @@ export interface KoreaScenarioPayload {
     display_periods: number
     horizon: number
     modified_fields: string[]
+    overlays: string[]
     conventions: string
   }
   rows: Record<string, number>[]
@@ -40,6 +41,19 @@ export interface KoreaScenarioPayload {
   funds: { nhi: KoreaFundJson; nps: KoreaFundJson; ei: KoreaFundJson }
   composition_2035: Record<string, number>
   ei_outlay_tn: number[]
+  overlay_readouts: {
+    key: string
+    revenue_final_tn?: number
+    deficit_widening_final_tn?: number
+    coverage_pct?: number | null
+    profit_share?: number
+    flow_final_tn?: number
+    given_back_base?: number
+    given_back_with_mandate?: number
+    years_bought_back?: number
+    eroded_date_with_mandate?: number | null
+    provenance: string
+  }[]
   band_note: string
 }
 
@@ -80,7 +94,8 @@ export function useKoreaScenarioData(cfg: KoreaConfig): KoreaScenarioData {
       const r = await fetch('/api/korea/run', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ preset: cfg.preset, levers: deviations(cfg) }),
+        body: JSON.stringify({ preset: cfg.preset, levers: deviations(cfg),
+                               overlays: cfg.overlays }),
       })
       if (!r.ok) throw new Error(`korea api: ${r.status}`)
       return (await r.json()) as KoreaScenarioPayload

@@ -106,9 +106,11 @@ def shifted_reserves(fund: FundPath, erosion, wage_linked_share: float = 1.0,
     n = len(e)
     lost = np.asarray(fund.revenue[:n]) * wage_linked_share * e
     if extra_outlays_tn is not None:
+        # SIGNED: positive = extra outlays (EI benefit spending), negative = extra inflows
+        # (the NPS-mandate overlay routes an equity-dividend flow INTO the fund)
         x = np.asarray(extra_outlays_tn, dtype=float)[:n]
-        assert x.shape == (n,) and (x >= 0.0).all()
-        lost = lost + x                      # the OUTLAY side (e.g. EI benefit spending)
+        assert x.shape == (n,) and np.isfinite(x).all()
+        lost = lost + x
     return np.asarray(fund.reserves[:n]) - np.cumsum(lost)
 
 

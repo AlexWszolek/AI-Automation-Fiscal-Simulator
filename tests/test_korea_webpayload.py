@@ -141,3 +141,36 @@ def test_committed_tornado_bundles_match_fresh_generation(pools):
     fresh = json.loads(json.dumps(korea_mc_tornado(
         sanitize_korea_config({"preset": "korea-central"}), n=400, **pools)))
     assert fresh == committed, "stale tornado bundle — scripts/gen_korea_scenarios.py"
+
+
+def test_overlays_sanitize_and_read_out_honestly(pools):
+    """kr-vat: calibrated to the NABO-receipts effective base, covers >100% of the central
+    widening, and NEVER touches the funds. kr-nps-mandate: buys back part of the given-back
+    years without touching the treasury deficit."""
+    from fiscal_model.korea_overlays import kr_vat_engine_rate
+    from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
+                                               sanitize_korea_config)
+    cfg = sanitize_korea_config({"overlays": ["junk", "kr-nps-mandate", "kr-vat"]})
+    assert cfg["overlays"] == ["kr-nps-mandate", "kr-vat"]      # sorted, junk dropped
+
+    base = build_korea_scenario_payload(sanitize_korea_config({}), **pools)
+    p = build_korea_scenario_payload(cfg, **pools)
+    vat = next(r for r in p["overlay_readouts"] if r["key"] == "kr-vat")
+    nps = next(r for r in p["overlay_readouts"] if r["key"] == "kr-nps-mandate")
+
+    # year-0 statutory calibration: 1pp on the ₩792tn effective base ≈ ₩7.9tn, eroding after
+    assert 0.004 < kr_vat_engine_rate(0.01) < 0.005
+    assert 7.0 < vat["revenue_final_tn"] < 7.92
+    assert vat["coverage_pct"] > 100.0                          # the headline
+    assert p["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
+    assert p["final"]["nps_given_back"] == base["final"]["nps_given_back"]
+    assert p["final"]["fed_deficit_B"] < base["final"]["fed_deficit_B"]
+
+    assert 0.0 < nps["years_bought_back"] < nps["given_back_base"]
+    assert nps["given_back_with_mandate"] == pytest.approx(
+        nps["given_back_base"] - nps["years_bought_back"], abs=0.011)
+    # the mandate flows to the FUND, never the treasury: with kr-vat also on, the deficit
+    # equals the vat-only deficit (mandate contributes nothing to the ledger)
+    vat_only = build_korea_scenario_payload(
+        sanitize_korea_config({"overlays": ["kr-vat"]}), **pools)
+    assert p["final"]["fed_deficit_B"] == vat_only["final"]["fed_deficit_B"]

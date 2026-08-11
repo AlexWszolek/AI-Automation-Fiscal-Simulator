@@ -27,6 +27,7 @@ from .korea_assembly import (build_korea_data, build_korea_deltas,
                              korea_project_funds)
 from .korea_exposure import exposure_variant
 from .korea_funds import EI_BASELINE, NHI_REFORM, NPS_REFORM, first_negative_year
+from .korea_overlays import KOREA_OVERLAYS, NPS_MANDATE_PROFIT_SHARE
 from .korea_scenarios import KOREA_PRESETS, WAGE_LINKED_SHARE
 
 HORIZON = len(NPS_REFORM.revenue)                    # 40 — the NPS projection window
@@ -77,13 +78,20 @@ def sanitize_korea_config(body: dict) -> dict:
             if k in _INT_LEVERS:
                 x = int(round(x))
             levers[str(k)] = x
-    return {"preset": preset, "levers": levers}
+    raw_ov = body.get("overlays") or []
+    overlays = sorted({str(k) for k in raw_ov if str(k) in KOREA_OVERLAYS}) \
+        if isinstance(raw_ov, list) else []
+    return {"preset": preset, "levers": levers, "overlays": overlays}
 
 
-def _korea_v2p(preset: str, levers: dict):
+def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
     """Preset params + sanitized model levers, with the two derived rules the sampler also
-    follows: the disposition simplex remainder and shape-preserved adoption-path scaling."""
+    follows: the disposition simplex remainder and shape-preserved adoption-path scaling.
+    Overlay params (kr-vat's calibrated fed_vat_rate) are applied on top — readout-only
+    overlays (kr-nps-mandate) contribute no params here by design."""
     model_levers = {k: v for k, v in levers.items() if k in _MODEL_LEVERS}
+    for k in overlays:
+        model_levers.update(KOREA_OVERLAYS[k].params)
     v2p = korea_preset_params(preset, HORIZON, **model_levers)
     if "adoption_end" in levers:
         path = np.asarray(v2p.adoption_path, float)
@@ -120,6 +128,7 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     and `ctx_pool` ({exposure_delta: ScenarioContext}) amortize construction across requests
     — pass module-level dicts from the API; None rebuilds everything (scripts, tests)."""
     preset_key, levers = cfg["preset"], cfg["levers"]
+    overlays = tuple(cfg.get("overlays") or ())
     preset = KOREA_PRESETS[preset_key]
     display_n = preset.n_periods
     nhi_s = levers.get("nhi_share", NHI_MID)
@@ -132,7 +141,7 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     if ctx_pool is None:
         ctx_pool = {}
     base = korea_preset_params("korea-central", HORIZON)   # one structural shape for all runs
-    v2p = _korea_v2p(preset_key, levers)
+    v2p = _korea_v2p(preset_key, levers, overlays)
     bridges = {}
     for d in EXPOSURE_DELTAS:
         if d not in data_pool:
@@ -170,9 +179,52 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         + (["adoption_end"] if "adoption_end" in levers
            and levers["adoption_end"] != float(pp.adoption_path[-1]) else []))
 
+    # overlay readouts, each self-contained and honest about its routing (kr-vat flows
+    # through the treasury line of THIS run; the NPS mandate never touches the treasury)
+    overlay_readouts = []
+    if "kr-vat" in overlays:
+        vat_tn = [round(float(r["fed_vat_B"]) / 1000.0, 2) for r in rows]
+        f_row = user_res.iloc[display_n - 1]
+        vat_final = float(f_row["fed_vat_B"]) / 1000.0
+        # the widening WITHOUT the overlay: fed_vat enters net_fed linearly as revenue,
+        # so adding it back recovers the no-overlay deficit exactly — no second run
+        gap_final = float(f_row["fed_deficit_B"]) / 1000.0 + vat_final
+        overlay_readouts.append({
+            "key": "kr-vat",
+            "revenue_tn": vat_tn,
+            "revenue_final_tn": round(vat_final, 2),
+            "deficit_widening_final_tn": round(gap_final, 2),
+            "coverage_pct": round(100.0 * vat_final / gap_final, 1)
+            if gap_final > 0.05 else None,
+            "provenance": KOREA_OVERLAYS["kr-vat"].provenance,
+        })
+    if "kr-nps-mandate" in overlays:
+        from .korea_funds import NPS_REFORM as _NPS
+        from .korea_funds import depletion_shift as _shift
+        flow_tn = (NPS_MANDATE_PROFIT_SHARE
+                   * user_res["shareholder_undist_B"].to_numpy(float) / 1000.0)
+        er_nps = bridge["erosion"]["NPS pension"][:len(_NPS.years)]
+        with_mandate = _shift(_NPS, er_nps, wage_linked_share=nps_s,
+                              extra_outlays_tn=-flow_tn[:len(_NPS.years)])
+        overlay_readouts.append({
+            "key": "kr-nps-mandate",
+            "profit_share": NPS_MANDATE_PROFIT_SHARE,
+            "flow_final_tn": round(float(flow_tn[len(_NPS.years) - 1]), 2),
+            "given_back_base": round(float(central["nps"]["years_pulled_forward"]), 2),
+            "given_back_with_mandate": round(
+                float(with_mandate["years_pulled_forward"]), 2),
+            "years_bought_back": round(
+                float(central["nps"]["years_pulled_forward"]
+                      - with_mandate["years_pulled_forward"]), 2),
+            "eroded_date_with_mandate": round(float(with_mandate["eroded_date"]), 2)
+            if with_mandate.get("eroded_date") is not None else None,
+            "provenance": KOREA_OVERLAYS["kr-nps-mandate"].provenance,
+        })
+
     return {
         "config": {
             "country": "kr", "preset": preset_key, "levers": levers,
+            "overlays": list(overlays),
             "start_year": 2026, "display_periods": display_n, "horizon": HORIZON,
             "modified_fields": modified,
             "conventions": "cognitive channel only; demography frozen (published medium "
@@ -198,6 +250,7 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                              for k, v in bridge["erosion"].items()},
         "ei_outlay_tn": [round(float(v) / 1000.0, 3)
                          for v in bridge["ei_outlay_bn"][:len(EI_BASELINE.years)]],
+        "overlay_readouts": overlay_readouts,
         "band_note": "envelope = exposure read ±0.5pp × wage-linked share band edges at "
                      "the CURRENT lever settings (12 projections over 3 runs); preset "
                      "spread lives in the preset picker, not this envelope",

@@ -24,12 +24,14 @@ export interface KoreaPreset {
 export interface KoreaConfig {
   preset: string
   levers: Record<string, number>       // only DEVIATIONS from the preset defaults
+  overlays: string[]                   // active policy overlays (kr-vat, kr-nps-mandate)
 }
 
 export const KOREA_GRID = grid.levers as Record<string, KoreaLeverSpec>
 export const KOREA_PRESETS = grid.presets as KoreaPreset[]
 export const KOREA_GROUPS = grid.groups as string[]
-export const INITIAL_KOREA: KoreaConfig = { preset: 'korea-central', levers: {} }
+export const KOREA_OVERLAY_KEYS = ['kr-vat', 'kr-nps-mandate'] as const
+export const INITIAL_KOREA: KoreaConfig = { preset: 'korea-central', levers: {}, overlays: [] }
 
 const KO = copy.korea as Record<string, any>
 const US_LEVER_COPY = copy.levers as Record<string, { label: string; help: string | null }>
@@ -56,7 +58,8 @@ export function effectiveKoreaLevers(cfg: KoreaConfig): Record<string, number> {
 
 export function isPristine(cfg: KoreaConfig): boolean {
   const d = presetMeta(cfg.preset).defaults
-  return Object.entries(cfg.levers).every(([k, v]) => v === d[k])
+  return cfg.overlays.length === 0
+    && Object.entries(cfg.levers).every(([k, v]) => v === d[k])
 }
 
 /** Only deviations reach the URL and the API body. */
@@ -68,6 +71,7 @@ export function deviations(cfg: KoreaConfig): Record<string, number> {
 export function queryStringFor(cfg: KoreaConfig): string {
   const qp = new URLSearchParams()
   if (cfg.preset !== INITIAL_KOREA.preset) qp.set('preset', cfg.preset)
+  if (cfg.overlays.length) qp.set('ov', [...cfg.overlays].sort().join(','))
   for (const [k, v] of Object.entries(deviations(cfg))) qp.set(k, String(v))
   return qp.toString()
 }
@@ -78,6 +82,10 @@ export function configFromLocation(search: string): KoreaConfig {
   const cfg: KoreaConfig = {
     preset: KOREA_PRESETS.some((p) => p.key === preset) ? preset : INITIAL_KOREA.preset,
     levers: {},
+    overlays: (qp.get('ov') ?? '').split(',')
+      .filter((o): o is (typeof KOREA_OVERLAY_KEYS)[number] =>
+        (KOREA_OVERLAY_KEYS as readonly string[]).includes(o))
+      .sort(),
   }
   for (const [k, raw] of qp.entries()) {
     const spec = KOREA_GRID[k]
