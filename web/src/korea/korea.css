@@ -2,8 +2,8 @@
    tokens, panels, metrics, chart grid — inherits from app.css unchanged. */
 .korea-shell { display: block; }
 .korea-shell .content { margin: 0 auto; }
-.korea-shell .metric-row.heroes.korea-heroes { grid-template-columns: repeat(3, 1fr); }
-@media (max-width: 720px) { .korea-shell .metric-row.heroes.korea-heroes { grid-template-columns: 1fr; } }
+.metric-row.heroes.korea-heroes { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 720px) { .metric-row.heroes.korea-heroes { grid-template-columns: 1fr; } }
 .korea-grid { grid-template-columns: 1fr; }
 .draft-banner { border-left: 3px solid var(--bad); }
 .korea-sources h2 { margin-top: 1.1rem; }

@@ -10,8 +10,11 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        // the Korea page: unlisted (noindex, no nav link) but a first-class build entry
+        // the Korea pages: unlisted (noindex, no nav link) but first-class build entries.
+        // korea.html = the stable presenter view; korea-app.html = the interactive parity
+        // track (graduates to the default Korea entry when it lands).
         korea: resolve(__dirname, 'korea.html'),
+        koreaApp: resolve(__dirname, 'korea-app.html'),
       },
     },
   },
