@@ -89,8 +89,8 @@ def test_agi_preset_payload_matches_its_bundle_row(pools):
     p = build_korea_scenario_payload(sanitize_korea_config({"preset": "korea-agi-5y"}),
                                      **pools)
     assert p["final"]["nhi_years_forward"] == pytest.approx(2.14, abs=0.02)
-    assert p["final"]["ei_shortfall_tn"] == pytest.approx(59.2, abs=0.5)
-    assert p["final"]["nps_given_back"] == pytest.approx(6.59, abs=0.05)
+    assert p["final"]["ei_shortfall_tn"] == pytest.approx(59.5, abs=0.5)
+    assert p["final"]["nps_given_back"] == pytest.approx(7.46, abs=0.05)
     assert p["config"]["display_periods"] == 10
 
 

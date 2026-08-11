@@ -5,7 +5,7 @@
   "seed": 0,
   "preset": "korea-central",
   "demography": "FROZEN (published medium variant)",
-  "runtime_s": 4.0
+  "runtime_s": 4.7
  },
  "base": {
   "nhi_years_forward": 0.5009,

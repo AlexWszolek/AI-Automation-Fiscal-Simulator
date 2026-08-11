@@ -70,5 +70,5 @@ never a point.
 to shorten. The sharper health expression is the post-depletion deficit widening.
 **Short (pension):** It is not small: at central assumptions automation takes back roughly a
 year (0.96–1.30) of the eight that a 44% contribution-rate increase — the first in 28 years,
-18 years of deadlock — just bought; the fast worlds take back four to six and a half. Priced
+18 years of deadlock — just bought; the fast worlds take back four to seven and a half. Priced
 in reform-effort units, that is the point.

@@ -325,6 +325,16 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
     same as the headline). Also returns the EI OUTLAY side: added benefit spending from the
     actual UI-window stock at the statutory (tax-exempt, near-flat) benefit rate.
 
+    RECONCILIATION vs the engine's own `payroll_fed_loss_B` (test-pinned): at t=0 the
+    bridge's gross (flat-wage) loss equals the engine line EXACTLY. Over time the two
+    deliberately diverge on two conventions: (1) the bridge NETS the raise-funded extra
+    contributions into erosion, while the engine books them in survivor_gain_fed_B; and
+    (2) displaced workers who exit via natural attrition (the `retired` stock) STAY counted
+    as erosion here — the automated position never refills, so against the demography-scaled
+    baseline (in which positions refill up to the population path) its contributions are
+    genuinely gone. That is the declining-baseline counterfactual, applied consistently;
+    the engine's line follows the US jobs-lost convention (retired excluded) instead.
+
     Returns {"erosion": {scheme: np.ndarray}, "ei_outlay_bn": np.ndarray (₩bn per year)}."""
     from .korea_funds import _COMPONENTS
     w = deltas["worker_wage"].to_numpy(float)
@@ -334,16 +344,22 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
     dp = getattr(v2p, "demography_path", None)
     demo = (list(dp) if dp is not None else [1.0] * len(res))
     W = res["W_survivor"].to_numpy(float)
-    haircut = float(getattr(model, "_reab_haircut", 0.0)) if hasattr(model, "_reab_haircut") \
-        else 0.0
+    # the re-employed contribute at the reabsorption engine's OWN destination wage:
+    # haircut wage floored at the statutory service floor, then the per-period rung-1 wage
+    # index (Baumol/crowding; 1.0 whenever those levers are off). Reading the haircut from
+    # a model attribute was this bridge's second silent-fallback bug (the first was the
+    # demography path) — take it from the bound params, which always exist.
+    haircut = float(model.v2p.reemployment_haircut)
+    W_reab = (res["W_reab"].to_numpy(float) if "W_reab" in res.columns
+              else np.ones(len(res)))
     from .korea_assembly import KoreaReabsorptionEngine
-    w_reab = np.maximum(w * (1.0 - haircut), KoreaReabsorptionEngine.SERVICE_FLOOR_WON)
+    w_reab0 = np.maximum(w * (1.0 - haircut), KoreaReabsorptionEngine.SERVICE_FLOOR_WON)
 
     # the two income-tax lines of the composition, same convention as contribution_losses:
     # korea_income_tax at the (survivor-adjusted / destination) wage with the employee's own
     # contributions at that wage deducted — caps and credits re-evaluated, not scaled
     _tax = lambda wage: korea_income_tax(wage, _ENGINE.employee_fica(wage, "Single"))
-    tax0, tax_reab = _tax(w), _tax(w_reab)
+    tax0 = _tax(w)
     _PIT_LINES = ("income tax (national)", "local income surtax")
 
     erosion: dict[str, list] = {c.name: [] for c in _COMPONENTS}
@@ -351,12 +367,13 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
     ei_outlay = []
     for t, tr in enumerate(model.cell_trace):
         scale = demo[min(t, len(demo) - 1)]
+        w_reab = w_reab0 * W_reab[t]
         for c in _COMPONENTS:
             base = float(c.levy(w, "Single", c.rate) @ (emp0 * scale))
             actual = float(c.levy(w * W[t], "Single", c.rate) @ tr["employed"]
                            + c.levy(w_reab, "Single", c.rate) @ tr["reabsorbed"])
             erosion[c.name].append(max(0.0, 1.0 - actual / base) if base > 0 else 0.0)
-        tax_t = _tax(w * W[t])
+        tax_t, tax_reab = _tax(w * W[t]), _tax(w_reab)
         for key, part in zip(_PIT_LINES, ("national", "local")):
             base = float(tax0[part] @ (emp0 * scale))
             actual = float(tax_t[part] @ tr["employed"]

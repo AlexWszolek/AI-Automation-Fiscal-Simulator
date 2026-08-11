@@ -140,3 +140,52 @@ def test_run_korea_preset_agi_worlds_bite_harder(korea_run):
     agi40 = run_korea_preset("korea-agi-5y", n_periods=40, data=data, deltas=deltas)
     assert len(agi40["bridge"]["erosion"]["NPS pension"]) == 40
     assert agi40["params"].adoption_path[5] == 1.0 == agi40["params"].adoption_path[-1]
+
+
+def test_bridge_reconciles_with_the_engines_own_lines(korea_run):
+    """The adversarial pass's anchor, made permanent. Three identities against the engine:
+    (1) the bridge's EI outlay equals ui_outlay_fed_B to float dust (same formula, so any
+    convention drift screams); (2) at t=0 the bridge's GROSS (flat-wage) loss equals
+    payroll_fed_loss_B exactly — the raises decomposition validates the levy arithmetic;
+    (3) the erosion floor max(0, ·) never actually binds after year 0 on the central run
+    (a floor that binds would be masking a sign error, as it nearly did for zero adoption)."""
+    import numpy as np
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+    from fiscal_model.korea_assembly import korea_erosion_from_run
+    from fiscal_model.korea_funds import _COMPONENTS
+    from fiscal_model.levers_v2 import DEFAULTS_SHIPPED
+    data, deltas, korea = korea_run
+    params = replace(DEFAULTS_SHIPPED, **korea)
+    model = DynamicModelV2(data, deltas, params)
+    res = model.run()
+    bridge = korea_erosion_from_run(model, res, deltas)
+
+    assert np.abs(bridge["ei_outlay_bn"]
+                  - res["ui_outlay_fed_B"].to_numpy()).max() < 1e-9
+
+    w = deltas["worker_wage"].to_numpy(float)
+    emp0 = deltas["employed"].to_numpy(float)
+    lv = sum(c.levy(w, "Single", c.rate) for c in _COMPONENTS)
+    gross_t0 = (float(lv @ emp0) - float(lv @ model.cell_trace[0]["employed"])) / 1e9
+    assert gross_t0 == pytest.approx(float(res["payroll_fed_loss_B"].iloc[0]), rel=1e-9)
+
+    for scheme, path in bridge["erosion"].items():
+        assert (path[1:] > 0.0).all(), scheme
+
+
+def test_hostile_disposition_pair_cannot_500(korea_run):
+    """REGRESSION for the adversarial pass's find: a retained/price lever pair summing past
+    1 made the derived survivor remainder oversubscribe the simplex and raise — the payload
+    now clamps price to the remainder (retained wins, the US rail's rule)."""
+    from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
+                                               korea_mc_tornado, sanitize_korea_config)
+    data, deltas, _ = korea_run
+    pools = {"data_pool": {0.0: data}, "deltas": deltas, "ctx_pool": {}}
+    for body in ({"preset": "korea-agi-5y", "levers": {"retained_profit_share": 0.9}},
+                 {"levers": {"price_reduction_share": 0.9}},
+                 {"levers": {"retained_profit_share": 1.0, "price_reduction_share": 1.0}}):
+        p = build_korea_scenario_payload(sanitize_korea_config(body), **pools)
+        assert "funds" in p
+    t = korea_mc_tornado(sanitize_korea_config(
+        {"levers": {"retained_profit_share": 0.95}}), n=8, **pools)
+    assert t["base"]["ei_shortfall_tn"] > 0

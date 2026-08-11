@@ -149,11 +149,17 @@ export default function KoreaScenarioApp() {
                                    value={String(values[k])}
                                    onChange={(v) => dispatch({ type: 'setLever', key: k, value: Number(v) })} />
                   )
+                // the joint disposition constraint (the server clamps too): retained
+                // wins, the price-share slider is capped at the remainder
+                const priceMax = k === 'price_reduction_share'
+                  ? Math.max(0, 1 - Number(values.retained_profit_share)) : undefined
                 return (
                   <SliderControl key={k} label={c.label} help={c.help}
                                  spec={{ lo: spec.lo, hi: spec.hi, step: spec.step ?? 0.01,
                                          type: spec.kind === 'int' ? 'int' : 'float' } as any}
-                                 value={Number(values[k])}
+                                 max={priceMax}
+                                 value={priceMax !== undefined
+                                   ? Math.min(Number(values[k]), priceMax) : Number(values[k])}
                                  onChange={(v) => dispatch({ type: 'setLever', key: k, value: v })} />
                 )
               })}

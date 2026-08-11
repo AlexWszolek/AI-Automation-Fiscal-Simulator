@@ -89,7 +89,23 @@ def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
     follows: the disposition simplex remainder and shape-preserved adoption-path scaling.
     Overlay params (kr-vat's calibrated fed_vat_rate) are applied on top — readout-only
     overlays (kr-nps-mandate) contribute no params here by design."""
+    from .levers_v2 import DEFAULTS_SHIPPED
+
     model_levers = {k: v for k, v in levers.items() if k in _MODEL_LEVERS}
+    # The disposition simplex is a JOINT constraint the per-lever clamps can't see: a user
+    # retained/price pair summing past 1 makes the derived survivor remainder 0 and the
+    # engine's simplex guard raise (a 500 an adversarial pass reproduced). Apply the US
+    # rail's rule — retained wins, price clamps to the remainder — against the preset's
+    # own effective values, so a single-lever request can never oversubscribe the simplex.
+    ov = KOREA_PRESETS[preset].overrides
+    ret = model_levers.get("retained_profit_share",
+                           ov.get("retained_profit_share",
+                                  DEFAULTS_SHIPPED.retained_profit_share))
+    pri = model_levers.get("price_reduction_share",
+                           ov.get("price_reduction_share",
+                                  DEFAULTS_SHIPPED.price_reduction_share))
+    if ret + pri > 1.0:
+        model_levers["price_reduction_share"] = max(0.0, 1.0 - ret)
     for k in overlays:
         model_levers.update(KOREA_OVERLAYS[k].params)
     v2p = korea_preset_params(preset, HORIZON, **model_levers)
@@ -134,6 +150,8 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     nhi_s = levers.get("nhi_share", NHI_MID)
     nps_s = levers.get("nps_share", NPS_MID)
     user_delta = levers.get("exposure_delta", 0.0)
+    assert user_delta in EXPOSURE_DELTAS, \
+        f"exposure_delta {user_delta} off the read grid — cfg must come from sanitize"
 
     deltas = deltas if deltas is not None else build_korea_deltas()
     if data_pool is None:
