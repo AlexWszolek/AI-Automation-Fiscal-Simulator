@@ -220,26 +220,49 @@ export interface KoreaRegionRow {
   helc_share: number
 }
 
-export function koreaTileMap(rows: KoreaRegionRow[],
-                             opts: { height?: number } = {}): VisualizationSpec {
-  // tile cartogram, not a choropleth: 17 units read better as equal tiles than as land
-  // area (경기 is mid-sized land but 7.8m workers), and it needs no external geometry.
-  // Sequential single hue (site blue, light→dark) — magnitude job, per the color rules;
-  // tile labels switch to surface-white past the midpoint for contrast.
-  const tiles = rows.filter((r) => r.col >= 0)
-  const vals = tiles.map((t) => t.helc_share)
+// Approximate label anchors (lon, lat) for the geo map — hand-entered from the standard
+// administrative centroids; 서울/인천 nudged apart in the capital-belt crowd.
+const SIDO_LABELS: Record<string, [number, number]> = {
+  // capital belt and the small metros are offset apart (인천 offshore west, 경기 NE of
+  // Seoul, 부산/울산 toward the coast) so 17 labels survive without leader lines
+  서울: [126.94, 37.55], 인천: [126.12, 37.32], 경기: [127.62, 37.78],
+  강원: [128.35, 37.75], 충북: [127.85, 36.95], 충남: [126.55, 36.4],
+  세종: [127.05, 36.68], 대전: [127.52, 36.25], 경북: [128.95, 36.45],
+  대구: [128.65, 35.83], 울산: [129.42, 35.6], 부산: [129.2, 35.05],
+  경남: [128.15, 35.35], 전북: [127.1, 35.72], 광주: [126.68, 35.1],
+  전남: [126.85, 34.75], 제주: [126.55, 33.37],
+}
+// the topojson carries the 2013 names; two provinces were renamed 2023–24
+const TOPO_NAME: Record<string, string> = {
+  강원특별자치도: '강원도', 전북특별자치도: '전라북도',
+}
+
+export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
+                            opts: { height?: number } = {}): VisualizationSpec {
+  // an actual boundary map (Statistics Korea SGIS census geometry via the
+  // southkorea-maps kostat layer). Same sequential single-hue as the tile version;
+  // names label the regions, values live in the tooltip and the legend.
+  const data = rows.filter((r) => r.col >= 0).map((r) => ({
+    topo_name: TOPO_NAME[r.region] ?? r.region,
+    region: r.region, short: r.short,
+    pct: r.helc_share, emp_k: r.emp_k,
+    lon: SIDO_LABELS[r.short]?.[0], lat: SIDO_LABELS[r.short]?.[1],
+  }))
+  const vals = data.map((d) => d.pct)
   const mid = (Math.min(...vals) + Math.max(...vals)) / 2
-  const data = tiles.map((t) => ({ ...t, pct: t.helc_share, dark: t.helc_share > mid }))
-  const xEnc = { field: 'col', type: 'ordinal' as const, axis: null, sort: 'ascending' as const }
-  const yEnc = { field: 'row', type: 'ordinal' as const, axis: null, sort: 'ascending' as const }
   return {
-    width: 'container', height: opts.height ?? 420, background: 'transparent',
+    width: 'container', height: opts.height ?? 520, background: 'transparent',
     layer: [
       {
-        data: { values: data },
-        mark: { type: 'rect', stroke: '#fcfbf8', strokeWidth: 3, cornerRadius: 4 },
+        data: { values: topology, format: { type: 'topojson', feature: 'skorea_provinces_geo' } },
+        transform: [{
+          lookup: 'properties.name',
+          from: { data: { values: data }, key: 'topo_name',
+                  fields: ['region', 'short', 'pct', 'emp_k'] },
+        }],
+        projection: { type: 'mercator' },
+        mark: { type: 'geoshape', stroke: '#fcfbf8', strokeWidth: 1.5 },
         encoding: {
-          x: xEnc, y: yEnc,
           color: {
             field: 'pct', type: 'quantitative', title: null,
             scale: { range: ['#e9eff6', '#2a5480'] },
@@ -254,20 +277,14 @@ export function koreaTileMap(rows: KoreaRegionRow[],
       },
       {
         data: { values: data },
-        mark: { type: 'text', dy: -9, fontSize: 13, fontWeight: 600 },
+        projection: { type: 'mercator' },
+        mark: { type: 'text', fontSize: 11, fontWeight: 600 },
         encoding: {
-          x: xEnc, y: yEnc,
+          longitude: { field: 'lon', type: 'quantitative' },
+          latitude: { field: 'lat', type: 'quantitative' },
           text: { field: 'short' },
-          color: { condition: { test: 'datum.dark', value: '#fcfbf8' }, value: TOKENS.ink },
-        },
-      },
-      {
-        data: { values: data },
-        mark: { type: 'text', dy: 10, fontSize: 12, font: TOKENS.mono },
-        encoding: {
-          x: xEnc, y: yEnc,
-          text: { field: 'pct', format: '.1%' },
-          color: { condition: { test: 'datum.dark', value: '#fcfbf8' }, value: TOKENS.ink2 },
+          color: { condition: { test: `datum.pct > ${mid}`, value: '#fcfbf8' },
+                   value: TOKENS.ink },
         },
       },
     ],

@@ -109,28 +109,33 @@ def test_every_preset_reaches_then_holds_at_any_horizon():
         assert all(v == pytest.approx(p.adoption_end) for v in a[r:])
 
 
-def test_agi_presets_translate_cleanly():
-    """The Korinek-Suh translations: every override is a real V2Params field, the three
-    US-only fields are NOT ported (no state closure / no US GRT rate / robotics inert), and
-    physical_feasibility is pinned at 0.0 — Korea has no robot-exposure vector wired, so the
-    physical channel maps to zero. Wiring one later must consciously revisit these presets."""
+def test_translated_presets_follow_the_porting_discipline():
+    """EVERY ported preset (everything outside the band trio): overrides are real V2Params
+    fields with provenance, the US-only fields are NOT ported (no state closure / no US GRT
+    rate / robotics inert), cognitive_feasibility is never re-discounted (the BOK HELC base
+    already embeds the complementarity discount), and physical_feasibility stays 0.0 —
+    wiring a Korean robot-exposure vector later must consciously revisit every one."""
     import dataclasses
 
     from fiscal_model.korea_scenarios import KOREA_BAND_KEYS, KOREA_PRESETS
     from fiscal_model.levers_v2 import V2Params
     fields = {f.name for f in dataclasses.fields(V2Params)}
-    agi_keys = set(KOREA_PRESETS) - set(KOREA_BAND_KEYS)
-    assert agi_keys == {"korea-agi-20y", "korea-agi-5y"}
-    for k in agi_keys:
+    ported = set(KOREA_PRESETS) - set(KOREA_BAND_KEYS)
+    assert {"korea-agi-20y", "korea-agi-5y", "korea-ai-2027", "korea-metaculus",
+            "korea-karger", "korea-acemoglu", "korea-brynjolfsson"} <= ported
+    for k in ported:
         p = KOREA_PRESETS[k]
         assert set(p.overrides) <= fields, f"{k}: unknown V2Params field"
         assert not set(p.overrides) & {"state_cut_share", "state_rate_hike_cap",
                                        "compute_effective_rate", "robotics_lag"}, \
             f"{k}: US-only override ported by mistake"
-        assert p.overrides["physical_feasibility"] == 0.0, \
+        assert p.overrides.get("physical_feasibility", 0.0) == 0.0, \
             f"{k}: physical channel opened without a Korean robot-exposure vector"
-        assert p.adoption_end == 1.0
+        assert p.overrides.get("cognitive_feasibility", 1.0) == 1.0, \
+            f"{k}: cf re-discount on the already-discounted BOK HELC base"
         assert set(p.overrides) <= set(p.provenance), f"{k}: override without provenance"
+    for k in ("korea-agi-20y", "korea-agi-5y", "korea-ai-2027"):
+        assert KOREA_PRESETS[k].adoption_end == 1.0
     # the aggressive world reaches full automation at year 5 and holds
     from fiscal_model.presets import build_adoption_path
     a5 = build_adoption_path(KOREA_PRESETS["korea-agi-5y"], 40)

@@ -37,6 +37,11 @@ export interface KoreaScenarioPayload {
     nhi_years_forward: number
     nps_given_back: number
     ei_shortfall_tn: number
+    inc_tax_lost_cum_tn: number
+    contrib_lost_cum_tn: number
+    ei_outlay_cum_tn: number
+    u_uplift_pp: number
+    u_base_pct: number
   }
   funds: { nhi: KoreaFundJson; nps: KoreaFundJson; ei: KoreaFundJson }
   composition_2035: Record<string, number>

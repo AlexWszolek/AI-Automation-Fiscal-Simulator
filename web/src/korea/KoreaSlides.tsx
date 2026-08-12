@@ -11,7 +11,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { VisualizationSpec } from 'vega-embed'
 import copy from '../content/copy.json'
-import { compositionBars, fundBand, koreaTileMap, koreaTornado } from '../charts/korea'
+import { compositionBars, fundBand, koreaGeoMap, koreaTornado } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
@@ -70,25 +70,28 @@ export default function KoreaSlides() {
   const central = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-central.json')
   const bundle = useJson<KoreaBundle>('/data/korea.json')
   const tornado = useJson<any>('/data/korea/tornado/korea-central.json')
-  const presetFinals = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-agi-20y.json')
-  const agi5 = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-agi-5y.json')
-  const slow = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-slow.json')
-  const fast = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-fast.json')
+  const topo = useJson<object>('/data/korea-sido-topo.json')
+  const [allPresets, setAllPresets] = useState<Record<string, KoreaScenarioPayload> | null>(null)
+  useEffect(() => {
+    Promise.all(KOREA_PRESETS.map(async (p) => {
+      const r = await fetch(`/data/korea/scenarios/${p.key}.json`)
+      return [p.key, (await r.json()) as KoreaScenarioPayload] as const
+    })).then((entries) => setAllPresets(Object.fromEntries(entries)))
+      .catch(() => setAllPresets(null))
+  }, [])
 
   const params = new URLSearchParams(location.search)
   const exportSlide = params.get('slide') ? Number(params.get('slide')) : null
   const [active, setActive] = useState(0)
 
-  const ready = central && bundle && tornado && presetFinals && agi5 && slow && fast
+  const ready = central && bundle && tornado && allPresets && topo
   const slides = useMemo(() => {
     if (!ready) return []
     const h = bundle!.headlines
     const f = central!.funds
-    const scenarioRows = [
-      { p: KOREA_PRESETS[0], pay: slow! }, { p: KOREA_PRESETS[1], pay: central! },
-      { p: KOREA_PRESETS[2], pay: fast! }, { p: KOREA_PRESETS[3], pay: presetFinals! },
-      { p: KOREA_PRESETS[4], pay: agi5! },
-    ]
+    const scenarioRows = KOREA_PRESETS
+      .filter((p) => allPresets![p.key])
+      .map((p) => ({ p, pay: allPresets![p.key] }))
     const instLabel = (k: string) => KO.institutions[k] ?? k
 
     return [
@@ -168,7 +171,7 @@ export default function KoreaSlides() {
       { key: 'map', body: (
         <div className="slide-chart">
           <h2>{KO.sections.map}</h2>
-          <ChartPanel spec={slideSpec(koreaTileMap((bundle as any).regions ?? [],
+          <ChartPanel spec={slideSpec(koreaGeoMap((bundle as any).regions ?? [], topo!,
             { height: 620 }))} caption={KO.captions.map} />
         </div>
       ) },

@@ -27,6 +27,7 @@ from .korea_assembly import (build_korea_data, build_korea_deltas,
                              korea_project_funds)
 from .korea_exposure import exposure_variant
 from .korea_funds import EI_BASELINE, NHI_REFORM, NPS_REFORM, first_negative_year
+from .korea_region import national_labour_force
 from .korea_overlays import KOREA_OVERLAYS, NPS_MANDATE_PROFIT_SHARE
 from .korea_scenarios import KOREA_PRESETS, WAGE_LINKED_SHARE
 
@@ -42,9 +43,14 @@ _MODEL_LEVERS = ("reabsorption_rate", "reemployment_haircut", "lfp_exit_rate",
                  "attrition_rate", "survivor_elasticity", "retained_profit_share",
                  "price_reduction_share", "productivity_passthrough", "price_passthrough",
                  "demand_multiplier", "mpc", "consumption_stickiness", "ui_weeks",
-                 "auto_cost", "interest_rate", "baseline_growth_rate")
+                 "auto_cost", "interest_rate", "baseline_growth_rate",
+                 "reab_wage_baumol", "reab_wage_crowding", "compute_effective_rate",
+                 "survivor_raise_ceiling", "survivor_spillover_to_profit",
+                 "automation_tax_rate")
 KOREA_LEVER_SPECS: dict[str, tuple] = {
     **{k: mc_mod.PERTURBED[k] for k in _MODEL_LEVERS},
+    "survivor_raise_ceiling": (1.0, 3.0),        # PERTURBED's hi is inf; the slider needs one
+    "adoption_start": (0.0, 0.5),
     "adoption_end": (0.005, 1.0),
     "nhi_share": (WAGE_LINKED_SHARE["nhi"].low, WAGE_LINKED_SHARE["nhi"].high),
     "nps_share": (WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high),
@@ -106,17 +112,28 @@ def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
                                   DEFAULTS_SHIPPED.price_reduction_share))
     if ret + pri > 1.0:
         model_levers["price_reduction_share"] = max(0.0, 1.0 - ret)
+    # the robot tax's capacity bound (the sampler's rule): it is paid out of retained
+    # profit net of compute costs, so clamp to retained × (1 − auto_cost)
+    if "automation_tax_rate" in model_levers:
+        ac = model_levers.get("auto_cost", ov.get("auto_cost", DEFAULTS_SHIPPED.auto_cost))
+        model_levers["automation_tax_rate"] = min(
+            model_levers["automation_tax_rate"], max(0.0, ret * (1.0 - ac)))
     for k in overlays:
         model_levers.update(KOREA_OVERLAYS[k].params)
     v2p = korea_preset_params(preset, HORIZON, **model_levers)
-    if "adoption_end" in levers:
+    if "adoption_start" in levers or "adoption_end" in levers:
+        # rebuild the path parametrically with the preset's own reach semantics (linear to
+        # the reach year, flat after) — same shape family as build_adoption_path
+        from dataclasses import replace
         path = np.asarray(v2p.adoption_path, float)
-        end = float(path[-1])
-        if end > 0:
-            factor = min(levers["adoption_end"] / end, 1.0 / max(float(path.max()), 1e-9))
-            from dataclasses import replace
-            v2p = replace(v2p, adoption_path=list(path * factor),
-                          adoption=float(path[-1] * factor))
+        start = float(levers.get("adoption_start", path[0]))
+        end = max(float(levers.get("adoption_end", path[-1])), start)
+        pre = KOREA_PRESETS[preset]
+        reach = pre.adoption_reach_year if pre.adoption_reach_year is not None else HORIZON - 1
+        ramp = np.linspace(start, end, reach + 1)
+        path2 = np.clip(np.concatenate(
+            [ramp, np.full(max(0, HORIZON - reach - 1), end)])[:HORIZON], 0.0, 1.0)
+        v2p = replace(v2p, adoption_path=list(path2), adoption=float(path2[-1]))
     return v2p
 
 
@@ -183,6 +200,14 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
 
     rows = user_res.iloc[:display_n].round(4).to_dict("records")
     final = user_res.iloc[display_n - 1]
+    disp = user_res.iloc[:display_n]
+    lf = national_labour_force()
+    # displaced still IN the labour force: the UI window + exhausted + demand-shortfall
+    # layoffs; exited/retired left it. Mechanical translation against the same survey
+    # frame as the map (지역별고용조사 sheet 1), disclosed as such.
+    u_uplift_pp = (100.0 * (float(final["on_ui_M"]) + float(final["exhausted_M"])
+                            + float(final["induced_M"])) * 1e6
+                   / (lf["labour_force_k"] * 1e3))
     bridge = bridges[user_delta]
     jobs_lost_M = float(final["population_M"] - final["employed_M"]
                         - final["reabsorbed_M"] - final["retired_M"])
@@ -258,6 +283,13 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
             "nps_given_back": round(float(central["nps"]["years_pulled_forward"]), 2),
             "ei_shortfall_tn": round(float(EI_BASELINE.reserves[-1]
                                            - central["ei"]["eroded_reserves"][-1]), 1),
+            "inc_tax_lost_cum_tn": round(float(disp["inc_fed_loss_B"].sum()
+                                               + disp["inc_state_loss_B"].sum()) / 1000.0, 2),
+            "contrib_lost_cum_tn": round(float(disp["payroll_fed_loss_B"].sum()) / 1000.0, 2),
+            "ei_outlay_cum_tn": round(float(bridge["ei_outlay_bn"][:display_n].sum())
+                                      / 1000.0, 2),
+            "u_uplift_pp": round(u_uplift_pp, 2),
+            "u_base_pct": round(lf["u_rate_pct"], 1),
         },
         "funds": {
             "nhi": _fund_json(NHI_REFORM, central["nhi"], *envelope["nhi"]),

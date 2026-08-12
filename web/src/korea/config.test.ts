@@ -18,9 +18,11 @@ describe('korea grid', () => {
     }
   })
 
-  it('carries the five presets with the AGI pair last', () => {
+  it('carries the ten presets, diffusion trio first, AGI pair last', () => {
     expect(KOREA_PRESETS.map((p) => p.key)).toEqual([
-      'korea-slow', 'korea-central', 'korea-fast', 'korea-agi-20y', 'korea-agi-5y'])
+      'korea-slow', 'korea-central', 'korea-fast',
+      'korea-acemoglu', 'korea-brynjolfsson', 'korea-karger', 'korea-metaculus',
+      'korea-ai-2027', 'korea-agi-20y', 'korea-agi-5y'])
   })
 })
 

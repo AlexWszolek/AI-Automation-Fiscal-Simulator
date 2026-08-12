@@ -3,9 +3,10 @@
 // always drawn, and the sources & disclosures panel is part of the page, not a tooltip.
 // ALL user-facing text on this page is provisional until Alex's copy pass (copy.json →
 // "korea"); the draft banner stays until that lands.
+import { useEffect, useState } from 'react'
 import copy from '../content/copy.json'
 import { ChartPanel } from '../components/ChartPanel'
-import { compositionBars, contrastBars, fundBand, koreaTileMap } from '../charts/korea'
+import { compositionBars, contrastBars, fundBand, koreaGeoMap } from '../charts/korea'
 import { useKoreaData } from '../state/useKoreaData'
 
 const KO = (copy as unknown as { korea: KoreaCopy }).korea
@@ -38,6 +39,11 @@ function Metric({ label, value, ground }: { label: string; value: string; ground
 
 export default function KoreaApp() {
   const { bundle, failed } = useKoreaData()
+  const [topo, setTopo] = useState<object | null>(null)
+  useEffect(() => {
+    fetch('/data/korea-sido-topo.json').then((r) => (r.ok ? r.json() : null))
+      .then(setTopo).catch(() => setTopo(null))
+  }, [])
   const label = (k: string) => KO.institutions[k] ?? k
 
   return (
@@ -103,10 +109,10 @@ export default function KoreaApp() {
                 spec={compositionBars(bundle.composition.central_2035, label)}
                 caption={KO.captions.composition}
               />
-              {bundle.regions && (
+              {bundle.regions && topo && (
                 <ChartPanel
                   title={KO.sections.map}
-                  spec={koreaTileMap(bundle.regions)}
+                  spec={koreaGeoMap(bundle.regions, topo)}
                   caption={KO.captions.map}
                 />
               )}

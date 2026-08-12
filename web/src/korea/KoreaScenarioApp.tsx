@@ -4,7 +4,7 @@
 // ALL user-facing text is provisional until Alex's copy pass (copy.json → "korea").
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import copy from '../content/copy.json'
-import { fundBand, compositionBars, koreaTileMap } from '../charts/korea'
+import { fundBand, compositionBars, koreaGeoMap } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
@@ -94,9 +94,12 @@ export default function KoreaScenarioApp() {
   )
   const instLabel = (k: string) => KO.institutions[k] ?? k
   const [regions, setRegions] = useState<import('../charts/korea').KoreaRegionRow[] | null>(null)
+  const [topo, setTopo] = useState<object | null>(null)
   useEffect(() => {
     fetch('/data/korea.json').then((r) => (r.ok ? r.json() : null))
       .then((b) => setRegions(b?.regions ?? null)).catch(() => setRegions(null))
+    fetch('/data/korea-sido-topo.json').then((r) => (r.ok ? r.json() : null))
+      .then(setTopo).catch(() => setTopo(null))
   }, [])
 
   return (
@@ -149,10 +152,14 @@ export default function KoreaScenarioApp() {
                                    value={String(values[k])}
                                    onChange={(v) => dispatch({ type: 'setLever', key: k, value: Number(v) })} />
                   )
-                // the joint disposition constraint (the server clamps too): retained
-                // wins, the price-share slider is capped at the remainder
+                // the two JOINT constraints (the server clamps both): price is capped at
+                // 1 − retained, and the robot tax at its retained-profit capacity bound
                 const priceMax = k === 'price_reduction_share'
-                  ? Math.max(0, 1 - Number(values.retained_profit_share)) : undefined
+                  ? Math.max(0, 1 - Number(values.retained_profit_share))
+                  : k === 'automation_tax_rate'
+                    ? Math.max(0, Number(values.retained_profit_share)
+                               * (1 - Number(values.auto_cost)))
+                    : undefined
                 return (
                   <SliderControl key={k} label={c.label} help={c.help}
                                  spec={{ lo: spec.lo, hi: spec.hi, step: spec.step ?? 0.01,
@@ -211,6 +218,28 @@ export default function KoreaScenarioApp() {
                   label={KO.metrics.ei}
                   value={`₩${payload.final.ei_shortfall_tn.toFixed(1)}tn short`}
                   ground={`vs the planned ₩${payload.funds.ei.published[payload.funds.ei.published.length - 1].toFixed(1)}tn rebuild by 2029`}
+                />
+              </div>
+              <div className="metric-row korea-second-row">
+                <Metric
+                  label={KO.metrics.jobs}
+                  value={`${payload.final.jobs_lost_M.toFixed(2)}m jobs`}
+                  ground={`${payload.final.employment_drop_pct.toFixed(1)}% of modeled wage employment by ${payload.config.start_year + payload.config.display_periods - 1}`}
+                />
+                <Metric
+                  label={KO.metrics.unemployment}
+                  value={`+${payload.final.u_uplift_pp.toFixed(1)} pp`}
+                  ground={`on the ${payload.final.u_base_pct.toFixed(1)}% rate (2025H1) if displaced job-seekers count as unemployed`}
+                />
+                <Metric
+                  label={KO.metrics.inc_tax}
+                  value={`₩${payload.final.inc_tax_lost_cum_tn.toFixed(1)}tn`}
+                  ground={`cumulative national + local income tax lost through ${payload.config.start_year + payload.config.display_periods - 1}`}
+                />
+                <Metric
+                  label={KO.metrics.contrib}
+                  value={`₩${payload.final.contrib_lost_cum_tn.toFixed(1)}tn`}
+                  ground={`cumulative social-insurance contributions lost · EI benefits paid ₩${payload.final.ei_outlay_cum_tn.toFixed(1)}tn`}
                 />
               </div>
             </div>
@@ -276,10 +305,10 @@ export default function KoreaScenarioApp() {
                 spec={compositionBars(payload.composition_2035, instLabel)}
                 caption={KO.captions.composition}
               />
-              {regions && (
+              {regions && topo && (
                 <ChartPanel
                   title={KO.sections.map}
-                  spec={koreaTileMap(regions)}
+                  spec={koreaGeoMap(regions, topo)}
                   caption={KO.captions.map}
                 />
               )}

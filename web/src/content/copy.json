@@ -42,7 +42,11 @@
    "nhi": "[copy: Alex — NHI hero label]",
    "ei": "[copy: Alex — EI hero label]",
    "contrast_a": "White-collar automation only",
-   "contrast_b": "Elementary automation only"
+   "contrast_b": "Elementary automation only",
+   "jobs": "[copy: Alex — jobs-lost metric label]",
+   "unemployment": "[copy: Alex — unemployment-uplift metric label]",
+   "inc_tax": "[copy: Alex — cumulative income-tax loss metric label]",
+   "contrib": "[copy: Alex — cumulative contribution loss metric label]"
   },
   "institutions": {
    "NPS pension": "National Pension (capped)",

@@ -204,6 +204,143 @@ KOREA_PRESETS = {
                             "catch-up → 0.40 of HELC jobs by 2035",
         }),
 
+    # ---- the forecast-literature family, translated onto Korean data. Same discipline as
+    # the AGI pair below: adoption paths, labor-market, disposition, and macro overrides
+    # carry over parametrically; cognitive_feasibility is NOT carried — the US presets
+    # discount a broad exposure measure (cf × PCA composite), while Korea's exposure IS the
+    # BOK displacement-prone classification, which already embeds the complementarity
+    # discount — carrying a second cf would double-discount. physical_feasibility stays
+    # pinned at 0.0 (no Korean robot-exposure vector; disclosed). US-only fields (state
+    # closure, US GRT compute rate, robotics_lag) are dropped. Calibration anchors are the
+    # US papers' — carried parametrically onto Korean structure, disclosed per preset.
+    # US presets without a reach year ramp linearly over their native horizon; the Korea
+    # invariant (every preset reaches-then-holds at ANY horizon) pins reach_year=9 here.
+    "korea-acemoglu": Preset(
+        key="korea-acemoglu", name="Acemoglu — Modest AI",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.02, adoption_end=0.23, n_periods=10, adoption_reach_year=9,
+        overrides=dict(reabsorption_rate=0.50, reemployment_haircut=0.13, lfp_exit_rate=0.03,
+                       retained_profit_share=0.60, price_reduction_share=0.35, auto_cost=0.05,
+                       survivor_elasticity=0.0, productivity_passthrough=0.15,
+                       price_passthrough=0.30, demand_multiplier=0.30,
+                       baseline_growth_rate=0.04),
+        provenance=dict(
+            adoption="Acemoglu/Svanberg: 23% of exposed tasks profitably automatable in 10y; "
+                     "US canaries start (§1); applied to the BOK HELC base, which replaces "
+                     "the US cf×exposure composite",
+            reabsorption_rate="Farber normal-market 0.50 mild-slack (§1)",
+            reemployment_haircut="Farber 2015 central 0.13 (§1)",
+            lfp_exit_rate="Farber ~10% of losers NILF (§1)",
+            retained_profit_share="capital share +0.38pp, no sizable wage rises (§1)",
+            price_reduction_share="0.60/0.35/0.05 split (§1)",
+            auto_cost="steady-state compute share, low (§1)",
+            survivor_elasticity="no wage response measured (§1)",
+            productivity_passthrough="TFP ≤0.66%/10y (§1)",
+            price_passthrough="shipped default", demand_multiplier="active-Fed reading (§1)",
+            baseline_growth_rate="~2% real + 2% inflation (§1)"),
+    ),
+    "korea-brynjolfsson": Preset(
+        key="korea-brynjolfsson", name="Brynjolfsson — Augmentation",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.02, adoption_end=0.30, n_periods=10, adoption_reach_year=9,
+        overrides=dict(reabsorption_rate=0.60, reemployment_haircut=0.10, lfp_exit_rate=0.02,
+                       retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.10,
+                       survivor_elasticity=0.10, productivity_passthrough=0.50,
+                       price_passthrough=0.30, demand_multiplier=0.30,
+                       baseline_growth_rate=0.045),
+        provenance=dict(
+            adoption="Canaries realized pace, moderate end (§1); BOK HELC base",
+            reabsorption_rate="Farber normal-market 0.60 (§1)",
+            reemployment_haircut="mild scarring, DvW ~0.10 (§1)",
+            lfp_exit_rate="augmentation world, below Farber (§1)",
+            retained_profit_share="GenAI-at-Work gains partly shared → survivor 0.20 (§1)",
+            price_reduction_share="0.55/0.25/0.20 split (§1)",
+            auto_cost="shipped default (§1)",
+            survivor_elasticity="complementarity at low depth: +0.10 (§1)",
+            productivity_passthrough="GenAI at Work +15%/+30% novices → 0.5 (§1)",
+            price_passthrough="shipped default", demand_multiplier="active-Fed reading (§1)",
+            baseline_growth_rate="J-Curve real anchors + inflation (§1)"),
+    ),
+    "korea-karger": Preset(
+        key="korea-karger", name="Karger et al. — Expert survey, rapid",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.03, adoption_end=0.16, n_periods=10, adoption_reach_year=9,
+        overrides=dict(reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
+                       retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.15,
+                       survivor_elasticity=0.0, productivity_passthrough=0.95,
+                       price_passthrough=0.30, demand_multiplier=0.30,
+                       baseline_growth_rate=0.05, reab_wage_baumol=0.30),
+        provenance=dict(
+            adoption="NBER w35046 rapid: net employment −≈3.1% by 2030, US-calibrated, "
+                     "carried parametrically (§5); BOK HELC base",
+            reabsorption_rate="0.35 mid-slack, churn with stable unemployment (§5)",
+            reemployment_haircut="Farber central (§1)",
+            lfp_exit_rate="the survey's signature: displacement exits the labour force (§5)",
+            retained_profit_share="labor share 55.5→52.0 by 2030 (§5)",
+            price_reduction_share="0.55/0.25/0.20 split (§5)",
+            auto_cost="heavy AI infrastructure investment (§5)",
+            survivor_elasticity="raises via the funded share, not tightness (§5)",
+            productivity_passthrough="0.95 near ceiling (§5)",
+            price_passthrough="shipped default", demand_multiplier="no doom loop in the "
+            "expert median (§5)",
+            baseline_growth_rate="rapid ≈3.3% real + inflation (§5)",
+            reab_wage_baumol="service wages ride growth under rapid (§5)"),
+    ),
+    "korea-metaculus": Preset(
+        key="korea-metaculus", name="Metaculus — Crowd median, 2035",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.02, adoption_end=0.20, n_periods=10, adoption_reach_year=9,
+        overrides=dict(reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
+                       retained_profit_share=0.45, price_reduction_share=0.20, auto_cost=0.10,
+                       survivor_elasticity=0.0, productivity_passthrough=0.45,
+                       price_passthrough=0.30, demand_multiplier=0.50,
+                       baseline_growth_rate=0.04,
+                       reab_wage_baumol=0.35, reab_wage_crowding=0.10),
+        provenance=dict(
+            adoption="Labor Automation Hub crowd medians: ≈7.5% AI-attributed employment "
+                     "gap by 2035, US-calibrated, carried parametrically (§6); BOK HELC base",
+            reabsorption_rate="growth concentrated in care/licensed occupations (§6)",
+            reemployment_haircut="55% grad underemployment → downshift re-employment (§6)",
+            lfp_exit_rate="long-term unemployment stays ≤4.5%: exits (§6)",
+            retained_profit_share="labor share −4 to −5pp by 2035 (§6)",
+            price_reduction_share="0.45/0.20/0.35: visible survivor raises (§6)",
+            auto_cost="shipped default",
+            survivor_elasticity="crowd wage growth is partly composition (§6)",
+            productivity_passthrough="automation-linked part of crowd +28.6% (§6)",
+            price_passthrough="shipped default",
+            demand_multiplier="commentary flags a consumption problem; mid (§6)",
+            baseline_growth_rate="~2% real + 2% inflation (§6)",
+            reab_wage_baumol="service wages rise with tight refuge demand (§6)",
+            reab_wage_crowding="crowding from the displaced inflow (§6)"),
+    ),
+    "korea-ai-2027": Preset(
+        key="korea-ai-2027", name="AI 2027 — Fast takeoff",
+        blurb="[copy TBD — not model-authored]",
+        adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
+        overrides=dict(reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
+                       retained_profit_share=0.70, price_reduction_share=0.20, auto_cost=0.30,
+                       survivor_elasticity=-0.50, productivity_passthrough=0.90,
+                       price_passthrough=0.50, demand_multiplier=1.20,
+                       baseline_growth_rate=0.08, interest_rate=0.04),
+        provenance=dict(
+            adoption="Davidson: capability 20%→100% ~3y + diffusion → ceiling at year 5, "
+                     "flat after (§2⑦); BOK HELC base — COGNITIVE ONLY, so the scenario's "
+                     "robot economy (~1M robots/mo by 2028) is ABSENT: a deep understatement "
+                     "for this preset in particular",
+            reabsorption_rate="little re-employment during takeoff (§2⑦)",
+            reemployment_haircut="displaced land at the service floor (§2⑦)",
+            lfp_exit_rate="elevated exit (§2⑦)",
+            retained_profit_share="0.70/0.20/0.10 split (§2⑦)",
+            price_reduction_share="see retained (§2⑦)",
+            auto_cost="$1T/yr global AI capex (§1)",
+            survivor_elasticity="slider max −0.50 (§1)",
+            productivity_passthrough="≥10× acceleration → near ceiling (§1)",
+            price_passthrough="strong deflation (§2⑦)",
+            demand_multiplier="crisis regime, partial offset (§1)",
+            baseline_growth_rate="explosion band upper end (§1)",
+            interest_rate="Korinek-Lockwood ~4% (§1)"),
+    ),
+
     # ---- fast worlds: the US Korinek-Suh AGI presets translated onto Korean data.
     # These are forecast-literature scenarios, NOT Korea-calibrated diffusion: capability-
     # driven adoption overrides the SME-laggard discount, so the adoption numbers carry over

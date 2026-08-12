@@ -83,3 +83,22 @@ def region_exposure(period: str = LATEST_PERIOD) -> pd.DataFrame:
     implied = float((reg.helc_share * reg.emp_k).sum() / reg.emp_k.sum())
     assert abs(implied - nat.helc_share) < 5e-4, (implied, nat.helc_share)
     return out
+
+
+LF_CSV = REGION_CSV.parent / "region_labour_force.tidy.csv"
+
+
+def national_labour_force(period: str = LATEST_PERIOD) -> dict:
+    """The 전국 labour-force block (thousands) for the unemployment-rate translation:
+    Δu(pp) = displaced-still-in-labour-force / 경제활동인구. Same committed workbook as the
+    occupation mix (sheet 1), so numerator and denominator share a survey frame."""
+    df = pd.read_csv(LF_CSV)
+    row = df[(df["period"] == period) & (df["region"] == "전국")]
+    assert len(row) == 1, f"no national LF row for {period}"
+    r = row.iloc[0]
+    out = {"labour_force_k": float(r.labour_force_k),
+           "employed_k": float(r.employed_k),
+           "unemployed_k": float(r.unemployed_k)}
+    out["u_rate_pct"] = 100.0 * out["unemployed_k"] / out["labour_force_k"]
+    assert 25_000 < out["labour_force_k"] < 35_000    # sanity: ~29-30m
+    return out

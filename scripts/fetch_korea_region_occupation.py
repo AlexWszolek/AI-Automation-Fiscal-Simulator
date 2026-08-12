@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "data" / "raw" / "korea"
 XLSX = RAW / "lafs_region_occupation_2017_2025.xlsx"
 OUT = RAW / "region_occupation.tidy.csv"
+LF_OUT = RAW / "region_labour_force.tidy.csv"
 URL = "https://kostat.go.kr/boardDownload.es?bid=211&list_no=439006&seq=5"
 UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/126.0 Safari/537.36")
@@ -72,6 +73,34 @@ def parse() -> None:
         w.writeheader()
         w.writerows(out)
     print(f"wrote {OUT} ({len(out)} rows, {len(periods)} periods)")
+
+    # sheet 1: labour force / employed / unemployed per region-period (the denominator for
+    # the unemployment-rate translation; 8 columns per period block)
+    ws1 = wb["1. 시도 성별 경제활동인구 총괄"]
+    rows1 = list(ws1.iter_rows(values_only=True))
+    periods1 = {clean(v): i for i, v in enumerate(rows1[2]) if v and "20" in str(v)}
+    lf = []
+    region = None
+    for r in rows1:
+        a, b = clean(r[0]), clean(r[1])
+        if a in REGIONS or a == "계":
+            region = "전국" if a == "계" else a
+        if region is None or b != "계":
+            continue
+        for period, col in periods1.items():
+            vals = r[col:col + 4]                    # 15세이상, 경활, 취업자, 실업자
+            if any(v in (None, "", "-") for v in vals):
+                continue
+            lf.append({"period": period, "region": region,
+                       "labour_force_k": float(vals[1]), "employed_k": float(vals[2]),
+                       "unemployed_k": float(vals[3])})
+    assert len(lf) >= 18 * len(periods1) * 0.95, f"LF parse truncated ({len(lf)})"
+    with open(LF_OUT, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=["period", "region", "labour_force_k",
+                                          "employed_k", "unemployed_k"])
+        w.writeheader()
+        w.writerows(lf)
+    print(f"wrote {LF_OUT} ({len(lf)} rows)")
 
 
 if __name__ == "__main__":
