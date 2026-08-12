@@ -1,192 +1,185 @@
-# Handoff: move the Korea interactive model client-side
+# Handoff: move the Korea interactive model client-side (Pyodide)
 
 **For a session picking this up cold.** Read `docs/research/korea-port-brief.md` first for the
 project, then this file for the change. Companion state: the `korea-port-project` memory and
-`docs/research/korea-fiscal-system.md` (✓/⚠ convention).
+`docs/research/korea-fiscal-system.md`.
+
+**Revision note (2026-08-12).** The first version of this handoff planned a TypeScript rewrite of
+the Korea engine, pinned to Python by golden fixtures. Alex challenged the premise — *why rewrite
+at all when Pyodide runs the actual engine in a Web Worker?* — and he was right: the entire risk
+apparatus of the old plan (fixture-pinned mirror, dual maintenance, the silent-getattr bug class)
+existed to manage the dangers of a second implementation. Running the same Python eliminates the
+class instead of managing it, which is this project's house philosophy. The JS engine survives
+only as Appendix A with an explicit trigger condition.
 
 ---
 
 ## 0. The decision and why
 
-Move the computation behind `/korea-app.html` from the server (`/api/korea/run`,
-`/api/korea/tornado`) into the browser. The Python model stays canonical; the browser runs a
-**fixture-pinned mirror**.
+Run the existing Korea engine — `fiscal_model.korea_webpayload.build_korea_scenario_payload` and
+`korea_mc_tornado`, unmodified — **in the browser under Pyodide, inside a Web Worker**, replacing
+the `/api/korea/*` calls. Python remains the one and only implementation.
 
-Why this is right for Korea and wrong for the US (adjudicated 2026-08-12, after an adversarial
-review of the hosting budget):
+Why client-side at all (unchanged from the original analysis):
+- 209 cells, closed-form transfers — the computation is tiny; the server buys nothing but latency
+- **Restricted-network capability** for a ministry-firewalled audience; resilience (no process to
+  crash the week the deck circulates); $0 Korea hosting; the template for countries 3–12
+- The server ask shrinks to US-model-only (~one 8-core box)
 
-- **The arithmetic is tiny.** 209 occupation×wage-bracket cells (vs 33,369 US), and Korean
-  transfers are closed-form statutory formulas (EI benefit, EITC trapezoids, Basic Pension) —
-  there is **no analogue of the US 2.1M-interpolation transfer-grid machinery**, which is 60% of
-  the US per-run cost. A Korea run is ~10⁵–10⁶ flop-equivalents; the measured 10ms/draw in Python
-  is mostly small-array dispatch overhead. In JS: sub-millisecond per draw, full 400-draw tornado
-  in a few hundred ms on the main-thread-free path.
-- **Restricted-network briefing rooms.** The policymaker audience sits behind ministry firewalls.
-  A fully client-side page (map topojson already self-hosted) works on any network that can load
-  one page, and can be handed to the diplomacy org as a file. The server version cannot have this
-  property.
-- **Resilience + cost.** The Korea site becomes static: CDN-cached, no process to crash the week
-  the deck circulates. The server ask shrinks to US-model-only (~$650/yr, one 8-core box).
-- **The template for countries 3–12.** Future reduced-form country models follow the Korea shape;
-  this port is the pattern they'll reuse.
-
-Why NOT to hand-port casually: the Korea work has already produced **two silent-`getattr` bugs in
-the funds bridge alone** — a parallel arithmetic path read a nonexistent attribute and quietly
-produced wrong headline numbers, twice. Both were caught by reconciliation tests pinning the
-bridge to the engine's own lines. A JS mirror without an equivalent pin **is** that bug class,
-permanently. The entire design below exists to prevent it.
+Why Pyodide and not a JS rewrite:
+- **Same code = no drift class.** The funds bridge that produced two silent-getattr bugs is the
+  same bridge, byte for byte. No mirror to maintain, no fixture chain as a load-bearing firewall
+  (fixtures survive only as a cheap parity-test corpus, §4).
+- **Feasibility is already strong on inspection** (verified 2026-08-12): the Korea path's data
+  inputs are stdlib `csv` reads of committed tidy CSVs (`korea_cells.py:71`,
+  `korea_assembly.py:54`) — no parquet, no lxml at runtime. Third-party surface is numpy + pandas
+  (+ their optional accelerators `pyarrow`/`numexpr`, which Pyodide's pandas runs without — spike
+  confirms). scipy was never a dependency, by long-standing project rule.
+- Cost: ~2–4 days against ~a week-plus for the rewrite, with near-zero ongoing cost instead of a
+  permanent dual-maintenance surface.
 
 ## 1. Non-negotiables
 
-1. **Timing gate: do NOT start before the September presentation is delivered.** Numbers freeze
-   ~Aug 26; the API version is built, parity-tested, and ships the event. This port is the
-   post-event upgrade. If you are reading this before the event: stop.
-2. **Python stays canonical, permanently.** Report artifacts, deck numbers, committed bundles,
-   and the numbers-freeze all come from the Python engine. The JS engine is a mirror whose only
-   authority is "equal to the fixtures Python generated." Never fix a JS/Python discrepancy by
-   changing Python to match JS.
-3. **Copy discipline.** Every user-facing string is a `[copy: Alex]` placeholder or lives in
-   copy.json (canonical). The port moves computation, not words. Do not author, move, or "improve"
-   copy.
-4. **Push only on Alex's explicit word.** Commit locally at phase boundaries.
-5. **The standing cost is real — state it, don't hide it.** After this ships, every Korea model
-   change lands twice: Python change → fixtures regen → JS mirror updated. The fixture chain (§3)
-   makes forgetting loud, but the second implementation is a permanent maintenance surface. That
-   trade was accepted deliberately (offline capability + resilience + the country template); if a
-   future maintainer finds the mirror rotting, the correct retreat is back to the API, not a
-   silently stale mirror.
+1. **Python canonical** — now trivially true: the browser runs the canonical code. Never patch
+   model behaviour inside the worker shim; any numeric change happens in `fiscal_model` and flows
+   everywhere.
+2. **Copy discipline.** `[copy: Alex]` placeholders and copy.json canonical. This change moves
+   computation, not words.
+3. **Push only on Alex's explicit word.**
+4. **Timing** (settled 2026-08-12, superseding the original hard gate): **Phase 0 + the parity
+   corpus may run now** — they are zero-production-risk and de-risk the estimate. **The swap
+   itself** (flag on, API retired) waits on two things: the Phase-0 checkpoint numbers, and
+   Alex's call on whether the offline capability should ship *at* the September event (in which
+   case: port in the post-freeze window, org reviews with the flag ON, minimum one week of soak)
+   or after it (default). The reviewed artifact must be the shipped artifact.
 
 ## 2. Scope
 
-**In:** the computation behind `/korea-app.html` — `build_korea_scenario_payload` and
-`korea_mc_tornado` (both in `fiscal_model/korea_webpayload.py`), consumed today via
-`api/korea.py` and `web/src/korea/useKoreaScenarioData.ts`.
+**In:** the compute behind `/korea-app.html` — payload builds and tornado, currently served by
+`api/korea.py` and consumed by `web/src/korea/useKoreaScenarioData.ts`.
 
-**Out, untouched:** the US model and site (server stays authoritative); `/korea.html` presenter
-view and `/korea-slides.html` (already static); the Python Korea modules themselves (they remain
-the source of fixtures and all publication numbers); all copy.
+**Out, untouched:** the US model and site; `/korea.html` presenter view; `/korea-slides.html`;
+all copy. The Python Korea modules are the thing being *shipped*, not replaced.
 
-**Deferred decision, default = keep:** the committed Korean static bundles. Keep them for
-first-paint (fast initial render, and they double as in-prod parity oracles — see §5 runtime
-self-check); the client engine takes over on first interaction.
+**Kept:** the committed Korean static bundles as the first-paint source (instant render while the
+worker warms) and as in-production parity oracles (§5 self-check).
 
-## 3. Architecture — the fixture chain is the whole design
+## 3. Architecture
 
 ```
-fiscal_model (canonical Python)
-   │  scripts/gen_korea_fixtures.py  (deterministic: fixed seeds, sorted keys, no timestamps)
-   ▼
-web/src/korea/engine/fixtures/*.json     (COMMITTED golden payloads + draw arrays)
-   │                                      │
-   │ pytest gate:                         │ vitest gate:
-   │ test_korea_fixtures_fresh —          │ engine.test.ts — the JS engine must
-   │ regenerating must reproduce the      │ reproduce every fixture payload at
-   │ committed files byte-for-byte        │ display precision
-   ▼                                      ▼
- any Python model change → pytest red → regen fixtures → vitest red until the JS mirror follows
+page load ──► static bundle paints the default scenario immediately (as today)
+     │
+     └─► Web Worker starts in background:
+           load pyodide.js + numpy + pandas (~25–30MB, service-worker precached)
+           micropip-install fiscal_model wheel (pure Python, built by CI)
+           load baked Korea data (tidy CSVs / npz, a few hundred KB)
+           warm-up: one payload build, self-check vs the fetched bundle
+     │
+slider/tornado ──► worker.postMessage(cfg) ──► sanitize_korea_config + payload/tornado
+                                              (the SAME functions api/korea.py calls)
+                   ◄── JSON payload (identical schema; useKoreaScenarioData swaps
+                       fetch() for worker call behind a feature flag)
 ```
 
-This is the same loud-drift pattern as `test_copy_json_fresh` and the cfg_repr staleness gates.
-Both gates must exist before the first line of engine port is written.
+- **Wheel**: `fiscal_model` packaged as a pure-Python wheel; the only new packaging artifact.
+- **Data**: the committed tidy CSVs ship as static assets; a small loader seam lets
+  `korea_assembly` read them from a supplied directory/bytes instead of the repo path. No 34MB
+  raw XML in the browser.
+- **Fallback**: the feature flag keeps `/api/korea/*` as the fallback path for one deploy after
+  the flag defaults on; then the routes, `api/korea.py` wiring, and the Caddy block retire. The
+  Python modules obviously remain.
 
-**Fixture coverage** (generated from Python, one file per case):
-- every preset × overlay subset × demography variant (저위/중위/고위) — pristine payloads
-- a lever sweep: each of the 25 levers at min/mid/max off a central config, plus ~20 random
-  jointly-perturbed configs (fixed seed)
-- tornado fixtures: full tornado output for ≥3 configs (pristine + modified), N as shipped
-- edge cases: every guard the Python engine raises on (out-of-grid levers, invalid overlay
-  pairs) — the JS engine must reject the same inputs
+## 4. Parity — a test, not a firewall
 
-**What ships to the browser** (a few hundred KB total, no runtime fetches beyond the page):
-- the baked 209-cell table (NOT the 34MB `data/raw/korea/` XML — bake via `korea_assembly`)
-- published fund paths, demography variants, grid/preset/overlay definitions
-- **the pre-drawn MC factor arrays** — see §4
+The old plan needed fixtures as the *only* thing standing between two implementations. Now parity
+is a regression test against environment differences (WASM numpy build, Pyodide's pinned
+numpy/pandas versions vs the repo's):
 
-## 4. Parity spec
-
-- **The bar is display-precision equality** — payloads round for display, so assert equality on
-  the rounded values, with a secondary tolerance check (rtol 1e-9) on raw floats to catch drift
-  early. Bitwise equality is NOT required — but will usually hold, because JS is spec-mandated
-  IEEE-754 double with **no FMA contraction** (the divergence we caught inside numpy itself —
-  see `reabsorption._interp_rows`'s docstring — cannot happen in JS).
-- **Known divergence source #1: `np.sum` pairwise summation.** A naive JS loop sums
-  left-to-right; numpy blocks pairwise. For 209-element arrays the difference is ~1e-15 relative
-  — inside tolerance, but if a fixture fails on a sum, replicate numpy's blocking rather than
-  loosening the gate.
-- **Known divergence source #2: the RNG. Do not port PCG64.** `korea_mc.py:114` uses
-  `np.random.default_rng(seed+1)` uniforms. Ship the drawn factor arrays as a fixture (they are
-  config-independent draws applied multiplicatively — verify this by reading `korea_mc.py`
-  before assuming; if any draw depends on the config, ship the underlying uniforms instead).
-  JS consumes the arrays; tornado fixtures then pin the whole chain.
-- **Language: TypeScript** under `web/src/korea/engine/`, tested with the existing vitest setup.
-  No new runtime dependencies; no WASM (unnecessary at this size).
+- **Bar: display-precision equality** of payloads (they round for display), with a secondary
+  rtol-1e-9 raw check. Ulp-level divergence is expected and acceptable — precedent: numpy's own
+  macOS-arm64 FMA contraction found in the `_interp_rows` work. (WASM, like JS, mandates plain
+  IEEE-754 doubles with no scalar FMA — so the browser may actually match the Linux server more
+  closely than the Mac matches either.)
+- **Corpus**: `scripts/gen_korea_fixtures.py` emits golden payloads (presets × overlays ×
+  demography variants + a lever sweep + ≥3 tornado cases). A vitest/worker test replays them
+  through Pyodide and asserts. Record the Pyodide, numpy, and pandas versions in the report.
+- **RNG**: no porting question anymore — `korea_mc.py`'s `default_rng(seed+1)` runs as-is. Seeded
+  determinism within a given numpy build; cross-build tornado equality asserted at display
+  precision like everything else.
 
 ## 5. Phases
 
-**Phase 0 — enumerate the live slice (½ day, with an abort checkpoint).**
-`korea_assembly` runs the full V2 assembly on Korean data. Before estimating anything, read
-`korea_assembly.py`, `korea_webpayload.py` (369 lines), and trace exactly which engine code paths
-execute for Korea (`close_state_gaps` must NOT be one of them — formula-transfer country; which
-survivor/reabsorption/disposition paths ARE live?). Deliverable: a list of every function the
-port must mirror, with line counts. **Checkpoint: if the live slice exceeds ~1,500 lines of
-Python, stop and report before porting** — the cost/benefit was estimated on the reduced chain
-(~2,435 total Korea lines, of which the payload path is a subset), and a much larger slice
-changes the decision.
+**Phase 0 — feasibility spike (~half a day), with measured checkpoints.**
+Build the wheel, load it in Pyodide in a worker, run one `build_korea_scenario_payload` and one
+tornado. Report four numbers:
+1. Cold worker-ready time (desktop + a throttled/mobile profile)
+2. Payload-build latency in-worker
+3. **Tornado wall time** — the known risk: Korea's 10ms/draw is small-array *dispatch* overhead,
+   and Pyodide's interpreter is ~3–5× slower, so 400 draws could land anywhere from 5s to 60s
+4. Peak WASM heap (phone RAM matters for the briefing-room audience)
 
-**Phase 1 — fixture harness first.** `scripts/gen_korea_fixtures.py` + the pytest freshness gate
-+ a vitest suite that loads fixtures and fails (no engine yet). Commit. From here, progress is
-"make fixtures pass," which keeps the port honest.
+**Abort criteria:** a hard pyarrow-style dependency that can't be shimmed; tornado >5s *after*
+Phase 3's batching; worker unusable on a mid-range phone profile. Retreat = stay server-side,
+lose nothing.
 
-**Phase 2 — port the engine slice.** Bottom-up: payroll components → tax chain → transfers →
-demography → erosion paths → funds bridge/projector → payload assembly → tornado. Make each
-layer's fixtures pass before the next. The funds bridge is where both silent-getattr bugs lived —
-port it against the reconciliation-test fixtures, not against the bridge code alone.
+**Phase 1 — loader seam + shipped data + parity corpus.** The `korea_assembly` read-from-bytes
+seam (native path unchanged and default); baked data as static assets; fixture generator + the
+freshness pytest gate; the parity replay test. No production change.
 
-**Phase 3 — integrate.** `useKoreaScenarioData.ts` calls the local engine instead of fetch;
-tornado in a Web Worker (keep the existing progressive-partial UX); static bundles remain the
-first-paint source. Add the **dev-build runtime self-check**: on load, recompute one bundled
-preset payload locally and `console.assert` equality with the fetched bundle — every dev session
-becomes a parity test.
+**Phase 2 — worker bridge + integration behind the flag.** `useKoreaScenarioData.ts` calls the
+worker when the flag is on; the warm-up self-check (recompute one bundled preset, assert equality
+with the fetched bundle — every session becomes a parity test); progressive tornado partials
+stream from the worker exactly as they do from the API today.
 
-**Phase 4 — verify offline + retire the API.** Full verification (§6). Then: keep
-`/api/korea/*` live but unused for one deploy (feature-flag fallback), then delete the routes,
-`api/korea.py`'s service wiring, and the Caddy block. Update the deploy notes. The Python Korea
-modules are NOT deleted — they are the fixture source forever.
+**Phase 3 — tornado performance, in Python, canonically.** If Phase 0's tornado number is poor,
+the fix is **batching the 400 draws across numpy** — at 209 cells a (400, 209) vectorization is
+straightforward, it amortizes the dispatch overhead that dominates, and it speeds the *server*
+path identically. It is a canonical optimization with a plain parity test (same draws, same
+results at display precision), not a browser-side hack.
+
+**Phase 4 — offline + retirement.** Service-worker precache of pyodide + wheel + data (offline
+after first visit — the PWA story); the verification battery; flag defaults on; one-deploy
+fallback window; retire `/api/korea/*`; update deploy notes and the `korea-port-project` memory.
 
 ## 6. Verification checklist
 
-- [ ] pytest fixture-freshness gate green; full suite green (baseline 434 + new)
-- [ ] vitest: every fixture payload reproduced at display precision (baseline 222 + new)
-- [ ] DevTools Network: **zero requests** during slider drags and tornado runs
-- [ ] Airplane-mode test: load `/korea-app.html`, then disconnect — everything still works,
-      including the map (self-hosted topojson) and tornado
-- [ ] Tornado completes < 1s in-browser; UI thread stays responsive (Worker)
-- [ ] Mobile: 375×812 preview + a CPU-throttled run (the audience opens this on phones)
-- [ ] The dev runtime self-check passes on every preset
+- [ ] Parity corpus green in CI (Pyodide replay ≡ native fixtures at display precision)
+- [ ] Warm-up self-check passes on every preset
+- [ ] DevTools Network: zero requests during slider drags and tornado runs
+- [ ] Offline test: load once, go offline, reload — everything works including map + tornado
+- [ ] Tornado ≤ ~3s in-worker on desktop, tolerable on a throttled phone; UI thread never blocks
+- [ ] Mobile: 375×812 + CPU-throttled run; peak memory recorded
 - [ ] Headline numbers on the rendered page match the frozen deck numbers exactly
       (NHI 0.23–0.90yr central 0.50; EI ₩2.6–11.4tn central 5.5; NPS 0.49–2.44 of 8;
       AGI-5y 2.14yr / ₩59.5tn / 7.46 of 8 — as pinned in the korea-port-project memory)
-- [ ] Commit per phase; **no push without Alex's word**
+- [ ] Full pytest + vitest suites green; commit per phase; no push without Alex's word
 
-## 7. Risks, ranked
+## 7. Honest costs and risks
 
-1. **Silent divergence** — the getattr precedent. Mitigated by the fixture chain; defeated only
-   if someone bypasses it. Never merge a JS change that isn't fixture-covered.
-2. **Phase-0 scope surprise** — the V2 assembly may exercise more engine than the reduced-chain
-   estimate assumed. That's what the checkpoint is for; the retreat (stay server-side) is cheap
-   and loses nothing that exists today.
-3. **Dual maintenance rot** — §1.5. The gates make it loud; the memory note should record that
-   the mirror exists so future sessions budget for it on every Korea model change.
-4. **RNG subtleties** — defeated by shipping draws, but only if the config-independence
-   assumption in §4 is verified by reading, not assumed.
+1. **~25–30MB runtime download** (pyodide + numpy + pandas, compressed; cached thereafter).
+   Mitigated by background worker load behind the instant static first paint. Still a real cost
+   on hotel/mobile connections the first time.
+2. **Tornado latency under the WASM interpreter** — the one number that can kill this. Phase 0
+   measures it; Phase 3's batching is the fix; the abort criterion is explicit.
+3. **Phone memory** (~150–300MB WASM heap with pandas). Measured at Phase 0 on a throttled
+   profile; the static-first page remains fully functional for anyone whose device declines the
+   worker.
+4. **Pyodide version pinning** — its numpy/pandas lag the repo's. Display-precision parity
+   absorbs this; the corpus test catches a Pyodide upgrade that doesn't.
+5. **True file-handoff remains unsolved** — WASM loading breaks under `file://`. Offline-after-
+   first-visit (PWA) works; a genuinely networkless single-file artifact does not. See Appendix A.
 
-## 8. Consequences elsewhere when this ships
+## Appendix A — the TypeScript engine (rejected default, one trigger)
 
-- **Hosting**: server = US model only; one 8-core box (~$650/yr) + CDN. The Seoul-satellite and
-  geo-routing questions are closed, not deferred.
-- **Grant text**: "country models run client-side (server-free, functional on restricted
-  government networks); the server serves only the US model's heavy computation and Monte Carlo."
-- **Countries 3–12**: this port is the template — new reduced-form countries target the JS
-  engine + fixture pattern from day one, with Python as the authoring/verification side.
-- **Memory**: update `korea-port-project` (architecture line + the dual-maintenance cost) when
-  Phase 4 completes.
+The original plan: hand-port the Korea chain to TS, pinned by the fixture chain (pytest freshness
+gate → committed fixtures → vitest parity gate), display-precision bar, ship the drawn MC factor
+arrays rather than porting PCG64, np.sum pairwise blocking as the known divergence source. It
+costs ~a week plus a **permanent dual-maintenance surface** — every Korea model change lands
+twice, forever — and its failure mode is the silent-getattr bug class that already happened twice
+in the bridge.
+
+**Trigger to revisit:** the diplomacy org needs a *genuinely networkless, single-file* artifact —
+open `index.html` from a USB stick in an air-gapped room. A ~100KB JS engine inlines into one
+HTML file; a 30MB WASM stack under `file://` does not. If that deliverable is ever requested,
+build the TS engine *then*, against the same fixture corpus §4 already maintains. Until then,
+don't.
