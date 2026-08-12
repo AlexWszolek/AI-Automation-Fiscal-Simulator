@@ -174,3 +174,40 @@ def test_overlays_sanitize_and_read_out_honestly(pools):
     vat_only = build_korea_scenario_payload(
         sanitize_korea_config({"overlays": ["kr-vat"]}), **pools)
     assert p["final"]["fed_deficit_B"] == vat_only["final"]["fed_deficit_B"]
+
+
+def test_demography_variants_and_tax_mults(pools):
+    """Alex's review asks: the published KOSIS variants move the pension damage in the
+    right direction (a shrinking contributor base amplifies the bite), the counterfactual
+    property holds under EVERY variant, and the tax mults are ledger-only — they close the
+    deficit and never touch the funds."""
+    from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
+                                               sanitize_korea_config)
+    low = build_korea_scenario_payload(sanitize_korea_config(
+        {"levers": {"demography_variant": -0.7}}), **pools)      # snaps to -1
+    assert low["final"]["demo_variant"] == "low"
+    base = build_korea_scenario_payload(sanitize_korea_config({}), **pools)
+    high = build_korea_scenario_payload(sanitize_korea_config(
+        {"levers": {"demography_variant": 1}}), **pools)
+    assert low["final"]["nps_given_back"] > base["final"]["nps_given_back"] \
+        > high["final"]["nps_given_back"]
+    assert low["final"]["demo_decline_pct"] > high["final"]["demo_decline_pct"]
+
+    # the inert property holds per variant: zero adoption → zero erosion under 저위 too
+    from dataclasses import replace as _replace
+
+    from fiscal_model.dynamics_v2 import DynamicModelV2
+    from fiscal_model.korea_assembly import korea_erosion_from_run, korea_preset_params
+    zp = _replace(korea_preset_params("korea-central", 40, demography_variant="low"),
+                  adoption=0.0, adoption_path=[0.0] * 40)
+    zm = DynamicModelV2(pools["data_pool"][0.0], pools["deltas"], zp)
+    zr = zm.run()
+    zb = korea_erosion_from_run(zm, zr, pools["deltas"])
+    for scheme, path in zb["erosion"].items():
+        assert abs(path).max() < 1e-9, scheme
+
+    m = build_korea_scenario_payload(sanitize_korea_config(
+        {"levers": {"corp_tax_mult": 1.2, "income_tax_mult": 0.9}}), **pools)
+    assert m["final"]["fed_deficit_B"] != base["final"]["fed_deficit_B"]
+    assert m["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
+    assert m["final"]["nps_given_back"] == base["final"]["nps_given_back"]

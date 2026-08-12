@@ -150,6 +150,8 @@ export default function KoreaScenarioApp() {
                     <SelectControl key={k} label={c.label} help={c.help}
                                    values={(spec.values ?? []).map(String)}
                                    value={String(values[k])}
+                                   display={k === 'demography_variant'
+                                     ? KO.rail.demography_options : undefined}
                                    onChange={(v) => dispatch({ type: 'setLever', key: k, value: Number(v) })} />
                   )
                 // the two JOINT constraints (the server clamps both): price is capped at
@@ -221,6 +223,11 @@ export default function KoreaScenarioApp() {
                 />
               </div>
               <div className="metric-row korea-second-row">
+                <Metric
+                  label={KO.metrics.demography}
+                  value={`−${payload.final.demo_decline_pct.toFixed(1)}%`}
+                  ground={`workforce decline from demography ALONE (KOSIS ${payload.final.demo_variant} variant) by ${payload.config.start_year + payload.config.display_periods - 1} — automation's losses are measured on top of this`}
+                />
                 <Metric
                   label={KO.metrics.jobs}
                   value={`${payload.final.jobs_lost_M.toFixed(2)}m jobs`}

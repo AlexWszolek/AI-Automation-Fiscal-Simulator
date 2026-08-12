@@ -46,12 +46,17 @@ _MODEL_LEVERS = ("reabsorption_rate", "reemployment_haircut", "lfp_exit_rate",
                  "auto_cost", "interest_rate", "baseline_growth_rate",
                  "reab_wage_baumol", "reab_wage_crowding", "compute_effective_rate",
                  "survivor_raise_ceiling", "survivor_spillover_to_profit",
-                 "automation_tax_rate")
+                 "automation_tax_rate",
+                 "income_tax_mult", "corp_tax_mult", "cons_tax_mult")
+_MULTS = ("income_tax_mult", "corp_tax_mult", "cons_tax_mult")
 KOREA_LEVER_SPECS: dict[str, tuple] = {
-    **{k: mc_mod.PERTURBED[k] for k in _MODEL_LEVERS},
+    **{k: mc_mod.PERTURBED[k] for k in _MODEL_LEVERS if k not in _MULTS},
+    **{k: (0.5, 1.5) for k in _MULTS},           # the US rail's bounds; FROZEN in MC, so
+                                                 # not in PERTURBED — contexts key on them
     "survivor_raise_ceiling": (1.0, 3.0),        # PERTURBED's hi is inf; the slider needs one
     "adoption_start": (0.0, 0.5),
     "adoption_end": (0.005, 1.0),
+    "demography_variant": (-1.0, 1.0),           # select: -1 low / 0 medium / +1 high
     "nhi_share": (WAGE_LINKED_SHARE["nhi"].low, WAGE_LINKED_SHARE["nhi"].high),
     "nps_share": (WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high),
     "exposure_delta": (-0.5, 0.5),
@@ -81,6 +86,8 @@ def sanitize_korea_config(body: dict) -> dict:
             x = float(np.clip(x, spec[0], spec[1]))
             if k == "exposure_delta":
                 x = min(EXPOSURE_DELTAS, key=lambda d: abs(d - x))
+            if k == "demography_variant":
+                x = float(round(x))                       # snap to the published scenarios
             if k in _INT_LEVERS:
                 x = int(round(x))
             levers[str(k)] = x
@@ -88,6 +95,9 @@ def sanitize_korea_config(body: dict) -> dict:
     overlays = sorted({str(k) for k in raw_ov if str(k) in KOREA_OVERLAYS}) \
         if isinstance(raw_ov, list) else []
     return {"preset": preset, "levers": levers, "overlays": overlays}
+
+
+_DEMO_VARIANTS = {-1.0: "low", 0.0: "medium", 1.0: "high"}
 
 
 def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
@@ -120,7 +130,8 @@ def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
             model_levers["automation_tax_rate"], max(0.0, ret * (1.0 - ac)))
     for k in overlays:
         model_levers.update(KOREA_OVERLAYS[k].params)
-    v2p = korea_preset_params(preset, HORIZON, **model_levers)
+    variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
+    v2p = korea_preset_params(preset, HORIZON, demography_variant=variant, **model_levers)
     if "adoption_start" in levers or "adoption_end" in levers:
         # rebuild the path parametrically with the preset's own reach semantics (linear to
         # the reach year, flat after) — same shape family as build_adoption_path
@@ -175,15 +186,24 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         data_pool = {}
     if ctx_pool is None:
         ctx_pool = {}
-    base = korea_preset_params("korea-central", HORIZON)   # one structural shape for all runs
+    # demography_path is FROZEN into a context template, so contexts key on
+    # (exposure variant, demography variant) — built lazily, ≤9 ever
+    demo_variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
+    mults = {k: levers[k] for k in _MULTS if k in levers}
     v2p = _korea_v2p(preset_key, levers, overlays)
     bridges = {}
     for d in EXPOSURE_DELTAS:
         if d not in data_pool:
             data_pool[d] = build_korea_data(exposure=exposure_variant(d) if d else None)
-        if d not in ctx_pool:
-            ctx_pool[d] = mc_mod.ScenarioContext(data_pool[d], deltas, base)
-        model, res = ctx_pool[d].run_model(v2p)
+        # the tax mults are FROZEN template fields (the US pool keys on them too) — a
+        # mult-modified config gets its own context, keyed alongside exposure and variant
+        ckey = (d, demo_variant, tuple(sorted(mults.items())))
+        if ckey not in ctx_pool:
+            ctx_pool[ckey] = mc_mod.ScenarioContext(
+                data_pool[d], deltas,
+                korea_preset_params("korea-central", HORIZON,
+                                    demography_variant=demo_variant, **mults))
+        model, res = ctx_pool[ckey].run_model(v2p)
         bridges[d] = korea_erosion_from_run(model, res, deltas)
         if d == user_delta:
             user_res = res
@@ -270,8 +290,13 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
             "overlays": list(overlays),
             "start_year": 2026, "display_periods": display_n, "horizon": HORIZON,
             "modified_fields": modified,
-            "conventions": "cognitive channel only; demography frozen (published medium "
-                           "variant); fiscal gap reported, never closed",
+            "conventions": ("cognitive channel only; demography = published KOSIS "
+                            f"{demo_variant} variant"
+                            + (" (NOTE: the published fund baselines embed NABO's own "
+                               "medium-family demographic assumptions — the selector "
+                               "varies the model's workforce path only)"
+                               if demo_variant != "medium" else "")
+                            + "; fiscal gap reported, never closed"),
         },
         "rows": rows,
         "final": {
@@ -290,6 +315,11 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                                       / 1000.0, 2),
             "u_uplift_pp": round(u_uplift_pp, 2),
             "u_base_pct": round(lf["u_rate_pct"], 1),
+            # the demographic decomposition: what the population path removes by itself vs
+            # what automation removes on top (the drop is measured AGAINST that baseline)
+            "demo_decline_pct": round(
+                100.0 * (1.0 - v2p.demography_path[display_n - 1]), 2),
+            "demo_variant": demo_variant,
         },
         "funds": {
             "nhi": _fund_json(NHI_REFORM, central["nhi"], *envelope["nhi"]),
@@ -317,12 +347,17 @@ def korea_mc_tornado(cfg: dict, n: int = 150, seed: int = 0,
     from .korea_mc import HEADLINES, run_korea_mc
 
     preset_key, levers = cfg["preset"], cfg["levers"]
+    # the tax mults are static LEDGER scoring — they cannot move any of the five tornado
+    # targets (funds/employment), so stripping them from the sampling base is exact, and
+    # it keeps the MC on the mult-free context templates
+    levers = {k: v for k, v in levers.items() if k not in _MULTS}
+    variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
     base_axes = {k: levers[k] for k in ("exposure_delta", "nhi_share", "nps_share")
                  if k in levers}
     r = run_korea_mc(n=n, spread=0.15, seed=seed, preset=preset_key,
                      base_params=_korea_v2p(preset_key, levers), base_axes=base_axes,
                      deltas=deltas, data_pool=data_pool, ctx_pool=ctx_pool,
-                     invariant_every=0)
+                     invariant_every=0, demography_variant=variant)
     return {
         "config": {"preset": preset_key, "levers": levers, "n": n, "seed": seed,
                    "spread": 0.15},

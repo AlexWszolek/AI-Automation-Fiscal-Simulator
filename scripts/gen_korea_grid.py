@@ -48,11 +48,16 @@ UI = [
     ("demand_multiplier",     "us:demand",     "Macro & demand",        0.05,  "float"),
     ("interest_rate",         "us:interest",   "Macro & demand",        0.005, "float"),
     ("automation_tax_rate",   "us:atax",       "Government policy",     0.01,  "float"),
+    ("income_tax_mult",       "us:income_mult", "Government policy",    0.05,  "float"),
+    ("corp_tax_mult",         "us:corp_mult",  "Government policy",     0.05,  "float"),
+    ("cons_tax_mult",         "us:cons_mult",  "Government policy",     0.05,  "float"),
     ("nhi_share",             "kr:nhi_share",  "KOREA_AXES",            0.01,  "float"),
     ("nps_share",             "kr:nps_share",  "KOREA_AXES",            0.01,  "float"),
     ("exposure_delta",        "kr:exposure_delta", "KOREA_AXES",        None,  "select"),
+    ("demography_variant",    "kr:demography_variant", "KOREA_AXES",    None,  "select"),
 ]
-AXIS_DEFAULTS = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0}
+AXIS_DEFAULTS = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0,
+                 "demography_variant": 0.0}
 
 
 def main() -> None:
@@ -62,7 +67,8 @@ def main() -> None:
         spec = {"lo": float(lo), "hi": float(hi), "copy": copy_key,
                 "group": group, "kind": kind}
         if kind == "select":
-            spec["values"] = [-0.5, 0.0, 0.5]
+            spec["values"] = ([-1, 0, 1] if name == "demography_variant"
+                              else [-0.5, 0.0, 0.5])
         else:
             spec["step"] = step
         levers[name] = spec

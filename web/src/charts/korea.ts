@@ -220,18 +220,6 @@ export interface KoreaRegionRow {
   helc_share: number
 }
 
-// Approximate label anchors (lon, lat) for the geo map — hand-entered from the standard
-// administrative centroids; 서울/인천 nudged apart in the capital-belt crowd.
-const SIDO_LABELS: Record<string, [number, number]> = {
-  // capital belt and the small metros are offset apart (인천 offshore west, 경기 NE of
-  // Seoul, 부산/울산 toward the coast) so 17 labels survive without leader lines
-  서울: [126.94, 37.55], 인천: [126.12, 37.32], 경기: [127.62, 37.78],
-  강원: [128.35, 37.75], 충북: [127.85, 36.95], 충남: [126.55, 36.4],
-  세종: [127.05, 36.68], 대전: [127.52, 36.25], 경북: [128.95, 36.45],
-  대구: [128.65, 35.83], 울산: [129.42, 35.6], 부산: [129.2, 35.05],
-  경남: [128.15, 35.35], 전북: [127.1, 35.72], 광주: [126.68, 35.1],
-  전남: [126.85, 34.75], 제주: [126.55, 33.37],
-}
 // the topojson carries the 2013 names; two provinces were renamed 2023–24
 const TOPO_NAME: Record<string, string> = {
   강원특별자치도: '강원도', 전북특별자치도: '전라북도',
@@ -242,51 +230,33 @@ export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
   // an actual boundary map (Statistics Korea SGIS census geometry via the
   // southkorea-maps kostat layer). Same sequential single-hue as the tile version;
   // names label the regions, values live in the tooltip and the legend.
+  // no on-map labels: the audience knows its own provinces (Alex's review) — identity
+  // rides the geography, values live in the tooltip and the legend
   const data = rows.filter((r) => r.col >= 0).map((r) => ({
     topo_name: TOPO_NAME[r.region] ?? r.region,
-    region: r.region, short: r.short,
-    pct: r.helc_share, emp_k: r.emp_k,
-    lon: SIDO_LABELS[r.short]?.[0], lat: SIDO_LABELS[r.short]?.[1],
+    region: r.region, pct: r.helc_share, emp_k: r.emp_k,
   }))
-  const vals = data.map((d) => d.pct)
-  const mid = (Math.min(...vals) + Math.max(...vals)) / 2
   return {
     width: 'container', height: opts.height ?? 520, background: 'transparent',
-    layer: [
-      {
-        data: { values: topology, format: { type: 'topojson', feature: 'skorea_provinces_geo' } },
-        transform: [{
-          lookup: 'properties.name',
-          from: { data: { values: data }, key: 'topo_name',
-                  fields: ['region', 'short', 'pct', 'emp_k'] },
-        }],
-        projection: { type: 'mercator' },
-        mark: { type: 'geoshape', stroke: '#fcfbf8', strokeWidth: 1.5 },
-        encoding: {
-          color: {
-            field: 'pct', type: 'quantitative', title: null,
-            scale: { range: ['#e9eff6', '#2a5480'] },
-            legend: { orient: 'bottom', format: '.0%', gradientLength: 220 },
-          },
-          tooltip: [
-            { field: 'region', type: 'nominal', title: 'Region' },
-            { field: 'pct', type: 'quantitative', title: 'Displacement-prone share', format: '.1%' },
-            { field: 'emp_k', type: 'quantitative', title: 'Employed (thousands)', format: ',.0f' },
-          ],
-        },
+    data: { values: topology, format: { type: 'topojson', feature: 'skorea_provinces_geo' } },
+    transform: [{
+      lookup: 'properties.name',
+      from: { data: { values: data }, key: 'topo_name',
+              fields: ['region', 'pct', 'emp_k'] },
+    }],
+    projection: { type: 'mercator' },
+    mark: { type: 'geoshape', stroke: '#fcfbf8', strokeWidth: 1.5 },
+    encoding: {
+      color: {
+        field: 'pct', type: 'quantitative', title: null,
+        scale: { range: ['#e9eff6', '#2a5480'] },
+        legend: { orient: 'bottom', format: '.0%', gradientLength: 220 },
       },
-      {
-        data: { values: data },
-        projection: { type: 'mercator' },
-        mark: { type: 'text', fontSize: 11, fontWeight: 600 },
-        encoding: {
-          longitude: { field: 'lon', type: 'quantitative' },
-          latitude: { field: 'lat', type: 'quantitative' },
-          text: { field: 'short' },
-          color: { condition: { test: `datum.pct > ${mid}`, value: '#fcfbf8' },
-                   value: TOKENS.ink },
-        },
-      },
-    ],
+      tooltip: [
+        { field: 'region', type: 'nominal', title: 'Region' },
+        { field: 'pct', type: 'quantitative', title: 'Displacement-prone share', format: '.1%' },
+        { field: 'emp_k', type: 'quantitative', title: 'Employed (thousands)', format: ',.0f' },
+      ],
+    },
   } as VisualizationSpec
 }

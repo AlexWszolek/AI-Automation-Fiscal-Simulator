@@ -76,7 +76,8 @@ def run_korea_mc(n: int = 400, spread: float = 0.15, seed: int = 0,
                  preset: str = "korea-central", invariant_every: int = 20,
                  progress=None, base_params=None, base_axes: dict | None = None,
                  deltas=None, data_pool: dict | None = None,
-                 ctx_pool: dict | None = None) -> KoreaMCResult:
+                 ctx_pool: dict | None = None,
+                 demography_variant: str = "medium") -> KoreaMCResult:
     """Serial and deterministic: one lever-draw stream (mc.sample_draws, `seed`), one
     Korea-axes stream (`seed`+1 — separate so adding a lever never reshuffles the share
     draws), fixed draw order. Every `invariant_every`-th draw runs the full conservation
@@ -89,19 +90,24 @@ def run_korea_mc(n: int = 400, spread: float = 0.15, seed: int = 0,
     it reflects the user's own configuration. `deltas`/`data_pool`/`ctx_pool` amortize
     construction across calls (shared with the webpayload pools — same structural shape)."""
     horizon = len(NPS_REFORM.revenue)
-    base = base_params if base_params is not None else korea_preset_params(preset, horizon)
+    base = base_params if base_params is not None else korea_preset_params(
+        preset, horizon, demography_variant=demography_variant)
     deltas = deltas if deltas is not None else build_korea_deltas()
     if data_pool is None:
         data_pool = {}
     if ctx_pool is None:
         ctx_pool = {}
+    contexts = {}
     for d in EXPOSURE_DELTAS:
         if d not in data_pool:
             data_pool[d] = build_korea_data(exposure=exposure_variant(d) if d else None)
-        if d not in ctx_pool:
-            ctx_pool[d] = mc.ScenarioContext(
-                data_pool[d], deltas, korea_preset_params("korea-central", horizon))
-    contexts = ctx_pool
+        ckey = (d, demography_variant, ())
+        if ckey not in ctx_pool:
+            ctx_pool[ckey] = mc.ScenarioContext(
+                data_pool[d], deltas,
+                korea_preset_params("korea-central", horizon,
+                                    demography_variant=demography_variant))
+        contexts[d] = ctx_pool[ckey]
 
     lever_draws = mc.sample_draws(base, n, spread, seed)
     pin = {k: getattr(base, k) for k in KOREA_PINNED}

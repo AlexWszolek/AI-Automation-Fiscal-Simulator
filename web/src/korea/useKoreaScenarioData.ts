@@ -42,6 +42,8 @@ export interface KoreaScenarioPayload {
     ei_outlay_cum_tn: number
     u_uplift_pp: number
     u_base_pct: number
+    demo_decline_pct: number
+    demo_variant: string
   }
   funds: { nhi: KoreaFundJson; nps: KoreaFundJson; ei: KoreaFundJson }
   composition_2035: Record<string, number>

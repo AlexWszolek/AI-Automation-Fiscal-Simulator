@@ -204,16 +204,23 @@ def build_korea_data(year: str = "2025", exposure: dict | None = None) -> KoreaF
     wage_bill = float(deltas["worker_wage"].to_numpy() @ emp)
 
     # Federal rows must sum to total national revenue (NABO Focus 92 Table 1, 2025 총수입
-    # ₩650.6tn) for the ledger's absolute line; surcharge bases carry ONLY the sourced Labor
-    # row — corporate/consumption surcharge overlays stay disabled for Korea until their
-    # revenue bases are primary-sourced (no invented bases).
+    # ₩650.6tn) for the ledger's absolute line. Surcharge bases are now primary-sourced:
+    # corporate ₩84.6tn and VAT ₩79.2tn are the 2025 실적 from NABO 나보포커스 제137호
+    # [표 1] (sources/nabo-focus-137-tax-revenue-2025.pdf) — 실적 items inside a
+    # 총수입-budget total, with the frame difference absorbed by the residual row
+    # (disclosed; the residual is never levied). At mult = 1.0 nothing changes.
     total_revenue = 650_600.0
+    corp_base = 84_600.0
+    cons_base = 79_200.0
     receipts = pd.DataFrame([
         {"level": "Federal", "maps_to_base": "Labor income", "amount_busd": pit_national},
         {"level": "Federal", "maps_to_base": "Social insurance (payroll)",
          "amount_busd": payroll_total},
+        {"level": "Federal", "maps_to_base": "Corporate profits", "amount_busd": corp_base},
+        {"level": "Federal", "maps_to_base": "Consumption", "amount_busd": cons_base},
         {"level": "Federal", "maps_to_base": "Other (residual to NABO 총수입)",
-         "amount_busd": total_revenue - pit_national - payroll_total},
+         "amount_busd": total_revenue - pit_national - payroll_total
+                        - corp_base - cons_base},
         {"level": "State & local", "maps_to_base": "Labor income (local surtax)",
          "amount_busd": pit_local},
     ])
@@ -386,10 +393,13 @@ def korea_erosion_from_run(model, res, deltas: pd.DataFrame) -> dict:
             "ei_outlay_bn": np.asarray(ei_outlay)}
 
 
-def korea_preset_params(key: str, n_periods: int | None = None, **param_overrides):
+def korea_preset_params(key: str, n_periods: int | None = None,
+                        demography_variant: str = "medium", **param_overrides):
     """The V2 params for a Korea preset under the Korea conventions (cognitive channel
     only, Korean demography, no closure). The conventions live HERE, once, so a sweep can
-    never half-apply them; MC samples around exactly this object."""
+    never half-apply them; MC samples around exactly this object. `demography_variant`
+    selects among the PUBLISHED KOSIS scenarios (low/medium/high) — the demographic-risk
+    axis as published paths, never an invented slider."""
     from dataclasses import replace
 
     from .korea_demography import korea_demography_path
@@ -415,7 +425,7 @@ def korea_preset_params(key: str, n_periods: int | None = None, **param_override
                    adoption=preset.adoption_end,
                    adoption_path=build_adoption_path(preset, n),
                    n_periods=n,
-                   demography_path=list(korea_demography_path(n)),
+                   demography_path=list(korea_demography_path(n, variant=demography_variant)),
                    **fields)
 
 

@@ -176,6 +176,30 @@
    "kind": "float",
    "step": 0.01
   },
+  "income_tax_mult": {
+   "lo": 0.5,
+   "hi": 1.5,
+   "copy": "us:income_mult",
+   "group": "Government policy",
+   "kind": "float",
+   "step": 0.05
+  },
+  "corp_tax_mult": {
+   "lo": 0.5,
+   "hi": 1.5,
+   "copy": "us:corp_mult",
+   "group": "Government policy",
+   "kind": "float",
+   "step": 0.05
+  },
+  "cons_tax_mult": {
+   "lo": 0.5,
+   "hi": 1.5,
+   "copy": "us:cons_mult",
+   "group": "Government policy",
+   "kind": "float",
+   "step": 0.05
+  },
   "nhi_share": {
    "lo": 0.65,
    "hi": 0.97,
@@ -202,6 +226,18 @@
     -0.5,
     0.0,
     0.5
+   ]
+  },
+  "demography_variant": {
+   "lo": -1.0,
+   "hi": 1.0,
+   "copy": "kr:demography_variant",
+   "group": "KOREA_AXES",
+   "kind": "select",
+   "values": [
+    -1,
+    0,
+    1
    ]
   }
  },
@@ -234,9 +270,13 @@
     "demand_multiplier": 0.5,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -267,9 +307,13 @@
     "demand_multiplier": 0.5,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -300,9 +344,13 @@
     "demand_multiplier": 0.5,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -333,9 +381,13 @@
     "demand_multiplier": 0.3,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -366,9 +418,13 @@
     "demand_multiplier": 0.3,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -399,9 +455,13 @@
     "demand_multiplier": 0.3,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -432,9 +492,13 @@
     "demand_multiplier": 0.5,
     "interest_rate": 0.03,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -465,9 +529,13 @@
     "demand_multiplier": 1.2,
     "interest_rate": 0.04,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -498,9 +566,13 @@
     "demand_multiplier": 1.0,
     "interest_rate": 0.04,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   },
   {
@@ -531,9 +603,13 @@
     "demand_multiplier": 1.5,
     "interest_rate": 0.04,
     "automation_tax_rate": 0.0,
+    "income_tax_mult": 1.0,
+    "corp_tax_mult": 1.0,
+    "cons_tax_mult": 1.0,
     "nhi_share": 0.81,
     "nps_share": 0.85,
-    "exposure_delta": 0.0
+    "exposure_delta": 0.0,
+    "demography_variant": 0.0
    }
   }
  ],

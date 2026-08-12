@@ -40,10 +40,18 @@ class KoreaScenarioService:
                 return hit
             pools = self._ensure_pools()
             out = korea_mc_tornado(cfg, n=n, **pools)
+            self._prune(pools)
             self.payloads[rep] = out
             while len(self.payloads) > 16:
                 self.payloads.popitem(last=False)
         return out
+
+    @staticmethod
+    def _prune(pools: dict) -> None:
+        # contexts key on (exposure, demography variant, tax mults) — the mult axis is
+        # combinatorial, so keep an LRU-ish bound (insertion-ordered dict, oldest out)
+        while len(pools["ctx_pool"]) > 12:
+            pools["ctx_pool"].pop(next(iter(pools["ctx_pool"])))
 
     def run(self, body: dict) -> dict:
         cfg = sanitize_korea_config(body)
@@ -55,6 +63,7 @@ class KoreaScenarioService:
                 return hit
             pools = self._ensure_pools()
             payload = build_korea_scenario_payload(cfg, **pools)
+            self._prune(pools)
             self.payloads[rep] = payload
             while len(self.payloads) > 16:
                 self.payloads.popitem(last=False)

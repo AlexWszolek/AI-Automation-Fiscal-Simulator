@@ -46,7 +46,8 @@
    "jobs": "[copy: Alex — jobs-lost metric label]",
    "unemployment": "[copy: Alex — unemployment-uplift metric label]",
    "inc_tax": "[copy: Alex — cumulative income-tax loss metric label]",
-   "contrib": "[copy: Alex — cumulative contribution loss metric label]"
+   "contrib": "[copy: Alex — cumulative contribution loss metric label]",
+   "demography": "[copy: Alex — demographic-decline metric label]"
   },
   "institutions": {
    "NPS pension": "National Pension (capped)",
@@ -79,11 +80,20 @@
     "exposure_delta": {
      "label": "[copy: Alex — exposure figure-read select label]",
      "help": "[copy: Alex — help: BOK 그림 9 read ±0.5pp]"
+    },
+    "demography_variant": {
+     "label": "[copy: Alex — demography scenario select label (the published KOSIS variants)]",
+     "help": "[copy: Alex — help: 장래인구추계 2022~2072 저위/중위/고위; published paths only, never interpolated]"
     }
    },
    "preset_heading": "[copy: Alex — preset picker heading]",
    "agi_disclosure": "[copy: Alex — one-liner shown when an AGI preset is selected: cognitive channel only, understates manual-occupation displacement]",
-   "api_down": "[copy: Alex — custom sliders need the compute service; showing closest preset]"
+   "api_down": "[copy: Alex — custom sliders need the compute service; showing closest preset]",
+   "demography_options": {
+    "-1": "[copy: 저위 low]",
+    "0": "[copy: 중위 medium]",
+    "1": "[copy: 고위 high]"
+   }
   },
   "tornado_targets": {
    "ei_shortfall_tn": "[copy: Alex — EI shortfall target label]",
