@@ -245,7 +245,7 @@
   {
    "key": "korea-slow",
    "name": "Korea — slow diffusion",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "A China-shock-grind analogue: SME-laggard persistence holds realized displacement of exposed work to 10% by 2035.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.005,
@@ -282,7 +282,7 @@
   {
    "key": "korea-central",
    "name": "Korea — central",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "US-observed early adoption discounted for Korea's SME lag, reaching the Acemoglu-class 20% of exposed work by 2035.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.01,
@@ -319,7 +319,7 @@
   {
    "key": "korea-fast",
    "name": "Korea — fast catch-up",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "Half of feasible automation realized by 2035 on Korea's ICT-readiness catch-up.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -356,7 +356,7 @@
   {
    "key": "korea-acemoglu",
    "name": "Acemoglu — Modest AI",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "Acemoglu's 10-year upper bounds, which are small exposed share, modest productivity, normal labor market, and no wage response.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -393,7 +393,7 @@
   {
    "key": "korea-brynjolfsson",
    "name": "Brynjolfsson — Augmentation",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "AI augments more than it automates, so slow realized adoption, gains shared with survivors, strong productivity, and mild impacts.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -430,7 +430,7 @@
   {
    "key": "korea-karger",
    "name": "Karger et al. — Expert survey, rapid",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "The NBER expert survey's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.03,
@@ -467,7 +467,7 @@
   {
    "key": "korea-metaculus",
    "name": "Metaculus — Crowd median, 2035",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "The Labor Automation Hub's community medians: employment below the no-AI baseline, labor share down, and survivor wages up — US-calibrated, carried parametrically.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -504,7 +504,7 @@
   {
    "key": "korea-ai-2027",
    "name": "AI 2027 — Fast takeoff",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here — cognitive channel only.",
    "display_periods": 8,
    "defaults": {
     "adoption_start": 0.2,
@@ -541,7 +541,7 @@
   {
    "key": "korea-agi-20y",
    "name": "Korinek-Suh — AGI in 20 years",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "Full automation of exposed work over 20 years, with wages collapsing and capital keeping the gains.",
    "display_periods": 20,
    "defaults": {
     "adoption_start": 0.05,
@@ -578,7 +578,7 @@
   {
    "key": "korea-agi-5y",
    "name": "Korinek-Suh — AGI in 5 years",
-   "blurb": "[copy TBD — not model-authored]",
+   "blurb": "Full automation of exposed work at year 5, viewed over a 10-year fiscal window.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.2,

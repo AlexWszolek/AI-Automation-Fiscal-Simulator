@@ -215,7 +215,7 @@ export default function KoreaSlides() {
       <div className="slide export" style={{ width: SLIDE_W, height: SLIDE_H }}>
         {s.body}
         <div className="slide-footer caption">
-          <span>DRAFT · numbers final and test-pinned · strings pending the copy pass</span>
+          <span>DRAFT · numbers final and test-pinned · copy pending review</span>
           <span className="num">{exportSlide} / {slides.length}</span>
         </div>
       </div>
@@ -234,7 +234,7 @@ export default function KoreaSlides() {
                                         transform: `scale(${scale})` }}>
           {slides[active].body}
           <div className="slide-footer caption">
-            <span>DRAFT · numbers final and test-pinned · strings pending the copy pass</span>
+            <span>DRAFT · numbers final and test-pinned · copy pending review</span>
             <span className="num">{active + 1} / {slides.length}</span>
           </div>
         </div>

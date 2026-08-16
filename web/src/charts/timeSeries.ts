@@ -7,6 +7,8 @@ import { LABELS } from './labels'
 import { PALETTE } from './palette'
 
 export interface TsOpts {
+  labels?: Record<string, string>
+
   kind?: 'line' | 'area' | 'bar'
   stack?: boolean
   height?: number
@@ -25,11 +27,11 @@ export function timeSeries(
 ): VisualizationSpec {
   const { kind = 'line', stack, height = 260, colors, yZero = true,
           tooltipFormat = ',.1f', totalLabel } = opts
-  const labels = cols.map((c) => LABELS[c] ?? c)
+  const labels = cols.map((c) => opts.labels?.[c] ?? LABELS[c] ?? c)
   const long = rows.flatMap((r) =>
     cols.map((c, i) => ({
       year: startYear + (r.period as number),
-      series: LABELS[c] ?? c,
+      series: opts.labels?.[c] ?? LABELS[c] ?? c,
       sidx: i,
       value: r[c],
     })),

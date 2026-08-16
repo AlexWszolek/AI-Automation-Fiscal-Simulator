@@ -175,7 +175,7 @@ from .presets import Preset, build_adoption_path  # noqa: E402
 
 KOREA_PRESETS = {
     "korea-slow": Preset(
-        key="korea-slow", name="Korea — slow diffusion", blurb="[copy TBD — not model-authored]",
+        key="korea-slow", name="Korea — slow diffusion", blurb="A China-shock-grind analogue: SME-laggard persistence holds realized displacement of exposed work to 10% by 2035.",
         adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides={},
         adoption_reach_year=9,
         provenance={
@@ -186,7 +186,7 @@ KOREA_PRESETS = {
                             "realized displacement of HELC jobs to ~10% by 2035",
         }),
     "korea-central": Preset(
-        key="korea-central", name="Korea — central", blurb="[copy TBD — not model-authored]",
+        key="korea-central", name="Korea — central", blurb="US-observed early adoption discounted for Korea's SME lag, reaching the Acemoglu-class 20% of exposed work by 2035.",
         adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides={},
         adoption_reach_year=9,
         provenance={
@@ -195,7 +195,7 @@ KOREA_PRESETS = {
                             "automatable within 10y → 0.20 with the Korea adoption lag",
         }),
     "korea-fast": Preset(
-        key="korea-fast", name="Korea — fast catch-up", blurb="[copy TBD — not model-authored]",
+        key="korea-fast", name="Korea — fast catch-up", blurb="Half of feasible automation realized by 2035 on Korea's ICT-readiness catch-up.",
         adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides={},
         adoption_reach_year=9,
         provenance={
@@ -217,7 +217,7 @@ KOREA_PRESETS = {
     # invariant (every preset reaches-then-holds at ANY horizon) pins reach_year=9 here.
     "korea-acemoglu": Preset(
         key="korea-acemoglu", name="Acemoglu — Modest AI",
-        blurb="[copy TBD — not model-authored]",
+        blurb="Acemoglu's 10-year upper bounds, which are small exposed share, modest productivity, normal labor market, and no wage response.",
         adoption_start=0.02, adoption_end=0.23, n_periods=10, adoption_reach_year=9,
         overrides=dict(reabsorption_rate=0.50, reemployment_haircut=0.13, lfp_exit_rate=0.03,
                        retained_profit_share=0.60, price_reduction_share=0.35, auto_cost=0.05,
@@ -241,7 +241,7 @@ KOREA_PRESETS = {
     ),
     "korea-brynjolfsson": Preset(
         key="korea-brynjolfsson", name="Brynjolfsson — Augmentation",
-        blurb="[copy TBD — not model-authored]",
+        blurb="AI augments more than it automates, so slow realized adoption, gains shared with survivors, strong productivity, and mild impacts.",
         adoption_start=0.02, adoption_end=0.30, n_periods=10, adoption_reach_year=9,
         overrides=dict(reabsorption_rate=0.60, reemployment_haircut=0.10, lfp_exit_rate=0.02,
                        retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.10,
@@ -263,7 +263,7 @@ KOREA_PRESETS = {
     ),
     "korea-karger": Preset(
         key="korea-karger", name="Karger et al. — Expert survey, rapid",
-        blurb="[copy TBD — not model-authored]",
+        blurb="The NBER expert survey's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
         adoption_start=0.03, adoption_end=0.16, n_periods=10, adoption_reach_year=9,
         overrides=dict(reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
                        retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.15,
@@ -288,7 +288,7 @@ KOREA_PRESETS = {
     ),
     "korea-metaculus": Preset(
         key="korea-metaculus", name="Metaculus — Crowd median, 2035",
-        blurb="[copy TBD — not model-authored]",
+        blurb="The Labor Automation Hub's community medians: employment below the no-AI baseline, labor share down, and survivor wages up — US-calibrated, carried parametrically.",
         adoption_start=0.02, adoption_end=0.20, n_periods=10, adoption_reach_year=9,
         overrides=dict(reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
                        retained_profit_share=0.45, price_reduction_share=0.20, auto_cost=0.10,
@@ -315,7 +315,7 @@ KOREA_PRESETS = {
     ),
     "korea-ai-2027": Preset(
         key="korea-ai-2027", name="AI 2027 — Fast takeoff",
-        blurb="[copy TBD — not model-authored]",
+        blurb="Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here — cognitive channel only.",
         adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
         overrides=dict(reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
                        retained_profit_share=0.70, price_reduction_share=0.20, auto_cost=0.30,
@@ -355,7 +355,7 @@ KOREA_PRESETS = {
     # later forces a conscious revisit.
     "korea-agi-20y": Preset(
         key="korea-agi-20y", name="Korinek-Suh — AGI in 20 years",
-        blurb="[copy TBD — not model-authored]",
+        blurb="Full automation of exposed work over 20 years, with wages collapsing and capital keeping the gains.",
         adoption_start=0.05, adoption_end=1.0, n_periods=20, adoption_reach_year=19,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.05,
@@ -386,7 +386,7 @@ KOREA_PRESETS = {
     ),
     "korea-agi-5y": Preset(
         key="korea-agi-5y", name="Korinek-Suh — AGI in 5 years",
-        blurb="[copy TBD — not model-authored]",
+        blurb="Full automation of exposed work at year 5, viewed over a 10-year fiscal window.",
         adoption_start=0.20, adoption_end=1.0, n_periods=10, adoption_reach_year=5,
         overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,

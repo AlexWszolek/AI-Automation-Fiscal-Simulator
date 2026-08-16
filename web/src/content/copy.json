@@ -1,36 +1,36 @@
 {
  "korea": {
-  "title": "[copy: Alex — page title (h1)]",
-  "intro": "[copy: Alex — what this page is: Korea port of the model, three funds, results as depletion-date shifts; register of the US intro]",
-  "disclosure_note": "[copy: Alex — one-sentence disclosure: numbers are the assembled model (net of re-employment and demand effects, EI benefit outlays included); AGI scenarios are cognitive-channel-only (understate manual-occupation displacement); every number quoted as a range]",
+  "title": "Fiscal Consequences of AI Automation",
+  "intro": "This is a bottom-up accounting model of what AI automation does to Korea's public finances. To use this model, pick a scenario from the sidebar (each one is a published AI forecast) or set your own levers. Every number on this page is a change against a no-AI baseline, with NABO's projections coming first, and this adds to them. What the model shows is the tax base moving from wages and labor to profits, prices and compute, which are taxed at significantly lower rates. This disproportionately impacts the National Pension, Health Insurance, and Employment Insurance funds, which are funded exclusively by income and payroll tax.",
+  "disclosure_note": "Numbers are the assembled model — net of re-employment and demand effects, with EI benefit outlays included; AGI scenarios carry the cognitive channel only (they understate displacement in manual occupations), and every headline is quoted as a range.",
   "sections": {
-   "nps": "[copy: Alex — National Pension chart title]",
-   "nhi": "[copy: Alex — Health Insurance chart title]",
-   "ei": "[copy: Alex — Employment Insurance chart title]",
-   "composition": "[copy: Alex — composition chart title]",
-   "contrast": "[copy: Alex — decomposition chart title]",
+   "nps": "National Pension Fund Reserves",
+   "nhi": "Health Insurance Fund Reserves",
+   "ei": "Employment Insurance Fund Reserves",
+   "composition": "Base erosion by institution",
+   "contrast": "Which account pays — white-collar vs manual automation",
    "sources": "Sources",
-   "disclosures": "[copy: Alex — scope & limits heading]",
-   "workforce": "[copy: Alex — workforce chart title]",
-   "wages": "[copy: Alex — wages chart title]",
-   "budget": "[copy: Alex — budget chart title]",
-   "ei_outlay": "[copy: Alex — EI benefit outlay chart title]",
-   "tornado": "[copy: Alex — sensitivity section title]",
-   "scenarios": "[copy: Alex — scenarios slide title (diffusion family + fast worlds)]",
-   "map": "[copy: Alex — provincial exposure map title]"
+   "disclosures": "Scope & limits",
+   "workforce": "Where the workforce goes",
+   "wages": "Wages of the still-employed",
+   "budget": "National budget",
+   "ei_outlay": "EI benefit outlays",
+   "tornado": "What drives the result",
+   "scenarios": "Scenarios — the diffusion family and the fast worlds",
+   "map": "Where the exposed work sits"
   },
   "captions": {
-   "nps": "[copy: Alex — NPS caption: reform bought 8 years (2057→2065, NABO); band = what automation takes back]",
-   "nhi": "[copy: Alex — NHI caption: depletion 2029 published; automation pulls it forward within the band]",
-   "ei": "[copy: Alex — EI caption: the published rebuild relies on planned borrowing; erosion vs the plan]",
-   "composition": "[copy: Alex — central case: clerical epicentre spreads damage evenly, slight general-account tilt]",
-   "contrast": "[copy: Alex — the asymmetry: high-wage automation → general account; low-wage → the funds, pension hardest]",
-   "workforce": "[copy: Alex — workforce stacked-area caption (KR)]",
-   "wages": "[copy: Alex — survivor wage index caption (KR)]",
-   "budget": "[copy: Alex — national budget chart caption (KR): revenue loss + widening, ₩bn]",
-   "ei_outlay": "[copy: Alex — EI benefit outlay chart caption]",
-   "tornado": "[copy: Alex — tornado caption: Spearman rank correlation across the joint MC; red = raising the lever worsens the headline]",
-   "map": "[copy: Alex — map caption: all-employed occupation mix (지역별고용조사 2025H1) × BOK within-occupation HELC; descriptive — no provincial fiscal claims]"
+   "nps": "NABO's post-reform projection against the eroded path: the 2025 reform bought eight years (depletion 2057 → 2065), and the band is what automation takes back",
+   "nhi": "Depletion is published for 2029 on the reform variant; automation pulls it forward within the band",
+   "ei": "The published rebuild to ₩21.8tn by 2029 leans on planned public-fund borrowing — erosion plus benefit outlays is what automation takes from that plan",
+   "composition": "The central scenario spreads damage almost evenly: the clerical epicentre is mid-wage, so every institution loses about 9% of its base by 2035, the capped pension slightly most.",
+   "contrast": "The statutory pension cap routes high-wage automation to the general account and low-wage automation to the funds — a 50%-displacement what-if on the direct chain, not a forecast.",
+   "workforce": "Every worker out of the 12.4M modeled wage workers is in exactly one band each year. Displacement moves people down the stack, while re-employment and attrition move them out of limbo.",
+   "wages": "The wage index of workers who keep their jobs: raises funded from the survivor share push it up; labor-market slack pulls it down.",
+   "budget": "National revenue and the absolute deficit against the no-AI baseline, in ₩ trillions per year.",
+   "ei_outlay": "Benefit spending from the model's own unemployment-insurance stock at the statutory rate — the outlay side that dominates the EI shortfall.",
+   "tornado": "Spearman rank correlation across the joint Monte Carlo; red bars worsen the headline when raised",
+   "map": "All-employed occupation mix (지역별고용조사 2025H1) weighted by the BOK within-occupation displacement-prone shares. Descriptive — no provincial fiscal claims."
   },
   "series": {
    "published": "Published projection",
@@ -38,16 +38,16 @@
    "band": "Automation band"
   },
   "metrics": {
-   "nps": "[copy: Alex — NPS hero label, e.g. 'Of the pension reform's 8 bought years, automation takes back']",
-   "nhi": "[copy: Alex — NHI hero label]",
-   "ei": "[copy: Alex — EI hero label]",
+   "nps": "Of the pension reform's 8 bought years, automation takes back",
+   "nhi": "Health-fund depletion pulled forward",
+   "ei": "EI rebuild shortfall by 2029",
    "contrast_a": "White-collar automation only",
    "contrast_b": "Elementary automation only",
-   "jobs": "[copy: Alex — jobs-lost metric label]",
-   "unemployment": "[copy: Alex — unemployment-uplift metric label]",
-   "inc_tax": "[copy: Alex — cumulative income-tax loss metric label]",
-   "contrib": "[copy: Alex — cumulative contribution loss metric label]",
-   "demography": "[copy: Alex — demographic-decline metric label]"
+   "jobs": "Jobs lost",
+   "unemployment": "Unemployment-rate impact",
+   "inc_tax": "Income tax lost (cumulative)",
+   "contrib": "Contributions lost (cumulative)",
+   "demography": "Workforce decline from demography alone"
   },
   "institutions": {
    "NPS pension": "National Pension (capped)",
@@ -59,59 +59,59 @@
    "local income surtax": "Local income surtax"
   },
   "disclosures": [
-   "[copy: Alex — wage employees only, ~76% of employment; self-employment qualitative]",
-   "[copy: Alex — establishment survey: 12.4m of ~22m wage workers, larger firms, no public administration]",
-   "[copy: Alex — 9 occupation groups × 24 wage brackets; deliberately coarse, transparently so]",
-   "[copy: Alex — displacement ceiling: gross of re-employment (overstates); revenue-side-only projector (understates)]",
-   "[copy: Alex — exposure figure-read from BOK's published chart, reconciled to its printed aggregates]",
-   "[copy: Alex — NHI/NPS wage-linked shares shown as bands pending two statistical splits]"
+   "Wage employees only — about 76% of Korean employment; the self-employed are treated qualitatively.",
+   "Establishment survey frame: 12.4M of ~22M wage workers, larger firms over-represented, no public administration.",
+   "Nine occupation groups × 24 wage brackets — deliberately coarse, transparently so.",
+   "Displacement is net: the model re-employs into a finite service floor, pays survivor raises, and propagates demand destruction.",
+   "Erosion counts revenue plus EI benefit outlays; NHI/NPS outlay responses and forgone investment income are not counted (both understate the damage).",
+   "Exposure is a figure-read of BOK's published chart, accepted because it reconciles with the printed aggregates; the ±0.5pp read error is carried into the band."
   ],
   "rail": {
-   "axes_group": "[copy: Alex — rail group title for the Korea data axes (wage-linked shares + exposure read)]",
+   "axes_group": "Data assumptions — revenue shares, exposure, population",
    "levers": {
     "nhi_share": {
-     "label": "[copy: Alex — NHI wage-linked revenue share slider label]",
-     "help": "[copy: Alex — help: band 0.65–0.97 pending NHIS workplace split; midpoint default]"
+     "label": "NHI wage-linked revenue share",
+     "help": "The share of health-fund revenue that scales with the wage base. Documented band 0.65–0.97, midpoint default, pending the NHIS workplace split."
     },
     "nps_share": {
-     "label": "[copy: Alex — NPS wage-linked share slider label]",
-     "help": "[copy: Alex — help: band 0.75–0.95 pending NPS yearbook split]"
+     "label": "NPS wage-linked revenue share",
+     "help": "The share of pension contributions from workplace subscribers. Documented band 0.75–0.95, midpoint default, pending the NPS yearbook split."
     },
     "exposure_delta": {
-     "label": "[copy: Alex — exposure figure-read select label]",
-     "help": "[copy: Alex — help: BOK 그림 9 read ±0.5pp]"
+     "label": "Exposure figure-read (±0.5pp)",
+     "help": "The read tolerance on BOK 이슈노트 2025-2 <그림 9>, carried as a data scenario rather than averaged away."
     },
     "demography_variant": {
-     "label": "[copy: Alex — demography scenario select label (the published KOSIS variants)]",
-     "help": "[copy: Alex — help: 장래인구추계 2022~2072 저위/중위/고위; published paths only, never interpolated]"
+     "label": "Population scenario (KOSIS)",
+     "help": "장래인구추계 2022–2072 low / medium / high — published paths only, never interpolated between scenarios."
     }
    },
-   "preset_heading": "[copy: Alex — preset picker heading]",
-   "agi_disclosure": "[copy: Alex — one-liner shown when an AGI preset is selected: cognitive channel only, understates manual-occupation displacement]",
-   "api_down": "[copy: Alex — custom sliders need the compute service; showing closest preset]",
+   "preset_heading": "Scenario preset",
+   "agi_disclosure": "This scenario carries the cognitive channel only — there is no published Korean robot-exposure data — so it understates displacement in manual occupations.",
+   "api_down": "Custom settings need the compute service, which is not reachable; showing the closest preset instead. Preset browsing works fully offline.",
    "demography_options": {
-    "-1": "[copy: 저위 low]",
-    "0": "[copy: 중위 medium]",
-    "1": "[copy: 고위 high]"
+    "-1": "저위 (low)",
+    "0": "중위 (medium)",
+    "1": "고위 (high)"
    }
   },
   "tornado_targets": {
-   "ei_shortfall_tn": "[copy: Alex — EI shortfall target label]",
-   "nps_given_back": "[copy: Alex — NPS given-back target label]",
-   "nhi_years_forward": "[copy: Alex — NHI pulled-forward target label]"
+   "ei_shortfall_tn": "EI shortfall by 2029 (₩tn)",
+   "nps_given_back": "Pension years given back",
+   "nhi_years_forward": "NHI depletion pulled forward (yrs)"
   },
   "overlays": {
-   "heading": "[copy: Alex — overlay picker heading (policy responses)]",
+   "heading": "Policy responses",
    "kr-vat": {
-    "label": "[copy: Alex — +1pp VAT overlay label]",
-    "help": "[copy: Alex — help: statutory 10→11%, effective base ₩792tn from NABO Focus 137 receipts; base erodes with displacement]"
+    "label": "+1pp VAT (10% → 11%)",
+    "help": "One statutory point on the ₩792tn effective base measured from 2025 receipts (NABO Focus 137); the base erodes as displacement rises. Static scoring."
    },
    "kr-nps-mandate": {
-    "label": "[copy: Alex — NPS automation-dividend mandate label]",
-    "help": "[copy: Alex — help: NPS holds 20% of after-tax automation profits; flows to the fund, never the treasury]"
+    "label": "NPS automation dividend — 20% of AI profits",
+    "help": "A mandated NPS equity share of after-tax automation profits, flowing to the fund and never through the treasury. The 20% mirrors the US sovereign-wealth overlay."
    },
-   "vat_readout": "[copy: Alex — VAT readout template: revenue/yr by final year, % of widening covered]",
-   "nps_readout": "[copy: Alex — mandate readout template: flow/yr, years bought back of the given-back years]"
+   "vat_readout": "Static scoring — no behavioral response.",
+   "nps_readout": "Illustrative 20%, mirroring the US sovereign-wealth overlay."
   }
  },
  "about": "This is a bottom-up accounting model of what AI automation does to US public finances. Note that all models are wrong, but some are useful; ideally this model is useful to some.\n\n**How it works.** The model prices every displaced worker's taxes and benefits at the occupation-by-state level (33,369 cells against BLS, BEA, Census, and other data), then follows the wages firms stop paying to where they end up going: profit, lower prices, raises for the remaining staff, and compute costs. Then each destination is taxed at its real rate. However, wages are taxed at roughly 25-30%, while their replacements are taxed far less. All 51 states must balance their budgets every year, and the lost paychecks and state austerity cause demand destruction, leading to further layoffs. \n\n**What it isn't.** This is not a forecast, but rather is a scenario calculator and simulator. The presets are based on published forecasts (Acemoglu, Korinek, AI 2027, AI 2040, etc), whose projections are translated into lever positions. Every result is a change against a no-AI baseline, with the deficits the CBO already projects coming first.\n\n**Deliberate simplifications of this model.** There are two significant structural decisions that this model makes. First, capital income does not spend, with retained profit only impacting the economy through corporate taxes; there is no shareholder-consumption or investment channel, with the latter likely being a significant source of economic growth. Second, there is no task creation: displaced workers re-enter only through a fixed re-employment rate into a finite set of low-exposure occupations; automation never endogenously creates new kinds of work. These simplifications are deliberate. The history of automation shows that offsets will eventually arrive, but this model asks what the fiscal impacts will be if the offsets arrive late or never. Fiscal authorities will still need to be able to respond to this scenario, but consider the numbers to be in a world with no offsets.\n\n**Why trust the model.** The code is open source and machine-checked: around 350 automated tests, including eight accounting identities re-verified in every period of every run, so workers and dollars cannot multiply or vanish. With every lever switched off the system reproduces the static calculation bit-exact, and the results triangulate against three independent external models (Acemoglu, Windfall Trust, RAND). Claude Fable 5 and Opus 4.8 wrote the code in this project under those checks and constraints.\n\n**Acknowledgements.** Sincere appreciation to Princeton's Summer Social Impact Internship Fund for funding my internship at Constellation Institute. Further thanks to Jeff Alstott for mentoring and guiding me on this project.\n\n[Source code](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator) · [Technical report](https://aifiscalimpacts.alexwszolek.com/report.html) · [Preset evidence](https://aifiscalimpacts.alexwszolek.com/evidence.html)\"",

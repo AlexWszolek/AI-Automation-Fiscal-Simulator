@@ -77,7 +77,8 @@ export default function KoreaScenarioApp() {
   }, [qs])
 
   const preset = presetMeta(cfg.preset)
-  const isAgi = cfg.preset.includes('agi')
+  // ai-2027 shares the cognitive-only understatement even though its key lacks 'agi'
+  const isAgi = ['korea-agi-20y', 'korea-agi-5y', 'korea-ai-2027'].includes(cfg.preset)
   const startYear = payload?.config.start_year ?? 2026
   const rows = payload?.rows ?? []
   const budgetRows = useMemo(
@@ -181,8 +182,8 @@ export default function KoreaScenarioApp() {
       <main className="content">
         <div className="col-wide">
           <p className="panel caption draft-banner">
-            DRAFT — every string on this page is provisional until the copy pass
-            (content/copy.json → &quot;korea&quot;). Numbers are final and test-pinned.
+            DRAFT — copy is ported/short-written pending Alex&apos;s review; numbers are
+            final and test-pinned.
           </p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
@@ -226,7 +227,7 @@ export default function KoreaScenarioApp() {
                 <Metric
                   label={KO.metrics.demography}
                   value={`−${payload.final.demo_decline_pct.toFixed(1)}%`}
-                  ground={`workforce decline from demography ALONE (KOSIS ${payload.final.demo_variant} variant) by ${payload.config.start_year + payload.config.display_periods - 1} — automation's losses are measured on top of this`}
+                  ground={`KOSIS ${payload.final.demo_variant} variant, by ${payload.config.start_year + payload.config.display_periods - 1} — automation's losses are measured on top of this path`}
                 />
                 <Metric
                   label={KO.metrics.jobs}
@@ -292,7 +293,8 @@ export default function KoreaScenarioApp() {
                 spec={timeSeries(rows, ['employed_M', 'on_ui_M', 'exhausted_M', 'reabsorbed_M',
                   'exited_M', 'induced_M', 'retired_M'], 'millions of workers', startYear,
                   { kind: 'area', stack: true, height: 300, colors: WF_COLORS,
-                    totalLabel: 'All workers (modeled)' })}
+                    totalLabel: 'All workers (modeled)',
+                    labels: { exited_M: 'Left labor force' } })}
                 caption={KO.captions.workforce}
               />
               <ChartPanel

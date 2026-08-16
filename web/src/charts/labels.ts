@@ -11,9 +11,9 @@ export const LABELS: Record<string, string> = {
   fed_deficit_abs_B: 'Federal deficit (absolute)',
   fed_revenue_B: 'Federal revenue',
   // Korea chart columns (₩tn-scaled client-side) — [copy: Alex] like every Korea string
-  fed_revenue_tn: '[copy: Alex — national revenue series label]',
-  fed_deficit_abs_tn: '[copy: Alex — national deficit series label]',
-  ei_outlay_tn: '[copy: Alex — EI benefit outlay series label]',
+  fed_revenue_tn: 'National revenue',
+  fed_deficit_abs_tn: 'National deficit (absolute)',
+  ei_outlay_tn: 'EI benefit outlays',
   fed_deficit_B: 'Federal deficit change',
   fed_debt_B: 'Federal debt change (cumulative)',
   retained_profit_B: 'Kept as profit',

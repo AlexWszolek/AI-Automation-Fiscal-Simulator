@@ -51,8 +51,8 @@ export default function KoreaApp() {
       <main className="content korea-content">
         <div className="col-wide">
           <p className="panel caption draft-banner">
-            DRAFT — every string on this page is provisional until the copy pass
-            (content/copy.json → &quot;korea&quot;). Numbers are final and test-pinned.
+            DRAFT — copy is ported/short-written pending Alex&apos;s review; numbers are
+            final and test-pinned.
           </p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
