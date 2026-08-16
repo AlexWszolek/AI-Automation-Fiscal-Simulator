@@ -104,22 +104,19 @@ def main() -> None:
 
     bundle = {
         "config": {
-            "chain": "assembled V2 run (net displacement: re-employment, survivor raises, "
-                     "demand destruction) with the EI benefit-outlay side included",
-            "central": f"korea-central preset × central exposure read × band-midpoint "
-                       f"shares (NHI {NHI_MID}, NPS {NPS_MID})",
-            "band": "pointwise min/max over 9 assembled runs (3 diffusion presets × "
-                    "exposure read ±0.5pp) × NHI share edges "
-                    f"[{WAGE_LINKED_SHARE['nhi'].low}, {WAGE_LINKED_SHARE['nhi'].high}] × "
-                    f"NPS share edges [{WAGE_LINKED_SHARE['nps'].low}, "
-                    f"{WAGE_LINKED_SHARE['nps'].high}] ({len(runs)} projections)",
+            "chain": "the assembled model, which nets out re-employment, survivor raises "
+                     "and demand destruction, and includes EI benefit outlays",
+            "central": f"the central preset with the central exposure reading and "
+                       f"band-midpoint revenue shares (NHI {NHI_MID}, NPS {NPS_MID})",
+            "band": "the pointwise range over the three diffusion presets, the exposure "
+                    f"reading, and the revenue-share bands ({len(runs)} projections)",
             "agi": "korea-agi-20y / korea-agi-5y (Korinek-Suh translations) at central "
                    "exposure × mid shares — separate scenario rows, never band edges; "
                    "cognitive channel only (no Korean robot-exposure vector wired), which "
                    "understates displacement in manual occupations",
-            "adoption": "diffusion presets ramp 2026→2035 then hold; AGI presets reach full "
-                        "automation of exposed work at year 5 / year 20 then hold — "
-                        "anchored in docs/KOREA_PRESET_EVIDENCE.md",
+            "adoption": "diffusion presets ramp from 2026 to 2035 and then hold, while "
+                        "the AGI presets reach full automation of exposed work at year 5 "
+                        "or year 20 and then hold",
             "whatifs": "composition what-ifs are the direct structural chain (hypothetical "
                        "displacement pattern), not forecasts",
         },

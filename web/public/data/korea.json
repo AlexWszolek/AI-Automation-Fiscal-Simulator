@@ -1,10 +1,10 @@
 {
  "config": {
-  "chain": "assembled V2 run (net displacement: re-employment, survivor raises, demand destruction) with the EI benefit-outlay side included",
-  "central": "korea-central preset × central exposure read × band-midpoint shares (NHI 0.81, NPS 0.85)",
-  "band": "pointwise min/max over 9 assembled runs (3 diffusion presets × exposure read ±0.5pp) × NHI share edges [0.65, 0.97] × NPS share edges [0.75, 0.95] (36 projections)",
+  "chain": "the assembled model, which nets out re-employment, survivor raises and demand destruction, and includes EI benefit outlays",
+  "central": "the central preset with the central exposure reading and band-midpoint revenue shares (NHI 0.81, NPS 0.85)",
+  "band": "the pointwise range over the three diffusion presets, the exposure reading, and the revenue-share bands (36 projections)",
   "agi": "korea-agi-20y / korea-agi-5y (Korinek-Suh translations) at central exposure × mid shares — separate scenario rows, never band edges; cognitive channel only (no Korean robot-exposure vector wired), which understates displacement in manual occupations",
-  "adoption": "diffusion presets ramp 2026→2035 then hold; AGI presets reach full automation of exposed work at year 5 / year 20 then hold — anchored in docs/KOREA_PRESET_EVIDENCE.md",
+  "adoption": "diffusion presets ramp from 2026 to 2035 and then hold, while the AGI presets reach full automation of exposed work at year 5 or year 20 and then hold",
   "whatifs": "composition what-ifs are the direct structural chain (hypothetical displacement pattern), not forecasts"
  },
  "headlines": {

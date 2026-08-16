@@ -290,13 +290,12 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
             "overlays": list(overlays),
             "start_year": 2026, "display_periods": display_n, "horizon": HORIZON,
             "modified_fields": modified,
-            "conventions": ("cognitive channel only; demography = published KOSIS "
-                            f"{demo_variant} variant"
-                            + (" (NOTE: the published fund baselines embed NABO's own "
-                               "medium-family demographic assumptions — the selector "
-                               "varies the model's workforce path only)"
-                               if demo_variant != "medium" else "")
-                            + "; fiscal gap reported, never closed"),
+            "conventions": ("The model covers cognitive work only. Demography follows "
+                            f"the published KOSIS {demo_variant} scenario"
+                            + (", which varies the model's workforce path only, since the "
+                               "published fund baselines embed NABO's own demographic "
+                               "assumptions" if demo_variant != "medium" else "")
+                            + ". The fiscal gap is reported and never closed."),
         },
         "rows": rows,
         "final": {
@@ -331,9 +330,9 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         "ei_outlay_tn": [round(float(v) / 1000.0, 3)
                          for v in bridge["ei_outlay_bn"][:len(EI_BASELINE.years)]],
         "overlay_readouts": overlay_readouts,
-        "band_note": "envelope = exposure read ±0.5pp × wage-linked share band edges at "
-                     "the CURRENT lever settings (12 projections over 3 runs); preset "
-                     "spread lives in the preset picker, not this envelope",
+        "band_note": "The envelope combines the exposure reading and the wage-linked "
+                     "share bands at the current lever settings. Spread across scenarios "
+                     "lives in the preset picker, not in this envelope.",
     }
 
 

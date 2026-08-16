@@ -245,7 +245,7 @@
   {
    "key": "korea-slow",
    "name": "Korea — slow diffusion",
-   "blurb": "A China-shock-grind analogue: SME-laggard persistence holds realized displacement of exposed work to 10% by 2035.",
+   "blurb": "Slow diffusion in the pattern of the China shock, where SME lag holds realized displacement of exposed work to 10% by 2035.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.005,
@@ -282,7 +282,7 @@
   {
    "key": "korea-central",
    "name": "Korea — central",
-   "blurb": "US-observed early adoption discounted for Korea's SME lag, reaching the Acemoglu-class 20% of exposed work by 2035.",
+   "blurb": "US-observed early adoption discounted for Korea's SME lag, reaching 20% of exposed work by 2035.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.01,
@@ -319,7 +319,7 @@
   {
    "key": "korea-fast",
    "name": "Korea — fast catch-up",
-   "blurb": "Half of feasible automation realized by 2035 on Korea's ICT-readiness catch-up.",
+   "blurb": "Half of feasible automation realized by 2035, with Korea's ICT readiness driving a fast catch-up.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -467,7 +467,7 @@
   {
    "key": "korea-metaculus",
    "name": "Metaculus — Crowd median, 2035",
-   "blurb": "The Labor Automation Hub's community medians: employment below the no-AI baseline, labor share down, and survivor wages up — US-calibrated, carried parametrically.",
+   "blurb": "The Labor Automation Hub's community medians, which are employment below the no-AI baseline, labor share down, and survivor wages up. The medians are US-calibrated and carried over parametrically.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.02,
@@ -504,7 +504,7 @@
   {
    "key": "korea-ai-2027",
    "name": "AI 2027 — Fast takeoff",
-   "blurb": "Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here — cognitive channel only.",
+   "blurb": "Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here, since the model only covers cognitive work.",
    "display_periods": 8,
    "defaults": {
     "adoption_start": 0.2,

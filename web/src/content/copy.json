@@ -2,35 +2,35 @@
  "korea": {
   "title": "Fiscal Consequences of AI Automation",
   "intro": "This is a bottom-up accounting model of what AI automation does to Korea's public finances. To use this model, pick a scenario from the sidebar (each one is a published AI forecast) or set your own levers. Every number on this page is a change against a no-AI baseline, with NABO's projections coming first, and this adds to them. What the model shows is the tax base moving from wages and labor to profits, prices and compute, which are taxed at significantly lower rates. This disproportionately impacts the National Pension, Health Insurance, and Employment Insurance funds, which are funded exclusively by income and payroll tax.",
-  "disclosure_note": "Numbers are the assembled model — net of re-employment and demand effects, with EI benefit outlays included; AGI scenarios carry the cognitive channel only (they understate displacement in manual occupations), and every headline is quoted as a range.",
+  "disclosure_note": "All numbers are net of re-employment and demand effects, and include EI benefit outlays. AGI scenarios only cover cognitive work, meaning that they understate displacement in manual occupations, and every headline is quoted as a range.",
   "sections": {
    "nps": "National Pension Fund Reserves",
    "nhi": "Health Insurance Fund Reserves",
    "ei": "Employment Insurance Fund Reserves",
    "composition": "Base erosion by institution",
-   "contrast": "Which account pays — white-collar vs manual automation",
+   "contrast": "White-collar vs manual automation",
    "sources": "Sources",
    "disclosures": "Scope & limits",
    "workforce": "Where the workforce goes",
    "wages": "Wages of the still-employed",
    "budget": "National budget",
    "ei_outlay": "EI benefit outlays",
-   "tornado": "What drives the result",
-   "scenarios": "Scenarios — the diffusion family and the fast worlds",
-   "map": "Where the exposed work sits"
+   "tornado": "Which assumptions drive this number?",
+   "scenarios": "Scenario comparison",
+   "map": "Asymmetric exposure across provinces"
   },
   "captions": {
-   "nps": "NABO's post-reform projection against the eroded path: the 2025 reform bought eight years (depletion 2057 → 2065), and the band is what automation takes back",
-   "nhi": "Depletion is published for 2029 on the reform variant; automation pulls it forward within the band",
-   "ei": "The published rebuild to ₩21.8tn by 2029 leans on planned public-fund borrowing — erosion plus benefit outlays is what automation takes from that plan",
-   "composition": "The central scenario spreads damage almost evenly: the clerical epicentre is mid-wage, so every institution loses about 9% of its base by 2035, the capped pension slightly most.",
-   "contrast": "The statutory pension cap routes high-wage automation to the general account and low-wage automation to the funds — a 50%-displacement what-if on the direct chain, not a forecast.",
+   "nps": "The 2025 pension reform moved depletion from 2057 to 2065, buying eight years. The band shows how much of that automation takes back",
+   "nhi": "NABO projects depletion in 2029 under the medical reform plans. Automation pulls that date forward within the band",
+   "ei": "The published plan rebuilds reserves to ₩21.8tn by 2029, relying on borrowing from the public funds. Erosion plus benefit outlays is what automation takes from that plan",
+   "composition": "The central scenario spreads damage almost evenly. The clerical epicentre is mid-wage, so every institution loses about 9% of its base by 2035, with the capped pension losing slightly most.",
+   "contrast": "A what-if with 50% displacement concentrated in one group. High-wage automation mostly hits income tax, which goes to the general account, while low-wage automation hits the funds, with the pension hardest.",
    "workforce": "Every worker out of the 12.4M modeled wage workers is in exactly one band each year. Displacement moves people down the stack, while re-employment and attrition move them out of limbo.",
    "wages": "The wage index of workers who keep their jobs: raises funded from the survivor share push it up; labor-market slack pulls it down.",
    "budget": "National revenue and the absolute deficit against the no-AI baseline, in ₩ trillions per year.",
-   "ei_outlay": "Benefit spending from the model's own unemployment-insurance stock at the statutory rate — the outlay side that dominates the EI shortfall.",
-   "tornado": "Spearman rank correlation across the joint Monte Carlo; red bars worsen the headline when raised",
-   "map": "All-employed occupation mix (지역별고용조사 2025H1) weighted by the BOK within-occupation displacement-prone shares. Descriptive — no provincial fiscal claims."
+   "ei_outlay": "Benefit spending on the displaced, paid at the statutory rate. These outlays are what dominates the EI shortfall.",
+   "tornado": "Rank correlation with the chosen headline across the Monte Carlo draws. Red bars worsen the headline when raised",
+   "map": "Each province's occupation mix weighted by the BOK displacement-prone shares. This is descriptive only, and makes no provincial fiscal claims."
   },
   "series": {
    "published": "Published projection",
@@ -39,12 +39,12 @@
   },
   "metrics": {
    "nps": "Of the pension reform's 8 bought years, automation takes back",
-   "nhi": "Health-fund depletion pulled forward",
-   "ei": "EI rebuild shortfall by 2029",
+   "nhi": "Health fund depletion",
+   "ei": "Employment Insurance shortfall by 2029",
    "contrast_a": "White-collar automation only",
    "contrast_b": "Elementary automation only",
    "jobs": "Jobs lost",
-   "unemployment": "Unemployment-rate impact",
+   "unemployment": "Unemployment rate impact",
    "inc_tax": "Income tax lost (cumulative)",
    "contrib": "Contributions lost (cumulative)",
    "demography": "Workforce decline from demography alone"
@@ -59,35 +59,35 @@
    "local income surtax": "Local income surtax"
   },
   "disclosures": [
-   "Wage employees only — about 76% of Korean employment; the self-employed are treated qualitatively.",
-   "Establishment survey frame: 12.4M of ~22M wage workers, larger firms over-represented, no public administration.",
-   "Nine occupation groups × 24 wage brackets — deliberately coarse, transparently so.",
-   "Displacement is net: the model re-employs into a finite service floor, pays survivor raises, and propagates demand destruction.",
-   "Erosion counts revenue plus EI benefit outlays; NHI/NPS outlay responses and forgone investment income are not counted (both understate the damage).",
-   "Exposure is a figure-read of BOK's published chart, accepted because it reconciles with the printed aggregates; the ±0.5pp read error is carried into the band."
+   "Wage employees only, which is about 76% of Korean employment. The self-employed are treated qualitatively.",
+   "The establishment survey frame covers 12.4M of roughly 22M wage workers, over-represents larger firms, and excludes public administration.",
+   "Nine occupation groups by 24 wage brackets, which is deliberately coarse and transparently so.",
+   "Displacement is net. The model re-employs into a finite service floor, pays survivor raises, and propagates demand destruction.",
+   "Erosion counts revenue plus EI benefit outlays. NHI and NPS outlay responses and forgone investment income are not counted, and both omissions understate the damage.",
+   "Exposure is a reading of BOK's published chart, accepted because it reconciles with the printed aggregates. The ±0.5pp reading error is carried into the band."
   ],
   "rail": {
-   "axes_group": "Data assumptions — revenue shares, exposure, population",
+   "axes_group": "Data assumptions",
    "levers": {
     "nhi_share": {
      "label": "NHI wage-linked revenue share",
-     "help": "The share of health-fund revenue that scales with the wage base. Documented band 0.65–0.97, midpoint default, pending the NHIS workplace split."
+     "help": "The share of Health Insurance revenue that scales with the wage base. The documented band is 0.65 to 0.97, with the midpoint as the default, pending the NHIS workplace split."
     },
     "nps_share": {
      "label": "NPS wage-linked revenue share",
-     "help": "The share of pension contributions from workplace subscribers. Documented band 0.75–0.95, midpoint default, pending the NPS yearbook split."
+     "help": "The share of pension contributions that comes from workplace subscribers. The documented band is 0.75 to 0.95, with the midpoint as the default, pending the NPS yearbook split."
     },
     "exposure_delta": {
-     "label": "Exposure figure-read (±0.5pp)",
-     "help": "The read tolerance on BOK 이슈노트 2025-2 <그림 9>, carried as a data scenario rather than averaged away."
+     "label": "Exposure reading (±0.5pp)",
+     "help": "The reading tolerance on BOK's published chart, carried as a scenario rather than averaged away."
     },
     "demography_variant": {
      "label": "Population scenario (KOSIS)",
-     "help": "장래인구추계 2022–2072 low / medium / high — published paths only, never interpolated between scenarios."
+     "help": "The published KOSIS 2022–2072 projections. Low, medium, and high scenarios only, with no interpolation between them."
     }
    },
    "preset_heading": "Scenario preset",
-   "agi_disclosure": "This scenario carries the cognitive channel only — there is no published Korean robot-exposure data — so it understates displacement in manual occupations.",
+   "agi_disclosure": "This scenario only covers cognitive work, since there is no published Korean robot-exposure data, so it understates displacement in manual occupations.",
    "api_down": "Custom settings need the compute service, which is not reachable; showing the closest preset instead. Preset browsing works fully offline.",
    "demography_options": {
     "-1": "저위 (low)",
@@ -96,22 +96,22 @@
    }
   },
   "tornado_targets": {
-   "ei_shortfall_tn": "EI shortfall by 2029 (₩tn)",
+   "ei_shortfall_tn": "Employment Insurance shortfall by 2029 (₩tn)",
    "nps_given_back": "Pension years given back",
-   "nhi_years_forward": "NHI depletion pulled forward (yrs)"
+   "nhi_years_forward": "Health fund depletion pulled forward (yrs)"
   },
   "overlays": {
    "heading": "Policy responses",
    "kr-vat": {
     "label": "+1pp VAT (10% → 11%)",
-    "help": "One statutory point on the ₩792tn effective base measured from 2025 receipts (NABO Focus 137); the base erodes as displacement rises. Static scoring."
+    "help": "One statutory point on the effective base of ₩792tn, measured from 2025 receipts. The base erodes as displacement rises, and the scoring is static."
    },
    "kr-nps-mandate": {
-    "label": "NPS automation dividend — 20% of AI profits",
-    "help": "A mandated NPS equity share of after-tax automation profits, flowing to the fund and never through the treasury. The 20% mirrors the US sovereign-wealth overlay."
+    "label": "NPS automation dividend (20% of AI profits)",
+    "help": "A mandated NPS equity share of after-tax automation profits, which flows to the fund and never through the treasury. The 20% mirrors the US sovereign wealth overlay."
    },
-   "vat_readout": "Static scoring — no behavioral response.",
-   "nps_readout": "Illustrative 20%, mirroring the US sovereign-wealth overlay."
+   "vat_readout": "Static scoring, with no behavioral response.",
+   "nps_readout": "The 20% is illustrative."
   }
  },
  "about": "This is a bottom-up accounting model of what AI automation does to US public finances. Note that all models are wrong, but some are useful; ideally this model is useful to some.\n\n**How it works.** The model prices every displaced worker's taxes and benefits at the occupation-by-state level (33,369 cells against BLS, BEA, Census, and other data), then follows the wages firms stop paying to where they end up going: profit, lower prices, raises for the remaining staff, and compute costs. Then each destination is taxed at its real rate. However, wages are taxed at roughly 25-30%, while their replacements are taxed far less. All 51 states must balance their budgets every year, and the lost paychecks and state austerity cause demand destruction, leading to further layoffs. \n\n**What it isn't.** This is not a forecast, but rather is a scenario calculator and simulator. The presets are based on published forecasts (Acemoglu, Korinek, AI 2027, AI 2040, etc), whose projections are translated into lever positions. Every result is a change against a no-AI baseline, with the deficits the CBO already projects coming first.\n\n**Deliberate simplifications of this model.** There are two significant structural decisions that this model makes. First, capital income does not spend, with retained profit only impacting the economy through corporate taxes; there is no shareholder-consumption or investment channel, with the latter likely being a significant source of economic growth. Second, there is no task creation: displaced workers re-enter only through a fixed re-employment rate into a finite set of low-exposure occupations; automation never endogenously creates new kinds of work. These simplifications are deliberate. The history of automation shows that offsets will eventually arrive, but this model asks what the fiscal impacts will be if the offsets arrive late or never. Fiscal authorities will still need to be able to respond to this scenario, but consider the numbers to be in a world with no offsets.\n\n**Why trust the model.** The code is open source and machine-checked: around 350 automated tests, including eight accounting identities re-verified in every period of every run, so workers and dollars cannot multiply or vanish. With every lever switched off the system reproduces the static calculation bit-exact, and the results triangulate against three independent external models (Acemoglu, Windfall Trust, RAND). Claude Fable 5 and Opus 4.8 wrote the code in this project under those checks and constraints.\n\n**Acknowledgements.** Sincere appreciation to Princeton's Summer Social Impact Internship Fund for funding my internship at Constellation Institute. Further thanks to Jeff Alstott for mentoring and guiding me on this project.\n\n[Source code](https://github.com/AlexWszolek/AI-Automation-Fiscal-Simulator) · [Technical report](https://aifiscalimpacts.alexwszolek.com/report.html) · [Preset evidence](https://aifiscalimpacts.alexwszolek.com/evidence.html)\"",
