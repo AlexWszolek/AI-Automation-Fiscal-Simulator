@@ -11,3 +11,9 @@
 .korea-sources li { margin: 0.35rem 0; }
 .metric-row.korea-second-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin: 0.4rem 0 1.1rem; }
 @media (max-width: 900px) { .metric-row.korea-second-row { grid-template-columns: repeat(2, 1fr); } }
+.lang-toggle { display: inline-flex; gap: 0; border: 1px solid rgba(43,40,34,0.25);
+  border-radius: 6px; overflow: hidden; margin: 0.35rem 0 0.6rem; }
+.lang-btn { border: 0; background: transparent; padding: 0.22rem 0.7rem; cursor: pointer;
+  font: inherit; font-size: 0.82rem; color: inherit; }
+.lang-btn.active { background: #3b6ea5; color: #fcfbf8; }
+.lang-btn + .lang-btn { border-left: 1px solid rgba(43,40,34,0.25); }

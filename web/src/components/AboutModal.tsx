@@ -6,12 +6,15 @@ import { Markdown } from '../content/md'
 
 const PROSE = copy.prose as Record<string, string>
 
-export function ShareBox({ queryString }: { queryString: string }) {
+export function ShareBox({ queryString, labels }: {
+  queryString: string
+  labels?: { share_heading: string; copy_button: string; copied: string }
+}) {
   const [copied, setCopied] = useState(false)
   const url = `${location.origin}${location.pathname}${queryString ? `?${queryString}` : ''}`
   return (
     <details className="group">
-      <summary>Share this configuration</summary>
+      <summary>{labels?.share_heading ?? 'Share this configuration'}</summary>
       <div className="share-row">
         <input className="num share-url" readOnly value={url} onFocus={(e) => e.target.select()} />
         <button
@@ -23,7 +26,7 @@ export function ShareBox({ queryString }: { queryString: string }) {
             })
           }}
         >
-          {copied ? 'Copied' : 'Copy'}
+          {copied ? (labels?.copied ?? 'Copied') : (labels?.copy_button ?? 'Copy')}
         </button>
       </div>
       <p className="caption">{PROSE.share_caption}</p>

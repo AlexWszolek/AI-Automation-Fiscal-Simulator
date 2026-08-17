@@ -2,7 +2,6 @@
 // (bounds/defaults come from the same Python the API sanitizes with — a slider cannot emit
 // a value the server would clamp differently). URL form is plain query params
 // (?preset=korea-fast&ui_weeks=39): no packed codec until share-link volume earns one.
-import copy from '../content/copy.json'
 import grid from '../gen/korea_grid.json'
 
 export interface KoreaLeverSpec {
@@ -33,23 +32,12 @@ export const KOREA_GROUPS = grid.groups as string[]
 export const KOREA_OVERLAY_KEYS = ['kr-vat', 'kr-nps-mandate'] as const
 export const INITIAL_KOREA: KoreaConfig = { preset: 'korea-central', levers: {}, overlays: [] }
 
-const KO = copy.korea as Record<string, any>
-const US_LEVER_COPY = copy.levers as Record<string, { label: string; help: string | null }>
 
 export function presetMeta(key: string): KoreaPreset {
   return KOREA_PRESETS.find((p) => p.key === key) ?? KOREA_PRESETS[1]
 }
 
-export function leverCopy(name: string): { label: string; help: string | null } {
-  const ref = KOREA_GRID[name].copy
-  if (ref.startsWith('us:')) return US_LEVER_COPY[ref.slice(3)]
-  const kr = (KO.rail?.levers ?? {})[ref.slice(3)]
-  return kr ?? { label: name, help: null }
-}
 
-export function groupTitle(g: string): string {
-  return g === 'KOREA_AXES' ? String(KO.rail?.axes_group ?? g) : g
-}
 
 /** Preset defaults with the user's deviations applied. */
 export function effectiveKoreaLevers(cfg: KoreaConfig): Record<string, number> {

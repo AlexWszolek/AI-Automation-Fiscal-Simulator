@@ -10,16 +10,16 @@
 // the n=400 tornado — the same numbers as the site, by construction.
 import { useEffect, useMemo, useState } from 'react'
 import type { VisualizationSpec } from 'vega-embed'
-import copy from '../content/copy.json'
 import { compositionBars, fundBand, koreaGeoMap, koreaTornado } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
-import { fmt, KOREA_GRID, KOREA_PRESETS, leverCopy } from './config'
+import { fmt, KOREA_GRID, KOREA_PRESETS } from './config'
+import { LangToggle } from './LangToggle'
+import { useLocale } from './locale'
 import type { KoreaFundJson, KoreaScenarioPayload } from './useKoreaScenarioData'
 
-const KO = (copy as any).korea
-const T = KO.templates as Record<string, string>
+
 
 const SLIDE_W = 1920
 const SLIDE_H = 1080
@@ -68,6 +68,10 @@ function useJson<T>(url: string): T | null {
 }
 
 export default function KoreaSlides() {
+  const { lang, setLang, pack } = useLocale()
+  const KO = pack.KO
+  const T = KO.templates as Record<string, string>
+  const AX = KO.axis_titles as Record<string, string>
   const central = useJson<KoreaScenarioPayload>('/data/korea/scenarios/korea-central.json')
   const bundle = useJson<KoreaBundle>('/data/korea.json')
   const tornado = useJson<any>('/data/korea/tornado/korea-central.json')
@@ -92,7 +96,7 @@ export default function KoreaSlides() {
     const f = central!.funds
     const scenarioRows = KOREA_PRESETS
       .filter((p) => allPresets![p.key])
-      .map((p) => ({ p, pay: allPresets![p.key] }))
+      .map((p) => ({ p: { ...p, name: pack.preset(p.key).name }, pay: allPresets![p.key] }))
     const instLabel = (k: string) => KO.institutions[k] ?? k
 
     return [
@@ -121,14 +125,14 @@ export default function KoreaSlides() {
       { key: 'nps', body: (
         <div className="slide-chart">
           <h2>{KO.sections.nps}</h2>
-          <ChartPanel spec={slideSpec(fundBand(toFund(f.nps), '₩ trillions, reserves',
+          <ChartPanel spec={slideSpec(fundBand(toFund(f.nps), AX.reserves,
             KO.series, { height: 640, tips: KO.tooltips }))} caption={`${KO.captions.nps} — ${f.nps.source}`} />
         </div>
       ) },
       { key: 'nhi', body: (
         <div className="slide-chart">
           <h2>{KO.sections.nhi}</h2>
-          <ChartPanel spec={slideSpec(fundBand(toFund(f.nhi), '₩ trillions, reserves',
+          <ChartPanel spec={slideSpec(fundBand(toFund(f.nhi), AX.reserves,
             KO.series, { height: 640, tips: KO.tooltips }))} caption={`${KO.captions.nhi} — ${f.nhi.source}`} />
         </div>
       ) },
@@ -136,11 +140,11 @@ export default function KoreaSlides() {
         <div className="slide-chart slide-two-up">
           <h2>{KO.sections.ei}</h2>
           <div className="slide-cols">
-            <ChartPanel spec={slideSpec(fundBand(toFund(f.ei), '₩ trillions, reserves',
+            <ChartPanel spec={slideSpec(fundBand(toFund(f.ei), AX.reserves,
               KO.series, { height: 520, tips: KO.tooltips }))} caption={`${KO.captions.ei} — ${f.ei.source}`} />
             <ChartPanel spec={slideSpec(timeSeries(
               central!.ei_outlay_tn.map((v, i) => ({ period: i, ei_outlay_tn: v })),
-              ['ei_outlay_tn'], '₩ trillions / year', 2026, { kind: 'bar', height: 520 }))}
+              ['ei_outlay_tn'], AX.tn_year, 2026, { kind: 'bar', height: 520 }))}
               caption={KO.captions.ei_outlay} />
           </div>
         </div>
@@ -184,7 +188,8 @@ export default function KoreaSlides() {
         <div className="slide-chart">
           <h2>{KO.sections.tornado}</h2>
           <ChartPanel spec={slideSpec(koreaTornado(tornado!.targets.ei_shortfall_tn,
-            (l: string) => (KOREA_GRID[l] ? leverCopy(l).label : (TORNADO_LABELS[l] ?? l)),
+            (l: string) => (KOREA_GRID[l] ? pack.lever(KOREA_GRID[l].copy).label
+                            : (TORNADO_LABELS[l] ?? l)),
             KO.tornado_targets.ei_shortfall_tn, { top: 9 }))}
             caption={`${KO.captions.tornado} — n=${tornado!.config.n}`} />
         </div>
@@ -199,7 +204,7 @@ export default function KoreaSlides() {
         </div>
       ) },
     ]
-  }, [ready])
+  }, [ready, pack])
 
   useEffect(() => {
     if (exportSlide != null) return
@@ -231,6 +236,7 @@ export default function KoreaSlides() {
   return (
     <div className="deck">
       <p className="caption deck-help">{fmt(T.deck_help, { i: active + 1, n: slides.length })}</p>
+      <LangToggle lang={lang} setLang={setLang} />
       <div className="slide-stage" style={{ width: SLIDE_W * scale, height: SLIDE_H * scale }}>
         <div className="slide" style={{ width: SLIDE_W, height: SLIDE_H,
                                         transform: `scale(${scale})` }}>

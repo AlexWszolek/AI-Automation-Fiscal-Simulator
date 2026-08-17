@@ -27,7 +27,7 @@
   "reemployment_haircut": {
    "lo": 0.0,
    "hi": 1.0,
-   "copy": "us:haircut",
+   "copy": "kr:reemployment_haircut",
    "group": "Labor market",
    "kind": "float",
    "step": 0.01
@@ -35,7 +35,7 @@
   "ui_weeks": {
    "lo": 0.0,
    "hi": 52.0,
-   "copy": "us:ui_weeks",
+   "copy": "kr:ui_weeks",
    "group": "Labor market",
    "kind": "int",
    "step": 1
@@ -59,7 +59,7 @@
   "lfp_exit_rate": {
    "lo": 0.0,
    "hi": 1.0,
-   "copy": "us:lfp",
+   "copy": "kr:lfp_exit_rate",
    "group": "Labor market",
    "kind": "float",
    "step": 0.005
@@ -163,7 +163,7 @@
   "interest_rate": {
    "lo": 0.0,
    "hi": 0.1,
-   "copy": "us:interest",
+   "copy": "kr:interest_rate",
    "group": "Macro & demand",
    "kind": "float",
    "step": 0.005
@@ -179,7 +179,7 @@
   "income_tax_mult": {
    "lo": 0.5,
    "hi": 1.5,
-   "copy": "us:income_mult",
+   "copy": "kr:income_tax_mult",
    "group": "Government policy",
    "kind": "float",
    "step": 0.05
@@ -187,7 +187,7 @@
   "corp_tax_mult": {
    "lo": 0.5,
    "hi": 1.5,
-   "copy": "us:corp_mult",
+   "copy": "kr:corp_tax_mult",
    "group": "Government policy",
    "kind": "float",
    "step": 0.05
@@ -195,7 +195,7 @@
   "cons_tax_mult": {
    "lo": 0.5,
    "hi": 1.5,
-   "copy": "us:cons_mult",
+   "copy": "kr:cons_tax_mult",
    "group": "Government policy",
    "kind": "float",
    "step": 0.05

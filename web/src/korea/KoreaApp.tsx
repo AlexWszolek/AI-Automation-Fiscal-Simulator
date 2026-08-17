@@ -4,13 +4,11 @@
 // ALL user-facing text on this page is provisional until Alex's copy pass (copy.json →
 // "korea"); the draft banner stays until that lands.
 import { useEffect, useState } from 'react'
-import copy from '../content/copy.json'
 import { ChartPanel } from '../components/ChartPanel'
 import { compositionBars, contrastBars, fundBand, koreaGeoMap } from '../charts/korea'
+import { LangToggle } from './LangToggle'
+import { useLocale } from './locale'
 import { useKoreaData } from '../state/useKoreaData'
-
-const KO = (copy as unknown as { korea: KoreaCopy }).korea
-const T = (copy as any).korea.templates as Record<string, string>
 
 function fmt(template: string, vars: Record<string, string | number>): string {
   return template.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''))
@@ -44,6 +42,10 @@ function Metric({ label, value, ground }: { label: string; value: string; ground
 }
 
 export default function KoreaApp() {
+  const { lang, setLang, pack } = useLocale()
+  const KO = pack.KO as KoreaCopy
+  const T = pack.KO.templates as Record<string, string>
+  const AX = pack.KO.axis_titles as Record<string, string>
   const { bundle, failed } = useKoreaData()
   const [topo, setTopo] = useState<object | null>(null)
   useEffect(() => {
@@ -56,6 +58,7 @@ export default function KoreaApp() {
     <div className="shell korea-shell">
       <main className="content korea-content">
         <div className="col-wide">
+          <LangToggle lang={lang} setLang={setLang} />
           <p className="panel caption draft-banner">{T.draft_banner}</p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
@@ -99,17 +102,17 @@ export default function KoreaApp() {
             <div className="col-wide chart-grid korea-grid">
               <ChartPanel
                 title={KO.sections.nps}
-                spec={fundBand(bundle.funds.nps, '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
+                spec={fundBand(bundle.funds.nps, AX.reserves, KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nps} — ${bundle.funds.nps.source}`}
               />
               <ChartPanel
                 title={KO.sections.nhi}
-                spec={fundBand(bundle.funds.nhi, '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
+                spec={fundBand(bundle.funds.nhi, AX.reserves, KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nhi} — ${bundle.funds.nhi.source}`}
               />
               <ChartPanel
                 title={KO.sections.ei}
-                spec={fundBand(bundle.funds.ei, '₩ trillions, reserves', KO.series, { height: 260, tips: KO.tooltips })}
+                spec={fundBand(bundle.funds.ei, AX.reserves, KO.series, { height: 260, tips: KO.tooltips })}
                 caption={`${KO.captions.ei} — ${bundle.funds.ei.source}`}
               />
               <ChartPanel

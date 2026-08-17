@@ -3,17 +3,15 @@
 // modified configs POST /api/korea/tornado synchronously (the Korea engine is fast enough
 // to skip the US job queue) with a 1s settle and the last entry shown stale while loading.
 import { useEffect, useRef, useState } from 'react'
-import copy from '../content/copy.json'
 import { koreaTornado } from '../charts/korea'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
 import { TORNADO_LABELS } from '../charts/labels'
-import { fmt } from './config'
-import { deviations, isPristine, KOREA_GRID, leverCopy, type KoreaConfig } from './config'
+import { fmt, KOREA_GRID } from './config'
+import type { LocalePack } from './locale'
+import { deviations, isPristine, type KoreaConfig } from './config'
 
-const KO = (copy as any).korea
-const T = KO.templates as Record<string, string>
-const TARGETS = KO.tornado_targets as Record<string, string>
+
 
 interface TornadoData {
   config: { preset: string; levers: Record<string, number>; n: number }
@@ -24,7 +22,10 @@ interface TornadoData {
 const staticCache = new Map<string, TornadoData>()
 const DEBOUNCE_MS = 1000
 
-export function KoreaTornadoSection({ cfg }: { cfg: KoreaConfig }) {
+export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: LocalePack }) {
+  const KO = pack.KO
+  const T = KO.templates as Record<string, string>
+  const TARGETS = KO.tornado_targets as Record<string, string>
   const [entry, setEntry] = useState<TornadoData | null>(null)
   const [stale, setStale] = useState(false)
   const [target, setTarget] = useState('ei_shortfall_tn')
@@ -89,7 +90,8 @@ export function KoreaTornadoSection({ cfg }: { cfg: KoreaConfig }) {
         </div>
         <ChartPanel
           spec={koreaTornado(rows,
-            (l) => (KOREA_GRID[l] ? leverCopy(l).label : (TORNADO_LABELS[l] ?? l)),
+            (l) => (KOREA_GRID[l] ? pack.lever(KOREA_GRID[l].copy).label
+                                  : (TORNADO_LABELS[l] ?? l)),
             TARGETS[target], { stale })}
           caption={`${KO.captions.tornado} — ${fmt(T.tornado_caption_suffix, { n: entry.config.n })}`}
         />

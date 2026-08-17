@@ -3,7 +3,6 @@
 // /korea.html stays untouched until this page graduates to the default Korea entry.
 // ALL user-facing text is provisional until Alex's copy pass (copy.json → "korea").
 import { useEffect, useMemo, useReducer, useState } from 'react'
-import copy from '../content/copy.json'
 import { fundBand, compositionBars, koreaGeoMap } from '../charts/korea'
 import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
@@ -11,16 +10,16 @@ import { ListBox } from '../components/ListBox'
 import { ShareBox } from '../components/AboutModal'
 import { CheckboxControl, SelectControl, SliderControl } from '../components/controls'
 import {
-  configFromLocation, effectiveKoreaLevers, fmt, groupTitle, INITIAL_KOREA, KOREA_GRID,
-  KOREA_GROUPS, KOREA_PRESETS, leverCopy, presetMeta, queryStringFor,
+  configFromLocation, effectiveKoreaLevers, fmt, INITIAL_KOREA, KOREA_GRID,
+  KOREA_GROUPS, KOREA_PRESETS, queryStringFor,
   type KoreaConfig,
 } from './config'
+import { LangToggle } from './LangToggle'
+import { useLocale } from './locale'
 import { KoreaTornadoSection } from './KoreaTornadoSection'
 import { useKoreaScenarioData, type KoreaFundJson } from './useKoreaScenarioData'
 
-const KO = (copy as any).korea
-const T = KO.templates as Record<string, string>
-const SL = KO.series_labels as Record<string, string>
+
 const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a1d', '#b9b2a6']
 
 type Action =
@@ -69,6 +68,14 @@ export default function KoreaScenarioApp() {
     reducer,
     location.search && location.search !== '?' ? configFromLocation(location.search) : INITIAL_KOREA,
   )
+  const { lang, setLang, pack } = useLocale()
+  const KO = pack.KO
+  const T = KO.templates as Record<string, string>
+  const SL = KO.series_labels as Record<string, string>
+  const AX = KO.axis_titles as Record<string, string>
+  const variantLabel = (v: string) =>
+    (KO.rail.demography_options as Record<string, string>)[
+      ({ low: '-1', medium: '0', high: '1' } as Record<string, string>)[v]] ?? v
   const { payload, loading, apiDown, failed } = useKoreaScenarioData(cfg)
   const values = effectiveKoreaLevers(cfg)
   const qs = useMemo(() => queryStringFor(cfg), [cfg])
@@ -78,7 +85,7 @@ export default function KoreaScenarioApp() {
     history.replaceState(null, '', qs ? `?${qs}` : location.pathname)
   }, [qs])
 
-  const preset = presetMeta(cfg.preset)
+  const preset = pack.preset(cfg.preset)
   // ai-2027 shares the cognitive-only understatement even though its key lacks 'agi'
   const isAgi = ['korea-agi-20y', 'korea-agi-5y', 'korea-ai-2027'].includes(cfg.preset)
   const startYear = payload?.config.start_year ?? 2026
@@ -122,13 +129,14 @@ export default function KoreaScenarioApp() {
           )}
         </button>
         <div className="rail-body">
+          <LangToggle lang={lang} setLang={setLang} />
           <details className="group" open>
             <summary>{KO.rail.preset_heading}</summary>
             <div className="picker">
               <ListBox
                 ariaLabel="Scenario preset"
                 value={cfg.preset}
-                options={KOREA_PRESETS.map((p) => ({ value: p.key, label: p.name }))}
+                options={KOREA_PRESETS.map((p) => ({ value: p.key, label: pack.preset(p.key).name }))}
                 onChange={(v) => dispatch({ type: 'setPreset', preset: v })}
               />
               <p className="caption">{preset.blurb}</p>
@@ -145,9 +153,9 @@ export default function KoreaScenarioApp() {
           </details>
           {KOREA_GROUPS.map((g) => (
             <details key={g} className="group" open={g === 'Automation & adoption'}>
-              <summary>{groupTitle(g)}</summary>
+              <summary>{pack.group(g)}</summary>
               {Object.entries(KOREA_GRID).filter(([, s]) => s.group === g).map(([k, spec]) => {
-                const c = leverCopy(k)
+                const c = pack.lever(spec.copy)
                 if (spec.kind === 'select')
                   return (
                     <SelectControl key={k} label={c.label} help={c.help}
@@ -177,7 +185,7 @@ export default function KoreaScenarioApp() {
               })}
             </details>
           ))}
-          <ShareBox queryString={qs} />
+          <ShareBox queryString={qs} labels={pack.shared} />
         </div>
       </aside>
 
@@ -224,12 +232,13 @@ export default function KoreaScenarioApp() {
                 <Metric
                   label={KO.metrics.demography}
                   value={fmt(T.demo_value, { v: payload.final.demo_decline_pct.toFixed(1) })}
-                  ground={fmt(T.demo_ground, { variant: payload.final.demo_variant,
+                  ground={fmt(T.demo_ground, { variant: variantLabel(payload.final.demo_variant),
                     y: payload.config.start_year + payload.config.display_periods - 1 })}
                 />
                 <Metric
                   label={KO.metrics.jobs}
-                  value={fmt(T.jobs_value, { v: payload.final.jobs_lost_M.toFixed(2) })}
+                  value={fmt(T.jobs_value, { v: payload.final.jobs_lost_M.toFixed(2),
+                    man: (payload.final.jobs_lost_M * 100).toFixed(0) })}
                   ground={fmt(T.jobs_ground, { pct: payload.final.employment_drop_pct.toFixed(1),
                     y: payload.config.start_year + payload.config.display_periods - 1 })}
                 />
@@ -277,37 +286,37 @@ export default function KoreaScenarioApp() {
             <div className="col-wide chart-grid">
               <ChartPanel
                 title={KO.sections.nps}
-                spec={fundBand(toFund(payload.funds.nps), '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
+                spec={fundBand(toFund(payload.funds.nps), AX.reserves, KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nps} — ${payload.funds.nps.source}`}
               />
               <ChartPanel
                 title={KO.sections.nhi}
-                spec={fundBand(toFund(payload.funds.nhi), '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
+                spec={fundBand(toFund(payload.funds.nhi), AX.reserves, KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nhi} — ${payload.funds.nhi.source}`}
               />
               <ChartPanel
                 title={KO.sections.ei}
-                spec={fundBand(toFund(payload.funds.ei), '₩ trillions, reserves', KO.series, { height: 260, tips: KO.tooltips })}
+                spec={fundBand(toFund(payload.funds.ei), AX.reserves, KO.series, { height: 260, tips: KO.tooltips })}
                 caption={`${KO.captions.ei} — ${payload.funds.ei.source}`}
               />
               <ChartPanel
                 title={KO.sections.workforce}
                 spec={timeSeries(rows, ['employed_M', 'on_ui_M', 'exhausted_M', 'reabsorbed_M',
-                  'exited_M', 'induced_M', 'retired_M'], 'millions of workers', startYear,
+                  'exited_M', 'induced_M', 'retired_M'], AX.workers, startYear,
                   { kind: 'area', stack: true, height: 300, colors: WF_COLORS,
                     totalLabel: SL.workforce_total, labels: SL })}
                 caption={KO.captions.workforce}
               />
               <ChartPanel
                 title={KO.sections.wages}
-                spec={timeSeries(rows, ['W_survivor'], 'wage index (1.0 = baseline)', startYear,
+                spec={timeSeries(rows, ['W_survivor'], AX.wage_index, startYear,
                   { yZero: false, tooltipFormat: ',.4f', labels: SL })}
                 caption={KO.captions.wages}
               />
               <ChartPanel
                 title={KO.sections.budget}
                 spec={timeSeries(budgetRows, ['fed_revenue_tn', 'fed_deficit_abs_tn'],
-                  '₩ trillions / year', startYear, { labels: SL })}
+                  AX.tn_year, startYear, { labels: SL })}
                 caption={KO.captions.budget}
               />
               <ChartPanel
@@ -324,13 +333,13 @@ export default function KoreaScenarioApp() {
               )}
               <ChartPanel
                 title={KO.sections.ei_outlay}
-                spec={timeSeries(outlayRows, ['ei_outlay_tn'], '₩ trillions / year', startYear,
+                spec={timeSeries(outlayRows, ['ei_outlay_tn'], AX.tn_year, startYear,
                   { kind: 'bar', height: 220, labels: SL })}
                 caption={KO.captions.ei_outlay}
               />
             </div>
 
-            <KoreaTornadoSection cfg={cfg} />
+            <KoreaTornadoSection cfg={cfg} pack={pack} />
 
             <div className="col-wide panel korea-sources">
               <h2>{KO.sections.disclosures}</h2>
