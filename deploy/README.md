@@ -22,7 +22,19 @@ cd web && npm ci && npm run build          # -> web/dist
 
 If model code or presets changed, regenerate the committed bundles first:
 `python scripts/gen_web_bundle.py` (and `python scripts/precompute_app_mc.py` if the tornado
-artifact is stale — the test suite tells you).
+artifact is stale — the test suite tells you). For the Korea pages the equivalents are
+`scripts/gen_korea_bundle.py`, `scripts/gen_korea_scenarios.py`, and `scripts/gen_korea_grid.py`
+— all gated by staleness tests, so a green suite means the committed bundles are current.
+
+## The Korea site
+
+The same build serves three additional entries, all unlisted (noindex): `/korea.html`
+(the static presenter view), `/korea-app.html` (the interactive site with levers, overlays,
+and the EN/KR toggle — `?lang=ko` deep-links Korean), and `/korea-slides.html` (the deck).
+They are fully static except custom slider values and live tornados, which use
+`/api/korea/*` on the same compute service — restart it after pulling so the Korea routes
+load. `bash scripts/bootstrap.sh` builds the gitignored Korea tidy tables the service needs
+(step 7; from committed raw exports, no network).
 
 ## Serve
 

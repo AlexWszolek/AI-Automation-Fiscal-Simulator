@@ -8,14 +8,14 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo "==> 1/6  Python 3.12 venv (via uv)"
+echo "==> 1/7  Python 3.12 venv (via uv)"
 command -v uv >/dev/null 2>&1 || python3 -m pip install -q uv
 [ -d .venv ] || uv venv --python 3.12 .venv
 
-echo "==> 2/6  core deps (model + app + tests)"
+echo "==> 2/7  core deps (model + app + tests)"
 uv pip install --python .venv/bin/python -q -r requirements.txt
 
-echo "==> 3/6  ACS PUMS household microdata (csv_hus.zip ~251MB) for the NOC build"
+echo "==> 3/7  ACS PUMS household microdata (csv_hus.zip ~251MB) for the NOC build"
 if [ ! -f data/external/pums_hus/psam_husa.csv ]; then
   mkdir -p data/external
   curl -L --fail -sS -o data/external/csv_hus.zip \
@@ -25,15 +25,23 @@ else
   echo "    (already present)"
 fi
 
-echo "==> 4/6  NOC distribution (Part A) -> data/interim/noc_distribution.csv"
+echo "==> 4/7  NOC distribution (Part A) -> data/interim/noc_distribution.csv"
 .venv/bin/python -m fiscal_model.noc
 
-echo "==> 5/6  PolicyEngine benefit bake (Part B, heavy) -> data/interim/benefit_lookup.parquet"
+echo "==> 5/7  PolicyEngine benefit bake (Part B, heavy) -> data/interim/benefit_lookup.parquet"
 uv pip install --python .venv/bin/python -q -r requirements-bake.txt
 .venv/bin/python scripts/bake_benefits.py
 
-echo "==> 6/6  per-worker delta precompute (dynamics cache)"
+echo "==> 6/7  per-worker delta precompute (dynamics cache)"
 .venv/bin/python -m fiscal_model.dynamics >/dev/null
+
+echo "==> 7/7  Korea tidy tables (from committed raw exports)"
+if [ ! -f data/raw/korea/DT_118N_PAYM39.tidy.csv ] || [ ! -f data/raw/korea/region_occupation.tidy.csv ]; then
+  .venv/bin/python scripts/fetch_korea_tables.py --parse-only
+  .venv/bin/python scripts/fetch_korea_region_occupation.py --parse-only
+else
+  echo "    (already present)"
+fi
 
 echo
 echo "Done. Run the tests:    .venv/bin/python -m pytest -q"
