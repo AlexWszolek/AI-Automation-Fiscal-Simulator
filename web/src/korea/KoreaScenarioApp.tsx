@@ -11,7 +11,7 @@ import { ListBox } from '../components/ListBox'
 import { ShareBox } from '../components/AboutModal'
 import { CheckboxControl, SelectControl, SliderControl } from '../components/controls'
 import {
-  configFromLocation, effectiveKoreaLevers, groupTitle, INITIAL_KOREA, KOREA_GRID,
+  configFromLocation, effectiveKoreaLevers, fmt, groupTitle, INITIAL_KOREA, KOREA_GRID,
   KOREA_GROUPS, KOREA_PRESETS, leverCopy, presetMeta, queryStringFor,
   type KoreaConfig,
 } from './config'
@@ -19,6 +19,8 @@ import { KoreaTornadoSection } from './KoreaTornadoSection'
 import { useKoreaScenarioData, type KoreaFundJson } from './useKoreaScenarioData'
 
 const KO = (copy as any).korea
+const T = KO.templates as Record<string, string>
+const SL = KO.series_labels as Record<string, string>
 const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a1d', '#b9b2a6']
 
 type Action =
@@ -110,12 +112,12 @@ export default function KoreaScenarioApp() {
                 onClick={() => setDrawerOpen((o) => !o)}>
           <span className="mobile-bar-scenario">
             <span className="mobile-bar-chevron" aria-hidden>{drawerOpen ? '▴' : '▾'}</span>
-            {' '}Scenario · <span className="mobile-bar-preset">{preset.name}</span>
+            {' '}{T.scenario_word} · <span className="mobile-bar-preset">{preset.name}</span>
           </span>
           {payload && (
             <span className="mobile-bar-metric">
-              <span className="num">₩{payload.final.ei_shortfall_tn.toFixed(1)}tn</span>
-              <span className="mobile-bar-metric-label">EI shortfall 2029</span>
+              <span className="num">{fmt(T.money_tn, { v: payload.final.ei_shortfall_tn.toFixed(1) })}</span>
+              <span className="mobile-bar-metric-label">{T.mobile_metric_label}</span>
             </span>
           )}
         </button>
@@ -181,26 +183,20 @@ export default function KoreaScenarioApp() {
 
       <main className="content">
         <div className="col-wide">
-          <p className="panel caption draft-banner">
-            DRAFT — copy is ported/short-written pending Alex&apos;s review; numbers are
-            final and test-pinned.
-          </p>
+          <p className="panel caption draft-banner">{T.draft_banner}</p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
           <p className="panel caption">{KO.disclosure_note}</p>
           {apiDown && <p className="panel caption">{KO.rail.api_down}</p>}
           {payload && payload.config.modified_fields.length > 0 && (
             <p className="panel caption modified-note">
-              ⚠️ levers modified from the preset: {payload.config.modified_fields.join(', ')}
+              {fmt(T.modified_note, { fields: payload.config.modified_fields.join(', ') })}
             </p>
           )}
         </div>
 
         {failed && (
-          <p className="panel caption col-wide warning">
-            The Korea scenario bundles (/data/korea/scenarios) could not be loaded. If this
-            is a fresh deployment, run scripts/gen_korea_scenarios.py and redeploy.
-          </p>
+          <p className="panel caption col-wide warning">{T.load_failed}</p>
         )}
 
         {payload && (
@@ -209,45 +205,48 @@ export default function KoreaScenarioApp() {
               <div className="metric-row heroes korea-heroes">
                 <Metric
                   label={KO.metrics.nps}
-                  value={`${yearsFmt(payload.final.nps_given_back)} of 8 yrs`}
-                  ground={`reform moved depletion 2057 → ${payload.funds.nps.published_depletion} · eroded ${payload.funds.nps.eroded_date ?? '—'}`}
+                  value={fmt(T.nps_value, { v: yearsFmt(payload.final.nps_given_back) })}
+                  ground={fmt(T.nps_ground, { d: payload.funds.nps.eroded_date ?? '—' })}
                 />
                 <Metric
                   label={KO.metrics.nhi}
-                  value={`${yearsFmt(payload.final.nhi_years_forward)} yrs earlier`}
-                  ground={`published depletion ${payload.funds.nhi.published_depletion} · eroded ${payload.funds.nhi.eroded_date ?? '—'}`}
+                  value={fmt(T.nhi_value, { v: yearsFmt(payload.final.nhi_years_forward) })}
+                  ground={fmt(T.nhi_ground, { pub: payload.funds.nhi.published_depletion ?? '—',
+                                              d: payload.funds.nhi.eroded_date ?? '—' })}
                 />
                 <Metric
                   label={KO.metrics.ei}
-                  value={`₩${payload.final.ei_shortfall_tn.toFixed(1)}tn short`}
-                  ground={`vs the planned ₩${payload.funds.ei.published[payload.funds.ei.published.length - 1].toFixed(1)}tn rebuild by 2029`}
+                  value={fmt(T.ei_value, { v: payload.final.ei_shortfall_tn.toFixed(1) })}
+                  ground={fmt(T.ei_ground, { plan: payload.funds.ei.published[payload.funds.ei.published.length - 1].toFixed(1) })}
                 />
               </div>
               <div className="metric-row korea-second-row">
                 <Metric
                   label={KO.metrics.demography}
-                  value={`−${payload.final.demo_decline_pct.toFixed(1)}%`}
-                  ground={`KOSIS ${payload.final.demo_variant} variant, by ${payload.config.start_year + payload.config.display_periods - 1} — automation's losses are measured on top of this path`}
+                  value={fmt(T.demo_value, { v: payload.final.demo_decline_pct.toFixed(1) })}
+                  ground={fmt(T.demo_ground, { variant: payload.final.demo_variant,
+                    y: payload.config.start_year + payload.config.display_periods - 1 })}
                 />
                 <Metric
                   label={KO.metrics.jobs}
-                  value={`${payload.final.jobs_lost_M.toFixed(2)}m jobs`}
-                  ground={`${payload.final.employment_drop_pct.toFixed(1)}% of modeled wage employment by ${payload.config.start_year + payload.config.display_periods - 1}`}
+                  value={fmt(T.jobs_value, { v: payload.final.jobs_lost_M.toFixed(2) })}
+                  ground={fmt(T.jobs_ground, { pct: payload.final.employment_drop_pct.toFixed(1),
+                    y: payload.config.start_year + payload.config.display_periods - 1 })}
                 />
                 <Metric
                   label={KO.metrics.unemployment}
-                  value={`+${payload.final.u_uplift_pp.toFixed(1)} pp`}
-                  ground={`on the ${payload.final.u_base_pct.toFixed(1)}% rate (2025H1) if displaced job-seekers count as unemployed`}
+                  value={fmt(T.u_value, { v: payload.final.u_uplift_pp.toFixed(1) })}
+                  ground={fmt(T.u_ground, { base: payload.final.u_base_pct.toFixed(1) })}
                 />
                 <Metric
                   label={KO.metrics.inc_tax}
-                  value={`₩${payload.final.inc_tax_lost_cum_tn.toFixed(1)}tn`}
-                  ground={`cumulative national + local income tax lost through ${payload.config.start_year + payload.config.display_periods - 1}`}
+                  value={fmt(T.money_tn, { v: payload.final.inc_tax_lost_cum_tn.toFixed(1) })}
+                  ground={fmt(T.inctax_ground, { y: payload.config.start_year + payload.config.display_periods - 1 })}
                 />
                 <Metric
                   label={KO.metrics.contrib}
-                  value={`₩${payload.final.contrib_lost_cum_tn.toFixed(1)}tn`}
-                  ground={`cumulative social-insurance contributions lost · EI benefits paid ₩${payload.final.ei_outlay_cum_tn.toFixed(1)}tn`}
+                  value={fmt(T.money_tn, { v: payload.final.contrib_lost_cum_tn.toFixed(1) })}
+                  ground={fmt(T.contrib_ground, { e: payload.final.ei_outlay_cum_tn.toFixed(1) })}
                 />
               </div>
             </div>
@@ -256,16 +255,19 @@ export default function KoreaScenarioApp() {
               <div className="col-wide panel">
                 {payload.overlay_readouts.map((r) => r.key === 'kr-vat' ? (
                   <p key={r.key} className="caption">
-                    <strong>{KO.overlays['kr-vat'].label}</strong> — ₩{r.revenue_final_tn?.toFixed(1)}tn/yr
-                    by the final year{r.coverage_pct != null &&
-                      <> · covers {r.coverage_pct.toFixed(0)}% of the ₩{r.deficit_widening_final_tn?.toFixed(1)}tn widening</>}.
+                    <strong>{KO.overlays['kr-vat'].label}</strong> — {fmt(T.vat_readout, {
+                      v: r.revenue_final_tn?.toFixed(1) ?? '—',
+                      pct: r.coverage_pct?.toFixed(0) ?? '—',
+                      gap: r.deficit_widening_final_tn?.toFixed(1) ?? '—' })}.
                     {' '}<span className="modified-note">{KO.overlays.vat_readout}</span>
                   </p>
                 ) : (
                   <p key={r.key} className="caption">
-                    <strong>{KO.overlays['kr-nps-mandate'].label}</strong> — ₩{r.flow_final_tn?.toFixed(1)}tn/yr
-                    into the fund · buys back {r.years_bought_back?.toFixed(2)} of the {r.given_back_base?.toFixed(2)} given-back
-                    years (depletion {r.eroded_date_with_mandate ?? '—'}).
+                    <strong>{KO.overlays['kr-nps-mandate'].label}</strong> — {fmt(T.nps_readout, {
+                      v: r.flow_final_tn?.toFixed(1) ?? '—',
+                      b: r.years_bought_back?.toFixed(2) ?? '—',
+                      g: r.given_back_base?.toFixed(2) ?? '—',
+                      d: r.eroded_date_with_mandate ?? '—' })}.
                     {' '}<span className="modified-note">{KO.overlays.nps_readout}</span>
                   </p>
                 ))}
@@ -275,17 +277,17 @@ export default function KoreaScenarioApp() {
             <div className="col-wide chart-grid">
               <ChartPanel
                 title={KO.sections.nps}
-                spec={fundBand(toFund(payload.funds.nps), '₩ trillions, reserves', KO.series)}
+                spec={fundBand(toFund(payload.funds.nps), '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nps} — ${payload.funds.nps.source}`}
               />
               <ChartPanel
                 title={KO.sections.nhi}
-                spec={fundBand(toFund(payload.funds.nhi), '₩ trillions, reserves', KO.series)}
+                spec={fundBand(toFund(payload.funds.nhi), '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nhi} — ${payload.funds.nhi.source}`}
               />
               <ChartPanel
                 title={KO.sections.ei}
-                spec={fundBand(toFund(payload.funds.ei), '₩ trillions, reserves', KO.series, { height: 260 })}
+                spec={fundBand(toFund(payload.funds.ei), '₩ trillions, reserves', KO.series, { height: 260, tips: KO.tooltips })}
                 caption={`${KO.captions.ei} — ${payload.funds.ei.source}`}
               />
               <ChartPanel
@@ -293,38 +295,37 @@ export default function KoreaScenarioApp() {
                 spec={timeSeries(rows, ['employed_M', 'on_ui_M', 'exhausted_M', 'reabsorbed_M',
                   'exited_M', 'induced_M', 'retired_M'], 'millions of workers', startYear,
                   { kind: 'area', stack: true, height: 300, colors: WF_COLORS,
-                    totalLabel: 'All workers (modeled)',
-                    labels: { exited_M: 'Left labor force' } })}
+                    totalLabel: SL.workforce_total, labels: SL })}
                 caption={KO.captions.workforce}
               />
               <ChartPanel
                 title={KO.sections.wages}
                 spec={timeSeries(rows, ['W_survivor'], 'wage index (1.0 = baseline)', startYear,
-                  { yZero: false, tooltipFormat: ',.4f' })}
+                  { yZero: false, tooltipFormat: ',.4f', labels: SL })}
                 caption={KO.captions.wages}
               />
               <ChartPanel
                 title={KO.sections.budget}
                 spec={timeSeries(budgetRows, ['fed_revenue_tn', 'fed_deficit_abs_tn'],
-                  '₩ trillions / year', startYear)}
+                  '₩ trillions / year', startYear, { labels: SL })}
                 caption={KO.captions.budget}
               />
               <ChartPanel
                 title={KO.sections.composition}
-                spec={compositionBars(payload.composition_2035, instLabel)}
+                spec={compositionBars(payload.composition_2035, instLabel, { tips: KO.tooltips })}
                 caption={KO.captions.composition}
               />
               {regions && topo && (
                 <ChartPanel
                   title={KO.sections.map}
-                  spec={koreaGeoMap(regions, topo)}
+                  spec={koreaGeoMap(regions, topo, { tips: KO.tooltips })}
                   caption={KO.captions.map}
                 />
               )}
               <ChartPanel
                 title={KO.sections.ei_outlay}
                 spec={timeSeries(outlayRows, ['ei_outlay_tn'], '₩ trillions / year', startYear,
-                  { kind: 'bar', height: 220 })}
+                  { kind: 'bar', height: 220, labels: SL })}
                 caption={KO.captions.ei_outlay}
               />
             </div>
@@ -337,13 +338,16 @@ export default function KoreaScenarioApp() {
                 {KO.disclosures.map((d: string, i: number) => <li key={i}>{d}</li>)}
               </ul>
               <p className="caption">
-                Conventions: {payload.config.conventions}. {payload.band_note}.
+                {payload.final.demo_variant === 'medium'
+                  ? T.conventions_medium
+                  : fmt(T.conventions_offmedium, { variant: payload.final.demo_variant })}{' '}
+                {T.band_note}
               </p>
             </div>
           </>
         )}
 
-        {loading && !payload && <p className="caption col-wide">Loading the scenario…</p>}
+        {loading && !payload && <p className="caption col-wide">{T.loading}</p>}
       </main>
     </div>
   )

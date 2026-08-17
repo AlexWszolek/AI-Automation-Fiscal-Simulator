@@ -10,6 +10,11 @@ import { compositionBars, contrastBars, fundBand, koreaGeoMap } from '../charts/
 import { useKoreaData } from '../state/useKoreaData'
 
 const KO = (copy as unknown as { korea: KoreaCopy }).korea
+const T = (copy as any).korea.templates as Record<string, string>
+
+function fmt(template: string, vars: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''))
+}
 
 interface KoreaCopy {
   title: string
@@ -18,6 +23,7 @@ interface KoreaCopy {
   sections: Record<string, string>
   captions: Record<string, string>
   series: { published: string; eroded: string; band: string }
+  tooltips: Record<string, string>
   institutions: Record<string, string>
   disclosures: string[]
   metrics: Record<string, string>
@@ -50,20 +56,14 @@ export default function KoreaApp() {
     <div className="shell korea-shell">
       <main className="content korea-content">
         <div className="col-wide">
-          <p className="panel caption draft-banner">
-            DRAFT — copy is ported/short-written pending Alex&apos;s review; numbers are
-            final and test-pinned.
-          </p>
+          <p className="panel caption draft-banner">{T.draft_banner}</p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
           <p className="panel caption">{KO.disclosure_note}</p>
         </div>
 
         {failed && (
-          <p className="panel caption col-wide warning">
-            The Korea data bundle (/data/korea.json) could not be loaded. If this is a fresh
-            deployment, run scripts/gen_korea_bundle.py and redeploy.
-          </p>
+          <p className="panel caption col-wide warning">{T.bundle_failed}</p>
         )}
 
         {bundle && (
@@ -72,18 +72,26 @@ export default function KoreaApp() {
               <div className="metric-row heroes korea-heroes">
                 <Metric
                   label={KO.metrics.nps}
-                  value={`${yearsFmt(bundle.headlines.nps.given_back_central)} of ${bundle.headlines.nps.bought_years} yrs`}
-                  ground={`band ${yearsFmt(bundle.headlines.nps.given_back_lo)}–${yearsFmt(bundle.headlines.nps.given_back_hi)} · reform moved depletion ${bundle.headlines.nps.pre_reform_depletion} → ${bundle.headlines.nps.published_depletion}`}
+                  value={fmt(T.p_nps_value, { v: yearsFmt(bundle.headlines.nps.given_back_central),
+                                              n: bundle.headlines.nps.bought_years })}
+                  ground={fmt(T.p_nps_ground, { lo: yearsFmt(bundle.headlines.nps.given_back_lo),
+                    hi: yearsFmt(bundle.headlines.nps.given_back_hi),
+                    pre: bundle.headlines.nps.pre_reform_depletion,
+                    pub: bundle.headlines.nps.published_depletion })}
                 />
                 <Metric
                   label={KO.metrics.nhi}
-                  value={`${yearsFmt(bundle.headlines.nhi.years_forward_central)} yrs earlier`}
-                  ground={`band ${yearsFmt(bundle.headlines.nhi.years_forward_lo)}–${yearsFmt(bundle.headlines.nhi.years_forward_hi)} · published depletion ${bundle.headlines.nhi.published_depletion}`}
+                  value={fmt(T.nhi_value, { v: yearsFmt(bundle.headlines.nhi.years_forward_central) })}
+                  ground={fmt(T.p_nhi_ground, { lo: yearsFmt(bundle.headlines.nhi.years_forward_lo),
+                    hi: yearsFmt(bundle.headlines.nhi.years_forward_hi),
+                    pub: bundle.headlines.nhi.published_depletion })}
                 />
                 <Metric
                   label={KO.metrics.ei}
-                  value={`₩${bundle.headlines.ei.shortfall_central_tn.toFixed(1)}tn short`}
-                  ground={`band ₩${bundle.headlines.ei.shortfall_lo_tn.toFixed(1)}–${bundle.headlines.ei.shortfall_hi_tn.toFixed(1)}tn vs the planned ₩${bundle.headlines.ei.planned_2029_tn.toFixed(1)}tn rebuild by 2029`}
+                  value={fmt(T.ei_value, { v: bundle.headlines.ei.shortfall_central_tn.toFixed(1) })}
+                  ground={fmt(T.p_ei_ground, { lo: bundle.headlines.ei.shortfall_lo_tn.toFixed(1),
+                    hi: bundle.headlines.ei.shortfall_hi_tn.toFixed(1),
+                    plan: bundle.headlines.ei.planned_2029_tn.toFixed(1) })}
                 />
               </div>
             </div>
@@ -91,28 +99,28 @@ export default function KoreaApp() {
             <div className="col-wide chart-grid korea-grid">
               <ChartPanel
                 title={KO.sections.nps}
-                spec={fundBand(bundle.funds.nps, '₩ trillions, reserves', KO.series)}
+                spec={fundBand(bundle.funds.nps, '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nps} — ${bundle.funds.nps.source}`}
               />
               <ChartPanel
                 title={KO.sections.nhi}
-                spec={fundBand(bundle.funds.nhi, '₩ trillions, reserves', KO.series)}
+                spec={fundBand(bundle.funds.nhi, '₩ trillions, reserves', KO.series, { tips: KO.tooltips })}
                 caption={`${KO.captions.nhi} — ${bundle.funds.nhi.source}`}
               />
               <ChartPanel
                 title={KO.sections.ei}
-                spec={fundBand(bundle.funds.ei, '₩ trillions, reserves', KO.series, { height: 260 })}
+                spec={fundBand(bundle.funds.ei, '₩ trillions, reserves', KO.series, { height: 260, tips: KO.tooltips })}
                 caption={`${KO.captions.ei} — ${bundle.funds.ei.source}`}
               />
               <ChartPanel
                 title={KO.sections.composition}
-                spec={compositionBars(bundle.composition.central_2035, label)}
+                spec={compositionBars(bundle.composition.central_2035, label, { tips: KO.tooltips })}
                 caption={KO.captions.composition}
               />
               {bundle.regions && topo && (
                 <ChartPanel
                   title={KO.sections.map}
-                  spec={koreaGeoMap(bundle.regions, topo)}
+                  spec={koreaGeoMap(bundle.regions, topo, { tips: KO.tooltips })}
                   caption={KO.captions.map}
                 />
               )}
@@ -123,6 +131,7 @@ export default function KoreaApp() {
                   bundle.composition.elementary_only,
                   { a: KO.metrics.contrast_a, b: KO.metrics.contrast_b },
                   label,
+                  { tips: KO.tooltips },
                 )}
                 caption={KO.captions.contrast}
               />
@@ -140,8 +149,9 @@ export default function KoreaApp() {
                 {KO.disclosures.map((d, i) => <li key={i}>{d}</li>)}
               </ul>
               <p className="caption">
-                Model config: {bundle.config.chain}. Central = {bundle.config.central}.
-                Band = {bundle.config.band}. Adoption: {bundle.config.adoption}.
+                {fmt(T.model_config, { chain: bundle.config.chain,
+                  central: bundle.config.central, band: bundle.config.band,
+                  adoption: bundle.config.adoption })}
               </p>
             </div>
           </>

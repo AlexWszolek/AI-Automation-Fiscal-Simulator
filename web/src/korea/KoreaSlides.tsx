@@ -15,10 +15,11 @@ import { compositionBars, fundBand, koreaGeoMap, koreaTornado } from '../charts/
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
-import { KOREA_GRID, KOREA_PRESETS, leverCopy } from './config'
+import { fmt, KOREA_GRID, KOREA_PRESETS, leverCopy } from './config'
 import type { KoreaFundJson, KoreaScenarioPayload } from './useKoreaScenarioData'
 
 const KO = (copy as any).korea
+const T = KO.templates as Record<string, string>
 
 const SLIDE_W = 1920
 const SLIDE_H = 1080
@@ -101,14 +102,18 @@ export default function KoreaSlides() {
           <p className="slide-intro">{KO.intro}</p>
           <div className="metric-row heroes korea-heroes slide-heroes">
             <Hero label={KO.metrics.nps}
-                  value={`${h.nps.given_back_central.toFixed(1)} of ${h.nps.bought_years} yrs`}
-                  ground={`band ${h.nps.given_back_lo.toFixed(1)}–${h.nps.given_back_hi.toFixed(1)} · reform moved depletion ${h.nps.pre_reform_depletion} → ${h.nps.published_depletion}`} />
+                  value={fmt(T.p_nps_value, { v: h.nps.given_back_central.toFixed(1), n: h.nps.bought_years })}
+                  ground={fmt(T.p_nps_ground, { lo: h.nps.given_back_lo.toFixed(1),
+                    hi: h.nps.given_back_hi.toFixed(1), pre: h.nps.pre_reform_depletion,
+                    pub: h.nps.published_depletion })} />
             <Hero label={KO.metrics.nhi}
-                  value={`${h.nhi.years_forward_central.toFixed(2)} yrs earlier`}
-                  ground={`band ${h.nhi.years_forward_lo.toFixed(2)}–${h.nhi.years_forward_hi.toFixed(2)} · published depletion ${h.nhi.published_depletion}`} />
+                  value={fmt(T.nhi_value, { v: h.nhi.years_forward_central.toFixed(2) })}
+                  ground={fmt(T.p_nhi_ground, { lo: h.nhi.years_forward_lo.toFixed(2),
+                    hi: h.nhi.years_forward_hi.toFixed(2), pub: h.nhi.published_depletion })} />
             <Hero label={KO.metrics.ei}
-                  value={`₩${h.ei.shortfall_central_tn.toFixed(1)}tn short`}
-                  ground={`band ₩${h.ei.shortfall_lo_tn.toFixed(1)}–${h.ei.shortfall_hi_tn.toFixed(1)}tn vs the planned ₩${h.ei.planned_2029_tn.toFixed(1)}tn rebuild by 2029`} />
+                  value={fmt(T.ei_value, { v: h.ei.shortfall_central_tn.toFixed(1) })}
+                  ground={fmt(T.p_ei_ground, { lo: h.ei.shortfall_lo_tn.toFixed(1),
+                    hi: h.ei.shortfall_hi_tn.toFixed(1), plan: h.ei.planned_2029_tn.toFixed(1) })} />
           </div>
           <p className="caption slide-note">{KO.disclosure_note}</p>
         </div>
@@ -117,14 +122,14 @@ export default function KoreaSlides() {
         <div className="slide-chart">
           <h2>{KO.sections.nps}</h2>
           <ChartPanel spec={slideSpec(fundBand(toFund(f.nps), '₩ trillions, reserves',
-            KO.series, { height: 640 }))} caption={`${KO.captions.nps} — ${f.nps.source}`} />
+            KO.series, { height: 640, tips: KO.tooltips }))} caption={`${KO.captions.nps} — ${f.nps.source}`} />
         </div>
       ) },
       { key: 'nhi', body: (
         <div className="slide-chart">
           <h2>{KO.sections.nhi}</h2>
           <ChartPanel spec={slideSpec(fundBand(toFund(f.nhi), '₩ trillions, reserves',
-            KO.series, { height: 640 }))} caption={`${KO.captions.nhi} — ${f.nhi.source}`} />
+            KO.series, { height: 640, tips: KO.tooltips }))} caption={`${KO.captions.nhi} — ${f.nhi.source}`} />
         </div>
       ) },
       { key: 'ei', body: (
@@ -132,7 +137,7 @@ export default function KoreaSlides() {
           <h2>{KO.sections.ei}</h2>
           <div className="slide-cols">
             <ChartPanel spec={slideSpec(fundBand(toFund(f.ei), '₩ trillions, reserves',
-              KO.series, { height: 520 }))} caption={`${KO.captions.ei} — ${f.ei.source}`} />
+              KO.series, { height: 520, tips: KO.tooltips }))} caption={`${KO.captions.ei} — ${f.ei.source}`} />
             <ChartPanel spec={slideSpec(timeSeries(
               central!.ei_outlay_tn.map((v, i) => ({ period: i, ei_outlay_tn: v })),
               ['ei_outlay_tn'], '₩ trillions / year', 2026, { kind: 'bar', height: 520 }))}
@@ -165,14 +170,14 @@ export default function KoreaSlides() {
         <div className="slide-chart">
           <h2>{KO.sections.composition}</h2>
           <ChartPanel spec={slideSpec(compositionBars(central!.composition_2035, instLabel,
-            { height: 560 }))} caption={KO.captions.composition} />
+            { height: 560, tips: KO.tooltips }))} caption={KO.captions.composition} />
         </div>
       ) },
       { key: 'map', body: (
         <div className="slide-chart">
           <h2>{KO.sections.map}</h2>
           <ChartPanel spec={slideSpec(koreaGeoMap((bundle as any).regions ?? [], topo!,
-            { height: 620 }))} caption={KO.captions.map} />
+            { height: 620, tips: KO.tooltips }))} caption={KO.captions.map} />
         </div>
       ) },
       { key: 'sensitivity', body: (
@@ -215,7 +220,7 @@ export default function KoreaSlides() {
       <div className="slide export" style={{ width: SLIDE_W, height: SLIDE_H }}>
         {s.body}
         <div className="slide-footer caption">
-          <span>DRAFT · numbers final and test-pinned · copy pending review</span>
+          <span>{T.deck_footer}</span>
           <span className="num">{exportSlide} / {slides.length}</span>
         </div>
       </div>
@@ -225,16 +230,13 @@ export default function KoreaSlides() {
   const scale = Math.min(1, (window.innerWidth - 48) / SLIDE_W)
   return (
     <div className="deck">
-      <p className="caption deck-help">
-        ← → to navigate · slide {active + 1} of {slides.length} · append ?slide=N for the
-        1920×1080 export view (scripts/export_korea_slides.py writes the PNG pack)
-      </p>
+      <p className="caption deck-help">{fmt(T.deck_help, { i: active + 1, n: slides.length })}</p>
       <div className="slide-stage" style={{ width: SLIDE_W * scale, height: SLIDE_H * scale }}>
         <div className="slide" style={{ width: SLIDE_W, height: SLIDE_H,
                                         transform: `scale(${scale})` }}>
           {slides[active].body}
           <div className="slide-footer caption">
-            <span>DRAFT · numbers final and test-pinned · copy pending review</span>
+            <span>{T.deck_footer}</span>
             <span className="num">{active + 1} / {slides.length}</span>
           </div>
         </div>

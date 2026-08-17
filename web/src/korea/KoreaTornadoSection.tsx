@@ -8,9 +8,11 @@ import { koreaTornado } from '../charts/korea'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
 import { TORNADO_LABELS } from '../charts/labels'
+import { fmt } from './config'
 import { deviations, isPristine, KOREA_GRID, leverCopy, type KoreaConfig } from './config'
 
 const KO = (copy as any).korea
+const T = KO.templates as Record<string, string>
 const TARGETS = KO.tornado_targets as Record<string, string>
 
 interface TornadoData {
@@ -89,7 +91,7 @@ export function KoreaTornadoSection({ cfg }: { cfg: KoreaConfig }) {
           spec={koreaTornado(rows,
             (l) => (KOREA_GRID[l] ? leverCopy(l).label : (TORNADO_LABELS[l] ?? l)),
             TARGETS[target], { stale })}
-          caption={`${KO.captions.tornado} — n=${entry.config.n} draws around this configuration`}
+          caption={`${KO.captions.tornado} — ${fmt(T.tornado_caption_suffix, { n: entry.config.n })}`}
         />
       </div>
     </div>

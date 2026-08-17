@@ -100,3 +100,8 @@ export function configFromLocation(search: string): KoreaConfig {
   }
   return cfg
 }
+
+/** Tiny template formatter for the copy templates: fmt("{v} of 8 yrs", {v: '1.1'}). */
+export function fmt(template: string, vars: Record<string, string | number>): string {
+  return template.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ''))
+}

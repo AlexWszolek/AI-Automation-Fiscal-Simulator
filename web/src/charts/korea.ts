@@ -24,8 +24,11 @@ export function fundBand(
   fund: KoreaFund,
   yTitle: string,
   labels: { published: string; eroded: string; band: string },
-  opts: { height?: number } = {},
+  opts: { height?: number; tips?: { year?: string; band_low?: string; band_high?: string } } = {},
 ): VisualizationSpec {
+  const tipYear = opts.tips?.year ?? 'Year'
+  const tipLo = (opts.tips?.band_low ?? '{band} (low)').replace('{band}', labels.band)
+  const tipHi = (opts.tips?.band_high ?? '{band} (high)').replace('{band}', labels.band)
   const { height = 300 } = opts
   const rows = fund.years.map((year, i) => ({
     year,
@@ -96,11 +99,11 @@ export function fundBand(
           x: xEnc,
           opacity: { condition: { param: 'hov', empty: false, value: 0.6 }, value: 0 },
           tooltip: [
-            { field: 'year', type: 'quantitative', title: 'Year', format: 'd' },
+            { field: 'year', type: 'quantitative', title: tipYear, format: 'd' },
             { field: 'published', type: 'quantitative', title: labels.published, format: ',.1f' },
             { field: 'central', type: 'quantitative', title: labels.eroded, format: ',.1f' },
-            { field: 'lo', type: 'quantitative', title: `${labels.band} (low)`, format: ',.1f' },
-            { field: 'hi', type: 'quantitative', title: `${labels.band} (high)`, format: ',.1f' },
+            { field: 'lo', type: 'quantitative', title: tipLo, format: ',.1f' },
+            { field: 'hi', type: 'quantitative', title: tipHi, format: ',.1f' },
           ],
         },
       },
@@ -111,8 +114,10 @@ export function fundBand(
 export function compositionBars(
   values: Record<string, number>,
   labelFor: (key: string) => string,
-  opts: { height?: number } = {},
+  opts: { height?: number; tips?: { institution?: string; base_eroded?: string } } = {},
 ): VisualizationSpec {
+  const tipInst = opts.tips?.institution ?? 'Institution'
+  const tipBase = opts.tips?.base_eroded ?? 'Base eroded'
   const rows = Object.entries(values).map(([k, v]) => ({ label: labelFor(k), value: v }))
   return {
     width: 'container', height: opts.height ?? 240, background: 'transparent',
@@ -126,8 +131,8 @@ export function compositionBars(
           x: { field: 'value', type: 'quantitative', title: null,
                axis: { format: '.0%', tickCount: 5 } },
           tooltip: [
-            { field: 'label', type: 'nominal', title: 'Institution' },
-            { field: 'value', type: 'quantitative', title: 'Base eroded', format: '.2%' },
+            { field: 'label', type: 'nominal', title: tipInst },
+            { field: 'value', type: 'quantitative', title: tipBase, format: '.2%' },
           ],
         },
       },
@@ -149,8 +154,11 @@ export function contrastBars(
   b: Record<string, number>,
   names: { a: string; b: string },
   labelFor: (key: string) => string,
-  opts: { height?: number } = {},
+  opts: { height?: number; tips?: { institution?: string; scenario?: string; base_eroded?: string } } = {},
 ): VisualizationSpec {
+  const tipInst = opts.tips?.institution ?? 'Institution'
+  const tipScen = opts.tips?.scenario ?? 'Scenario'
+  const tipBase = opts.tips?.base_eroded ?? 'Base eroded'
   const rows = [
     ...Object.entries(a).map(([k, v]) => ({ label: labelFor(k), scenario: names.a, value: v })),
     ...Object.entries(b).map(([k, v]) => ({ label: labelFor(k), scenario: names.b, value: v })),
@@ -172,9 +180,9 @@ export function contrastBars(
         legend: { orient: 'bottom', columns: 1, labelLimit: 0 },
       },
       tooltip: [
-        { field: 'label', type: 'nominal', title: 'Institution' },
-        { field: 'scenario', type: 'nominal', title: 'Scenario' },
-        { field: 'value', type: 'quantitative', title: 'Base eroded', format: '.2%' },
+        { field: 'label', type: 'nominal', title: tipInst },
+        { field: 'scenario', type: 'nominal', title: tipScen },
+        { field: 'value', type: 'quantitative', title: tipBase, format: '.2%' },
       ],
     },
   } as VisualizationSpec
@@ -226,7 +234,10 @@ const TOPO_NAME: Record<string, string> = {
 }
 
 export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
-                            opts: { height?: number } = {}): VisualizationSpec {
+                            opts: { height?: number; tips?: { region?: string; share?: string; employed_k?: string } } = {}): VisualizationSpec {
+  const tipRegion = opts.tips?.region ?? 'Region'
+  const tipShare = opts.tips?.share ?? 'Displacement-prone share'
+  const tipEmp = opts.tips?.employed_k ?? 'Employed (thousands)'
   // an actual boundary map (Statistics Korea SGIS census geometry via the
   // southkorea-maps kostat layer). Same sequential single-hue as the tile version;
   // names label the regions, values live in the tooltip and the legend.
@@ -253,9 +264,9 @@ export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
         legend: { orient: 'bottom', format: '.0%', gradientLength: 220 },
       },
       tooltip: [
-        { field: 'region', type: 'nominal', title: 'Region' },
-        { field: 'pct', type: 'quantitative', title: 'Displacement-prone share', format: '.1%' },
-        { field: 'emp_k', type: 'quantitative', title: 'Employed (thousands)', format: ',.0f' },
+        { field: 'region', type: 'nominal', title: tipRegion },
+        { field: 'pct', type: 'quantitative', title: tipShare, format: '.1%' },
+        { field: 'emp_k', type: 'quantitative', title: tipEmp, format: ',.0f' },
       ],
     },
   } as VisualizationSpec
