@@ -175,7 +175,7 @@ from .presets import Preset, build_adoption_path  # noqa: E402
 
 KOREA_PRESETS = {
     "korea-slow": Preset(
-        key="korea-slow", name="Korea — slow diffusion", blurb="Slow diffusion in the pattern of the China shock, where SME lag holds realized displacement of exposed work to 10% by 2035.",
+        key="korea-slow", name="Korea — slow diffusion", blurb="Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
         adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides={},
         adoption_reach_year=9,
         provenance={

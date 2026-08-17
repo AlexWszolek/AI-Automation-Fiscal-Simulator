@@ -245,7 +245,7 @@
   {
    "key": "korea-slow",
    "name": "Korea — slow diffusion",
-   "blurb": "Slow diffusion in the pattern of the China shock, where SME lag holds realized displacement of exposed work to 10% by 2035.",
+   "blurb": "Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
    "display_periods": 10,
    "defaults": {
     "adoption_start": 0.005,

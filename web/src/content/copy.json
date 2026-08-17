@@ -21,10 +21,10 @@
   },
   "captions": {
    "nps": "The 2025 pension reform moved depletion from 2057 to 2065, buying eight years. The band shows how much of that automation takes back",
-   "nhi": "NABO projects depletion in 2029 under the medical reform plans. Automation pulls that date forward within the band",
+   "nhi": "NABO projects depletion in 2029 under the medical reform plans. Automation shortens that depletion time.",
    "ei": "The published plan rebuilds reserves to ₩21.8tn by 2029, relying on borrowing from the public funds. Erosion plus benefit outlays is what automation takes from that plan",
-   "composition": "The central scenario spreads damage almost evenly. The clerical epicentre is mid-wage, so every institution loses about 9% of its base by 2035, with the capped pension losing slightly most.",
-   "contrast": "A what-if with 50% displacement concentrated in one group. High-wage automation mostly hits income tax, which goes to the general account, while low-wage automation hits the funds, with the pension hardest.",
+   "composition": "The central scenario spreads damage almost evenly. The clerical epicentre is mid-wage, so every fund loses about 9% of its base by 2035, with the capped pension losing slightly most.",
+   "contrast": "A what-if scenario with 50% displacement concentrated in one group. High-wage automation mostly hits income tax, which goes to the general account, while low-wage automation hits the funds, with the pension hardest.",
    "workforce": "Every worker out of the 12.4M modeled wage workers is in exactly one band each year. Displacement moves people down the stack, while re-employment and attrition move them out of limbo.",
    "wages": "The wage index of workers who keep their jobs: raises funded from the survivor share push it up; labor-market slack pulls it down.",
    "budget": "National revenue and the absolute deficit against the no-AI baseline, in ₩ trillions per year.",
@@ -104,11 +104,11 @@
    "heading": "Policy responses",
    "kr-vat": {
     "label": "+1pp VAT (10% → 11%)",
-    "help": "One statutory point on the effective base of ₩792tn, measured from 2025 receipts. The base erodes as displacement rises, and the scoring is static."
+    "help": "One statutory point on the effective base of ₩792tn, measured from 2025 receipts. The base erodes as displacement rises."
    },
    "kr-nps-mandate": {
     "label": "NPS automation dividend (20% of AI profits)",
-    "help": "A mandated NPS equity share of after-tax automation profits, which flows to the fund and never through the treasury. The 20% mirrors the US sovereign wealth overlay."
+    "help": "A mandated NPS equity share of after-tax automation profits, which flows to the fund and never through the treasury."
    },
    "vat_readout": "Static scoring, with no behavioral response.",
    "nps_readout": "The 20% is illustrative."
