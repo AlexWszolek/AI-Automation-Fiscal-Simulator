@@ -141,7 +141,7 @@ export default function KoreaApp() {
                 </div>
                 <div className="korea-map-chart">
                   <ChartPanel spec={koreaGeoMap(bundle.regions, topo,
-                    { height: 560, tips: KO.tooltips })} />
+                    { tips: KO.tooltips })} />
                 </div>
               </div>
             )}

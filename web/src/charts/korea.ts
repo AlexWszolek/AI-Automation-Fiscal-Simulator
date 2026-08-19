@@ -234,7 +234,7 @@ const TOPO_NAME: Record<string, string> = {
 }
 
 export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
-                            opts: { height?: number; tips?: { region?: string; share?: string; employed_k?: string } } = {}): VisualizationSpec {
+                            opts: { size?: number; tips?: { region?: string; share?: string; employed_k?: string } } = {}): VisualizationSpec {
   const tipRegion = opts.tips?.region ?? 'Region'
   const tipShare = opts.tips?.share ?? 'Displacement-prone share'
   const tipEmp = opts.tips?.employed_k ?? 'Employed (thousands)'
@@ -247,8 +247,15 @@ export function koreaGeoMap(rows: KoreaRegionRow[], topology: object,
     topo_name: TOPO_NAME[r.region] ?? r.region,
     region: r.region, pct: r.helc_share, emp_k: r.emp_k,
   }))
+  // FIXED dims at Korea's own mercator aspect (0.942 w/h for the SGIS extent), with the
+  // bottom legend budgeted in via autosize:fit — never width:'container'. A container-fit
+  // geoshape letterboxes the peninsula into whatever box the column happens to be, so the
+  // map floated in dead space and re-fit on every resize. Fixed dims render the identical
+  // map everywhere; the svg scales down responsively via the viewBox patch in mount().
+  const width = opts.size ?? 500
   return {
-    width: 'container', height: opts.height ?? 520, background: 'transparent',
+    width, height: Math.round(width * 1.15), background: 'transparent',
+    autosize: { type: 'fit', contains: 'padding' },
     data: { values: topology, format: { type: 'topojson', feature: 'skorea_provinces_geo' } },
     transform: [{
       lookup: 'properties.name',

@@ -22,6 +22,10 @@
 .korea-map-section { display: grid; grid-template-columns: minmax(260px, 1fr) 1.35fr;
   gap: 2rem; align-items: start; margin: 1.2rem 0; }
 @media (max-width: 900px) { .korea-map-section { grid-template-columns: 1fr; } }
+/* grid items default to min-width:auto, so a wide chart svg would hold the column open
+   and push the whole page into horizontal overflow */
+.korea-map-section > * { min-width: 0; }
+.korea-map-chart svg { display: block; margin: 0 auto; }
 .korea-map-text h2 { margin-top: 0.3rem; }
 /* headers that open a panel were double-spaced by the h2's own top margin */
 .panel > h2:first-child { margin-top: 0.2rem; }

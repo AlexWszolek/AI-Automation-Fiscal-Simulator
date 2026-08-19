@@ -181,7 +181,7 @@ export default function KoreaSlides() {
         <div className="slide-chart">
           <h2>{KO.sections.map}</h2>
           <ChartPanel spec={slideSpec(koreaGeoMap((bundle as any).regions ?? [], topo!,
-            { height: 620, tips: KO.tooltips }))} caption={KO.captions.map} />
+            { size: 620, tips: KO.tooltips }))} caption={KO.captions.map} />
         </div>
       ) },
       { key: 'sensitivity', body: (

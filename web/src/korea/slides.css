@@ -17,6 +17,8 @@
 .slide-center { margin: auto 0; }
 .slide-chart { display: flex; flex-direction: column; flex: 1; min-height: 0; }
 .slide-chart .panel { border: none; padding: 0; }
+/* fixed-size specs (the map) center on the stage; container-width charts are unaffected */
+.slide-chart svg { display: block; margin: 0 auto; }
 .slide-heroes { margin: 40px 0 24px; }
 .slide-hero .metric-value { font-size: 72px; }
 .slide-hero .metric-label { font-size: 24px; }

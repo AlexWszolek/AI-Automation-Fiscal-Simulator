@@ -223,6 +223,9 @@ input[type='range']::-moz-range-thumb:hover { background: #1f4666; }
 .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.2rem; margin-top: 1.6rem; }
 .chart-panel { margin: 0 0 1.6rem; min-width: 0; }
 .chart-panel h2 { margin-top: 1rem; }
+/* vega svgs carry a viewBox, so an svg wider than its column (fixed-size specs like the
+   Korea map; axis labels past a narrow plot) scales down instead of widening the page */
+.chart-panel svg { max-width: 100%; height: auto; }
 .warning { border-color: var(--bad); }
 
 @media (max-width: 1100px) {

@@ -337,7 +337,7 @@ export default function KoreaScenarioApp() {
                 </div>
                 <div className="korea-map-chart">
                   <ChartPanel spec={koreaGeoMap(regions, topo,
-                    { height: 560, tips: KO.tooltips })} />
+                    { tips: KO.tooltips })} />
                 </div>
               </div>
             )}
