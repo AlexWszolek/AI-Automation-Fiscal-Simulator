@@ -20,7 +20,7 @@
 /* the map section: gloss left, geography right — Korea is tall, so it gets the
    full-width treatment the US states section uses */
 .korea-map-section { display: grid; grid-template-columns: minmax(260px, 1fr) 1.35fr;
-  gap: 2rem; align-items: start; margin: 1.2rem 0; }
+  gap: 2rem; align-items: center; margin: 1.2rem 0; }
 @media (max-width: 900px) { .korea-map-section { grid-template-columns: 1fr; } }
 /* grid items default to min-width:auto, so a wide chart svg would hold the column open
    and push the whole page into horizontal overflow */
