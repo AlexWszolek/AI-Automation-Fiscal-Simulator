@@ -120,13 +120,6 @@ export default function KoreaApp() {
                 spec={compositionBars(bundle.composition.central_2035, label, { tips: KO.tooltips })}
                 caption={KO.captions.composition}
               />
-              {bundle.regions && topo && (
-                <ChartPanel
-                  title={KO.sections.map}
-                  spec={koreaGeoMap(bundle.regions, topo, { tips: KO.tooltips })}
-                  caption={KO.captions.map}
-                />
-              )}
               <ChartPanel
                 title={KO.sections.contrast}
                 spec={contrastBars(
@@ -139,6 +132,19 @@ export default function KoreaApp() {
                 caption={KO.captions.contrast}
               />
             </div>
+
+            {bundle.regions && topo && (
+              <div className="col-wide korea-map-section">
+                <div className="korea-map-text">
+                  <h2>{KO.sections.map}</h2>
+                  <p className="caption">{KO.captions.map}</p>
+                </div>
+                <div className="korea-map-chart">
+                  <ChartPanel spec={koreaGeoMap(bundle.regions, topo,
+                    { height: 560, tips: KO.tooltips })} />
+                </div>
+              </div>
+            )}
 
             <div className="col-wide panel korea-sources">
               <h2>{KO.sections.sources}</h2>

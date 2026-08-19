@@ -112,6 +112,18 @@
     "interest_rate": {
      "label": "Interest rate on national debt",
      "help": "New deficits compound into debt at this rate."
+    },
+    "vat_pp": {
+     "label": "VAT increase (statutory +pp)",
+     "help": "Statutory VAT points added to the 10% rate, applied to the ₩792tn effective base measured from 2025 receipts (NABO Focus 137). The base erodes as displacement rises, and the scoring is static."
+    },
+    "nps_mandate_share": {
+     "label": "NPS automation dividend (share of AI profits)",
+     "help": "A mandated NPS equity share of after-tax automation profits, which flows to the fund and never through the treasury."
+    },
+    "corp_to_funds": {
+     "label": "Automation corporate recapture to the funds",
+     "help": "The share of automation-driven corporate tax revenue (the corporate offset plus the compute-pool tax) transferred from the general account to the three funds, allocated in proportion to each fund's erosion. The deficit worsens by exactly the transfer."
     }
    },
    "preset_heading": "Scenario preset",
@@ -158,7 +170,7 @@
    "inctax_ground": "cumulative national + local income tax lost through {y}",
    "contrib_ground": "cumulative social-insurance contributions lost · EI benefits paid ₩{e}tn",
    "vat_readout": "₩{v}tn/yr by the final year · covers {pct}% of the ₩{gap}tn widening",
-   "nps_readout": "₩{v}tn/yr into the fund · buys back {b} of the {g} given-back years (depletion {d})",
+   "nps_readout": "₩{v}tn/yr into the fund · buys back {b} of the {g} given-back years",
    "modified_note": "⚠️ levers modified from the preset: {fields}",
    "loading": "Loading the scenario…",
    "load_failed": "The Korea scenario bundles could not be loaded. If this is a fresh deployment, run scripts/gen_korea_scenarios.py and redeploy.",
@@ -176,7 +188,8 @@
    "deck_footer": "DRAFT · numbers final and test-pinned · copy pending review",
    "deck_help": "← → to navigate · slide {i} of {n} · append ?slide=N for the 1920×1080 export view",
    "draft_banner": "DRAFT — copy is ported/short-written pending Alex's review; numbers are final and test-pinned.",
-   "bundle_failed": "The Korea data bundle could not be loaded. If this is a fresh deployment, run scripts/gen_korea_bundle.py and redeploy."
+   "bundle_failed": "The Korea data bundle could not be loaded. If this is a fresh deployment, run scripts/gen_korea_bundle.py and redeploy.",
+   "corp_readout": "₩{v}tn/yr transferred · recovers {nps} pension years, {nhi} health years, and ₩{ei}tn of the EI shortfall · costs the general account ₩{cost}tn in the final year"
   },
   "series_labels": {
    "employed_M": "Employed",

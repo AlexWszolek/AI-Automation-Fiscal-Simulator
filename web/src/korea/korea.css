@@ -17,3 +17,12 @@
   font: inherit; font-size: 0.82rem; color: inherit; }
 .lang-btn.active { background: #3b6ea5; color: #fcfbf8; }
 .lang-btn + .lang-btn { border-left: 1px solid rgba(43,40,34,0.25); }
+/* the map section: gloss left, geography right — Korea is tall, so it gets the
+   full-width treatment the US states section uses */
+.korea-map-section { display: grid; grid-template-columns: minmax(260px, 1fr) 1.35fr;
+  gap: 2rem; align-items: start; margin: 1.2rem 0; }
+@media (max-width: 900px) { .korea-map-section { grid-template-columns: 1fr; } }
+.korea-map-text h2 { margin-top: 0.3rem; }
+/* headers that open a panel were double-spaced by the h2's own top margin */
+.panel > h2:first-child { margin-top: 0.2rem; }
+.korea-sources > h2:first-child { margin-top: 0.2rem; }

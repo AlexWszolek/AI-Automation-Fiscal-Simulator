@@ -79,8 +79,8 @@ export default function App() {
         </button>
         <div className="rail-body">
           <PresetPicker cfg={cfg} dispatch={dispatch} />
-          <OverlayPicker cfg={cfg} payload={payload} dispatch={dispatch} />
-          <LeverPanel cfg={cfg} dispatch={dispatch} />
+          <LeverPanel cfg={cfg} dispatch={dispatch}
+            overlaySlot={<OverlayPicker cfg={cfg} payload={payload} dispatch={dispatch} />} />
           <ShareBox queryString={qs} />
           <AboutSection />
           <FeedbackSection />

@@ -78,9 +78,8 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
   const rows = entry.targets[target] ?? []
   return (
     <div className="col-wide">
-      <div className="panel">
-        <h2>{KO.sections.tornado}</h2>
-        <div className="picker" style={{ maxWidth: '22rem', marginBottom: '0.5rem' }}>
+      <h2>{KO.sections.tornado}</h2>
+      <div className="picker" style={{ maxWidth: '22rem', marginBottom: '0.5rem' }}>
           <ListBox
             ariaLabel="Sensitivity target"
             value={target}
@@ -95,7 +94,6 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
             TARGETS[target], { stale })}
           caption={`${KO.captions.tornado} — ${fmt(T.tornado_caption_suffix, { n: entry.config.n })}`}
         />
-      </div>
     </div>
   )
 }

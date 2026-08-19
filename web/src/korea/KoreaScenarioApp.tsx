@@ -8,7 +8,7 @@ import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
 import { ShareBox } from '../components/AboutModal'
-import { CheckboxControl, SelectControl, SliderControl } from '../components/controls'
+import { SelectControl, SliderControl } from '../components/controls'
 import {
   configFromLocation, effectiveKoreaLevers, fmt, INITIAL_KOREA, KOREA_GRID,
   KOREA_GROUPS, KOREA_PRESETS, queryStringFor,
@@ -25,19 +25,11 @@ const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a
 type Action =
   | { type: 'setPreset'; preset: string }
   | { type: 'setLever'; key: string; value: number }
-  | { type: 'toggleOverlay'; key: string }
   | { type: 'reset' }
 
 function reducer(cfg: KoreaConfig, a: Action): KoreaConfig {
-  if (a.type === 'setPreset') return { preset: a.preset, levers: {}, overlays: cfg.overlays }
-  if (a.type === 'reset') return { ...cfg, levers: {}, overlays: [] }
-  if (a.type === 'toggleOverlay')
-    return {
-      ...cfg,
-      overlays: cfg.overlays.includes(a.key)
-        ? cfg.overlays.filter((o) => o !== a.key)
-        : [...cfg.overlays, a.key].sort(),
-    }
+  if (a.type === 'setPreset') return { preset: a.preset, levers: {} }
+  if (a.type === 'reset') return { ...cfg, levers: {} }
   return { ...cfg, levers: { ...cfg.levers, [a.key]: a.value } }
 }
 
@@ -142,14 +134,6 @@ export default function KoreaScenarioApp() {
               <p className="caption">{preset.blurb}</p>
               {isAgi && <p className="caption">{KO.rail.agi_disclosure}</p>}
             </div>
-          </details>
-          <details className="group" open>
-            <summary>{KO.overlays.heading}</summary>
-            {(['kr-vat', 'kr-nps-mandate'] as const).map((k) => (
-              <CheckboxControl key={k} label={KO.overlays[k].label} help={KO.overlays[k].help}
-                               value={cfg.overlays.includes(k)}
-                               onChange={() => dispatch({ type: 'toggleOverlay', key: k })} />
-            ))}
           </details>
           {KOREA_GROUPS.map((g) => (
             <details key={g} className="group" open={g === 'Automation & adoption'}>
@@ -260,26 +244,39 @@ export default function KoreaScenarioApp() {
               </div>
             </div>
 
-            {payload.overlay_readouts.length > 0 && (
+            {payload.policy_readouts.length > 0 && (
               <div className="col-wide panel">
-                {payload.overlay_readouts.map((r) => r.key === 'kr-vat' ? (
-                  <p key={r.key} className="caption">
-                    <strong>{KO.overlays['kr-vat'].label}</strong> — {fmt(T.vat_readout, {
-                      v: r.revenue_final_tn?.toFixed(1) ?? '—',
-                      pct: r.coverage_pct?.toFixed(0) ?? '—',
-                      gap: r.deficit_widening_final_tn?.toFixed(1) ?? '—' })}.
-                    {' '}<span className="modified-note">{KO.overlays.vat_readout}</span>
-                  </p>
-                ) : (
-                  <p key={r.key} className="caption">
-                    <strong>{KO.overlays['kr-nps-mandate'].label}</strong> — {fmt(T.nps_readout, {
-                      v: r.flow_final_tn?.toFixed(1) ?? '—',
-                      b: r.years_bought_back?.toFixed(2) ?? '—',
-                      g: r.given_back_base?.toFixed(2) ?? '—',
-                      d: r.eroded_date_with_mandate ?? '—' })}.
-                    {' '}<span className="modified-note">{KO.overlays.nps_readout}</span>
-                  </p>
-                ))}
+                {payload.policy_readouts.map((r) => {
+                  const lever = pack.lever(`kr:${r.key}`)
+                  if (r.key === 'vat_pp')
+                    return (
+                      <p key={r.key} className="caption">
+                        <strong>{lever.label}</strong> — {fmt(T.vat_readout, {
+                          v: r.revenue_final_tn?.toFixed(1) ?? '—',
+                          pct: r.coverage_pct?.toFixed(0) ?? '—',
+                          gap: r.deficit_widening_final_tn?.toFixed(1) ?? '—' })}
+                      </p>
+                    )
+                  if (r.key === 'nps_mandate_share')
+                    return (
+                      <p key={r.key} className="caption">
+                        <strong>{lever.label}</strong> — {fmt(T.nps_readout, {
+                          v: r.flow_final_tn?.toFixed(1) ?? '—',
+                          b: r.years_bought_back?.toFixed(2) ?? '—',
+                          g: r.given_back_nopolicy?.toFixed(2) ?? '—' })}
+                      </p>
+                    )
+                  return (
+                    <p key={r.key} className="caption">
+                      <strong>{lever.label}</strong> — {fmt(T.corp_readout, {
+                        v: r.transfer_final_tn?.toFixed(1) ?? '—',
+                        nps: r.nps_years_recovered?.toFixed(2) ?? '—',
+                        nhi: r.nhi_years_recovered?.toFixed(2) ?? '—',
+                        ei: r.ei_shortfall_recovered_tn?.toFixed(1) ?? '—',
+                        cost: r.deficit_cost_final_tn?.toFixed(1) ?? '—' })}
+                    </p>
+                  )
+                })}
               </div>
             )}
 
@@ -324,13 +321,6 @@ export default function KoreaScenarioApp() {
                 spec={compositionBars(payload.composition_2035, instLabel, { tips: KO.tooltips })}
                 caption={KO.captions.composition}
               />
-              {regions && topo && (
-                <ChartPanel
-                  title={KO.sections.map}
-                  spec={koreaGeoMap(regions, topo, { tips: KO.tooltips })}
-                  caption={KO.captions.map}
-                />
-              )}
               <ChartPanel
                 title={KO.sections.ei_outlay}
                 spec={timeSeries(outlayRows, ['ei_outlay_tn'], AX.tn_year, startYear,
@@ -338,6 +328,19 @@ export default function KoreaScenarioApp() {
                 caption={KO.captions.ei_outlay}
               />
             </div>
+
+            {regions && topo && (
+              <div className="col-wide korea-map-section">
+                <div className="korea-map-text">
+                  <h2>{KO.sections.map}</h2>
+                  <p className="caption">{KO.captions.map}</p>
+                </div>
+                <div className="korea-map-chart">
+                  <ChartPanel spec={koreaGeoMap(regions, topo,
+                    { height: 560, tips: KO.tooltips })} />
+                </div>
+              </div>
+            )}
 
             <KoreaTornadoSection cfg={cfg} pack={pack} />
 

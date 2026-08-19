@@ -447,22 +447,57 @@ def run_korea_preset(key: str, n_periods: int | None = None, year: str = "2025",
     return {"res": res, "bridge": bridge, "params": params, "model": model, "deltas": deltas}
 
 
-def korea_project_funds(bridge: dict, nhi_share: float, nps_share: float) -> dict:
+def korea_project_funds(bridge: dict, nhi_share: float, nps_share: float,
+                        nps_inflows_tn=None, fund_transfer_tn=None) -> dict:
     """Bridge → the three fund projections. Wage-linked shares enter HERE, not in the run —
     erosion is share-independent, so a band over share edges reuses one assembled run.
-    EI always uses its verified share and carries the outlay side (₩tn/yr)."""
+    EI always uses its verified share and carries the outlay side (₩tn/yr).
+
+    Policy flows also enter here, never in the run: `nps_inflows_tn` (the NPS automation-
+    dividend mandate — into NPS only, never through the treasury) and `fund_transfer_tn`
+    (the corporate-recapture transfer, ₩tn/yr from the treasury), allocated across the
+    three funds in proportion to each fund's wage-linked erosion ₩ that year — the neutral
+    rule, disclosed. Beyond a fund's published horizon its allocation share is zero."""
     from .korea_funds import EI_BASELINE, NHI_REFORM, NPS_REFORM, depletion_shift
     from .korea_scenarios import WAGE_LINKED_SHARE
     er = bridge["erosion"]
+    n_nhi, n_nps, n_ei = len(NHI_REFORM.years), len(NPS_REFORM.years), len(EI_BASELINE.years)
+    ei_share = WAGE_LINKED_SHARE["ei"].value
+
+    alloc = {"nhi": np.zeros(n_nhi), "nps": np.zeros(n_nps), "ei": np.zeros(n_ei)}
+    if fund_transfer_tn is not None:
+        tr = np.asarray(fund_transfer_tn, dtype=float)
+        T = min(len(tr), n_nps)                       # NPS carries the longest horizon
+        lost = np.zeros((3, T))
+        lost[0, :min(T, n_nhi)] = (np.asarray(NHI_REFORM.revenue[:min(T, n_nhi)])
+                                   * nhi_share * er["NHI health"][:min(T, n_nhi)])
+        lost[1, :min(T, n_nps)] = (np.asarray(NPS_REFORM.revenue[:min(T, n_nps)])
+                                   * nps_share * er["NPS pension"][:min(T, n_nps)])
+        lost[2, :min(T, n_ei)] = (np.asarray(EI_BASELINE.revenue[:min(T, n_ei)])
+                                  * ei_share * er["EI unemployment benefit"][:min(T, n_ei)])
+        tot = lost.sum(axis=0)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            shares = np.where(tot > 0, lost / np.where(tot > 0, tot, 1.0), 0.0)
+        full = shares * tr[:T]                       # (3, T) allocation, ₩tn/yr
+        alloc["nhi"][:min(T, n_nhi)] = full[0, :min(T, n_nhi)]
+        alloc["nps"][:min(T, n_nps)] = full[1, :min(T, n_nps)]
+        alloc["ei"][:min(T, n_ei)] = full[2, :min(T, n_ei)]
+
+    nps_extra = -alloc["nps"]
+    if nps_inflows_tn is not None:
+        nps_extra = nps_extra - np.asarray(nps_inflows_tn, dtype=float)[:n_nps]
+    ei_extra = bridge["ei_outlay_bn"][:n_ei] / 1000.0 - alloc["ei"]
+
     return {
-        "nhi": depletion_shift(NHI_REFORM, er["NHI health"][:len(NHI_REFORM.years)],
-                               wage_linked_share=nhi_share),
-        "nps": depletion_shift(NPS_REFORM, er["NPS pension"][:len(NPS_REFORM.years)],
-                               wage_linked_share=nps_share),
-        "ei": depletion_shift(
-            EI_BASELINE, er["EI unemployment benefit"][:len(EI_BASELINE.years)],
-            wage_linked_share=WAGE_LINKED_SHARE["ei"].value,
-            extra_outlays_tn=bridge["ei_outlay_bn"][:len(EI_BASELINE.years)] / 1000.0),
+        "nhi": depletion_shift(NHI_REFORM, er["NHI health"][:n_nhi],
+                               wage_linked_share=nhi_share,
+                               extra_outlays_tn=-alloc["nhi"] if alloc["nhi"].any() else None),
+        "nps": depletion_shift(NPS_REFORM, er["NPS pension"][:n_nps],
+                               wage_linked_share=nps_share,
+                               extra_outlays_tn=nps_extra if nps_extra.any() else None),
+        "ei": depletion_shift(EI_BASELINE, er["EI unemployment benefit"][:n_ei],
+                              wage_linked_share=ei_share,
+                              extra_outlays_tn=ei_extra),
     }
 
 

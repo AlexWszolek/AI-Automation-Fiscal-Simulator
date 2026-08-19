@@ -28,7 +28,7 @@ from .korea_assembly import (build_korea_data, build_korea_deltas,
 from .korea_exposure import exposure_variant
 from .korea_funds import EI_BASELINE, NHI_REFORM, NPS_REFORM, first_negative_year
 from .korea_region import national_labour_force
-from .korea_overlays import KOREA_OVERLAYS, NPS_MANDATE_PROFIT_SHARE
+from .korea_overlays import NPS_MANDATE_PROFIT_SHARE
 from .korea_scenarios import KOREA_PRESETS, WAGE_LINKED_SHARE
 
 HORIZON = len(NPS_REFORM.revenue)                    # 40 — the NPS projection window
@@ -57,6 +57,10 @@ KOREA_LEVER_SPECS: dict[str, tuple] = {
     "adoption_start": (0.0, 0.5),
     "adoption_end": (0.005, 1.0),
     "demography_variant": (-1.0, 1.0),           # select: -1 low / 0 medium / +1 high
+    # policy levers (all default 0 = off; pristine numbers never move):
+    "vat_pp": (0.0, 5.0),                        # statutory VAT points, engine-calibrated
+    "nps_mandate_share": (0.0, 0.5),             # NPS share of after-tax automation profit
+    "corp_to_funds": (0.0, 1.0),                 # automation corp recapture → the funds
     "nhi_share": (WAGE_LINKED_SHARE["nhi"].low, WAGE_LINKED_SHARE["nhi"].high),
     "nps_share": (WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high),
     "exposure_delta": (-0.5, 0.5),
@@ -91,20 +95,24 @@ def sanitize_korea_config(body: dict) -> dict:
             if k in _INT_LEVERS:
                 x = int(round(x))
             levers[str(k)] = x
+    # legacy: the overlay checkboxes became levers — old shared links keep their meaning
     raw_ov = body.get("overlays") or []
-    overlays = sorted({str(k) for k in raw_ov if str(k) in KOREA_OVERLAYS}) \
-        if isinstance(raw_ov, list) else []
-    return {"preset": preset, "levers": levers, "overlays": overlays}
+    if isinstance(raw_ov, list):
+        if "kr-vat" in raw_ov and "vat_pp" not in levers:
+            levers["vat_pp"] = 1.0
+        if "kr-nps-mandate" in raw_ov and "nps_mandate_share" not in levers:
+            levers["nps_mandate_share"] = NPS_MANDATE_PROFIT_SHARE
+    return {"preset": preset, "levers": levers}
 
 
 _DEMO_VARIANTS = {-1.0: "low", 0.0: "medium", 1.0: "high"}
 
 
-def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
+def _korea_v2p(preset: str, levers: dict):
     """Preset params + sanitized model levers, with the two derived rules the sampler also
     follows: the disposition simplex remainder and shape-preserved adoption-path scaling.
-    Overlay params (kr-vat's calibrated fed_vat_rate) are applied on top — readout-only
-    overlays (kr-nps-mandate) contribute no params here by design."""
+    The vat_pp policy lever maps through the receipts-calibrated statutory→engine rate;
+    the other policy levers act at the projector, not here."""
     from .levers_v2 import DEFAULTS_SHIPPED
 
     model_levers = {k: v for k, v in levers.items() if k in _MODEL_LEVERS}
@@ -128,8 +136,9 @@ def _korea_v2p(preset: str, levers: dict, overlays: tuple = ()):
         ac = model_levers.get("auto_cost", ov.get("auto_cost", DEFAULTS_SHIPPED.auto_cost))
         model_levers["automation_tax_rate"] = min(
             model_levers["automation_tax_rate"], max(0.0, ret * (1.0 - ac)))
-    for k in overlays:
-        model_levers.update(KOREA_OVERLAYS[k].params)
+    if levers.get("vat_pp", 0.0) > 0:
+        from .korea_overlays import kr_vat_engine_rate
+        model_levers["fed_vat_rate"] = kr_vat_engine_rate(levers["vat_pp"] / 100.0)
     variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
     v2p = korea_preset_params(preset, HORIZON, demography_variant=variant, **model_levers)
     if "adoption_start" in levers or "adoption_end" in levers:
@@ -172,7 +181,6 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     and `ctx_pool` ({exposure_delta: ScenarioContext}) amortize construction across requests
     — pass module-level dicts from the API; None rebuilds everything (scripts, tests)."""
     preset_key, levers = cfg["preset"], cfg["levers"]
-    overlays = tuple(cfg.get("overlays") or ())
     preset = KOREA_PRESETS[preset_key]
     display_n = preset.n_periods
     nhi_s = levers.get("nhi_share", NHI_MID)
@@ -190,8 +198,10 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     # (exposure variant, demography variant) — built lazily, ≤9 ever
     demo_variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
     mults = {k: levers[k] for k in _MULTS if k in levers}
-    v2p = _korea_v2p(preset_key, levers, overlays)
-    bridges = {}
+    mandate_share = levers.get("nps_mandate_share", 0.0)
+    corp_share = levers.get("corp_to_funds", 0.0)
+    v2p = _korea_v2p(preset_key, levers)
+    runs = {}
     for d in EXPOSURE_DELTAS:
         if d not in data_pool:
             data_pool[d] = build_korea_data(exposure=exposure_variant(d) if d else None)
@@ -204,13 +214,30 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                 korea_preset_params("korea-central", HORIZON,
                                     demography_variant=demo_variant, **mults))
         model, res = ctx_pool[ckey].run_model(v2p)
-        bridges[d] = korea_erosion_from_run(model, res, deltas)
+        # the two projector-level policy flows, from THIS run's own engine outputs:
+        # the mandate is share × after-tax undistributed automation profit (never through
+        # the treasury); the transfer is share × automation-attributable corporate
+        # recapture (corp offset + compute-pool tax + overflow corp tax), FROM the treasury
+        mandate_tn = (mandate_share * res["shareholder_undist_B"].to_numpy(float) / 1000.0
+                      if mandate_share > 0 else None)
+        transfer_tn = (corp_share * (res["corp_offset_B"].to_numpy(float)
+                                     + res["compute_pool_tax_B"].to_numpy(float)
+                                     + res["survivor_overflow_corp_tax_B"].to_numpy(float))
+                       / 1000.0 if corp_share > 0 else None)
+        runs[d] = {"bridge": korea_erosion_from_run(model, res, deltas),
+                   "mandate_tn": mandate_tn, "transfer_tn": transfer_tn}
         if d == user_delta:
             user_res = res
 
-    central = korea_project_funds(bridges[user_delta], nhi_s, nps_s)
-    grid = [korea_project_funds(b, ns, ps)
-            for b in bridges.values()
+    bridges = {d: r["bridge"] for d, r in runs.items()}
+    ur = runs[user_delta]
+    central = korea_project_funds(ur["bridge"], nhi_s, nps_s,
+                                  nps_inflows_tn=ur["mandate_tn"],
+                                  fund_transfer_tn=ur["transfer_tn"])
+    grid = [korea_project_funds(r["bridge"], ns, ps,
+                                nps_inflows_tn=r["mandate_tn"],
+                                fund_transfer_tn=r["transfer_tn"])
+            for r in runs.values()
             for ns in (WAGE_LINKED_SHARE["nhi"].low, WAGE_LINKED_SHARE["nhi"].high)
             for ps in (WAGE_LINKED_SHARE["nps"].low, WAGE_LINKED_SHARE["nps"].high)]
     envelope = {
@@ -220,6 +247,15 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
 
     rows = user_res.iloc[:display_n].round(4).to_dict("records")
     final = user_res.iloc[display_n - 1]
+    # the corporate-recapture transfer comes FROM the treasury: the reported deficit
+    # worsens by exactly the transferred amount while the funds gain it (conservation is
+    # test-pinned). Applied to the payload's display copies, never the engine output.
+    deficit_raw_final = float(final["fed_deficit_B"])
+    if ur["transfer_tn"] is not None:
+        tr_bn = ur["transfer_tn"] * 1000.0
+        for i, r in enumerate(rows):
+            r["fed_deficit_B"] = round(r["fed_deficit_B"] + tr_bn[i], 4)
+            r["fed_deficit_abs_B"] = round(r["fed_deficit_abs_B"] + tr_bn[i], 4)
     disp = user_res.iloc[:display_n]
     lf = national_labour_force()
     # displaced still IN the labour force: the UI window + exhausted + demand-shortfall
@@ -232,7 +268,9 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     jobs_lost_M = float(final["population_M"] - final["employed_M"]
                         - final["reabsorbed_M"] - final["retired_M"])
 
-    default_axes = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0}
+    default_axes = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0,
+                    "demography_variant": 0.0, "vat_pp": 0.0,
+                    "nps_mandate_share": 0.0, "corp_to_funds": 0.0}
     pp = korea_preset_params(preset_key, HORIZON)
     modified = sorted(
         [k for k, v in levers.items()
@@ -242,52 +280,54 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         + (["adoption_end"] if "adoption_end" in levers
            and levers["adoption_end"] != float(pp.adoption_path[-1]) else []))
 
-    # overlay readouts, each self-contained and honest about its routing (kr-vat flows
-    # through the treasury line of THIS run; the NPS mandate never touches the treasury)
-    overlay_readouts = []
-    if "kr-vat" in overlays:
-        vat_tn = [round(float(r["fed_vat_B"]) / 1000.0, 2) for r in rows]
-        f_row = user_res.iloc[display_n - 1]
-        vat_final = float(f_row["fed_vat_B"]) / 1000.0
-        # the widening WITHOUT the overlay: fed_vat enters net_fed linearly as revenue,
-        # so adding it back recovers the no-overlay deficit exactly — no second run
-        gap_final = float(f_row["fed_deficit_B"]) / 1000.0 + vat_final
-        overlay_readouts.append({
-            "key": "kr-vat",
-            "revenue_tn": vat_tn,
+    # policy readouts. The charts and heroes already REFLECT the policy levers (they run
+    # through the projector); the readouts state each lever's own ledger, including the
+    # no-policy comparison, computed with one extra projector call (never an engine run).
+    policy_readouts = []
+    any_policy = (levers.get("vat_pp", 0) > 0 or mandate_share > 0 or corp_share > 0)
+    nopolicy = (korea_project_funds(ur["bridge"], nhi_s, nps_s) if any_policy else central)
+    if levers.get("vat_pp", 0) > 0:
+        vat_final = float(final["fed_vat_B"]) / 1000.0
+        # the widening WITHOUT the vat: fed_vat enters net_fed linearly as revenue,
+        # so adding it back recovers the no-vat deficit exactly — no second run
+        gap_final = deficit_raw_final / 1000.0 + vat_final
+        policy_readouts.append({
+            "key": "vat_pp", "pp": levers["vat_pp"],
             "revenue_final_tn": round(vat_final, 2),
             "deficit_widening_final_tn": round(gap_final, 2),
             "coverage_pct": round(100.0 * vat_final / gap_final, 1)
             if gap_final > 0.05 else None,
-            "provenance": KOREA_OVERLAYS["kr-vat"].provenance,
         })
-    if "kr-nps-mandate" in overlays:
-        from .korea_funds import NPS_REFORM as _NPS
-        from .korea_funds import depletion_shift as _shift
-        flow_tn = (NPS_MANDATE_PROFIT_SHARE
-                   * user_res["shareholder_undist_B"].to_numpy(float) / 1000.0)
-        er_nps = bridge["erosion"]["NPS pension"][:len(_NPS.years)]
-        with_mandate = _shift(_NPS, er_nps, wage_linked_share=nps_s,
-                              extra_outlays_tn=-flow_tn[:len(_NPS.years)])
-        overlay_readouts.append({
-            "key": "kr-nps-mandate",
-            "profit_share": NPS_MANDATE_PROFIT_SHARE,
-            "flow_final_tn": round(float(flow_tn[len(_NPS.years) - 1]), 2),
-            "given_back_base": round(float(central["nps"]["years_pulled_forward"]), 2),
-            "given_back_with_mandate": round(
-                float(with_mandate["years_pulled_forward"]), 2),
+    if mandate_share > 0:
+        policy_readouts.append({
+            "key": "nps_mandate_share", "share": mandate_share,
+            "flow_final_tn": round(float(ur["mandate_tn"][-1]), 2),
+            "given_back_nopolicy": round(float(nopolicy["nps"]["years_pulled_forward"]), 2),
             "years_bought_back": round(
-                float(central["nps"]["years_pulled_forward"]
-                      - with_mandate["years_pulled_forward"]), 2),
-            "eroded_date_with_mandate": round(float(with_mandate["eroded_date"]), 2)
-            if with_mandate.get("eroded_date") is not None else None,
-            "provenance": KOREA_OVERLAYS["kr-nps-mandate"].provenance,
+                float(nopolicy["nps"]["years_pulled_forward"]
+                      - central["nps"]["years_pulled_forward"]), 2),
+        })
+    if corp_share > 0:
+        tr = ur["transfer_tn"]
+        policy_readouts.append({
+            "key": "corp_to_funds", "share": corp_share,
+            "transfer_final_tn": round(float(tr[display_n - 1]), 2),
+            "transfer_cum_tn": round(float(tr[:display_n].sum()), 2),
+            "nps_years_recovered": round(
+                float(nopolicy["nps"]["years_pulled_forward"]
+                      - central["nps"]["years_pulled_forward"]), 2),
+            "nhi_years_recovered": round(
+                float(nopolicy["nhi"]["years_pulled_forward"]
+                      - central["nhi"]["years_pulled_forward"]), 2),
+            "ei_shortfall_recovered_tn": round(
+                float(central["ei"]["eroded_reserves"][-1]
+                      - nopolicy["ei"]["eroded_reserves"][-1]), 2),
+            "deficit_cost_final_tn": round(float(tr[display_n - 1]), 2),
         })
 
     return {
         "config": {
             "country": "kr", "preset": preset_key, "levers": levers,
-            "overlays": list(overlays),
             "start_year": 2026, "display_periods": display_n, "horizon": HORIZON,
             "modified_fields": modified,
             "conventions": ("The model covers cognitive work only. Demography follows "
@@ -301,7 +341,9 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         "final": {
             "jobs_lost_M": round(jobs_lost_M, 4),
             "employment_drop_pct": round(float(final["employment_drop_pct"]), 4),
-            "fed_deficit_B": round(float(final["fed_deficit_B"]), 4),      # ₩bn
+            "fed_deficit_B": round(deficit_raw_final
+                                   + (float(ur["transfer_tn"][display_n - 1]) * 1000.0
+                                      if ur["transfer_tn"] is not None else 0.0), 4),  # ₩bn
             "W_survivor": round(float(final["W_survivor"]), 6),
             "nhi_years_forward": round(float(central["nhi"]["years_pulled_forward"]), 2),
             "nps_given_back": round(float(central["nps"]["years_pulled_forward"]), 2),
@@ -329,7 +371,7 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                              for k, v in bridge["erosion"].items()},
         "ei_outlay_tn": [round(float(v) / 1000.0, 3)
                          for v in bridge["ei_outlay_bn"][:len(EI_BASELINE.years)]],
-        "overlay_readouts": overlay_readouts,
+        "policy_readouts": policy_readouts,
         "band_note": "The envelope combines the exposure reading and the wage-linked "
                      "share bands at the current lever settings. Spread across scenarios "
                      "lives in the preset picker, not in this envelope.",
@@ -346,10 +388,12 @@ def korea_mc_tornado(cfg: dict, n: int = 150, seed: int = 0,
     from .korea_mc import HEADLINES, run_korea_mc
 
     preset_key, levers = cfg["preset"], cfg["levers"]
-    # the tax mults are static LEDGER scoring — they cannot move any of the five tornado
-    # targets (funds/employment), so stripping them from the sampling base is exact, and
-    # it keeps the MC on the mult-free context templates
-    levers = {k: v for k, v in levers.items() if k not in _MULTS}
+    # the tax mults are static LEDGER scoring (they cannot move the five targets) and the
+    # policy levers (vat_pp / nps_mandate_share / corp_to_funds) are policy CHOICES, not
+    # model uncertainty — the tornado deliberately samples the PRE-POLICY model, so all
+    # are stripped from the sampling base (documented in the caption's framing)
+    _POLICY = ("vat_pp", "nps_mandate_share", "corp_to_funds")
+    levers = {k: v for k, v in levers.items() if k not in _MULTS and k not in _POLICY}
     variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
     base_axes = {k: levers[k] for k in ("exposure_delta", "nhi_share", "nps_share")
                  if k in levers}

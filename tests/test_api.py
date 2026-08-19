@@ -189,6 +189,8 @@ def test_korea_junk_request_never_500s(client, korea_ready):
     for body in ({"preset": "acemoglu-modest"},                  # US preset key
                  {"levers": {"ui_weeks": 1e9, "mpc": "NaN", "x": None}},
                  {"levers": "not-a-dict"},
+                 {"overlays": ["kr-vat", 7, None]},              # legacy body
+                 {"levers": {"corp_to_funds": 99, "vat_pp": -3}},
                  {}):
         r = client.post("/api/korea/run", json=body)
         assert r.status_code == 200

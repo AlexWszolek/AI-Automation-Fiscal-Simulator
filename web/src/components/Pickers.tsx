@@ -33,10 +33,10 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
   payload: ScenarioPayload | null
   dispatch: (a: ScenarioAction) => void
 }) {
+  // rendered INSIDE the Government policy lever group — the checkboxes are policy
+  // responses like every dial around them, not a privileged section of their own
   return (
-    <details className="group" open>
-      <summary>Policy responses</summary>
-      <div className="picker">
+    <div className="picker overlay-rows">
       {OVERLAYS.map((o) => (
         <label key={o.key} className="overlay-row">
           <input
@@ -50,7 +50,6 @@ export function OverlayPicker({ cfg, payload, dispatch }: {
       {payload?.config.overlay_notes.map((n) => (
         <p key={n} className="caption">{n}</p>
       ))}
-      </div>
-    </details>
+    </div>
   )
 }

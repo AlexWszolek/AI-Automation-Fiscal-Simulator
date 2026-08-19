@@ -48,6 +48,9 @@ UI = [
     ("demand_multiplier",     "us:demand",     "Macro & demand",        0.05,  "float"),
     ("interest_rate",         "kr:interest_rate",   "Macro & demand",        0.005, "float"),
     ("automation_tax_rate",   "us:atax",       "Government policy",     0.01,  "float"),
+    ("vat_pp",                "kr:vat_pp",     "Government policy",     0.25,  "float"),
+    ("nps_mandate_share",     "kr:nps_mandate_share", "Government policy", 0.05, "float"),
+    ("corp_to_funds",         "kr:corp_to_funds", "Government policy",  0.05,  "float"),
     ("income_tax_mult",       "kr:income_tax_mult", "Government policy",    0.05,  "float"),
     ("corp_tax_mult",         "kr:corp_tax_mult",  "Government policy",     0.05,  "float"),
     ("cons_tax_mult",         "kr:cons_tax_mult",  "Government policy",     0.05,  "float"),
@@ -57,7 +60,8 @@ UI = [
     ("demography_variant",    "kr:demography_variant", "KOREA_AXES",    None,  "select"),
 ]
 AXIS_DEFAULTS = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0,
-                 "demography_variant": 0.0}
+                 "demography_variant": 0.0, "vat_pp": 0.0, "nps_mandate_share": 0.0,
+                 "corp_to_funds": 0.0}
 
 
 def main() -> None:

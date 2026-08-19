@@ -28,7 +28,7 @@ describe('korea grid', () => {
 
 describe('url round-trip', () => {
   it('encodes only deviations and decodes them back', () => {
-    const cfg = { preset: 'korea-fast', levers: { ui_weeks: 39, adoption_end: 0.6 }, overlays: [] }
+    const cfg = { preset: 'korea-fast', levers: { ui_weeks: 39, adoption_end: 0.6 } }
     const qs = queryStringFor(cfg)
     expect(qs).toContain('preset=korea-fast')
     const back = configFromLocation(`?${qs}`)
@@ -41,14 +41,19 @@ describe('url round-trip', () => {
     expect(queryStringFor(INITIAL_KOREA)).toBe('')
   })
 
-  it('round-trips overlays and rejects unknown ones', () => {
-    const cfg = { preset: 'korea-central', levers: {}, overlays: ['kr-vat', 'kr-nps-mandate'] }
-    const qs = queryStringFor(cfg)
-    expect(qs).toContain('ov=kr-nps-mandate%2Ckr-vat')
-    const back = configFromLocation(`?${qs}`)
-    expect(back.overlays).toEqual(['kr-nps-mandate', 'kr-vat'])
+  it('legacy overlay links translate to the policy levers', () => {
+    const back = configFromLocation('?ov=kr-nps-mandate,kr-vat')
+    expect(back.levers.vat_pp).toBe(1)
+    expect(back.levers.nps_mandate_share).toBe(0.2)
     expect(isPristine(back)).toBe(false)
-    expect(configFromLocation('?ov=junk,kr-vat').overlays).toEqual(['kr-vat'])
+    expect(configFromLocation('?ov=junk').levers).toEqual({})
+  })
+
+  it('the policy levers ride the normal lever codec', () => {
+    const cfg = { preset: 'korea-central', levers: { corp_to_funds: 0.5, vat_pp: 2 } }
+    const back = configFromLocation(`?${queryStringFor(cfg)}`)
+    expect(back.levers.corp_to_funds).toBe(0.5)
+    expect(back.levers.vat_pp).toBe(2)
   })
 
   it('clamps hostile query values exactly like the server sanitizer', () => {
@@ -65,13 +70,13 @@ describe('url round-trip', () => {
 describe('pristine & deviations', () => {
   it('a lever set to its default is still pristine and sends nothing', () => {
     const d = presetMeta('korea-central').defaults
-    const cfg = { preset: 'korea-central', levers: { ui_weeks: d.ui_weeks }, overlays: [] }
+    const cfg = { preset: 'korea-central', levers: { ui_weeks: d.ui_weeks } }
     expect(isPristine(cfg)).toBe(true)
     expect(deviations(cfg)).toEqual({})
   })
 
   it('effective levers = preset defaults overlaid with deviations', () => {
-    const cfg = { preset: 'korea-agi-5y', levers: { ui_weeks: 10 }, overlays: [] }
+    const cfg = { preset: 'korea-agi-5y', levers: { ui_weeks: 10 } }
     const v = effectiveKoreaLevers(cfg)
     expect(v.ui_weeks).toBe(10)
     expect(v.retained_profit_share).toBe(0.8)      // the AGI preset's override

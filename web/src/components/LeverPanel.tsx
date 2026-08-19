@@ -64,9 +64,10 @@ export function LeverRow({ k, values, dispatch }: {
 /** The three state-response controls render inside the states section, not the rail. */
 const STATE_KEYS = new Set(['state_resp', 'state_cut', 'rate_cap'])
 
-export function LeverPanel({ cfg, dispatch }: {
+export function LeverPanel({ cfg, dispatch, overlaySlot }: {
   cfg: ScenarioConfig
   dispatch: (a: ScenarioAction) => void
+  overlaySlot?: React.ReactNode
 }) {
   const values = effectiveLevers(cfg)
   return (
@@ -74,6 +75,7 @@ export function LeverPanel({ cfg, dispatch }: {
       {GROUPS.map((g) => (
         <details key={g.title} className="group" open={g.expanded}>
           <summary>{g.title}</summary>
+          {g.title === 'Government policy' && overlaySlot}
           {g.keys.filter((k) => !STATE_KEYS.has(k)).map((k) => (
             <LeverRow key={k} k={k} values={values} dispatch={dispatch} />
           ))}

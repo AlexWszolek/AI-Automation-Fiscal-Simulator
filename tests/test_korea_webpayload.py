@@ -143,37 +143,59 @@ def test_committed_tornado_bundles_match_fresh_generation(pools):
     assert fresh == committed, "stale tornado bundle — scripts/gen_korea_scenarios.py"
 
 
-def test_overlays_sanitize_and_read_out_honestly(pools):
-    """kr-vat: calibrated to the NABO-receipts effective base, covers >100% of the central
-    widening, and NEVER touches the funds. kr-nps-mandate: buys back part of the given-back
-    years without touching the treasury deficit."""
-    from fiscal_model.korea_overlays import kr_vat_engine_rate
+def test_policy_levers_route_honestly(pools):
+    """The three policy levers, each with its own ledger discipline. vat_pp: calibrated to
+    the receipts-measured base, covers >100%/pp-class of the widening, never touches the
+    funds. nps_mandate_share: moves the NPS chart/hero, never the treasury. corp_to_funds:
+    CONSERVATION — the deficit worsens by exactly what the funds gain, allocated across the
+    three funds; even at 100% the funds recover only part of the damage (recapture is
+    structurally smaller than contribution erosion — the thesis, quantified)."""
     from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
                                                sanitize_korea_config)
-    cfg = sanitize_korea_config({"overlays": ["junk", "kr-nps-mandate", "kr-vat"]})
-    assert cfg["overlays"] == ["kr-nps-mandate", "kr-vat"]      # sorted, junk dropped
-
     base = build_korea_scenario_payload(sanitize_korea_config({}), **pools)
+
+    vat = build_korea_scenario_payload(
+        sanitize_korea_config({"levers": {"vat_pp": 1}}), **pools)
+    r = vat["policy_readouts"][0]
+    assert 7.0 < r["revenue_final_tn"] < 7.92          # 1pp on the ₩792tn base, eroded
+    assert r["coverage_pct"] > 100.0
+    assert vat["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
+    assert vat["final"]["fed_deficit_B"] < base["final"]["fed_deficit_B"]
+
+    man = build_korea_scenario_payload(
+        sanitize_korea_config({"levers": {"nps_mandate_share": 0.2}}), **pools)
+    assert man["final"]["nps_given_back"] < base["final"]["nps_given_back"]
+    assert man["funds"]["nps"]["eroded"][-1] > base["funds"]["nps"]["eroded"][-1]
+    assert man["final"]["fed_deficit_B"] == base["final"]["fed_deficit_B"]
+    assert man["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
+
+    corp = build_korea_scenario_payload(
+        sanitize_korea_config({"levers": {"corp_to_funds": 1.0}}), **pools)
+    rc = next(r for r in corp["policy_readouts"] if r["key"] == "corp_to_funds")
+    # conservation: reported deficit worsens by exactly the final-year transfer
+    assert (corp["final"]["fed_deficit_B"] - base["final"]["fed_deficit_B"]
+            ) == pytest.approx(rc["transfer_final_tn"] * 1000.0, abs=5.0)
+    # all three funds improve, and none is made MORE than whole
+    assert 0 < rc["nps_years_recovered"] < base["final"]["nps_given_back"]
+    assert 0 < rc["nhi_years_recovered"] < base["final"]["nhi_years_forward"]
+    assert 0 < rc["ei_shortfall_recovered_tn"] < base["final"]["ei_shortfall_tn"]
+    # the finding: even 100% recapture transfer does not make the pension whole
+    assert corp["final"]["nps_given_back"] > 0.2
+
+    both = build_korea_scenario_payload(sanitize_korea_config(
+        {"levers": {"vat_pp": 1, "nps_mandate_share": 0.2, "corp_to_funds": 0.5}}), **pools)
+    assert len(both["policy_readouts"]) == 3
+
+
+def test_legacy_overlay_bodies_map_to_levers(pools):
+    from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
+                                               sanitize_korea_config)
+    cfg = sanitize_korea_config({"overlays": ["kr-vat", "kr-nps-mandate", "junk"]})
+    assert cfg["levers"]["vat_pp"] == 1.0
+    assert cfg["levers"]["nps_mandate_share"] == pytest.approx(0.2)
+    assert "overlays" not in cfg
     p = build_korea_scenario_payload(cfg, **pools)
-    vat = next(r for r in p["overlay_readouts"] if r["key"] == "kr-vat")
-    nps = next(r for r in p["overlay_readouts"] if r["key"] == "kr-nps-mandate")
-
-    # year-0 statutory calibration: 1pp on the ₩792tn effective base ≈ ₩7.9tn, eroding after
-    assert 0.004 < kr_vat_engine_rate(0.01) < 0.005
-    assert 7.0 < vat["revenue_final_tn"] < 7.92
-    assert vat["coverage_pct"] > 100.0                          # the headline
-    assert p["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
-    assert p["final"]["nps_given_back"] == base["final"]["nps_given_back"]
-    assert p["final"]["fed_deficit_B"] < base["final"]["fed_deficit_B"]
-
-    assert 0.0 < nps["years_bought_back"] < nps["given_back_base"]
-    assert nps["given_back_with_mandate"] == pytest.approx(
-        nps["given_back_base"] - nps["years_bought_back"], abs=0.011)
-    # the mandate flows to the FUND, never the treasury: with kr-vat also on, the deficit
-    # equals the vat-only deficit (mandate contributes nothing to the ledger)
-    vat_only = build_korea_scenario_payload(
-        sanitize_korea_config({"overlays": ["kr-vat"]}), **pools)
-    assert p["final"]["fed_deficit_B"] == vat_only["final"]["fed_deficit_B"]
+    assert {r["key"] for r in p["policy_readouts"]} == {"vat_pp", "nps_mandate_share"}
 
 
 def test_demography_variants_and_tax_mults(pools):
