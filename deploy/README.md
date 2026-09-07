@@ -30,7 +30,8 @@ artifact is stale — the test suite tells you). For the Korea pages the equival
 
 The same build serves three additional entries, all unlisted (noindex): `/korea.html`
 (the static presenter view), `/korea-app.html` (the interactive site with levers, overlays,
-and the EN/KR toggle — `?lang=ko` deep-links Korean), and `/korea-slides.html` (the deck).
+and the EN/KR toggle — `?lang=ko` deep-links Korean), `/korea-slides.html` (the deck), and
+`/korea-dash.html` (the seminar's single screen — presets only, so it never touches the API).
 They are fully static except custom slider values and live tornados, which use
 `/api/korea/*` on the same compute service — restart it after pulling so the Korea routes
 load. `bash scripts/bootstrap.sh` builds the gitignored Korea tidy tables the service needs

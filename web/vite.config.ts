@@ -16,6 +16,9 @@ export default defineConfig({
         korea: resolve(__dirname, 'korea.html'),
         koreaApp: resolve(__dirname, 'korea-app.html'),
         koreaSlides: resolve(__dirname, 'korea-slides.html'),
+        // korea-dash.html = the seminar's single screen: presets only (static bundles, no
+        // compute service), map + four heroes + the pension chart, nothing below the fold.
+        koreaDash: resolve(__dirname, 'korea-dash.html'),
       },
     },
   },
