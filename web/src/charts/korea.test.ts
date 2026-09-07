@@ -52,7 +52,7 @@ describe('compositionBars', () => {
       data?: unknown
     }
     expect(spec.layer[0].mark.type).toBe('bar')
-    expect(spec.layer[0].mark.color).toBe('#3b6ea5')
+    expect(spec.layer[0].mark.color).toBe('#8c2f28')   // the loss hue: base ERODED
     expect(spec.layer[1].mark.type).toBe('text')
     const rows = (spec as unknown as { data: { values: { label: string }[] } }).data.values
     expect(rows.map((r) => r.label)).toEqual(['A', 'B'])

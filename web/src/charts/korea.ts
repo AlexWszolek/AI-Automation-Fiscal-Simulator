@@ -3,8 +3,9 @@
 // a fund-reserve chart (published path vs eroded central + uncertainty band) and
 // horizontal bar comparisons for the institutional composition. Colors are the validated
 // pair — published #3b6ea5 / eroded #8c2f28 (oxblood = the loss direction, as everywhere
-// on the site) — and composition bars carry ONE hue: identity lives in the axis labels,
-// so seven categorical hues would do no work (and the 7-slot palette fails CVD checks).
+// on the site) — and composition bars carry ONE hue, the LOSS hue (they show base eroded;
+// the diplomat review found neutral blue on a loss unreadable): identity lives in the axis
+// labels, so seven categorical hues would do no work (and the 7-slot palette fails CVD checks).
 import type { VisualizationSpec } from 'vega-embed'
 import { PALETTE, TOKENS } from './palette'
 
@@ -124,7 +125,7 @@ export function compositionBars(
     data: { values: rows },
     layer: [
       {
-        mark: { type: 'bar', color: PUBLISHED_COLOR, cornerRadiusEnd: 3, height: { band: 0.7 } },
+        mark: { type: 'bar', color: ERODED_COLOR, cornerRadiusEnd: 3, height: { band: 0.7 } },
         encoding: {
           y: { field: 'label', type: 'nominal', title: null, sort: '-x',
                axis: { labelLimit: 220 } },

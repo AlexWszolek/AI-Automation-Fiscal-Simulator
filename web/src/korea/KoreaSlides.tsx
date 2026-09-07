@@ -11,6 +11,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { VisualizationSpec } from 'vega-embed'
 import { compositionBars, fundBand, koreaGeoMap, koreaTornado } from '../charts/korea'
+import { NEG } from '../charts/palette'
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
@@ -53,7 +54,7 @@ function Hero({ label, value, ground }: { label: string; value: string; ground: 
   return (
     <div className="metric hero slide-hero">
       <div className="metric-label caption">{label}</div>
-      <div className="metric-value num">{value}</div>
+      <div className="metric-value num bad">{value}</div>
       <div className="metric-ground caption">{ground}</div>
     </div>
   )
@@ -144,7 +145,7 @@ export default function KoreaSlides() {
               KO.series, { height: 520, tips: KO.tooltips }))} caption={`${KO.captions.ei} — ${f.ei.source}`} />
             <ChartPanel spec={slideSpec(timeSeries(
               central!.ei_outlay_tn.map((v, i) => ({ period: i, ei_outlay_tn: v })),
-              ['ei_outlay_tn'], AX.tn_year, 2026, { kind: 'bar', height: 520 }))}
+              ['ei_outlay_tn'], AX.tn_year, 2026, { kind: 'bar', height: 520, colors: [NEG] }))}
               caption={KO.captions.ei_outlay} />
           </div>
         </div>

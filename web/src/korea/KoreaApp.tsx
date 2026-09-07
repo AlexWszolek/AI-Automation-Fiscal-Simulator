@@ -35,7 +35,7 @@ function Metric({ label, value, ground }: { label: string; value: string; ground
   return (
     <div className="metric hero">
       <div className="metric-label caption">{label}</div>
-      <div className="metric-value num">{value}</div>
+      <div className="metric-value num bad">{value}</div>
       <div className="metric-ground caption">{ground}</div>
     </div>
   )

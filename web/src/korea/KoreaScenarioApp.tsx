@@ -4,6 +4,7 @@
 // ALL user-facing text is provisional until Alex's copy pass (copy.json → "korea").
 import { useEffect, useMemo, useReducer, useState } from 'react'
 import { fundBand, compositionBars, koreaGeoMap } from '../charts/korea'
+import { NEG, PALETTE } from '../charts/palette'
 import { timeSeries } from '../charts/timeSeries'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
@@ -45,11 +46,14 @@ function yearsFmt(v: number) {
   return v.toFixed(v >= 1 ? 1 : 2)
 }
 
-function Metric({ label, value, ground }: { label: string; value: string; ground: string }) {
+// tone: 'bad' paints the value in the loss hue (tokens: red = fiscally bad); the demography
+// figure stays ink because it is the published baseline, not automation's doing
+function Metric({ label, value, ground, tone = 'bad' }:
+                { label: string; value: string; ground: string; tone?: 'bad' | 'neutral' }) {
   return (
     <div className="metric hero">
       <div className="metric-label caption">{label}</div>
-      <div className="metric-value num">{value}</div>
+      <div className={tone === 'bad' ? 'metric-value num bad' : 'metric-value num'}>{value}</div>
       <div className="metric-ground caption">{ground}</div>
     </div>
   )
@@ -106,7 +110,7 @@ export default function KoreaScenarioApp() {
 
   return (
     <div className="shell">
-      <aside className={drawerOpen ? 'rail open' : 'rail'}>
+      <aside className={[ 'rail', drawerOpen ? 'open' : '', apiDown ? 'api-down' : '' ].join(' ').trim()}>
         <button type="button" className="mobile-bar" aria-expanded={drawerOpen}
                 onClick={() => setDrawerOpen((o) => !o)}>
           <span className="mobile-bar-scenario">
@@ -179,7 +183,7 @@ export default function KoreaScenarioApp() {
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
           <p className="panel caption">{KO.disclosure_note}</p>
-          {apiDown && <p className="panel caption">{KO.rail.api_down}</p>}
+          {apiDown && <p className="panel caption warning api-banner" role="alert">{KO.rail.api_down}</p>}
           {payload && payload.config.modified_fields.length > 0 && (
             <p className="panel caption modified-note">
               {fmt(T.modified_note, { fields: payload.config.modified_fields.join(', ') })}
@@ -214,6 +218,7 @@ export default function KoreaScenarioApp() {
               </div>
               <div className="metric-row korea-second-row">
                 <Metric
+                  tone="neutral"
                   label={KO.metrics.demography}
                   value={fmt(T.demo_value, { v: payload.final.demo_decline_pct.toFixed(1) })}
                   ground={fmt(T.demo_ground, { variant: variantLabel(payload.final.demo_variant),
@@ -245,7 +250,7 @@ export default function KoreaScenarioApp() {
             </div>
 
             {payload.policy_readouts.length > 0 && (
-              <div className="col-wide panel">
+              <div className="col-wide panel policy-readouts">
                 {payload.policy_readouts.map((r) => {
                   const lever = pack.lever(`kr:${r.key}`)
                   if (r.key === 'vat_pp')
@@ -313,7 +318,7 @@ export default function KoreaScenarioApp() {
               <ChartPanel
                 title={KO.sections.budget}
                 spec={timeSeries(budgetRows, ['fed_revenue_tn', 'fed_deficit_abs_tn'],
-                  AX.tn_year, startYear, { labels: SL })}
+                  AX.tn_year, startYear, { labels: SL, colors: [PALETTE[0], NEG] })}
                 caption={KO.captions.budget}
               />
               <ChartPanel
@@ -324,7 +329,7 @@ export default function KoreaScenarioApp() {
               <ChartPanel
                 title={KO.sections.ei_outlay}
                 spec={timeSeries(outlayRows, ['ei_outlay_tn'], AX.tn_year, startYear,
-                  { kind: 'bar', height: 220, labels: SL })}
+                  { kind: 'bar', height: 220, labels: SL, colors: [NEG] })}
                 caption={KO.captions.ei_outlay}
               />
             </div>

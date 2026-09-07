@@ -30,3 +30,12 @@
 /* headers that open a panel were double-spaced by the h2's own top margin */
 .panel > h2:first-child { margin-top: 0.2rem; }
 .korea-sources > h2:first-child { margin-top: 0.2rem; }
+
+/* colour semantics (diplomat review): the loss hue on every worsening figure — the tokens'
+   own rule (red = fiscally bad), finished. Policy readouts carry the recovery hue. */
+.metric-value.bad { color: var(--bad); }
+.policy-readouts { border-left: 3px solid var(--good); }
+/* the compute service being unreachable used to be one caption line; a mover of sliders
+   never saw it and read the whole rail as dead. Sticky, red-edged, and the rail dims. */
+.api-banner { position: sticky; top: 0; z-index: 5; }
+.rail.api-down .group { opacity: 0.6; }
