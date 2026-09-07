@@ -14,7 +14,7 @@ import { compositionBars, fundBand, koreaGeoMap, koreaTornado } from '../charts/
 import { timeSeries } from '../charts/timeSeries'
 import { TORNADO_LABELS } from '../charts/labels'
 import { ChartPanel } from '../components/ChartPanel'
-import { fmt, KOREA_GRID, KOREA_PRESETS } from './config'
+import { fmt, KOREA_GRID, KOREA_PRESETS, TORNADO_ONLY_REFS } from './config'
 import { LangToggle } from './LangToggle'
 import { useLocale } from './locale'
 import type { KoreaFundJson, KoreaScenarioPayload } from './useKoreaScenarioData'
@@ -189,6 +189,7 @@ export default function KoreaSlides() {
           <h2>{KO.sections.tornado}</h2>
           <ChartPanel spec={slideSpec(koreaTornado(tornado!.targets.ei_shortfall_tn,
             (l: string) => (KOREA_GRID[l] ? pack.lever(KOREA_GRID[l].copy).label
+                            : TORNADO_ONLY_REFS[l] ? pack.lever(TORNADO_ONLY_REFS[l]).label
                             : (TORNADO_LABELS[l] ?? l)),
             KO.tornado_targets.ei_shortfall_tn, { top: 9 }))}
             caption={`${KO.captions.tornado} — n=${tornado!.config.n}`} />

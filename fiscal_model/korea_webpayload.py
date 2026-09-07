@@ -43,11 +43,17 @@ _MODEL_LEVERS = ("reabsorption_rate", "reemployment_haircut", "lfp_exit_rate",
                  "attrition_rate", "survivor_elasticity", "retained_profit_share",
                  "price_reduction_share", "productivity_passthrough", "price_passthrough",
                  "demand_multiplier", "mpc", "consumption_stickiness", "ui_weeks",
-                 "auto_cost", "interest_rate", "baseline_growth_rate",
+                 "auto_cost", "baseline_growth_rate",
                  "reab_wage_baumol", "reab_wage_crowding", "compute_effective_rate",
-                 "survivor_raise_ceiling", "survivor_spillover_to_profit",
+                 "survivor_raise_ceiling",
                  "automation_tax_rate",
                  "income_tax_mult", "corp_tax_mult", "cons_tax_mult")
+# Delisted from the rail (diplomat review, 2026-08): interest_rate moves only the debt
+# columns, which no Korea chart plots, and survivor_spillover_to_profit acts only when
+# the survivor-raise ceiling binds, which no rail-reachable config makes it do. Both stay
+# engine params (presets and the tornado's sampler still see them); they are simply not
+# accepted from the web. reemployment_haircut stays: inert in the diffusion family
+# because re-employment wages already sit at the service floor there, live elsewhere.
 _MULTS = ("income_tax_mult", "corp_tax_mult", "cons_tax_mult")
 KOREA_LEVER_SPECS: dict[str, tuple] = {
     **{k: mc_mod.PERTURBED[k] for k in _MODEL_LEVERS if k not in _MULTS},
@@ -130,6 +136,15 @@ def _korea_v2p(preset: str, levers: dict):
                                   DEFAULTS_SHIPPED.price_reduction_share))
     if ret + pri > 1.0:
         model_levers["price_reduction_share"] = max(0.0, 1.0 - ret)
+    # reabsorption + LFP-exit is the second joint constraint the per-lever clamps can't
+    # see (workers.py asserts the pair sums ≤ 1). Same shape as the simplex rule above:
+    # the rate the user pushed wins, the exit rate clamps to the remainder.
+    reab = model_levers.get("reabsorption_rate",
+                            ov.get("reabsorption_rate", DEFAULTS_SHIPPED.reabsorption_rate))
+    lfe = model_levers.get("lfp_exit_rate",
+                           ov.get("lfp_exit_rate", DEFAULTS_SHIPPED.lfp_exit_rate))
+    if reab + lfe > 1.0:
+        model_levers["lfp_exit_rate"] = max(0.0, 1.0 - reab)
     # the robot tax's capacity bound (the sampler's rule): it is paid out of retained
     # profit net of compute costs, so clamp to retained × (1 − auto_cost)
     if "automation_tax_rate" in model_levers:

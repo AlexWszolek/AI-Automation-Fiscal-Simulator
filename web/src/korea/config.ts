@@ -30,6 +30,13 @@ export const KOREA_PRESETS = grid.presets as KoreaPreset[]
 export const KOREA_GROUPS = grid.groups as string[]
 export const INITIAL_KOREA: KoreaConfig = { preset: 'korea-central', levers: {} }
 
+// Levers the tornado samples but the rail no longer offers (delisted: dead-on-page or
+// inert at rail-reachable configs). Their copy refs keep the tornado rows localized.
+export const TORNADO_ONLY_REFS: Record<string, string> = {
+  interest_rate: 'kr:interest_rate',
+  survivor_spillover_to_profit: 'us:spillover',
+}
+
 
 export function presetMeta(key: string): KoreaPreset {
   return KOREA_PRESETS.find((p) => p.key === key) ?? KOREA_PRESETS[1]

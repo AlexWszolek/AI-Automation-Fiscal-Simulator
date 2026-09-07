@@ -7,7 +7,7 @@ import { koreaTornado } from '../charts/korea'
 import { ChartPanel } from '../components/ChartPanel'
 import { ListBox } from '../components/ListBox'
 import { TORNADO_LABELS } from '../charts/labels'
-import { fmt, KOREA_GRID } from './config'
+import { fmt, KOREA_GRID, TORNADO_ONLY_REFS } from './config'
 import type { LocalePack } from './locale'
 import { deviations, isPristine, type KoreaConfig } from './config'
 
@@ -90,7 +90,8 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
         <ChartPanel
           spec={koreaTornado(rows,
             (l) => (KOREA_GRID[l] ? pack.lever(KOREA_GRID[l].copy).label
-                                  : (TORNADO_LABELS[l] ?? l)),
+                    : TORNADO_ONLY_REFS[l] ? pack.lever(TORNADO_ONLY_REFS[l]).label
+                    : (TORNADO_LABELS[l] ?? l)),
             TARGETS[target], { stale })}
           caption={`${KO.captions.tornado} — ${fmt(T.tornado_caption_suffix, { n: entry.config.n })}`}
         />

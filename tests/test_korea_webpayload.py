@@ -40,6 +40,30 @@ def test_sanitizer_survives_hostile_bodies():
         assert k not in cfg["levers"]
 
 
+def test_delisted_levers_are_dropped():
+    # interest_rate and survivor_spillover_to_profit left the rail (diplomat review):
+    # dead-on-page / inert at rail-reachable configs. Old shared links must not 500.
+    from fiscal_model.korea_webpayload import sanitize_korea_config
+    cfg = sanitize_korea_config({
+        "preset": "korea-central",
+        "levers": {"interest_rate": 0.06, "survivor_spillover_to_profit": 0.9}})
+    assert cfg["levers"] == {}
+
+
+def test_reabsorption_exit_pair_cannot_crash(pools):
+    # the engine asserts reabsorption + lfp_exit ≤ 1; both levers at their rail maxima
+    # must clamp (exit yields), never propagate the AssertionError as a 500
+    from fiscal_model.korea_webpayload import (KOREA_LEVER_SPECS,
+                                               build_korea_scenario_payload,
+                                               sanitize_korea_config)
+    hi_reab = KOREA_LEVER_SPECS["reabsorption_rate"][1]
+    hi_lfe = KOREA_LEVER_SPECS["lfp_exit_rate"][1]
+    p = build_korea_scenario_payload(sanitize_korea_config(
+        {"preset": "korea-central",
+         "levers": {"reabsorption_rate": hi_reab, "lfp_exit_rate": hi_lfe}}), **pools)
+    assert p["final"]["jobs_lost_M"] > 0
+
+
 def test_default_payload_matches_the_bundle_pins(central):
     f = central["final"]
     assert f["nhi_years_forward"] == pytest.approx(0.50, abs=0.01)

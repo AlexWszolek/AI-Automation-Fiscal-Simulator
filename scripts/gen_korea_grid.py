@@ -41,12 +41,13 @@ UI = [
     ("compute_effective_rate", "us:compute_rate", "Firms",               0.01,  "float"),
     ("survivor_elasticity",   "us:elasticity", "Survivor wages",        0.05,  "float"),
     ("survivor_raise_ceiling", "us:ceiling",    "Survivor wages",        0.05,  "float"),
-    ("survivor_spillover_to_profit", "us:spillover", "Survivor wages",   0.05,  "float"),
+    # survivor_spillover_to_profit and interest_rate are delisted from the rail (see the
+    # _MODEL_LEVERS note in korea_webpayload.py); TORNADO_ONLY_REFS keeps their tornado
+    # rows localized
     ("price_passthrough",     "us:price_pt",   "Macro & demand",        0.05,  "float"),
     ("productivity_passthrough", "us:prod_pt", "Macro & demand",        0.05,  "float"),
     ("baseline_growth_rate",  "us:growth",     "Macro & demand",        0.005, "float"),
     ("demand_multiplier",     "us:demand",     "Macro & demand",        0.05,  "float"),
-    ("interest_rate",         "kr:interest_rate",   "Macro & demand",        0.005, "float"),
     ("automation_tax_rate",   "us:atax",       "Government policy",     0.01,  "float"),
     ("vat_pp",                "kr:vat_pp",     "Government policy",     0.25,  "float"),
     ("nps_mandate_share",     "kr:nps_mandate_share", "Government policy", 0.05, "float"),
