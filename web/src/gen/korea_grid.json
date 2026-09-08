@@ -258,8 +258,8 @@
    "defaults": {
     "adoption_start": 0.005,
     "adoption_end": 0.1,
-    "reabsorption_rate": 0.0,
-    "reemployment_haircut": 0.3,
+    "reabsorption_rate": 0.25,
+    "reemployment_haircut": 0.13,
     "ui_weeks": 26,
     "reab_wage_baumol": 0.0,
     "reab_wage_crowding": 0.0,
@@ -296,8 +296,8 @@
    "defaults": {
     "adoption_start": 0.01,
     "adoption_end": 0.2,
-    "reabsorption_rate": 0.0,
-    "reemployment_haircut": 0.3,
+    "reabsorption_rate": 0.25,
+    "reemployment_haircut": 0.13,
     "ui_weeks": 26,
     "reab_wage_baumol": 0.0,
     "reab_wage_crowding": 0.0,
@@ -334,8 +334,8 @@
    "defaults": {
     "adoption_start": 0.02,
     "adoption_end": 0.4,
-    "reabsorption_rate": 0.0,
-    "reemployment_haircut": 0.3,
+    "reabsorption_rate": 0.25,
+    "reemployment_haircut": 0.13,
     "ui_weeks": 26,
     "reab_wage_baumol": 0.0,
     "reab_wage_crowding": 0.0,

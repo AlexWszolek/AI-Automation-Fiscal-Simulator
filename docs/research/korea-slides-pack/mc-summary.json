@@ -5,261 +5,261 @@
   "seed": 0,
   "preset": "korea-central",
   "demography": "FROZEN (published medium variant)",
-  "runtime_s": 4.7
+  "runtime_s": 4.4
  },
  "base": {
-  "nhi_years_forward": 0.5009,
-  "nps_given_back": 1.1364,
-  "ei_shortfall_tn": 5.513,
-  "employment_drop_pct": 16.8129,
-  "nhi_erosion_2035": 0.0911
+  "nhi_years_forward": 0.4316,
+  "nps_given_back": 0.1921,
+  "ei_shortfall_tn": 5.2231,
+  "employment_drop_pct": 15.0026,
+  "nhi_erosion_2035": 0.0372
  },
  "percentiles": {
   "nhi_years_forward": {
-   "p10": 0.4165,
-   "p25": 0.4448,
-   "p50": 0.4898,
-   "p75": 0.5413,
-   "p90": 0.5899
+   "p10": 0.3404,
+   "p25": 0.3794,
+   "p50": 0.4311,
+   "p75": 0.4746,
+   "p90": 0.516
   },
   "nps_given_back": {
-   "p10": 0.9047,
-   "p25": 1.0054,
-   "p50": 1.1059,
-   "p75": 1.215,
-   "p90": 1.3216
+   "p10": 0.1304,
+   "p25": 0.1548,
+   "p50": 0.1907,
+   "p75": 0.2274,
+   "p90": 0.2608
   },
   "ei_shortfall_tn": {
-   "p10": 4.3511,
-   "p25": 4.7977,
-   "p50": 5.4016,
-   "p75": 6.0293,
-   "p90": 6.7773
+   "p10": 4.08,
+   "p25": 4.5305,
+   "p50": 5.2019,
+   "p75": 5.8298,
+   "p90": 6.3446
   },
   "employment_drop_pct": {
-   "p10": 13.7357,
-   "p25": 15.0189,
-   "p50": 16.4287,
-   "p75": 17.8307,
-   "p90": 19.3933
+   "p10": 12.1706,
+   "p25": 13.36,
+   "p50": 15.0462,
+   "p75": 16.4661,
+   "p90": 17.6809
   },
   "nhi_erosion_2035": {
-   "p10": 0.0753,
-   "p25": 0.0818,
-   "p50": 0.0889,
-   "p75": 0.0964,
-   "p90": 0.106
+   "p10": 0.0279,
+   "p25": 0.0324,
+   "p50": 0.0367,
+   "p75": 0.0421,
+   "p90": 0.0459
   }
  },
  "tornado": {
   "ei_shortfall_tn": [
    {
     "input": "adoption_end",
-    "spearman": 0.7612
+    "spearman": 0.7425
    },
    {
     "input": "ui_weeks",
-    "spearman": 0.6069
+    "spearman": 0.5913
    },
    {
     "input": "exposure_delta",
-    "spearman": 0.1945
+    "spearman": 0.218
    },
    {
-    "input": "reemployment_haircut",
-    "spearman": -0.1526
+    "input": "price_passthrough",
+    "spearman": -0.1428
    },
    {
-    "input": "mpc",
-    "spearman": -0.1031
+    "input": "survivor_raise_ceiling",
+    "spearman": -0.1339
    },
    {
-    "input": "survivor_gains_share",
-    "spearman": -0.0968
+    "input": "survivor_spillover_to_profit",
+    "spearman": 0.1294
    },
    {
-    "input": "price_reduction_share",
-    "spearman": 0.0681
-   },
-   {
-    "input": "attrition_rate",
-    "spearman": 0.0662
+    "input": "nhi_share",
+    "spearman": 0.1041
    },
    {
     "input": "interest_rate",
-    "spearman": 0.0659
+    "spearman": 0.0909
    },
    {
     "input": "productivity_passthrough",
-    "spearman": -0.0553
+    "spearman": 0.0598
+   },
+   {
+    "input": "reabsorption_rate",
+    "spearman": -0.0596
    }
   ],
   "employment_drop_pct": [
    {
     "input": "adoption_end",
-    "spearman": 0.9109
+    "spearman": 0.9398
    },
    {
     "input": "exposure_delta",
-    "spearman": 0.2633
-   },
-   {
-    "input": "demand_multiplier",
-    "spearman": 0.1713
-   },
-   {
-    "input": "reemployment_haircut",
-    "spearman": -0.16
+    "spearman": 0.263
    },
    {
     "input": "survivor_gains_share",
-    "spearman": -0.1574
+    "spearman": -0.1659
+   },
+   {
+    "input": "survivor_spillover_to_profit",
+    "spearman": 0.1324
+   },
+   {
+    "input": "price_passthrough",
+    "spearman": -0.124
+   },
+   {
+    "input": "survivor_raise_ceiling",
+    "spearman": -0.1237
    },
    {
     "input": "retained_profit_share",
-    "spearman": 0.0815
+    "spearman": 0.1102
    },
    {
-    "input": "lfp_exit_rate",
-    "spearman": 0.0733
+    "input": "mpc",
+    "spearman": 0.0917
    },
    {
-    "input": "survivor_elasticity",
-    "spearman": 0.0485
+    "input": "interest_rate",
+    "spearman": 0.0901
    },
    {
-    "input": "consumption_stickiness",
-    "spearman": 0.0481
-   },
-   {
-    "input": "productivity_passthrough",
-    "spearman": -0.0428
+    "input": "nhi_share",
+    "spearman": 0.0845
    }
   ],
   "nhi_erosion_2035": [
    {
     "input": "adoption_end",
-    "spearman": 0.9162
+    "spearman": 0.6875
+   },
+   {
+    "input": "reabsorption_rate",
+    "spearman": -0.5627
    },
    {
     "input": "survivor_gains_share",
-    "spearman": -0.3005
-   },
-   {
-    "input": "exposure_delta",
-    "spearman": 0.2457
+    "spearman": -0.389
    },
    {
     "input": "retained_profit_share",
-    "spearman": 0.1812
+    "spearman": 0.2503
    },
    {
-    "input": "reemployment_haircut",
-    "spearman": -0.1649
+    "input": "exposure_delta",
+    "spearman": 0.1983
    },
    {
-    "input": "demand_multiplier",
-    "spearman": 0.0999
-   },
-   {
-    "input": "mpc",
-    "spearman": -0.054
-   },
-   {
-    "input": "productivity_passthrough",
-    "spearman": -0.0504
+    "input": "price_passthrough",
+    "spearman": -0.1234
    },
    {
     "input": "survivor_elasticity",
-    "spearman": -0.0436
+    "spearman": -0.0994
    },
    {
-    "input": "price_reduction_share",
-    "spearman": 0.0407
+    "input": "nhi_share",
+    "spearman": 0.0878
+   },
+   {
+    "input": "productivity_passthrough",
+    "spearman": 0.0854
+   },
+   {
+    "input": "reemployment_haircut",
+    "spearman": 0.0827
    }
   ],
   "nhi_years_forward": [
    {
     "input": "adoption_end",
-    "spearman": 0.6782
+    "spearman": 0.7099
    },
    {
     "input": "nhi_share",
-    "spearman": 0.6679
+    "spearman": 0.675
    },
    {
     "input": "survivor_gains_share",
-    "spearman": -0.2279
+    "spearman": -0.2237
    },
    {
     "input": "retained_profit_share",
-    "spearman": 0.1654
+    "spearman": 0.1788
+   },
+   {
+    "input": "reabsorption_rate",
+    "spearman": -0.1658
    },
    {
     "input": "exposure_delta",
-    "spearman": 0.1474
+    "spearman": 0.1651
    },
    {
-    "input": "reemployment_haircut",
-    "spearman": -0.126
+    "input": "price_passthrough",
+    "spearman": -0.1294
    },
    {
-    "input": "mpc",
-    "spearman": -0.0596
+    "input": "survivor_elasticity",
+    "spearman": -0.1051
    },
    {
-    "input": "compute_effective_rate",
-    "spearman": -0.0592
+    "input": "survivor_spillover_to_profit",
+    "spearman": 0.0987
    },
    {
-    "input": "nps_share",
-    "spearman": 0.0585
-   },
-   {
-    "input": "baseline_growth_rate",
-    "spearman": -0.0543
+    "input": "survivor_raise_ceiling",
+    "spearman": -0.0633
    }
   ],
   "nps_given_back": [
    {
-    "input": "adoption_end",
-    "spearman": 0.7919
+    "input": "reabsorption_rate",
+    "spearman": -0.6128
    },
    {
-    "input": "nps_share",
-    "spearman": 0.4793
+    "input": "adoption_end",
+    "spearman": 0.4824
    },
    {
     "input": "survivor_gains_share",
-    "spearman": -0.2709
-   },
-   {
-    "input": "exposure_delta",
-    "spearman": 0.2288
+    "spearman": -0.471
    },
    {
     "input": "retained_profit_share",
-    "spearman": 0.1753
+    "spearman": 0.2994
+   },
+   {
+    "input": "lfp_exit_rate",
+    "spearman": 0.2273
+   },
+   {
+    "input": "nps_share",
+    "spearman": 0.1996
+   },
+   {
+    "input": "exposure_delta",
+    "spearman": 0.1656
    },
    {
     "input": "reemployment_haircut",
-    "spearman": -0.1709
+    "spearman": 0.1511
    },
    {
-    "input": "demand_multiplier",
-    "spearman": 0.1197
+    "input": "attrition_rate",
+    "spearman": 0.1495
    },
    {
-    "input": "survivor_spillover_to_profit",
-    "spearman": -0.0632
-   },
-   {
-    "input": "survivor_elasticity",
-    "spearman": -0.0553
-   },
-   {
-    "input": "nhi_share",
-    "spearman": 0.0376
+    "input": "price_passthrough",
+    "spearman": -0.1231
    }
   ]
  }

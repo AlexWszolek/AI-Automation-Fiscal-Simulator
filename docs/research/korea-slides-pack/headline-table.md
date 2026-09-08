@@ -15,18 +15,18 @@ figure-read error axis (±0.5pp), 36 projections total.
 
 | Preset | NHI share | NPS share | NHI yrs earlier | NHI depletion | EI 2029 shortfall (₩tn) | NPS yrs given back | NPS depletion |
 |---|---|---|---|---|---|---|---|
-| korea-slow | 0.65 | 0.75 | 0.24 | 2029.64 | 2.8 | 0.52 | 2065.07 |
-| korea-slow | 0.65 | 0.95 | 0.24 | 2029.64 | 2.8 | 0.65 | 2064.94 |
-| korea-slow | 0.97 | 0.75 | 0.33 | 2029.54 | 2.8 | 0.52 | 2065.07 |
-| korea-slow | 0.97 | 0.95 | 0.33 | 2029.54 | 2.8 | 0.65 | 2064.94 |
-| korea-central | 0.65 | 0.75 | 0.42 | 2029.45 | 5.5 | 1.01 | 2064.58 |
-| korea-central | 0.65 | 0.95 | 0.42 | 2029.45 | 5.5 | 1.26 | 2064.33 |
-| korea-central | 0.97 | 0.75 | 0.57 | 2029.30 | 5.5 | 1.01 | 2064.58 |
-| korea-central | 0.97 | 0.95 | 0.57 | 2029.30 | 5.5 | 1.26 | 2064.33 |
-| korea-fast | 0.65 | 0.75 | 0.70 | 2029.18 | 11.0 | 1.92 | 2063.67 |
-| korea-fast | 0.65 | 0.95 | 0.70 | 2029.18 | 11.0 | 2.38 | 2063.21 |
-| korea-fast | 0.97 | 0.75 | 0.88 | 2028.99 | 11.0 | 1.92 | 2063.67 |
-| korea-fast | 0.97 | 0.95 | 0.88 | 2028.99 | 11.0 | 2.38 | 2063.21 |
+| korea-slow | 0.65 | 0.75 | 0.20 | 2029.68 | 2.6 | 0.09 | 2065.50 |
+| korea-slow | 0.65 | 0.95 | 0.20 | 2029.68 | 2.6 | 0.11 | 2065.48 |
+| korea-slow | 0.97 | 0.75 | 0.28 | 2029.59 | 2.6 | 0.09 | 2065.50 |
+| korea-slow | 0.97 | 0.95 | 0.28 | 2029.59 | 2.6 | 0.11 | 2065.48 |
+| korea-central | 0.65 | 0.75 | 0.36 | 2029.51 | 5.2 | 0.17 | 2065.42 |
+| korea-central | 0.65 | 0.95 | 0.36 | 2029.51 | 5.2 | 0.21 | 2065.37 |
+| korea-central | 0.97 | 0.75 | 0.50 | 2029.38 | 5.2 | 0.17 | 2065.42 |
+| korea-central | 0.97 | 0.95 | 0.50 | 2029.38 | 5.2 | 0.21 | 2065.37 |
+| korea-fast | 0.65 | 0.75 | 0.62 | 2029.26 | 10.4 | 0.33 | 2065.26 |
+| korea-fast | 0.65 | 0.95 | 0.62 | 2029.26 | 10.4 | 0.42 | 2065.17 |
+| korea-fast | 0.97 | 0.75 | 0.81 | 2029.07 | 10.4 | 0.33 | 2065.26 |
+| korea-fast | 0.97 | 0.95 | 0.81 | 2029.07 | 10.4 | 0.42 | 2065.17 |
 
 ## Fast worlds — Korinek-Suh translations (mid shares, separate rows, never band edges)
 
@@ -40,8 +40,8 @@ UNDERSTATE displacement in manual occupations.
 
 ## Band summary (the numbers for the slide)
 
-- **NHI depletion pulled forward: 0.23–0.90 years**
-- **EI 2029 planned-rebuild shortfall: ₩2.6–11.4tn**
+- **NHI depletion pulled forward: 0.19–0.82 years**
+- **EI 2029 planned-rebuild shortfall: ₩2.5–10.8tn**
   (of ₩21.8tn planned — benefit outlays included)
-- **NPS: 0.49–2.44 of the reform's eight bought years
-  given back** (central preset: 0.96–1.30)
+- **NPS: 0.08–0.43 of the reform's eight bought years
+  given back** (central preset: 0.16–0.22)

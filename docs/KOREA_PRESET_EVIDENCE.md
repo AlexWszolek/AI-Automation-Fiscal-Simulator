@@ -80,3 +80,22 @@ Fixed (`adoption_reach_year=9`; a regression test pins the path shape) and recom
 0.34–1.64 of the reform's eight bought years** (central preset: **0.67–0.84**). Zero-erosion
 anchor reproduces 표 25 exactly; NABO's own post-reform depletion is **2065** (quote NABO's
 2065, not the ministry-attributed ~2064).
+
+## Addendum 2026-09-08 — the diffusion family's labour-market anchor
+
+The three diffusion presets (slow / central / fast) were defined with empty overrides and
+so inherited the engine's shipped `reabsorption_rate = 0.0`: no displaced worker was ever
+re-employed in the headline case — an inherited default, never a calibrated choice (every
+other Korea preset and every US preset sets a rate). Korean anchor now applied via
+`KOREA_DIFFUSION_LABOUR` in `fiscal_model/korea_scenarios.py`:
+
+| Field | Value | Evidence |
+|---|---|---|
+| `reabsorption_rate` | **0.25/yr** | 고용노동부 구직급여 수급 중 재취업률 30.6% (2024; 26.9% 2021 → 30.3% 2023), ~120 days to re-employment — annualizes to ~0.35–0.45/yr for ALL recipients. AI displacement is structural (re-entry into the finite service floor), so the all-recipient rate is an upper anchor; discounted to 0.25 (Alex's judgment; DvW slack band 0.15–0.35). |
+| `reemployment_haircut` | 0.13 | Farber 2015 central — no Korean primary on re-employment wages yet (KLI ask outstanding). |
+
+Effect on the central headlines (zero re-employment → 0.25): NHI 0.50 → 0.43 yrs earlier;
+EI ₩5.5 → 5.2tn short (outlays dominate, robust); NPS 1.14 → 0.19 of 8 bought years; jobs
+0.91M → 0.40M; Δu +2.7 → +1.1pp. The recapture finding flips for the pension only: 100%
+corporate recapture (₩7.6tn/yr) now makes the pension whole, recovers 0.26 of NHI's 0.43
+years, and refunds under a fifth of the EI shortfall.

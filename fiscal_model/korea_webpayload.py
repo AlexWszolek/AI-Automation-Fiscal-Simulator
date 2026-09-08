@@ -52,8 +52,9 @@ _MODEL_LEVERS = ("reabsorption_rate", "reemployment_haircut", "lfp_exit_rate",
 # columns, which no Korea chart plots, and survivor_spillover_to_profit acts only when
 # the survivor-raise ceiling binds, which no rail-reachable config makes it do. Both stay
 # engine params (presets and the tornado's sampler still see them); they are simply not
-# accepted from the web. reemployment_haircut stays: inert in the diffusion family
-# because re-employment wages already sit at the service floor there, live elsewhere.
+# accepted from the web. reemployment_haircut stays: inert in the diffusion family only
+# because those three presets run the shipped reabsorption_rate of 0 (nobody is
+# re-employed, so there is no wage to cut), live in the seven presets that set a rate.
 _MULTS = ("income_tax_mult", "corp_tax_mult", "cons_tax_mult")
 KOREA_LEVER_SPECS: dict[str, tuple] = {
     **{k: mc_mod.PERTURBED[k] for k in _MODEL_LEVERS if k not in _MULTS},
@@ -170,6 +171,23 @@ def _korea_v2p(preset: str, levers: dict):
             [ramp, np.full(max(0, HORIZON - reach - 1), end)])[:HORIZON], 0.0, 1.0)
         v2p = replace(v2p, adoption_path=list(path2), adoption=float(path2[-1]))
     return v2p
+
+
+def _shift(proj_fund: dict) -> float:
+    """Years the eroded path pulls the published crossing forward; 0.0 when the eroded path
+    no longer crosses inside the published window (a policy lever made the fund whole —
+    the projector reports None), so heroes and readouts stay numeric. Negative means the
+    fund now depletes LATER than published (a policy over-delivered within the window)."""
+    v = proj_fund.get("years_pulled_forward")
+    return float(v) if v is not None else 0.0
+
+
+def _recovered(nopolicy_fund: dict, policy_fund: dict) -> float:
+    """Years a policy gives back, capped at what erosion took: a path that now depletes
+    later than published (or past the window) counts as whole, never as a gain — the
+    readout compares against the published date, and the projector cannot see past it."""
+    given = _shift(nopolicy_fund)
+    return round(min(given - _shift(policy_fund), given), 2) if given > 0 else 0.0
 
 
 def _fund_json(fund, proj, lo: np.ndarray, hi: np.ndarray) -> dict:
@@ -317,10 +335,10 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         policy_readouts.append({
             "key": "nps_mandate_share", "share": mandate_share,
             "flow_final_tn": round(float(ur["mandate_tn"][-1]), 2),
-            "given_back_nopolicy": round(float(nopolicy["nps"]["years_pulled_forward"]), 2),
-            "years_bought_back": round(
-                float(nopolicy["nps"]["years_pulled_forward"]
-                      - central["nps"]["years_pulled_forward"]), 2),
+            "given_back_nopolicy": round(_shift(nopolicy["nps"]), 2),
+            "years_bought_back": _recovered(nopolicy["nps"], central["nps"]),
+            "made_whole": central["nps"]["years_pulled_forward"] is None
+            or _shift(central["nps"]) <= 0.0,
         })
     if corp_share > 0:
         tr = ur["transfer_tn"]
@@ -328,12 +346,15 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
             "key": "corp_to_funds", "share": corp_share,
             "transfer_final_tn": round(float(tr[display_n - 1]), 2),
             "transfer_cum_tn": round(float(tr[:display_n].sum()), 2),
-            "nps_years_recovered": round(
-                float(nopolicy["nps"]["years_pulled_forward"]
-                      - central["nps"]["years_pulled_forward"]), 2),
-            "nhi_years_recovered": round(
-                float(nopolicy["nhi"]["years_pulled_forward"]
-                      - central["nhi"]["years_pulled_forward"]), 2),
+            "nps_years_recovered": _recovered(nopolicy["nps"], central["nps"]),
+            "nhi_years_recovered": _recovered(nopolicy["nhi"], central["nhi"]),
+            # whole = the policy path no longer depletes inside the published window (or
+            # depletes later than published); recovered years are then capped at what was
+            # given back — the projector cannot see past the window
+            "nps_made_whole": central["nps"]["years_pulled_forward"] is None
+            or _shift(central["nps"]) <= 0.0,
+            "nhi_made_whole": central["nhi"]["years_pulled_forward"] is None
+            or _shift(central["nhi"]) <= 0.0,
             "ei_shortfall_recovered_tn": round(
                 float(central["ei"]["eroded_reserves"][-1]
                       - nopolicy["ei"]["eroded_reserves"][-1]), 2),
@@ -360,8 +381,8 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
                                    + (float(ur["transfer_tn"][display_n - 1]) * 1000.0
                                       if ur["transfer_tn"] is not None else 0.0), 4),  # ₩bn
             "W_survivor": round(float(final["W_survivor"]), 6),
-            "nhi_years_forward": round(float(central["nhi"]["years_pulled_forward"]), 2),
-            "nps_given_back": round(float(central["nps"]["years_pulled_forward"]), 2),
+            "nhi_years_forward": round(_shift(central["nhi"]), 2),
+            "nps_given_back": round(_shift(central["nps"]), 2),
             "ei_shortfall_tn": round(float(EI_BASELINE.reserves[-1]
                                            - central["ei"]["eroded_reserves"][-1]), 1),
             "inc_tax_lost_cum_tn": round(float(disp["inc_fed_loss_B"].sum()

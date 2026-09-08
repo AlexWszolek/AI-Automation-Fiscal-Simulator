@@ -40,10 +40,10 @@ def test_pinned_conventions_never_reach_the_draws(mc8):
 
 
 def test_base_row_matches_the_bundle_central_pins(mc8):
-    assert mc8.base["nhi_years_forward"] == pytest.approx(0.50, abs=0.02)
-    assert mc8.base["ei_shortfall_tn"] == pytest.approx(5.5, abs=0.2)
-    assert mc8.base["nps_given_back"] == pytest.approx(1.14, abs=0.03)
-    assert mc8.base["nhi_erosion_2035"] == pytest.approx(0.091, abs=0.005)
+    assert mc8.base["nhi_years_forward"] == pytest.approx(0.43, abs=0.02)
+    assert mc8.base["ei_shortfall_tn"] == pytest.approx(5.2, abs=0.2)
+    assert mc8.base["nps_given_back"] == pytest.approx(0.19, abs=0.03)
+    assert mc8.base["nhi_erosion_2035"] == pytest.approx(0.037, abs=0.003)
 
 
 def test_zero_spread_leaves_only_the_korea_axes(mc8):

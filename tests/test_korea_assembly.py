@@ -15,14 +15,17 @@ pytestmark = pytest.mark.skipif(
 def korea_run():
     from fiscal_model.korea_assembly import build_korea_data, build_korea_deltas
     from fiscal_model.korea_demography import korea_demography_path
-    from fiscal_model.korea_scenarios import KOREA_PRESETS
+    from fiscal_model.korea_scenarios import KOREA_DIFFUSION_LABOUR, KOREA_PRESETS
     from fiscal_model.presets import build_adoption_path
     data = build_korea_data()
     deltas = build_korea_deltas()
     korea = dict(adoption=0.20,
                  adoption_path=build_adoption_path(KOREA_PRESETS["korea-central"], 10),
                  cognitive_feasibility=1.0, physical_feasibility=0.0,
-                 demography_path=list(korea_demography_path(10)))
+                 demography_path=list(korea_demography_path(10)),
+                 # the diffusion family's Korean-anchored labour convention (MOEL-anchored
+                 # re-employment 0.25, Farber haircut 0.13) — the hand-assembled central
+                 **KOREA_DIFFUSION_LABOUR)
     return data, deltas, korea
 
 
@@ -50,8 +53,9 @@ def test_shipped_full_dynamics_invariants_green(korea_run):
     params, res = _run(korea_run, DEFAULTS_SHIPPED)
     assert_all_invariants(res, params, float(res["population_M"].iloc[0]), country="kr")
     f = res.iloc[-1]
-    assert f["employment_drop_pct"] == pytest.approx(8.95, abs=0.1)
-    assert f["induced_M"] > 0.05                    # demand destruction is LIVE
+    assert f["employment_drop_pct"] == pytest.approx(8.70, abs=0.1)
+    assert f["induced_M"] > 0.01                    # demand destruction is LIVE (re-employment
+                                                    # restores most of the withdrawn demand)
     assert f["W_survivor"] > 1.005                  # survivor wages are LIVE
     assert f["retired_M"] > 1.0                     # the demographic outflow is LIVE
     # the no-closure mirror: Korea reports the local shortfall, never austerity-closes it
@@ -98,9 +102,9 @@ def test_run_bridge_full_dynamics_worsens_the_funds(korea_run):
     model = DynamicModelV2(data, deltas, params)
     res = model.run()
     bridge = korea_erosion_from_run(model, res, deltas)
-    assert bridge["erosion"]["NHI health"][-1] == pytest.approx(0.091, abs=0.005)
+    assert bridge["erosion"]["NHI health"][-1] == pytest.approx(0.0372, abs=0.002)
     nhi = depletion_shift(NHI_REFORM, bridge["erosion"]["NHI health"], wage_linked_share=0.81)
-    assert nhi["years_pulled_forward"] == pytest.approx(0.50, abs=0.03)
+    assert nhi["years_pulled_forward"] == pytest.approx(0.43, abs=0.03)
     ei = depletion_shift(EI_BASELINE, bridge["erosion"]["EI unemployment benefit"][:4],
                          wage_linked_share=WAGE_LINKED_SHARE["ei"].value,
                          extra_outlays_tn=bridge["ei_outlay_bn"][:4] / 1000.0)
@@ -117,8 +121,8 @@ def test_run_korea_preset_is_the_same_run(korea_run):
     data, deltas, _ = korea_run
     out = run_korea_preset("korea-central", data=data, deltas=deltas)
     assert out["params"].n_periods == 10
-    assert out["bridge"]["erosion"]["NHI health"][-1] == pytest.approx(0.091, abs=0.005)
-    assert out["res"]["employment_drop_pct"].iloc[-1] == pytest.approx(8.95, abs=0.1)
+    assert out["bridge"]["erosion"]["NHI health"][-1] == pytest.approx(0.0372, abs=0.002)
+    assert out["res"]["employment_drop_pct"].iloc[-1] == pytest.approx(8.70, abs=0.1)
 
 
 def test_run_korea_preset_agi_worlds_bite_harder(korea_run):

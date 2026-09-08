@@ -173,12 +173,30 @@ def korea_fund_headlines(adoption_path, nhi_wage_linked_share: float,
 # copy is Alex's voice and gets written before any UI exposure, never here.
 from .presets import Preset, build_adoption_path  # noqa: E402
 
+# ---- the diffusion family's labour-market convention (Korean-anchored, 2026-09-08). These
+# three presets used to run overrides={} and inherit DEFAULTS_SHIPPED.reabsorption_rate = 0
+# (no displaced worker was ever re-employed — an inherited default, never a choice; every
+# other preset here and every US preset sets a rate). Now anchored on Korean evidence:
+# 고용노동부 구직급여 수급 중 재취업률 30.6% (2024; 26.9% 2021 → 30.3% 2023), ~120 days to
+# re-employment, which annualizes to ~0.35–0.45/yr for ALL recipients. AI displacement is
+# structural (the occupation goes, re-entry is into the finite service floor), so the
+# all-recipient rate is an UPPER anchor; Alex's judgment discounts it to 0.25 — mid-band of
+# the DvW slack-market evidence (0.15–0.35, docs/PRESET_EVIDENCE.md). The wage scar keeps
+# Farber's central 0.13: no Korean primary on re-employment wages yet (KLI ask outstanding).
+KOREA_DIFFUSION_LABOUR = dict(reabsorption_rate=0.25, reemployment_haircut=0.13)
+KOREA_DIFFUSION_LABOUR_PROVENANCE = {
+    "reabsorption_rate": "MOEL 구직급여 수급 중 재취업률 30.6% (2024) as the upper anchor, "
+                         "discounted for structural displacement → 0.25 (DvW slack 0.15–0.35)",
+    "reemployment_haircut": "Farber 2015 central 0.13 (no Korean primary yet)",
+}
+
 KOREA_PRESETS = {
     "korea-slow": Preset(
         key="korea-slow", name="Korea — slow diffusion", blurb="Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
-        adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides={},
+        adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={
+            **KOREA_DIFFUSION_LABOUR_PROVENANCE,
             "adoption_start": "US realized canaries ~0.01–0.03 at year 3, discounted: Korea "
                               "is EARLIER on the curve (31% SME adoption vs >50% DEU, OECD "
                               "2025 first-hand)",
@@ -187,18 +205,20 @@ KOREA_PRESETS = {
         }),
     "korea-central": Preset(
         key="korea-central", name="Korea — central", blurb="US-observed early adoption discounted for Korea's SME lag, reaching 20% of exposed work by 2035.",
-        adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides={},
+        adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={
+            **KOREA_DIFFUSION_LABOUR_PROVENANCE,
             "adoption_start": "US canaries lower bound; OECD 31%-SME Korea discount",
             "adoption_end": "Acemoglu/Svanberg-class ~23% of exposed work profitably "
                             "automatable within 10y → 0.20 with the Korea adoption lag",
         }),
     "korea-fast": Preset(
         key="korea-fast", name="Korea — fast catch-up", blurb="Half of feasible automation realized by 2035, with Korea's ICT readiness driving a fast catch-up.",
-        adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides={},
+        adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={
+            **KOREA_DIFFUSION_LABOUR_PROVENANCE,
             "adoption_start": "US canaries upper bound",
             "adoption_end": "Windfall-Medium-class half-of-feasible with Korea ICT-readiness "
                             "catch-up → 0.40 of HELC jobs by 2035",

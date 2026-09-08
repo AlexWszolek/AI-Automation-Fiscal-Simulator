@@ -66,10 +66,10 @@ def test_reabsorption_exit_pair_cannot_crash(pools):
 
 def test_default_payload_matches_the_bundle_pins(central):
     f = central["final"]
-    assert f["nhi_years_forward"] == pytest.approx(0.50, abs=0.01)
-    assert f["nps_given_back"] == pytest.approx(1.14, abs=0.01)
-    assert f["ei_shortfall_tn"] == pytest.approx(5.5, abs=0.1)
-    assert f["employment_drop_pct"] == pytest.approx(8.95, abs=0.1)
+    assert f["nhi_years_forward"] == pytest.approx(0.43, abs=0.01)
+    assert f["nps_given_back"] == pytest.approx(0.19, abs=0.01)
+    assert f["ei_shortfall_tn"] == pytest.approx(5.2, abs=0.1)
+    assert f["employment_drop_pct"] == pytest.approx(8.70, abs=0.1)
     assert central["config"]["modified_fields"] == []
     assert len(central["rows"]) == 10                           # display horizon, not 40
     assert len(central["funds"]["nps"]["years"]) == 40          # funds get the full window
@@ -90,7 +90,7 @@ def test_levers_actually_move_the_payload(pools):
         sanitize_korea_config({"levers": {"ui_weeks": 39, "adoption_end": 0.30}}), **pools)
     assert p["config"]["modified_fields"] == ["adoption_end", "ui_weeks"]
     assert p["final"]["ei_shortfall_tn"] > 8.0        # longer window + more adoption
-    assert p["final"]["nhi_years_forward"] > 0.60
+    assert p["final"]["nhi_years_forward"] > 0.50     # central is 0.43
 
 
 def test_prefix_property_pins_the_one_run_design(pools):
@@ -169,11 +169,12 @@ def test_committed_tornado_bundles_match_fresh_generation(pools):
 
 def test_policy_levers_route_honestly(pools):
     """The three policy levers, each with its own ledger discipline. vat_pp: calibrated to
-    the receipts-measured base, covers >100%/pp-class of the widening, never touches the
-    funds. nps_mandate_share: moves the NPS chart/hero, never the treasury. corp_to_funds:
+    the receipts-measured base, ~₩7.9tn/pp, never touches the funds (and under the
+    Korean-anchored central has no general-account widening left to cover). nps_mandate_share: moves the NPS chart/hero, never the treasury. corp_to_funds:
     CONSERVATION — the deficit worsens by exactly what the funds gain, allocated across the
-    three funds; even at 100% the funds recover only part of the damage (recapture is
-    structurally smaller than contribution erosion — the thesis, quantified)."""
+    three funds. Under the Korean-anchored central (re-employment 0.25) full recapture
+    makes the PENSION whole but not health, and barely touches EI, whose shortfall is
+    outlays, not contributions — the thesis holds where the money leaves as benefits."""
     from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
                                                sanitize_korea_config)
     base = build_korea_scenario_payload(sanitize_korea_config({}), **pools)
@@ -182,7 +183,11 @@ def test_policy_levers_route_honestly(pools):
         sanitize_korea_config({"levers": {"vat_pp": 1}}), **pools)
     r = vat["policy_readouts"][0]
     assert 7.0 < r["revenue_final_tn"] < 7.92          # 1pp on the ₩792tn base, eroded
-    assert r["coverage_pct"] > 100.0
+    # the Korean-anchored central leaves the general account slightly BETTER off by the
+    # final year (taxed automation profits + re-employed income tax outrun the labour-tax
+    # loss) while the earmarked funds erode — so there is no widening for VAT to cover
+    # and the readout says so (None), rather than inventing a coverage ratio
+    assert r["deficit_widening_final_tn"] < 0 and r["coverage_pct"] is None
     assert vat["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
     assert vat["final"]["fed_deficit_B"] < base["final"]["fed_deficit_B"]
 
@@ -199,12 +204,16 @@ def test_policy_levers_route_honestly(pools):
     # conservation: reported deficit worsens by exactly the final-year transfer
     assert (corp["final"]["fed_deficit_B"] - base["final"]["fed_deficit_B"]
             ) == pytest.approx(rc["transfer_final_tn"] * 1000.0, abs=5.0)
-    # all three funds improve, and none is made MORE than whole
-    assert 0 < rc["nps_years_recovered"] < base["final"]["nps_given_back"]
+    # all three funds improve; recovery is capped at what erosion took (never a "gain")
+    assert 0 < rc["nps_years_recovered"] <= base["final"]["nps_given_back"]
     assert 0 < rc["nhi_years_recovered"] < base["final"]["nhi_years_forward"]
     assert 0 < rc["ei_shortfall_recovered_tn"] < base["final"]["ei_shortfall_tn"]
-    # the finding: even 100% recapture transfer does not make the pension whole
-    assert corp["final"]["nps_given_back"] > 0.2
+    # the finding: 100% recapture makes the pension whole (contribution erosion is small
+    # once the displaced re-employ), NOT health, and recovers under a fifth of the EI
+    # shortfall — EI's hole is benefit outlays, which no revenue transfer refunds
+    assert rc["nps_made_whole"] and corp["final"]["nps_given_back"] == 0.0
+    assert not rc["nhi_made_whole"]
+    assert rc["ei_shortfall_recovered_tn"] < 0.2 * base["final"]["ei_shortfall_tn"]
 
     both = build_korea_scenario_payload(sanitize_korea_config(
         {"levers": {"vat_pp": 1, "nps_mandate_share": 0.2, "corp_to_funds": 0.5}}), **pools)
