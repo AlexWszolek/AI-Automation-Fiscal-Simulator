@@ -26,10 +26,12 @@
 .slide-note { margin-top: 20px; max-width: 1500px; }
 .slide-cols { display: grid; grid-template-columns: 3fr 2fr; gap: 48px; align-items: start; }
 .slide-table { border-collapse: collapse; margin: 24px 0; font-size: 28px; }
-.slide-table th, .slide-table td { padding: 14px 36px 14px 0; text-align: left;
+.slide-table th, .slide-table td { padding: 11px 36px 11px 0; text-align: left;
   border-bottom: 1px solid rgba(43, 40, 34, 0.15); }
 .slide-table th { font-size: 22px; font-weight: 600; }
-.slide-table .scenario-name { font-family: inherit; }
+/* ten scenarios on one stage: names never wrap (the descriptive names are long), so every
+   row stays one line and the table clears the footer */
+.slide-table .scenario-name { font-family: inherit; white-space: nowrap; }
 .slide-table .agi-row td { color: #8c2f28; }
 .slide-list { font-size: 24px; line-height: 1.6; max-width: 1500px; padding-left: 1.2em; }
 .slide-list li { margin-bottom: 10px; }

@@ -8,7 +8,7 @@ describe('locale packs', () => {
     const p = packFor('en')
     expect(p.KO.sections.nps).toBe('National Pension Fund Reserves')
     expect(p.lever('us:reab').label).toBe('Reabsorption rate per year')
-    expect(p.preset('korea-central').name).toBe('Korea — central')
+    expect(p.preset('korea-central').name).toBe('Central — 20% by 2035')
     expect(p.group('Labor market')).toBe('Labor market')
   })
 

@@ -192,7 +192,7 @@ KOREA_DIFFUSION_LABOUR_PROVENANCE = {
 
 KOREA_PRESETS = {
     "korea-slow": Preset(
-        key="korea-slow", name="Korea — slow diffusion", blurb="Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
+        key="korea-slow", name="Slow adoption — 10% of exposed work by 2035", blurb="Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
         adoption_start=0.005, adoption_end=0.10, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={
@@ -204,7 +204,7 @@ KOREA_PRESETS = {
                             "realized displacement of HELC jobs to ~10% by 2035",
         }),
     "korea-central": Preset(
-        key="korea-central", name="Korea — central", blurb="US-observed early adoption discounted for Korea's SME lag, reaching 20% of exposed work by 2035.",
+        key="korea-central", name="Central — 20% by 2035", blurb="US-observed early adoption discounted for Korea's SME lag, reaching 20% of exposed work by 2035.",
         adoption_start=0.01, adoption_end=0.20, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={
@@ -214,7 +214,7 @@ KOREA_PRESETS = {
                             "automatable within 10y → 0.20 with the Korea adoption lag",
         }),
     "korea-fast": Preset(
-        key="korea-fast", name="Korea — fast catch-up", blurb="Half of feasible automation realized by 2035, with Korea's ICT readiness driving a fast catch-up.",
+        key="korea-fast", name="Rapid adoption — 40% by 2035", blurb="Half of feasible automation realized by 2035, with Korea's ICT readiness driving a fast catch-up.",
         adoption_start=0.02, adoption_end=0.40, n_periods=10, overrides=dict(KOREA_DIFFUSION_LABOUR),
         adoption_reach_year=9,
         provenance={

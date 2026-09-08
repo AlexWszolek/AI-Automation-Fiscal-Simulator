@@ -252,7 +252,7 @@
  "presets": [
   {
    "key": "korea-slow",
-   "name": "Korea — slow diffusion",
+   "name": "Slow adoption — 10% of exposed work by 2035",
    "blurb": "Slow diffusion, where SME lag holds realized displacement of exposed work to 10% by 2035.",
    "display_periods": 10,
    "defaults": {
@@ -290,7 +290,7 @@
   },
   {
    "key": "korea-central",
-   "name": "Korea — central",
+   "name": "Central — 20% by 2035",
    "blurb": "US-observed early adoption discounted for Korea's SME lag, reaching 20% of exposed work by 2035.",
    "display_periods": 10,
    "defaults": {
@@ -328,7 +328,7 @@
   },
   {
    "key": "korea-fast",
-   "name": "Korea — fast catch-up",
+   "name": "Rapid adoption — 40% by 2035",
    "blurb": "Half of feasible automation realized by 2035, with Korea's ICT readiness driving a fast catch-up.",
    "display_periods": 10,
    "defaults": {
