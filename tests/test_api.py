@@ -212,3 +212,46 @@ def test_korea_tornado_static_equals_live(client, korea_ready):
     assert live == static
     junk = client.post("/api/korea/tornado", json={"n": "lots", "levers": {"x": 1}})
     assert junk.status_code == 200 and junk.json()["config"]["n"] == 150
+
+
+def test_korea_tornado_never_blocks_runs_and_superseded_requests_skip(monkeypatch):
+    """The org reported >1s per lever: a live tornado (seconds of MC on the production box)
+    held the single service lock, so every slider run queued behind it. Runs and tornados
+    now own separate pools and locks, and a queued tornado a newer request has superseded
+    returns without computing. Timing-based, with the model calls stubbed out."""
+    import threading
+    import time
+
+    import api.korea as korea_api
+
+    def slow_mc(cfg, n, **pools):
+        time.sleep(0.4)
+        return {"config": {"levers": cfg["levers"], "n": n}, "base": {}, "targets": {}}
+
+    monkeypatch.setattr(korea_api, "korea_mc_tornado", slow_mc)
+    monkeypatch.setattr(korea_api, "build_korea_scenario_payload",
+                        lambda cfg, **pools: {"config": cfg, "final": {}})
+    svc = korea_api.KoreaScenarioService()
+    svc._deltas = object()                                  # never build the real table
+
+    results: dict[str, dict] = {}
+
+    def tornado(tag, weeks):
+        results[tag] = svc.tornado({"levers": {"ui_weeks": weeks}}, 150)
+
+    a = threading.Thread(target=tornado, args=("a", 30)); a.start()
+    time.sleep(0.05)                                        # A is inside the 0.4s MC
+    t0 = time.perf_counter()
+    out = svc.run({"levers": {"ui_weeks": 31}})
+    assert out["config"]["levers"] == {"ui_weeks": 31}
+    assert time.perf_counter() - t0 < 0.2, "a run waited behind the tornado"
+
+    b = threading.Thread(target=tornado, args=("b", 32)); b.start()
+    time.sleep(0.05)
+    c = threading.Thread(target=tornado, args=("c", 33)); c.start()
+    for t in (a, b, c):
+        t.join(timeout=5)
+    assert results["a"]["config"]["levers"] == {"ui_weeks": 30}
+    # exactly one of the two queued requests computed — the newest — the other skipped
+    assert results["b"] is korea_api.SUPERSEDED
+    assert results["c"]["config"]["levers"] == {"ui_weeks": 33}

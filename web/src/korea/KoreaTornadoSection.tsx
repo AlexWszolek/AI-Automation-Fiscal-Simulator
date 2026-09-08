@@ -20,7 +20,10 @@ interface TornadoData {
 }
 
 const staticCache = new Map<string, TornadoData>()
-const DEBOUNCE_MS = 1000
+// a live tornado is seconds of MC on the server: wait for the user to stop moving
+// sliders before asking for one (runs no longer queue behind it, but every request
+// still costs the box)
+const DEBOUNCE_MS = 2000
 
 export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: LocalePack }) {
   const KO = pack.KO

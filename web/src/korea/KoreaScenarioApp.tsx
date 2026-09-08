@@ -107,6 +107,13 @@ export default function KoreaScenarioApp() {
     fetch('/data/korea-sido-topo.json').then((r) => (r.ok ? r.json() : null))
       .then(setTopo).catch(() => setTopo(null))
   }, [])
+  // the map does not depend on the levers: a stable spec identity keeps ChartPanel from
+  // re-running vega over the topojson on every payload (a visible chunk of each lever's
+  // latency was this re-parse, not the model)
+  const mapSpec = useMemo(
+    () => (regions && topo ? koreaGeoMap(regions, topo, { tips: KO.tooltips }) : null),
+    [regions, topo, KO],
+  )
 
   return (
     <div className="shell">
@@ -334,15 +341,14 @@ export default function KoreaScenarioApp() {
               />
             </div>
 
-            {regions && topo && (
+            {mapSpec && (
               <div className="col-wide korea-map-section">
                 <div className="korea-map-text">
                   <h2>{KO.sections.map}</h2>
                   <p className="caption">{KO.captions.map}</p>
                 </div>
                 <div className="korea-map-chart">
-                  <ChartPanel spec={koreaGeoMap(regions, topo,
-                    { tips: KO.tooltips })} />
+                  <ChartPanel spec={mapSpec} />
                 </div>
               </div>
             )}

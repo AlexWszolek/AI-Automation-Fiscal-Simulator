@@ -82,7 +82,12 @@ def create_app(backend=None) -> FastAPI:
     def korea_tornado(body: dict) -> dict:
         n = body.get("n")
         n = int(n) if isinstance(n, (int, float)) and 50 <= int(n) <= 400 else 150
-        return state["korea"].tornado(body, n)
+        out = state["korea"].tornado(body, n)
+        if out.get("superseded"):
+            # a newer tornado request arrived while this one waited; the page shows only
+            # the latest, so this one is not worth the seconds of MC
+            raise HTTPException(status_code=409, detail="superseded by a newer request")
+        return out
 
     @app.post("/api/tornado")
     def tornado(body: dict) -> dict:
