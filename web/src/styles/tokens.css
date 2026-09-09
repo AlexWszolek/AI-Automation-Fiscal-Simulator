@@ -19,9 +19,11 @@
   --accent: #2c5f8a;          /* interactive only: focus, links, slider thumb */
 
   /* type: Charter (system on Apple; Charis SIL is the vendored webfont sibling) +
-     Source Code Pro for every number */
+     a plain sans for every number */
   --font-serif: Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', serif;
-  --font-mono: 'Source Code Pro', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  /* numbers: a plain sans (tabular figures where the browser has them) — the mono face
+     was retired 2026-09-09; the token keeps its name so no rule had to move */
+  --font-mono: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans KR', sans-serif;
 
   /* layout */
   --col: 720px;               /* prose + metric column */

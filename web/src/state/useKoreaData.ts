@@ -10,7 +10,8 @@ export interface KoreaBundle {
            years_forward_lo: number; years_forward_hi: number }
     nps: { published_depletion: number; pre_reform_depletion: number; bought_years: number;
            given_back_central: number; given_back_central_lo: number;
-           given_back_central_hi: number; given_back_lo: number; given_back_hi: number }
+           given_back_central_hi: number; given_back_lo: number; given_back_hi: number;
+           eroded_year_central: number | null }
     ei: { planned_2029_tn: number; shortfall_central_tn: number;
           shortfall_lo_tn: number; shortfall_hi_tn: number }
   }

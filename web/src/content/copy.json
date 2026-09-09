@@ -2,7 +2,6 @@
  "korea": {
   "title": "Fiscal Consequences of AI Automation",
   "intro": "This is a bottom-up accounting model of what AI automation does to Korea's public finances. To use this model, pick a scenario from the sidebar (each one is a published AI forecast) or set your own levers. Every number on this page is a change against a no-AI baseline, with NABO's projections coming first, and this adds to them. What the model shows is the tax base moving from wages and labor to profits, prices and compute, which are taxed at significantly lower rates. This disproportionately impacts the National Pension, Health Insurance, and Employment Insurance funds, which are funded exclusively by income and payroll tax.",
-  "disclosure_note": "All numbers are net of re-employment and demand effects, and include EI benefit outlays. AGI scenarios only cover cognitive work, meaning that they understate displacement in manual occupations, and every headline is quoted as a range.",
   "sections": {
    "nps": "National Pension Fund Reserves",
    "nhi": "Health Insurance Fund Reserves",
@@ -38,7 +37,7 @@
    "band": "Automation band"
   },
   "metrics": {
-   "nps": "Of the pension reform's 8 bought years, automation takes back",
+   "nps": "When the pension fund depletes",
    "nhi": "Health fund depletion",
    "ei": "Employment Insurance shortfall by 2029",
    "contrast_a": "White-collar automation only",
@@ -127,7 +126,7 @@
     }
    },
    "preset_heading": "Scenario preset",
-   "agi_disclosure": "This scenario only covers cognitive work, since there is no published Korean robot-exposure data, so it understates displacement in manual occupations.",
+   "agi_disclosure": "This scenario uses cognitive-exposure measures from the BOK, but robot-exposure measures from the US, since there is no published Korean robot-exposure data.",
    "api_down": "Custom settings need the compute service, which is not reachable; showing the closest preset instead. Preset browsing works fully offline.",
    "demography_options": {
     "-1": "저위 (low)",
@@ -137,7 +136,7 @@
   },
   "tornado_targets": {
    "ei_shortfall_tn": "Employment Insurance shortfall by 2029 (₩tn)",
-   "nps_given_back": "Pension years given back",
+   "nps_given_back": "Years the pension depletion comes forward",
    "nhi_years_forward": "Health fund depletion pulled forward (yrs)"
   },
   "overlays": {
@@ -154,8 +153,8 @@
    "nps_readout": "The 20% is illustrative."
   },
   "templates": {
-   "nps_value": "{v} of 8 yrs",
-   "nps_ground": "reform moved depletion 2057 → 2065 · eroded {d}",
+   "nps_value": "{y}",
+   "nps_ground": "published {pub} · automation brings it forward {v} years",
    "nhi_value": "{v} yrs earlier",
    "nhi_ground": "published depletion {pub} · eroded {d}",
    "ei_value": "₩{v}tn short",
@@ -180,14 +179,12 @@
    "conventions_medium": "The model covers cognitive work only. Demography follows the published KOSIS medium scenario. The fiscal gap is reported and never closed.",
    "conventions_offmedium": "The model covers cognitive work only. Demography follows the published KOSIS {variant} scenario, which varies the model's workforce path only, since the published fund baselines embed NABO's own demographic assumptions. The fiscal gap is reported and never closed.",
    "band_note": "The envelope combines the exposure reading and the wage-linked share bands at the current lever settings. Spread across scenarios lives in the preset picker, not in this envelope.",
-   "p_nps_value": "{v} of {n} yrs",
-   "p_nps_ground": "band {lo}–{hi} · reform moved depletion {pre} → {pub}",
+   "p_nps_value": "{y}",
+   "p_nps_ground": "published {pub} · {v} years earlier, band {lo}–{hi}",
    "p_nhi_ground": "band {lo}–{hi} · published depletion {pub}",
    "p_ei_ground": "band ₩{lo}–{hi}tn vs the planned ₩{plan}tn rebuild by 2029",
    "model_config": "Model config: {chain}. Central = {central}. Band = {band}. Adoption: {adoption}.",
-   "deck_footer": "DRAFT · numbers final and test-pinned · copy pending review",
    "deck_help": "← → to navigate · slide {i} of {n} · append ?slide=N for the 1920×1080 export view",
-   "draft_banner": "DRAFT — copy is ported/short-written pending Alex's review; numbers are final and test-pinned.",
    "bundle_failed": "The Korea data bundle could not be loaded. If this is a fresh deployment, run scripts/gen_korea_bundle.py and redeploy.",
    "corp_readout": "₩{v}tn/yr transferred · recovers {nps} pension years, {nhi} health years, and ₩{ei}tn of the EI shortfall · costs the general account ₩{cost}tn in the final year"
   },

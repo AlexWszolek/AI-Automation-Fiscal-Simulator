@@ -8,7 +8,7 @@ export const TOKENS = {
   bad: '#8c2f28',
   good: '#5b7c99',
   serif: "Charter, 'Bitstream Charter', 'Charis SIL', 'XCharter', serif",
-  mono: "'Source Code Pro', ui-monospace, 'SF Mono', Menlo, Consolas, monospace",
+  mono: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans KR', sans-serif",
 } as const
 
 export const PALETTE = ['#3b6ea5', '#d9a441', '#4e937a', '#b3554d', '#7d6ca3', '#6b7b8c', '#a98467']

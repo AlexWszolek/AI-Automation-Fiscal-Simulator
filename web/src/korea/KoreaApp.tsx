@@ -2,7 +2,7 @@
 // app's codec/state). Presenter-proof by construction: no levers, the uncertainty band is
 // always drawn, and the sources & disclosures panel is part of the page, not a tooltip.
 // ALL user-facing text on this page is provisional until Alex's copy pass (copy.json →
-// "korea"); the draft banner stays until that lands.
+// "korea").
 import { useEffect, useState } from 'react'
 import { ChartPanel } from '../components/ChartPanel'
 import { compositionBars, contrastBars, fundBand, koreaGeoMap } from '../charts/korea'
@@ -17,7 +17,6 @@ function fmt(template: string, vars: Record<string, string | number>): string {
 interface KoreaCopy {
   title: string
   intro: string
-  disclosure_note: string
   sections: Record<string, string>
   captions: Record<string, string>
   series: { published: string; eroded: string; band: string }
@@ -59,10 +58,8 @@ export default function KoreaApp() {
       <main className="content korea-content">
         <div className="col-wide">
           <LangToggle lang={lang} setLang={setLang} />
-          <p className="panel caption draft-banner">{T.draft_banner}</p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
-          <p className="panel caption">{KO.disclosure_note}</p>
         </div>
 
         {failed && (
@@ -75,12 +72,12 @@ export default function KoreaApp() {
               <div className="metric-row heroes korea-heroes">
                 <Metric
                   label={KO.metrics.nps}
-                  value={fmt(T.p_nps_value, { v: yearsFmt(bundle.headlines.nps.given_back_central),
-                                              n: bundle.headlines.nps.bought_years })}
-                  ground={fmt(T.p_nps_ground, { lo: yearsFmt(bundle.headlines.nps.given_back_lo),
-                    hi: yearsFmt(bundle.headlines.nps.given_back_hi),
-                    pre: bundle.headlines.nps.pre_reform_depletion,
-                    pub: bundle.headlines.nps.published_depletion })}
+                  value={fmt(T.p_nps_value, { y: bundle.headlines.nps.eroded_year_central
+                                              ?? bundle.headlines.nps.published_depletion })}
+                  ground={fmt(T.p_nps_ground, { pub: bundle.headlines.nps.published_depletion,
+                    v: yearsFmt(bundle.headlines.nps.given_back_central),
+                    lo: yearsFmt(bundle.headlines.nps.given_back_lo),
+                    hi: yearsFmt(bundle.headlines.nps.given_back_hi) })}
                 />
                 <Metric
                   label={KO.metrics.nhi}

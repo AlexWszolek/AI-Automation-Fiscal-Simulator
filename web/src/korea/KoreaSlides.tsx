@@ -107,10 +107,10 @@ export default function KoreaSlides() {
           <p className="slide-intro">{KO.intro}</p>
           <div className="metric-row heroes korea-heroes slide-heroes">
             <Hero label={KO.metrics.nps}
-                  value={fmt(T.p_nps_value, { v: h.nps.given_back_central.toFixed(1), n: h.nps.bought_years })}
-                  ground={fmt(T.p_nps_ground, { lo: h.nps.given_back_lo.toFixed(1),
-                    hi: h.nps.given_back_hi.toFixed(1), pre: h.nps.pre_reform_depletion,
-                    pub: h.nps.published_depletion })} />
+                  value={fmt(T.p_nps_value, { y: f.nps.eroded_date != null ? Math.floor(f.nps.eroded_date) : h.nps.published_depletion })}
+                  ground={fmt(T.p_nps_ground, { pub: h.nps.published_depletion,
+                    v: h.nps.given_back_central.toFixed(2), lo: h.nps.given_back_lo.toFixed(1),
+                    hi: h.nps.given_back_hi.toFixed(1) })} />
             <Hero label={KO.metrics.nhi}
                   value={fmt(T.nhi_value, { v: h.nhi.years_forward_central.toFixed(2) })}
                   ground={fmt(T.p_nhi_ground, { lo: h.nhi.years_forward_lo.toFixed(2),
@@ -120,7 +120,6 @@ export default function KoreaSlides() {
                   ground={fmt(T.p_ei_ground, { lo: h.ei.shortfall_lo_tn.toFixed(1),
                     hi: h.ei.shortfall_hi_tn.toFixed(1), plan: h.ei.planned_2029_tn.toFixed(1) })} />
           </div>
-          <p className="caption slide-note">{KO.disclosure_note}</p>
         </div>
       ) },
       { key: 'nps', body: (
@@ -163,7 +162,7 @@ export default function KoreaSlides() {
                   <td className="scenario-name">{p.name}</td>
                   <td>{pay.final.nhi_years_forward.toFixed(2)} yrs</td>
                   <td>₩{pay.final.ei_shortfall_tn.toFixed(1)}tn</td>
-                  <td>{pay.final.nps_given_back.toFixed(2)} of 8</td>
+                  <td>{pay.funds.nps.eroded_date != null ? Math.floor(pay.funds.nps.eroded_date) : '—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -227,7 +226,7 @@ export default function KoreaSlides() {
       <div className="slide export" style={{ width: SLIDE_W, height: SLIDE_H }}>
         {s.body}
         <div className="slide-footer caption">
-          <span>{T.deck_footer}</span>
+          <span>{KO.title}</span>
           <span className="num">{exportSlide} / {slides.length}</span>
         </div>
       </div>
@@ -244,7 +243,7 @@ export default function KoreaSlides() {
                                         transform: `scale(${scale})` }}>
           {slides[active].body}
           <div className="slide-footer caption">
-            <span>{T.deck_footer}</span>
+            <span>{KO.title}</span>
             <span className="num">{active + 1} / {slides.length}</span>
           </div>
         </div>

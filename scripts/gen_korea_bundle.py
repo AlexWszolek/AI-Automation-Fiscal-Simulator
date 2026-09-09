@@ -132,6 +132,9 @@ def main() -> None:
                 "pre_reform_depletion": 2057,
                 "bought_years": 8,
                 "given_back_central": round(central["nps"]["years_pulled_forward"], 2),
+                # the calendar year the eroded path first goes negative (the hero shows WHEN)
+                "eroded_year_central": int(central["nps"]["eroded_date"] // 1)
+                if central["nps"].get("eroded_date") is not None else None,
                 "given_back_central_lo": round(min(nps_central), 2),
                 "given_back_central_hi": round(max(nps_central), 2),
                 "given_back_lo": round(min(nps_years), 2),

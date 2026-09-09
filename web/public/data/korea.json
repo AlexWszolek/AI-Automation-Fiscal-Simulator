@@ -19,6 +19,7 @@
    "pre_reform_depletion": 2057,
    "bought_years": 8,
    "given_back_central": 0.19,
+   "eroded_year_central": 2065,
    "given_back_central_lo": 0.16,
    "given_back_central_hi": 0.22,
    "given_back_lo": 0.08,

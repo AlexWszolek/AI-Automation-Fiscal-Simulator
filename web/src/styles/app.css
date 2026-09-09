@@ -2,7 +2,7 @@
 @import './tokens.css';
 
 /* Charis SIL: the Bitstream Charter sibling, vendored so every platform gets the Charter
-   look (Apple systems use their shipped Charter first). Source Code Pro carries the numbers. */
+   look (Apple systems use their shipped Charter first). A plain sans carries the numbers. */
 @font-face {
   font-family: 'Charis SIL';
   src: url('/fonts/charis-400.woff2') format('woff2');
@@ -14,20 +14,6 @@
   font-family: 'Charis SIL';
   src: url('/fonts/charis-700.woff2') format('woff2');
   font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Source Code Pro';
-  src: url('/fonts/scp-400.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Source Code Pro';
-  src: url('/fonts/scp-600.woff2') format('woff2');
-  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }

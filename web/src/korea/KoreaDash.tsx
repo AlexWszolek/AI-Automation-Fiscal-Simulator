@@ -151,8 +151,10 @@ export default function KoreaDash() {
                     ground={fmt(T.ei_ground, {
                       plan: payload.funds.ei.published[payload.funds.ei.published.length - 1].toFixed(1) })} />
               <Tile icon="pillars" label={KO.metrics.nps}
-                    value={fmt(T.nps_value, { v: yearsFmt(payload.final.nps_given_back) })}
-                    ground={fmt(T.nps_ground, { d: payload.funds.nps.eroded_date ?? '—' })} />
+                    value={fmt(T.nps_value, { y: payload.funds.nps.eroded_date != null
+                      ? Math.floor(payload.funds.nps.eroded_date) : (payload.funds.nps.published_depletion ?? '—') })}
+                    ground={fmt(T.nps_ground, { pub: payload.funds.nps.published_depletion ?? '—',
+                      v: yearsFmt(payload.final.nps_given_back) })} />
             </div>
             <div className="dash-chart">
               <ChartPanel
@@ -165,7 +167,7 @@ export default function KoreaDash() {
         </div>
       )}
 
-      <footer className="dash-foot caption">{T.deck_footer}</footer>
+      <footer className="dash-foot caption">{KO.title}</footer>
     </div>
   )
 }

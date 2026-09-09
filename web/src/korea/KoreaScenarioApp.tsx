@@ -272,10 +272,8 @@ export default function KoreaScenarioApp() {
 
       <main className="content">
         <div className="col-wide">
-          <p className="panel caption draft-banner">{T.draft_banner}</p>
           <h1>{KO.title}</h1>
           <p>{KO.intro}</p>
-          <p className="panel caption">{KO.disclosure_note}</p>
           {apiDown && <p className="panel caption warning api-banner" role="alert">{KO.rail.api_down}</p>}
           {payload && payload.config.modified_fields.length > 0 && (
             <p className="panel caption modified-note">
@@ -294,8 +292,10 @@ export default function KoreaScenarioApp() {
               <div className="metric-row heroes korea-heroes">
                 <Metric
                   label={KO.metrics.nps}
-                  value={fmt(T.nps_value, { v: yearsFmt(payload.final.nps_given_back) })}
-                  ground={fmt(T.nps_ground, { d: payload.funds.nps.eroded_date ?? '—' })}
+                  value={fmt(T.nps_value, { y: payload.funds.nps.eroded_date != null
+                    ? Math.floor(payload.funds.nps.eroded_date) : (payload.funds.nps.published_depletion ?? '—') })}
+                  ground={fmt(T.nps_ground, { pub: payload.funds.nps.published_depletion ?? '—',
+                    v: yearsFmt(payload.final.nps_given_back) })}
                 />
                 <Metric
                   label={KO.metrics.nhi}
