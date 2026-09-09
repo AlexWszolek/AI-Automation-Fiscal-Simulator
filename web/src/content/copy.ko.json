@@ -220,6 +220,40 @@
    "workers": "백만 명",
    "tn_year": "연간 ₩조",
    "wage_index": "임금지수 (1.0 = 기준선)"
+  },
+  "revenue_table": {
+   "title": "세원별 세수 변화",
+   "caption": "각 세목의 기준선 세수와 본 시나리오에서의 변화, 그리고 그 재원이 귀속되는 곳을 보여줍니다. 노동에 부과되는 세목은 기금에 특정 목적으로 귀속되고 법인세는 일반회계로 귀속되며, 입법 없이는 둘 사이에 재원이 이동하지 않습니다.",
+   "columns": {
+    "line": "세목",
+    "baseline": "모형 기준선 ₩조",
+    "mix": "총조세 대비 비중 (OECD 2024)",
+    "final": "{y}년 변화 ₩조",
+    "cum": "{y0}–{y}년 변화 ₩조",
+    "dest": "귀속"
+   },
+   "lines": {
+    "contributions": "사회보험료",
+    "income_tax": "소득세(국세)",
+    "survivor_income_tax": "계속 취업자 임금 인상분 소득세",
+    "local_income": "지방소득세",
+    "vat": "부가가치세",
+    "corporate": "자동화 이윤에 대한 법인세",
+    "ei_outlays": "고용보험 구직급여 지출",
+    "other_transfers": "기타 이전지출",
+    "recapture_transfer": "기금으로의 환수분 이전"
+   },
+   "dest": {
+    "funds": "사회보험 기금",
+    "general": "일반회계",
+    "local": "지방정부"
+   },
+   "subtotals": {
+    "funds": "사회보험 기금",
+    "general": "일반회계",
+    "local": "지방정부",
+    "net": "전체"
+   }
   }
  },
  "levers": {

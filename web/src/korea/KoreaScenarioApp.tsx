@@ -2,7 +2,7 @@
 // payload function behind the static bundles and /api/korea/run. The presenter view at
 // /korea.html stays untouched until this page graduates to the default Korea entry.
 // ALL user-facing text is provisional until Alex's copy pass (copy.json → "korea").
-import { useEffect, useMemo, useReducer, useState } from 'react'
+import { Fragment, useEffect, useMemo, useReducer, useState } from 'react'
 import { fundBand, compositionBars, koreaGeoMap } from '../charts/korea'
 import { NEG, PALETTE } from '../charts/palette'
 import { timeSeries } from '../charts/timeSeries'
@@ -18,7 +18,7 @@ import {
 import { LangToggle } from './LangToggle'
 import { useLocale } from './locale'
 import { KoreaTornadoSection } from './KoreaTornadoSection'
-import { useKoreaScenarioData, type KoreaFundJson } from './useKoreaScenarioData'
+import { useKoreaScenarioData, type KoreaFundJson, type KoreaScenarioPayload } from './useKoreaScenarioData'
 
 
 const WF_COLORS = ['#c9d7e4', '#d9a441', '#b3554d', '#5b7c99', '#7d6ca3', '#8f2a1d', '#b9b2a6']
@@ -44,6 +44,85 @@ function toFund(f: KoreaFundJson) {
 
 function yearsFmt(v: number) {
   return v.toFixed(v >= 1 ? 1 : 2)
+}
+
+type RevenueLine = KoreaScenarioPayload['revenue_lines'][number]
+
+// Revenue by source: the thesis as a table. Lines grouped by where the money lands, a
+// subtotal per destination, and an all-levels net — signed, loss hue on losses.
+function RevenueTable({ lines, copy, y0, y }:
+                      { lines: RevenueLine[]; copy: any; y0: number; y: number }) {
+  const signed = (v: number) => (v > 0 ? '+' : '') + v.toFixed(1)
+  const tone = (v: number) => (v < -0.05 ? { color: 'var(--bad)' } : v > 0.05 ? { color: 'var(--good)' } : undefined)
+  const groups: RevenueLine['dest'][] = ['funds', 'general', 'local']
+  const sum = (ls: RevenueLine[], k: 'final_tn' | 'cum_tn') => ls.reduce((a, l) => a + l[k], 0)
+  const shown = lines.filter((l) => l.kind !== 'transfer')
+  const transfer = lines.find((l) => l.kind === 'transfer')
+  return (
+    <div className="col-wide revenue-table">
+      <h2>{copy.title}</h2>
+      <div className="table-scroll">
+        <table className="data-table summary-table">
+          <thead>
+            <tr>
+              <th>{copy.columns.line}</th>
+              <th className="num">{copy.columns.baseline}</th>
+              <th className="num">{copy.columns.mix}</th>
+              <th className="num">{fmt(copy.columns.final, { y })}</th>
+              <th className="num">{fmt(copy.columns.cum, { y0, y })}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {groups.map((g) => {
+              const ls = shown.filter((l) => l.dest === g)
+              return (
+                <Fragment key={g}>
+                  <tr className="group-row"><td colSpan={5}>{copy.subtotals[g]}</td></tr>
+                  {ls.map((l) => (
+                    <tr key={l.key}>
+                      <td className="row-label">{copy.lines[l.key] ?? l.key}</td>
+                      <td className="num">{l.baseline_tn != null ? l.baseline_tn.toFixed(1) : '—'}</td>
+                      <td className="num">{l.mix_pct != null ? `${l.mix_pct.toFixed(1)}%` : '—'}</td>
+                      <td className="num" style={tone(l.final_tn)}>{signed(l.final_tn)}</td>
+                      <td className="num" style={tone(l.cum_tn)}>{signed(l.cum_tn)}</td>
+                    </tr>
+                  ))}
+                  {transfer && (g === 'funds' || g === 'general') && (
+                    <tr key={`${g}-transfer`}>
+                      <td className="row-label">{copy.lines.recapture_transfer}</td>
+                      <td className="num">—</td>
+                      <td className="num">—</td>
+                      <td className="num" style={tone(g === 'funds' ? transfer.final_tn : -transfer.final_tn)}>
+                        {signed(g === 'funds' ? transfer.final_tn : -transfer.final_tn)}</td>
+                      <td className="num" style={tone(g === 'funds' ? transfer.cum_tn : -transfer.cum_tn)}>
+                        {signed(g === 'funds' ? transfer.cum_tn : -transfer.cum_tn)}</td>
+                    </tr>
+                  )}
+                  <tr className="emph">
+                    <td className="row-label">{copy.subtotals[g]}</td>
+                    <td className="num"></td>
+                    <td className="num"></td>
+                    <td className="num" style={tone(sum(ls, 'final_tn') + (transfer ? (g === 'funds' ? transfer.final_tn : g === 'general' ? -transfer.final_tn : 0) : 0))}>
+                      {signed(sum(ls, 'final_tn') + (transfer ? (g === 'funds' ? transfer.final_tn : g === 'general' ? -transfer.final_tn : 0) : 0))}</td>
+                    <td className="num" style={tone(sum(ls, 'cum_tn') + (transfer ? (g === 'funds' ? transfer.cum_tn : g === 'general' ? -transfer.cum_tn : 0) : 0))}>
+                      {signed(sum(ls, 'cum_tn') + (transfer ? (g === 'funds' ? transfer.cum_tn : g === 'general' ? -transfer.cum_tn : 0) : 0))}</td>
+                  </tr>
+                </Fragment>
+              )
+            })}
+            <tr className="emph">
+              <td className="row-label">{copy.subtotals.net}</td>
+              <td className="num"></td>
+              <td className="num"></td>
+              <td className="num" style={tone(sum(shown, 'final_tn'))}>{signed(sum(shown, 'final_tn'))}</td>
+              <td className="num" style={tone(sum(shown, 'cum_tn'))}>{signed(sum(shown, 'cum_tn'))}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="caption">{copy.caption}</p>
+    </div>
+  )
 }
 
 // tone: 'bad' paints the value in the loss hue (tokens: red = fiscally bad); the demography
@@ -105,6 +184,7 @@ export default function KoreaScenarioApp() {
     [payload],
   )
   const instLabel = (k: string) => KO.institutions[k] ?? k
+  const finalYear = (payload?.config.start_year ?? 2026) + (payload?.config.display_periods ?? 10) - 1
   const [regions, setRegions] = useState<import('../charts/korea').KoreaRegionRow[] | null>(null)
   const [topo, setTopo] = useState<object | null>(null)
   useEffect(() => {
@@ -297,6 +377,9 @@ export default function KoreaScenarioApp() {
                 })}
               </div>
             )}
+
+            <RevenueTable lines={payload.revenue_lines} copy={KO.revenue_table}
+                          y0={payload.config.start_year} y={finalYear} />
 
             <div className="col-wide chart-grid">
               <ChartPanel

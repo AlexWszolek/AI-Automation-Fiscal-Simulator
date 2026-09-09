@@ -175,6 +175,71 @@ def _korea_v2p(preset: str, levers: dict):
     return v2p
 
 
+# Share of Korea's total taxation by line, OECD Revenue Statistics 2024 (docs/research/
+# korea-fiscal-system.md §1: social security contributions 30.2%, personal income tax 20.1%,
+# corporate 14.4%, VAT 15.3%). The frame behind the thesis sentence; reference only.
+KR_TAX_MIX_OECD_2024 = {"contributions": 30.2, "income_tax": 20.1, "corporate": 14.4, "vat": 15.3}
+
+
+def _revenue_lines(data, rows: list, ur: dict, display_n: int) -> list:
+    """Revenue by source — the thesis as a table. Each line: the MODELED base (the ledger's
+    own receipts: contributions and income tax computed from the 12.4M wage-worker cells,
+    corporate and VAT the 2025 NABO 실적), the line's share of Korea's total taxation (OECD
+    Revenue Statistics 2024 — the frame the "30% / 20%" thesis sentence uses, kept separate
+    from the modeled base because the two frames differ), the final-year and cumulative
+    change over the display window (signed: gains +, losses and outlays −), and where the
+    money lands — the earmarked funds, the general account, or local government. Identities
+    pinned in tests: the general+funds lines sum to −fed_deficit_B (before any recapture
+    transfer) and the VAT+local lines sum to −state_gap_B, so nothing is double-counted.
+    Note the engine books VAT and the local surtax on its 'state' tier (Korea has no state
+    tier), so fed_deficit_B alone is NOT the general account: this table's subtotals are."""
+    rec = data.receipts.set_index("maps_to_base")["amount_busd"]        # ₩bn
+    base = {
+        "contributions": float(rec["Social insurance (payroll)"]),
+        "income_tax": float(rec["Labor income"]),
+        "local_income": float(rec["Labor income (local surtax)"]),
+        "vat": float(rec["Consumption"]),
+        "corporate": float(rec["Corporate profits"]),
+    }
+    disp = rows[:display_n]
+    def col(name):
+        return np.array([float(r.get(name, 0.0)) for r in disp])
+    tr = (ur["transfer_tn"][:display_n] * 1000.0 if ur.get("transfer_tn") is not None
+          else np.zeros(display_n))
+    # signed fiscal effect by line, ₩bn per year over the display window
+    effect = {
+        "contributions": -col("payroll_fed_loss_B"),
+        "income_tax": -col("inc_fed_loss_B"),
+        "survivor_income_tax": col("survivor_gain_fed_B"),
+        "local_income": -col("inc_state_loss_B") + col("survivor_gain_state_B"),
+        "vat": -col("cons_state_loss_B") + col("fed_vat_B"),
+        "corporate": (col("corp_offset_B") + col("survivor_overflow_corp_tax_B")
+                      + col("compute_pool_tax_B")),
+        "ei_outlays": -col("ui_outlay_fed_B"),
+        "other_transfers": -col("transfer_fed_B"),
+    }
+    dest = {"contributions": "funds", "income_tax": "general", "survivor_income_tax": "general",
+            "local_income": "local", "vat": "general", "corporate": "general",
+            "ei_outlays": "funds", "other_transfers": "general"}
+    kind = {k: ("outlay" if k in ("ei_outlays", "other_transfers") else "revenue") for k in effect}
+    out = []
+    for k, e in effect.items():
+        out.append({
+            "key": k, "dest": dest[k], "kind": kind[k],
+            "baseline_tn": round(base[k] / 1000.0, 1) if k in base else None,
+            "mix_pct": KR_TAX_MIX_OECD_2024.get(k),
+            "final_tn": round(float(e[-1]) / 1000.0, 2),
+            "cum_tn": round(float(e.sum()) / 1000.0, 2),
+        })
+    # the recapture transfer, when on: general account → funds, both sides shown
+    if float(np.abs(tr).sum()) > 0:
+        out.append({"key": "recapture_transfer", "dest": "funds", "kind": "transfer",
+                    "baseline_tn": None, "mix_pct": None,
+                    "final_tn": round(float(tr[-1]) / 1000.0, 2),
+                    "cum_tn": round(float(tr.sum()) / 1000.0, 2)})
+    return out
+
+
 def _shift(proj_fund: dict) -> float:
     """Years the eroded path pulls the published crossing forward; 0.0 when the eroded path
     no longer crosses inside the published window (a policy lever made the fund whole —
@@ -303,6 +368,8 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     jobs_lost_M = float(final["population_M"] - final["employed_M"]
                         - final["reabsorbed_M"] - final["retired_M"])
 
+    revenue_lines = _revenue_lines(data_pool[user_delta], rows, ur, display_n)
+
     default_axes = {"nhi_share": NHI_MID, "nps_share": NPS_MID, "exposure_delta": 0.0,
                     "demography_variant": 0.0, "vat_pp": 0.0,
                     "nps_mandate_share": 0.0, "corp_to_funds": 0.0}
@@ -410,6 +477,7 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
         "ei_outlay_tn": [round(float(v) / 1000.0, 3)
                          for v in bridge["ei_outlay_bn"][:len(EI_BASELINE.years)]],
         "policy_readouts": policy_readouts,
+        "revenue_lines": revenue_lines,
         "band_note": "The envelope combines the exposure reading and the wage-linked "
                      "share bands at the current lever settings. Spread across scenarios "
                      "lives in the preset picker, not in this envelope.",

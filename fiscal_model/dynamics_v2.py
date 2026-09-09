@@ -442,7 +442,9 @@ class DynamicModelV2:
                 ch["cons_state"] = ch["cons_state"] * km
 
             ui_outlay_fed = st.on_ui * v1.ui * v1.ui_share
-            ui_tax_fed = UI_FED_TAX_RATE * ui_outlay_fed      # income tax on UI benefits
+            # income tax on UI benefits — a US mechanic; Korea's 구직급여 is tax-exempt
+            # (country seam, so the US path and its config keys are untouched)
+            ui_tax_fed = (0.0 if self._country == "kr" else UI_FED_TAX_RATE) * ui_outlay_fed
             if im != 1.0:
                 ui_tax_fed = ui_tax_fed * im
 

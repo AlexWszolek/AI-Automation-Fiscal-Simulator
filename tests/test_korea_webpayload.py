@@ -278,3 +278,33 @@ def test_tornado_survives_rail_legal_exit_rates(pools):
                            n=30, **pools)
     assert "ei_shortfall_tn" in out["targets"] and len(out["targets"]["ei_shortfall_tn"]) > 5
     assert out["config"]["levers"]["lfp_exit_rate"] == 0.9
+
+
+def test_revenue_lines_reconcile_with_the_ledger(central, pools):
+    """Revenue by source is the same money the deficit lines carry, split by where it lands:
+    general + funds lines sum to −fed_deficit_B (no transfer in the pristine case) and the
+    VAT + local lines to −state_gap_B. Baselines are the ledger's own receipts."""
+    from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
+                                               sanitize_korea_config)
+    lines = {r["key"]: r for r in central["revenue_lines"]}
+    assert set(lines) == {"contributions", "income_tax", "survivor_income_tax", "local_income",
+                          "vat", "corporate", "ei_outlays", "other_transfers"}
+    final = central["rows"][-1]
+    national = sum(lines[k]["final_tn"] for k in ("contributions", "income_tax",
+                                                  "survivor_income_tax", "corporate",
+                                                  "ei_outlays", "other_transfers"))
+    assert national == pytest.approx(-final["fed_deficit_B"] / 1000.0, abs=0.02)
+    assert (lines["vat"]["final_tn"] + lines["local_income"]["final_tn"]
+            == pytest.approx(-final["state_gap_B"] / 1000.0, abs=0.02))
+    assert lines["contributions"]["dest"] == "funds" and lines["corporate"]["dest"] == "general"
+    assert lines["contributions"]["final_tn"] < 0 < lines["corporate"]["final_tn"]
+    assert lines["corporate"]["baseline_tn"] == 84.6 and lines["vat"]["baseline_tn"] == 79.2
+    assert lines["contributions"]["mix_pct"] == 30.2               # OECD 2024: the thesis frame
+    assert lines["income_tax"]["mix_pct"] == 20.1 and lines["ei_outlays"]["mix_pct"] is None
+    # Korea's 구직급여 is tax-exempt: no income tax booked on EI benefits
+    assert final["ui_tax_fed_B"] == 0.0
+    # the recapture transfer appears as its own line when the lever is on
+    corp = build_korea_scenario_payload(
+        sanitize_korea_config({"levers": {"corp_to_funds": 0.5}}), **pools)
+    keys = [r["key"] for r in corp["revenue_lines"]]
+    assert keys[-1] == "recapture_transfer" and corp["revenue_lines"][-1]["final_tn"] > 0

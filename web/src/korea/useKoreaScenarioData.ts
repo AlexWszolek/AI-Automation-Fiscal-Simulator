@@ -64,6 +64,15 @@ export interface KoreaScenarioPayload {
     ei_shortfall_recovered_tn?: number
     deficit_cost_final_tn?: number
   }[]
+  revenue_lines: {
+    key: string
+    dest: 'funds' | 'general' | 'local'
+    kind: 'revenue' | 'outlay' | 'transfer'
+    baseline_tn: number | null
+    mix_pct: number | null
+    final_tn: number
+    cum_tn: number
+  }[]
   band_note: string
 }
 
