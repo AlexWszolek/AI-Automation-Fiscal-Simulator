@@ -35,8 +35,8 @@ UI = [
     ("reab_wage_crowding",    "us:reab_crowd", "Labor market",          0.05,  "float"),
     ("lfp_exit_rate",         "kr:lfp_exit_rate",        "Labor market",          0.005, "float"),
     ("attrition_rate",        "us:attrition",  "Labor market",          0.005, "float"),
-    ("retained_profit_share", "us:retained",   "Firms",                 0.01,  "float"),
-    ("price_reduction_share", "us:price",      "Firms",                 0.01,  "float"),
+    ("retained_profit_share", "kr:retained_profit_share", "Firms",     0.01,  "float"),
+    ("price_reduction_share", "kr:price_reduction_share", "Firms",     0.01,  "float"),
     ("auto_cost",             "us:auto_cost",  "Firms",                 0.01,  "float"),
     ("survivor_elasticity",   "us:elasticity", "Survivor wages",        0.05,  "float"),
     ("survivor_raise_ceiling", "us:ceiling",    "Survivor wages",        0.05,  "float"),
@@ -47,7 +47,7 @@ UI = [
     ("productivity_passthrough", "us:prod_pt", "Macro & demand",        0.05,  "float"),
     ("baseline_growth_rate",  "us:growth",     "Macro & demand",        0.005, "float"),
     ("demand_multiplier",     "us:demand",     "Macro & demand",        0.05,  "float"),
-    ("automation_tax_rate",   "us:atax",       "Government policy",     0.01,  "float"),
+    ("automation_tax_rate",   "kr:automation_tax_rate", "Government policy", 0.01, "float"),
     ("vat_pp",                "kr:vat_pp",     "Government policy",     0.25,  "float"),
     ("nps_mandate_share",     "kr:nps_mandate_share", "Government policy", 0.05, "float"),
     ("corp_to_funds",         "kr:corp_to_funds", "Government policy",  0.05,  "float"),
@@ -89,6 +89,9 @@ def main() -> None:
             else:
                 defaults[name] = AXIS_DEFAULTS.get(name, getattr(v2p, name, None))
         defaults["ui_weeks"] = int(defaults["ui_weeks"])
+        # not a rail lever: the page uses it to show the exposure-source note where the
+        # physical channel is on
+        defaults["physical_feasibility"] = float(v2p.physical_feasibility)
         presets.append({"key": key, "name": p.name, "blurb": p.blurb,
                         "display_periods": p.n_periods, "defaults": defaults})
 

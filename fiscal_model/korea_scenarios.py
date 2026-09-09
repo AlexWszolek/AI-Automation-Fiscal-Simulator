@@ -194,6 +194,8 @@ KOREA_DIFFUSION_LABOUR = dict(
     retained_profit_share=0.6, price_reduction_share=0.2,
     survivor_elasticity=-0.15, auto_cost=0.10, demand_multiplier=0.5,
     price_passthrough=0.3, productivity_passthrough=0.3,
+    mpc=0.95, consumption_stickiness=1.0, reabsorption_rung=1,
+    reab_wage_baumol=0.0, reab_wage_crowding=0.0,
 )
 KOREA_DIFFUSION_LABOUR_PROVENANCE = {
     "physical_feasibility": "0 — the diffusion family is the AI-cognitive wave on the BOK "
@@ -213,6 +215,11 @@ KOREA_DIFFUSION_LABOUR_PROVENANCE = {
     "demand_multiplier": "US shipped convention 0.5, carried",
     "price_passthrough": "US shipped convention 0.3, carried",
     "productivity_passthrough": "US shipped convention 0.3, carried",
+    "mpc": "US shipped convention 0.95, carried (review 2026-09-09: sensitive)",
+    "consumption_stickiness": "US shipped convention 1.0, carried (sensitive)",
+    "reabsorption_rung": "rung 1 — the finite service-floor refuge, carried",
+    "reab_wage_baumol": "US shipped convention 0, carried (the ported presets set their own)",
+    "reab_wage_crowding": "US shipped convention 0, carried",
 }
 
 # Channels the engine carries for the US that have no Korean counterpart, switched OFF for
@@ -268,7 +275,9 @@ KOREA_PRESETS = {
     # carry over parametrically; cognitive_feasibility is NOT carried — the US presets
     # discount a broad exposure measure (cf × PCA composite), while Korea's exposure IS the
     # BOK displacement-prone classification, which already embeds the complementarity
-    # discount — carrying a second cf would double-discount. physical_feasibility stays
+    # discount — carrying a second cf would double-discount. physical_feasibility carries
+    # the US presets' ramps on Webb's robot share mapped onto KSCO majors (no Korean
+    # measure exists; disclosed) — it no longer stays
     # pinned at 0.0 (no Korean robot-exposure vector; disclosed). US-only fields (state
     # closure, US GRT compute rate, robotics_lag) are dropped. Calibration anchors are the
     # US papers' — carried parametrically onto Korean structure, disclosed per preset.
@@ -386,7 +395,7 @@ KOREA_PRESETS = {
     ),
     "korea-ai-2027": Preset(
         key="korea-ai-2027", name="AI 2027 — Fast takeoff",
-        blurb="Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here, since the model only covers cognitive work.",
+        blurb="Cognition automated almost immediately with heavy compute investment, and the scenario's robot economy on the US robot-exposure measure, since no Korean one exists.",
         adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
         overrides=dict(physical_feasibility=0.9, robotics_lag=3.0,
                        reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
@@ -398,9 +407,9 @@ KOREA_PRESETS = {
             physical_feasibility="robot economy: ~1M robots/mo by end-2028 (US preset, carried)",
             robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="Davidson: capability 20%→100% ~3y + diffusion → ceiling at year 5, "
-                     "flat after (§2⑦); BOK HELC base — COGNITIVE ONLY, so the scenario's "
-                     "robot economy (~1M robots/mo by 2028) is ABSENT: a deep understatement "
-                     "for this preset in particular",
+                     "flat after (§2⑦); BOK HELC base for cognitive exposure; the scenario's "
+                     "robot economy (~1M robots/mo by 2028) runs on the Webb (2020) robot "
+                     "share mapped onto KSCO majors — a US measure, since no Korean one exists",
             reabsorption_rate="little re-employment during takeoff (§2⑦)",
             reemployment_haircut="displaced land at the service floor (§2⑦)",
             lfp_exit_rate="elevated exit (§2⑦)",

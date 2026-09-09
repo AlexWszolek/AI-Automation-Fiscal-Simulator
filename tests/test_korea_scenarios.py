@@ -129,7 +129,8 @@ def test_translated_presets_follow_the_porting_discipline():
         p = KOREA_PRESETS[k]
         assert set(p.overrides) <= fields, f"{k}: unknown V2Params field"
         assert not set(p.overrides) & {"state_cut_share", "state_rate_hike_cap",
-                                       "compute_effective_rate"}, \
+                                       "compute_effective_rate", "shareholder_eff_rate",
+                                       "ssdi_annual"}, \
             f"{k}: US-only override ported by mistake"
         # the physical channel is wired (Webb robot share mapped onto KSCO majors,
         # korea_exposure.ROBOT_SHARE): every preset states its ramp explicitly
@@ -190,3 +191,21 @@ def test_band_covers_all_axes():
     for key, v in band.items():
         assert v["nhi_years_forward"] > 0.0, key
         assert v["ei_reserve_2029_shortfall_tn"] > 0.0, key
+
+
+def test_channel_conventions_hold_for_every_preset():
+    """The US-only channels are off beneath every Korea preset (korea_preset_params applies
+    KOREA_CHANNEL_CONVENTIONS under the overrides), and the diffusion trio names every field
+    its run is sensitive to — the review's one-at-a-time sweep found five more riding the
+    shipped defaults, now explicit."""
+    from fiscal_model.korea_assembly import korea_preset_params
+    from fiscal_model.korea_scenarios import (KOREA_CHANNEL_CONVENTIONS, KOREA_DIFFUSION_LABOUR,
+                                              KOREA_PRESETS)
+    for k in KOREA_PRESETS:
+        p = korea_preset_params(k, 10)
+        for f, v in KOREA_CHANNEL_CONVENTIONS.items():
+            assert getattr(p, f) == v, f"{k}: {f} = {getattr(p, f)}, convention {v}"
+    for f in ("mpc", "consumption_stickiness", "reabsorption_rung", "reab_wage_baumol",
+              "reab_wage_crowding", "ui_weeks", "physical_feasibility"):
+        assert f in KOREA_DIFFUSION_LABOUR
+

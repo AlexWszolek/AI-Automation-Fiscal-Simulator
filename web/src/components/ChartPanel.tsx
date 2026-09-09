@@ -33,7 +33,7 @@ export function ChartPanel({ spec, caption, title, lazy }: {
     if (!el.current) return
     // measure before the first embed: starting at 0 meant every chart embedded once at
     // width 0 and again at its real width (a full second vega pass on first paint)
-    setFitWidth(Math.round(el.current.getBoundingClientRect().width))
+    setFitWidth(Math.round(el.current.clientWidth))     // untransformed, like the observer
     let timer: ReturnType<typeof setTimeout> | undefined
     const ro = new ResizeObserver((entries) => {
       const w = Math.round(entries[0].contentRect.width)

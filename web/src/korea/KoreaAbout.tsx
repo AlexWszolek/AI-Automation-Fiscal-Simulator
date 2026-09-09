@@ -11,12 +11,19 @@ export function KoreaAbout({ copy, disclosures, conventions }:
   const dlg = useRef<HTMLDialogElement>(null)
   // ?about opens the dialog on load: a deep link to the methodology (and how the export
   // and screenshots reach it without a click)
+  const open = () => {
+    const d = dlg.current
+    if (d && typeof d.showModal === 'function' && !d.open) d.showModal()
+  }
   useEffect(() => {
-    if (new URLSearchParams(location.search).has('about')) dlg.current?.showModal()
+    // not on a phone: the rail body is display:none there, and a modal whose ancestor is
+    // hidden renders nothing while still making the page inert
+    const railVisible = !window.matchMedia('(max-width: 900px)').matches
+    if (railVisible && new URLSearchParams(location.search).has('about')) open()
   }, [])
   return (
     <div className="about-launch">
-      <button type="button" className="dl" onClick={() => dlg.current?.showModal()}>{copy.button}</button>
+      <button type="button" className="dl" onClick={open}>{copy.button}</button>
       <dialog ref={dlg}>
         <div className="dialog-head">
           <h3>{copy.title}</h3>

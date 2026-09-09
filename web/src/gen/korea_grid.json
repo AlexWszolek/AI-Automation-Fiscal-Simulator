@@ -75,7 +75,7 @@
   "retained_profit_share": {
    "lo": 0.0,
    "hi": 1.0,
-   "copy": "us:retained",
+   "copy": "kr:retained_profit_share",
    "group": "Firms",
    "kind": "float",
    "step": 0.01
@@ -83,7 +83,7 @@
   "price_reduction_share": {
    "lo": 0.0,
    "hi": 1.0,
-   "copy": "us:price",
+   "copy": "kr:price_reduction_share",
    "group": "Firms",
    "kind": "float",
    "step": 0.01
@@ -147,7 +147,7 @@
   "automation_tax_rate": {
    "lo": 0.0,
    "hi": 1.0,
-   "copy": "us:atax",
+   "copy": "kr:automation_tax_rate",
    "group": "Government policy",
    "kind": "float",
    "step": 0.01
@@ -276,7 +276,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.0
    }
   },
   {
@@ -313,7 +314,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.0
    }
   },
   {
@@ -350,7 +352,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.0
    }
   },
   {
@@ -387,7 +390,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.05
    }
   },
   {
@@ -424,7 +428,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.1
    }
   },
   {
@@ -461,7 +466,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.15
    }
   },
   {
@@ -498,13 +504,14 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.2
    }
   },
   {
    "key": "korea-ai-2027",
    "name": "AI 2027 — Fast takeoff",
-   "blurb": "Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here, since the model only covers cognitive work.",
+   "blurb": "Cognition automated almost immediately with heavy compute investment, and the scenario's robot economy on the US robot-exposure measure, since no Korean one exists.",
    "display_periods": 8,
    "defaults": {
     "adoption_start": 0.2,
@@ -535,7 +542,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 0.9
    }
   },
   {
@@ -572,7 +580,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 1.0
    }
   },
   {
@@ -609,7 +618,8 @@
     "nhi_share": 0.81,
     "nps_share": 0.85,
     "exposure_delta": 0.0,
-    "demography_variant": 0.0
+    "demography_variant": 0.0,
+    "physical_feasibility": 1.0
    }
   }
  ],

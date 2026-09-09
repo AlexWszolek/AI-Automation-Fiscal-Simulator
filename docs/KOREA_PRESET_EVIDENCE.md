@@ -117,8 +117,8 @@ running in every Korea preset. Resolution (Alex's decisions):
 `KOREA_CHANNEL_CONVENTIONS` in `fiscal_model/korea_scenarios.py` applies the three channel
 switches beneath every preset's overrides (in `korea_preset_params`).
 
-Effect: fund headlines unchanged (NHI 0.43 / EI ₩5.2tn / NPS 0.19). The 2035 general-account
-result moves from ₩1.57tn better off to **₩0.47tn better off** — still no widening for VAT
+Effect: fund headlines unchanged (NHI 0.43 / EI ₩5.2tn / NPS 0.19). The engine's national deficit line (`fed_deficit_B`, which mixes the fund lines in — not the general account)
+moves from ₩1.57tn better off to **₩0.36tn better off** (after the 구직급여 tax exemption; the revenue-by-source table puts the general account at +₩4.8tn against the funds' −₩6.4tn) — still no widening for VAT
 to cover, but no longer resting on US channels. The corporate-recapture transfer is
 **₩7.0tn/yr** (was 7.6); at 100% it still makes the pension whole, recovers 0.24 of NHI's
 0.43 years, and refunds ₩0.7tn of the ₩5.2tn EI shortfall.
@@ -137,3 +137,13 @@ used because it is the only one — disclosed as such wherever it surfaces:
 
 Effect: diffusion trio unchanged. AGI-5y employment drop 68% → 100% (NHI 2.26 yrs, EI ₩106tn,
 NPS 9.8 of 8 — more than the reform bought); AI-2027 53% → 92%; Metaculus 8.2% → 9.8%.
+
+## Addendum 2026-09-09 (3) — the adoption-level anchor's source
+
+The About text cites 9.2% of Korean firms using AI in 2024, up from 1.4% in 2017. Source:
+KISDI Perspectives 초점 (November 2025), 「국내 기업의 인공지능(AI) 도입 및 특징」, tabulating
+Statistics Korea's 기업활동조사 — AI use among surveyed corporations 1.4% (2017) → 4.3% (2022)
+→ 6.1% (2023) → 9.2% (2024); ICT 34.5%, 300+ employees 18.0%, under 100 employees 6.2%,
+capital region 11.8% vs 4.6% elsewhere. It anchors the LEVEL and the lag only; the path shape
+remains the US-literature convention, as the About text's "which inputs are Korean" paragraph
+discloses.

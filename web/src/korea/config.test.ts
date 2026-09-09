@@ -10,6 +10,7 @@ describe('korea grid', () => {
   it('every preset default is inside its lever bounds', () => {
     for (const p of KOREA_PRESETS) {
       for (const [k, v] of Object.entries(p.defaults)) {
+        if (k === 'physical_feasibility') continue   // a page flag, not a rail lever
         const s = KOREA_GRID[k]
         expect(s, `${p.key}:${k}`).toBeDefined()
         expect(v, `${p.key}:${k}`).toBeGreaterThanOrEqual(s.lo)

@@ -50,7 +50,13 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
       return t
     }
 
-    if (isPristine(cfg)) {
+    // the tornado samples the PRE-POLICY model and ignores the tax mults, so a config that
+    // differs from its preset only on those is pristine for its purposes: the committed
+    // n=400 bundle, not a live n=150 draw whose lower ranks would visibly reshuffle
+    const TORNADO_INERT = new Set(['income_tax_mult', 'corp_tax_mult', 'cons_tax_mult',
+                                   'vat_pp', 'nps_mandate_share', 'corp_to_funds'])
+    const sampled = Object.keys(deviations(cfg)).filter((k) => !TORNADO_INERT.has(k))
+    if (isPristine(cfg) || sampled.length === 0) {
       fetchStatic()
         .then((t) => {
           if (cancelled()) return
@@ -61,6 +67,7 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
       return
     }
 
+    let retryTimer: ReturnType<typeof setTimeout> | undefined
     const request = (attempt: number): Promise<TornadoData> =>
       fetch('/api/korea/tornado', {
         method: 'POST',
@@ -71,8 +78,9 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
           if (r.ok) return r.json() as Promise<TornadoData>
           // 409: another viewer's request superseded ours; 429: the queue was full.
           // Neither means our configuration was computed — try once more, then give up.
-          if ((r.status === 409 || r.status === 429) && attempt === 0)
-            return new Promise((res) => setTimeout(res, RETRY_MS)).then(() => request(1))
+          if ((r.status === 409 || r.status === 429) && attempt === 0 && !cancelled())
+            return new Promise<void>((res) => { retryTimer = setTimeout(res, RETRY_MS) })
+              .then(() => (cancelled() ? Promise.reject(new Error('cancelled')) : request(1)))
           return Promise.reject(new Error(String(r.status)))
         })
     const timer = setTimeout(() => {
@@ -84,7 +92,7 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
         })
         .catch(() => { /* keep the last entry, and keep it DIMMED: it is not this config */ })
     }, DEBOUNCE_MS)
-    return () => clearTimeout(timer)
+    return () => { clearTimeout(timer); clearTimeout(retryTimer) }
   }, [JSON.stringify(cfg)])
 
   if (!entry) return null

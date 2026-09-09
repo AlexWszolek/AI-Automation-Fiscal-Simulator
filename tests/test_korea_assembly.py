@@ -15,13 +15,15 @@ pytestmark = pytest.mark.skipif(
 def korea_run():
     from fiscal_model.korea_assembly import build_korea_data, build_korea_deltas
     from fiscal_model.korea_demography import korea_demography_path
-    from fiscal_model.korea_scenarios import KOREA_DIFFUSION_LABOUR, KOREA_PRESETS
+    from fiscal_model.korea_scenarios import (KOREA_CHANNEL_CONVENTIONS, KOREA_DIFFUSION_LABOUR,
+                                              KOREA_PRESETS)
     from fiscal_model.presets import build_adoption_path
     data = build_korea_data()
     deltas = build_korea_deltas()
     korea = dict(adoption=0.20,
                  adoption_path=build_adoption_path(KOREA_PRESETS["korea-central"], 10),
                  cognitive_feasibility=1.0,        # physical_feasibility comes with the conventions
+                 **KOREA_CHANNEL_CONVENTIONS,       # the US-only channels off, as the site runs
                  demography_path=list(korea_demography_path(10)),
                  # the diffusion family's explicit conventions (MOEL-anchored re-employment,
                  # Farber haircut, the carried disposition/macro values) — the hand-assembled

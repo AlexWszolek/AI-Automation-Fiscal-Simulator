@@ -30,8 +30,8 @@ figure-read error axis (±0.5pp), 36 projections total.
 
 ## Fast worlds — Korinek-Suh translations (mid shares, separate rows, never band edges)
 
-Cognitive channel only: Korea has no published robot-exposure vector wired, so these
-UNDERSTATE displacement in manual occupations.
+The robot channel runs on the Webb (2020) robot-exposure share mapped onto KSCO majors
+(a US measure — Korea publishes none); the cognitive channel on the BOK's displacement-prone read.
 
 | Scenario | NHI share | NPS share | NHI yrs earlier | NHI depletion | EI 2029 shortfall (₩tn) | NPS yrs given back | NPS depletion |
 |---|---|---|---|---|---|---|---|

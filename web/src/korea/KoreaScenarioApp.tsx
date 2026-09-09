@@ -47,14 +47,15 @@ function yearsFmt(v: number) {
   return v.toFixed(v >= 1 ? 1 : 2)
 }
 
-type RevenueLine = KoreaScenarioPayload['revenue_lines'][number]
+type RevenueLine = NonNullable<KoreaScenarioPayload['revenue_lines']>[number]
 
 // Revenue by source: the thesis as a table. Lines grouped by where the money lands, a
 // subtotal per destination, and an all-levels net — signed, loss hue on losses.
 function RevenueTable({ lines, copy, y0, y }:
                       { lines: RevenueLine[]; copy: any; y0: number; y: number }) {
-  const signed = (v: number) => (v > 0 ? '+' : '') + v.toFixed(1)
-  const tone = (v: number) => (v < -0.05 ? { color: 'var(--bad)' } : v > 0.05 ? { color: 'var(--good)' } : undefined)
+  const rounded = (v: number) => Number(v.toFixed(1))
+  const signed = (v: number) => { const r = rounded(v); return (r > 0 ? '+' : '') + (r === 0 ? '0.0' : r.toFixed(1)) }
+  const tone = (v: number) => { const r = rounded(v); return r < 0 ? { color: 'var(--bad)' } : r > 0 ? { color: 'var(--good)' } : undefined }
   const groups: RevenueLine['dest'][] = ['funds', 'general', 'local']
   const sum = (ls: RevenueLine[], k: 'final_tn' | 'cum_tn') => ls.reduce((a, l) => a + l[k], 0)
   const shown = lines.filter((l) => l.kind !== 'transfer')
@@ -168,8 +169,9 @@ export default function KoreaScenarioApp() {
   }, [qs])
 
   const preset = pack.preset(cfg.preset)
-  // ai-2027 shares the cognitive-only understatement even though its key lacks 'agi'
-  const isAgi = ['korea-agi-20y', 'korea-agi-5y', 'korea-ai-2027'].includes(cfg.preset)
+  // the exposure-source note applies to every preset whose physical ramp is on (robot
+  // exposure is the US measure); the diffusion trio runs cognitive-only and gets none
+  const isAgi = Number(KOREA_PRESETS.find((p) => p.key === cfg.preset)?.defaults.physical_feasibility ?? 0) > 0
   const startYear = payload?.config.start_year ?? 2026
   const rows = payload?.rows ?? []
   const budgetRows = useMemo(
@@ -352,6 +354,13 @@ export default function KoreaScenarioApp() {
               <div className="col-wide panel policy-readouts">
                 {payload.policy_readouts.map((r) => {
                   const lever = pack.lever(`kr:${r.key}`)
+                  if (r.key === 'vat_pp' && r.coverage_pct == null)
+                    return (
+                      <p key={r.key} className="caption">
+                        <strong>{lever.label}</strong> — {fmt(T.vat_readout_nogap, {
+                          v: r.revenue_final_tn?.toFixed(1) ?? '—' })}
+                      </p>
+                    )
                   if (r.key === 'vat_pp')
                     return (
                       <p key={r.key} className="caption">
@@ -384,8 +393,11 @@ export default function KoreaScenarioApp() {
               </div>
             )}
 
-            <RevenueTable lines={payload.revenue_lines} copy={KO.revenue_table}
-                          y0={payload.config.start_year} y={finalYear} />
+            {/* a bundle cached from before this table shipped has no revenue_lines */}
+            {payload.revenue_lines && payload.revenue_lines.length > 0 && (
+              <RevenueTable lines={payload.revenue_lines} copy={KO.revenue_table}
+                            y0={payload.config.start_year} y={finalYear} />
+            )}
 
             <div className="col-wide chart-grid">
               <ChartPanel

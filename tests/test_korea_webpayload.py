@@ -162,13 +162,15 @@ def test_committed_tornado_bundles_match_fresh_generation(pools):
     from pathlib import Path
 
     from fiscal_model.korea_webpayload import korea_mc_tornado, sanitize_korea_config
+    from fiscal_model.korea_scenarios import KOREA_PRESETS
     root = Path(__file__).resolve().parent.parent
-    path = root / "web" / "public" / "data" / "korea" / "tornado" / "korea-central.json"
-    assert path.exists(), "missing tornado bundle — scripts/gen_korea_scenarios.py"
-    committed = json.loads(path.read_text(encoding="utf-8"))
-    fresh = json.loads(json.dumps(korea_mc_tornado(
-        sanitize_korea_config({"preset": "korea-central"}), n=400, **pools)))
-    assert fresh == committed, "stale tornado bundle — scripts/gen_korea_scenarios.py"
+    for key in KOREA_PRESETS:                       # all ten, like the scenario gate
+        path = root / "web" / "public" / "data" / "korea" / "tornado" / f"{key}.json"
+        assert path.exists(), f"missing tornado bundle {key} — scripts/gen_korea_scenarios.py"
+        committed = json.loads(path.read_text(encoding="utf-8"))
+        fresh = json.loads(json.dumps(korea_mc_tornado(
+            sanitize_korea_config({"preset": key}), n=400, **pools)))
+        assert fresh == committed, f"stale tornado bundle {key} — scripts/gen_korea_scenarios.py"
 
 
 def test_policy_levers_route_honestly(pools):
@@ -290,15 +292,43 @@ def test_revenue_lines_reconcile_with_the_ledger(central, pools):
     from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
                                                sanitize_korea_config)
     lines = {r["key"]: r for r in central["revenue_lines"]}
-    assert set(lines) == {"contributions", "income_tax", "survivor_income_tax", "local_income",
-                          "vat", "corporate", "ei_outlays", "other_transfers"}
+    NATIONAL = ("contributions", "survivor_contributions", "income_tax", "survivor_income_tax",
+                "corporate", "ei_outlays", "other_transfers")
+    assert set(lines) == set(NATIONAL) | {"local_income", "vat"}
     final = central["rows"][-1]
-    national = sum(lines[k]["final_tn"] for k in ("contributions", "income_tax",
-                                                  "survivor_income_tax", "corporate",
-                                                  "ei_outlays", "other_transfers"))
-    assert national == pytest.approx(-final["fed_deficit_B"] / 1000.0, abs=0.02)
-    assert (lines["vat"]["final_tn"] + lines["local_income"]["final_tn"]
-            == pytest.approx(-final["state_gap_B"] / 1000.0, abs=0.02))
+
+    def identities(p, tiers=True):
+        L = {r["key"]: r for r in p["revenue_lines"] if r["kind"] != "transfer"}
+        tr = next((r["final_tn"] for r in p["revenue_lines"] if r["kind"] == "transfer"), 0.0)
+        f = p["rows"][-1]
+        # every lever: the all-levels net is the two engine tiers together (the recapture
+        # transfer nets out across tiers but the engine's deficit line carries only the
+        # general account's outgoing side, hence the −tr on the national side)
+        assert sum(r["final_tn"] for r in L.values()) - tr == pytest.approx(
+            -(f["fed_deficit_B"] + f["state_gap_B"]) / 1000.0, abs=0.05)
+        if tiers:
+            assert sum(L[k]["final_tn"] for k in NATIONAL) - tr == pytest.approx(
+                -f["fed_deficit_B"] / 1000.0, abs=0.05)
+            assert (L["vat"]["final_tn"] + L["local_income"]["final_tn"]
+                    == pytest.approx(-f["state_gap_B"] / 1000.0, abs=0.05))
+    identities(central)
+    # the identities must hold under EVERY policy lever — the review found the table
+    # missing the robot tax and the three surcharges (off by ₩10–25tn/yr when moved).
+    # The engine books the VAT surcharge and the VAT-rate rise on its national tier while
+    # the baseline VAT loss sits on the 'state' tier, so under the two consumption levers
+    # only the all-levels total partitions cleanly (the table's VAT line is one line)
+    for levers, tiers in (({"automation_tax_rate": 0.2}, True), ({"income_tax_mult": 1.3}, True),
+                          ({"corp_tax_mult": 1.3}, True), ({"nps_mandate_share": 0.5}, True),
+                          ({"corp_to_funds": 0.5}, True),
+                          ({"cons_tax_mult": 1.3}, False), ({"vat_pp": 2.0}, False)):
+        identities(build_korea_scenario_payload(sanitize_korea_config({"levers": levers}),
+                                                **pools), tiers=tiers)
+    # survivor raises carry income tax (general) AND contributions (funds): split, the
+    # income leg exactly 10 × the local surtax gain, the contributions leg positive
+    assert lines["survivor_income_tax"]["final_tn"] == pytest.approx(
+        10.0 * final["survivor_gain_state_B"] / 1000.0, abs=0.01)
+    assert lines["survivor_contributions"]["final_tn"] > 0
+    assert lines["survivor_contributions"]["dest"] == "funds"
     assert lines["contributions"]["dest"] == "funds" and lines["corporate"]["dest"] == "general"
     assert lines["contributions"]["final_tn"] < 0 < lines["corporate"]["final_tn"]
     assert lines["corporate"]["baseline_tn"] == 84.6 and lines["vat"]["baseline_tn"] == 79.2

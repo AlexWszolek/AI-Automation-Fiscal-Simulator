@@ -15,8 +15,8 @@ Conventions, documented once and carried in the bundle's `config` block:
 - band envelope  = pointwise min/max over 9 assembled runs (3 diffusion presets × exposure
                    read ±0.5pp) × 4 share-edge combos applied in the projector;
 - AGI scenarios  = korea-agi-20y / korea-agi-5y at central exposure × mid shares. Separate
-                   rows, NEVER band edges. Cognitive channel only (no Korean robot-exposure
-                   vector) — an understatement the page must disclose;
+                   rows, NEVER band edges. Robot channel on the Webb (2020) share mapped
+                   onto KSCO majors (a US measure — disclosed in the About text);
 - the two composition what-ifs stay on the direct chain: they are structural decompositions
   of a hypothetical displacement pattern, not forecasts.
 """
@@ -188,7 +188,7 @@ def main() -> None:
              "all-employed occupation mix × BOK within-occupation HELC shares; "
              "descriptive, no provincial fiscal claims"},
             {"name": "AGI scenarios", "cite": "Korinek & Suh — translated presets "
-             "(docs/PRESET_EVIDENCE §1); cognitive channel only for Korea"},
+             "(docs/PRESET_EVIDENCE §1); AI-cognitive channel on the BOK read; physical channel on Webb (2020) robot exposure mapped from US occupations, since no Korean measure exists"},
         ],
     }
     OUT.write_text(json.dumps(bundle, ensure_ascii=False, indent=1), encoding="utf-8")

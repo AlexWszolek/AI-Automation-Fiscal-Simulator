@@ -189,10 +189,12 @@ def _revenue_lines(data, rows: list, ur: dict, display_n: int) -> list:
     from the modeled base because the two frames differ), the final-year and cumulative
     change over the display window (signed: gains +, losses and outlays −), and where the
     money lands — the earmarked funds, the general account, or local government. Identities
-    pinned in tests: the general+funds lines sum to −fed_deficit_B (before any recapture
-    transfer) and the VAT+local lines sum to −state_gap_B, so nothing is double-counted.
-    Note the engine books VAT and the local surtax on its 'state' tier (Korea has no state
-    tier), so fed_deficit_B alone is NOT the general account: this table's subtotals are."""
+    pinned in tests: all lines together (net of the recapture transfer) sum to
+    −(fed_deficit_B + state_gap_B) under every policy lever, so nothing is double-counted;
+    per engine tier, the general+funds lines sum to −fed_deficit_B and the VAT+local lines
+    to −state_gap_B, except under the two consumption levers, which the engine books on the
+    national tier while the baseline VAT loss sits on its 'state' tier. Korea has no state
+    tier — the engine's fed_deficit_B is NOT the general account: this table's subtotals are."""
     rec = data.receipts.set_index("maps_to_base")["amount_busd"]        # ₩bn
     base = {
         "contributions": float(rec["Social insurance (payroll)"]),
@@ -207,18 +209,30 @@ def _revenue_lines(data, rows: list, ur: dict, display_n: int) -> list:
     tr = (ur["transfer_tn"][:display_n] * 1000.0 if ur.get("transfer_tn") is not None
           else np.zeros(display_n))
     # signed fiscal effect by line, ₩bn per year over the display window
+    # survivor_gain_fed_B bundles the national income tax AND the contributions the raised
+    # wages carry; the local surtax is exactly 10% of the national income tax, so the
+    # income-tax leg is 10 × the state gain and the remainder is contributions (funds)
+    surv_income = 10.0 * col("survivor_gain_state_B")
+    surv_contrib = col("survivor_gain_fed_B") - surv_income
     effect = {
         "contributions": -col("payroll_fed_loss_B"),
-        "income_tax": -col("inc_fed_loss_B"),
-        "survivor_income_tax": col("survivor_gain_fed_B"),
-        "local_income": -col("inc_state_loss_B") + col("survivor_gain_state_B"),
-        "vat": -col("cons_state_loss_B") + col("fed_vat_B"),
+        "survivor_contributions": surv_contrib,
+        "income_tax": -col("inc_fed_loss_B") + col("income_surcharge_fed_B"),
+        "survivor_income_tax": surv_income,
+        "local_income": (-col("inc_state_loss_B") + col("survivor_gain_state_B")
+                         + col("income_surcharge_state_B") + col("corp_surcharge_state_B")
+                         + col("cons_surcharge_state_B")),
+        "vat": -col("cons_state_loss_B") + col("fed_vat_B") + col("excise_surcharge_fed_B"),
+        # the robot tax is paid from retained profit and deductible: it lands here so the
+        # corporate line moves with the lever the way the deficit does
         "corporate": (col("corp_offset_B") + col("survivor_overflow_corp_tax_B")
-                      + col("compute_pool_tax_B")),
+                      + col("compute_pool_tax_B") + col("corp_surcharge_fed_B")
+                      + col("automation_tax_B")),
         "ei_outlays": -col("ui_outlay_fed_B"),
         "other_transfers": -col("transfer_fed_B"),
     }
-    dest = {"contributions": "funds", "income_tax": "general", "survivor_income_tax": "general",
+    dest = {"contributions": "funds", "survivor_contributions": "funds",
+            "income_tax": "general", "survivor_income_tax": "general",
             "local_income": "local", "vat": "general", "corporate": "general",
             "ei_outlays": "funds", "other_transfers": "general"}
     kind = {k: ("outlay" if k in ("ei_outlays", "other_transfers") else "revenue") for k in effect}

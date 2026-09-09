@@ -141,7 +141,7 @@ def create_app(backend=None) -> FastAPI:
         client = _client_id(request)
         now = time.monotonic()
         if len(feedback_last) > 1000:             # bounded: expired entries are dropped
-            for k in [k for k, t in feedback_last.items() if now - t > FEEDBACK_COOLDOWN_S]:
+            for k in [k for k in list(feedback_last) if now - feedback_last.get(k, now) > FEEDBACK_COOLDOWN_S]:
                 feedback_last.pop(k, None)
         if now - feedback_last.get(client, -FEEDBACK_COOLDOWN_S) < FEEDBACK_COOLDOWN_S:
             raise HTTPException(429, "please wait a moment before sending more feedback")

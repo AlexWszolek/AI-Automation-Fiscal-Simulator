@@ -3,7 +3,7 @@
 // always drawn, and the sources & disclosures panel is part of the page, not a tooltip.
 // ALL user-facing text on this page is provisional until Alex's copy pass (copy.json →
 // "korea").
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ChartPanel } from '../components/ChartPanel'
 import { compositionBars, contrastBars, fundBand, koreaGeoMap } from '../charts/korea'
 import { LangToggle } from './LangToggle'
@@ -52,6 +52,10 @@ export default function KoreaApp() {
       .then(setTopo).catch(() => setTopo(null))
   }, [])
   const label = (k: string) => KO.institutions[k] ?? k
+  const mapSpec = useMemo(
+    () => (bundle?.regions && topo ? koreaGeoMap(bundle.regions, topo, { tips: KO.tooltips }) : null),
+    [bundle, topo, KO],
+  )
 
   return (
     <div className="shell korea-shell">
@@ -130,15 +134,14 @@ export default function KoreaApp() {
               />
             </div>
 
-            {bundle.regions && topo && (
+            {mapSpec && (
               <div className="col-wide korea-map-section">
                 <div className="korea-map-text">
                   <h2>{KO.sections.map}</h2>
                   <p className="caption">{KO.captions.map}</p>
                 </div>
                 <div className="korea-map-chart">
-                  <ChartPanel spec={koreaGeoMap(bundle.regions, topo,
-                    { tips: KO.tooltips })} />
+                  <ChartPanel spec={mapSpec} />
                 </div>
               </div>
             )}
