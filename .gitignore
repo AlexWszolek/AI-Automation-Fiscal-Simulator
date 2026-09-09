@@ -43,3 +43,6 @@ docs/report/report.pdf
 # Korea tables: tidy CSVs are regenerable from the committed raw exports
 # (scripts/fetch_korea_tables.py --parse-only)
 data/raw/korea/*.tidy.csv
+
+# headless-Chrome profiles left by the slide/PDF exporters
+.chrome-profile/

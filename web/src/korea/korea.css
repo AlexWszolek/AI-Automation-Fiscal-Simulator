@@ -30,9 +30,11 @@
 .panel > h2:first-child { margin-top: 0.2rem; }
 .korea-sources > h2:first-child { margin-top: 0.2rem; }
 
-/* colour semantics (diplomat review): the loss hue on every worsening figure — the tokens'
-   own rule (red = fiscally bad), finished. Policy readouts carry the recovery hue. */
-.metric-value.bad { color: var(--bad); }
+/* colour semantics (diplomat review): the loss hue on charts, bars and the signed table
+   cells. Headline numbers stay ink — Alex's call 2026-09-09 ("the red text ... should be
+   black"); the .bad class stays on the hero markup so the hue is one rule away. Policy
+   readouts carry the recovery hue. */
+.metric-value.bad { color: inherit; }
 .policy-readouts { border-left: 3px solid var(--good); }
 /* the compute service being unreachable used to be one caption line; a mover of sliders
    never saw it and read the whole rail as dead. Sticky, red-edged, and the rail dims. */
