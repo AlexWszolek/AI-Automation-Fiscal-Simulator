@@ -129,10 +129,13 @@ def test_translated_presets_follow_the_porting_discipline():
         p = KOREA_PRESETS[k]
         assert set(p.overrides) <= fields, f"{k}: unknown V2Params field"
         assert not set(p.overrides) & {"state_cut_share", "state_rate_hike_cap",
-                                       "compute_effective_rate", "robotics_lag"}, \
+                                       "compute_effective_rate"}, \
             f"{k}: US-only override ported by mistake"
-        assert p.overrides.get("physical_feasibility", 0.0) == 0.0, \
-            f"{k}: physical channel opened without a Korean robot-exposure vector"
+        # the physical channel is wired (Webb robot share mapped onto KSCO majors,
+        # korea_exposure.ROBOT_SHARE): every preset states its ramp explicitly
+        assert {"physical_feasibility", "robotics_lag"} <= set(p.overrides), \
+            f"{k}: physical ramp must be explicit now that the robot vector is wired"
+        assert 0.0 <= p.overrides["physical_feasibility"] <= 1.0
         assert p.overrides.get("cognitive_feasibility", 1.0) == 1.0, \
             f"{k}: cf re-discount on the already-discounted BOK HELC base"
         assert set(p.overrides) <= set(p.provenance), f"{k}: override without provenance"

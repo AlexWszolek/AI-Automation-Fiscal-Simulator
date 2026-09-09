@@ -35,8 +35,8 @@ UNDERSTATE displacement in manual occupations.
 
 | Scenario | NHI share | NPS share | NHI yrs earlier | NHI depletion | EI 2029 shortfall (₩tn) | NPS yrs given back | NPS depletion |
 |---|---|---|---|---|---|---|---|
-| korea-agi-20y | 0.81 | 0.85 | 1.26 | 2028.62 | 17.2 | 4.18 | 2061.40 |
-| korea-agi-5y | 0.81 | 0.85 | 2.14 | 2027.73 | 59.5 | 7.46 | 2058.13 |
+| korea-agi-20y | 0.81 | 0.85 | 1.31 | 2028.57 | 21.2 | 7.22 | 2058.37 |
+| korea-agi-5y | 0.81 | 0.85 | 2.26 | 2027.62 | 106.3 | 9.83 | 2055.76 |
 
 ## Band summary (the numbers for the slide)
 

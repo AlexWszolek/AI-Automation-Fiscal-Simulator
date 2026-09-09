@@ -30,7 +30,7 @@ import pandas as pd
 
 from . import rates
 from .korea_cells import load_korea_cells
-from .korea_exposure import EXPOSURE_HELC
+from .korea_exposure import EXPOSURE_HELC, ROBOT_SHARE
 from .korea_tax import korea_income_tax
 from .korea_transfers import ei_daily_benefit, kr_eitc_delta_on_displacement
 
@@ -114,6 +114,11 @@ def build_cells_frames(year: str = "2025", exposure: dict | None = None) -> tupl
         "ai_pca_score": np.nan,
         "cognitive_share": c["occ_code"].map(exposure if exposure is not None
                                              else EXPOSURE_HELC).astype(float),
+        # physical channel: Webb's robot-patent exposure mapped from US occupations onto
+        # KSCO majors (korea_exposure.ROBOT_SHARE) — no Korean measure exists, disclosed.
+        # Acts only where a preset carries physical_feasibility > 0 (the diffusion trio
+        # keeps it at 0; the ported presets carry the US presets' ramps).
+        "robot_share": c["occ_code"].map(ROBOT_SHARE).astype(float),
     })
 
     # occupation × industry: ILOSTAT shares allocate each cell's employment/comp over

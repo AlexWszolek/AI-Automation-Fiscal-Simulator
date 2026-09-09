@@ -21,7 +21,7 @@ def korea_run():
     deltas = build_korea_deltas()
     korea = dict(adoption=0.20,
                  adoption_path=build_adoption_path(KOREA_PRESETS["korea-central"], 10),
-                 cognitive_feasibility=1.0, physical_feasibility=0.0,
+                 cognitive_feasibility=1.0,        # physical_feasibility comes with the conventions
                  demography_path=list(korea_demography_path(10)),
                  # the diffusion family's explicit conventions (MOEL-anchored re-employment,
                  # Farber haircut, the carried disposition/macro values) — the hand-assembled

@@ -59,3 +59,25 @@ def test_seam_default_is_a_copy_not_an_alias():
         assert EXPOSURE_HELC[3] == 1.0
     finally:
         korea_scenarios.EXPOSURE_BY_OCC[3] = EXPOSURE_HELC[3]
+
+
+def test_us_mapped_exposure_literals_match_the_generator():
+    """The robot share the physical channel consumes (and the Budget Lab cross-check) are
+    committed literals; scripts/gen_korea_exposure_map.py must reproduce them from the
+    crosswalks and the US files, so a silent re-map cannot drift the manual groups."""
+    import importlib.util
+    from pathlib import Path
+
+    from fiscal_model.korea_exposure import ROBOT_SHARE, US_COGNITIVE_SHARE
+    root = Path(__file__).resolve().parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "gen_map", root / "scripts" / "gen_korea_exposure_map.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    rob, cog, g = mod.build_map()
+    assert rob == ROBOT_SHARE, "regenerate: scripts/gen_korea_exposure_map.py"
+    assert cog == US_COGNITIVE_SHARE
+    assert set(ROBOT_SHARE) == set(range(1, 10))
+    # the manual groups are the physical channel: well above the cognitive-heavy groups
+    assert min(ROBOT_SHARE[g] for g in (6, 7, 8, 9)) > max(ROBOT_SHARE[g] for g in (1, 2, 5))
+    assert g.attrs["unmapped_emp_share"] < 0.10

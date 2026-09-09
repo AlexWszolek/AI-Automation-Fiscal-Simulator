@@ -122,3 +122,18 @@ result moves from ₩1.57tn better off to **₩0.47tn better off** — still no 
 to cover, but no longer resting on US channels. The corporate-recapture transfer is
 **₩7.0tn/yr** (was 7.6); at 100% it still makes the pension whole, recovers 0.24 of NHI's
 0.43 years, and refunds ₩0.7tn of the ₩5.2tn EI shortfall.
+
+## Addendum 2026-09-09 (2) — the physical channel is wired
+
+Alex's step-back: the fast worlds left 3.6M manual workers employed because the Korea data
+carried no robot exposure at all. No Korean institution publishes one, so the US measure is
+used because it is the only one — disclosed as such wherever it surfaces:
+
+| Field | Value | Evidence |
+|---|---|---|
+| `robot_share` per KSCO major | managers 0.25 · professionals 0.26 · clerical 0.35 · service 0.56 · sales 0.26 · agriculture 0.67 · craft 0.70 · operators 0.85 · elementary 0.86 | Webb (2020) robot-patent exposure percentile/100 per US SOC occupation (`data/raw/robot_exposure_by_soc.xlsx`), mapped SOC 2018 → SOC 2010 → ISCO-08 → KSCO major (`data/raw/crosswalks/`, BLS crosswalk via the eworx mirror; KSCO 2 = ISCO 2+3, ISCO 5 → KSCO 4/5 by sub-major), US-employment-weighted; 13 SOC occupations (5.5% of US employment) unmapped. `scripts/gen_korea_exposure_map.py`; pinned by test. |
+| `physical_feasibility`, `robotics_lag` | ported presets carry the US presets' ramps (Acemoglu 0.05/8y … AI-2027 0.90/3y, AGI 1.0/10y and 1.0/2y); the diffusion trio is explicit 0 | The central case stays the AI-cognitive wave on the BOK read — central numbers unchanged. |
+| `US_COGNITIVE_SHARE` (reference) | Budget Lab percentile share mapped the same way: managers 0.69 · professionals 0.71 · clerical 0.84 · service 0.36 · sales 0.52 · manual 0.15–0.28 | Sensitivity / cross-check only; the cognitive headline stays on the BOK read (Korea's central bank for what Korea measures). Where they disagree: BOK puts everything on clerical (1.00 vs 0.84) and nothing on professionals/managers/sales (0.22/0.00/0.36 vs 0.71/0.69/0.52). |
+
+Effect: diffusion trio unchanged. AGI-5y employment drop 68% → 100% (NHI 2.26 yrs, EI ₩106tn,
+NPS 9.8 of 8 — more than the reform bought); AI-2027 53% → 92%; Metaculus 8.2% → 9.8%.

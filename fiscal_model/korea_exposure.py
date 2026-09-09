@@ -67,6 +67,27 @@ assert abs(_le + _hehc + _helc - _PUBLISHED["TOTAL"]) < _TOL, "figure read does 
 EXPOSURE_HELC = {g: (v[2] / sum(v) if sum(v) else 0.0) for g, v in FIG9_SHARES.items()}
 EXPOSURE_HEHC = {g: (v[1] / sum(v) if sum(v) else 0.0) for g, v in FIG9_SHARES.items()}
 
+# ---------------------------------------------------------------- the physical channel
+# Robot exposure by KSCO major: Webb (2020) robot-patent exposure percentile/100 per US SOC
+# occupation, mapped SOC 2018 → SOC 2010 → ISCO-08 → KSCO major (data/raw/crosswalks/) and
+# US-employment-weighted — scripts/gen_korea_exposure_map.py regenerates these literals and a
+# test pins them. No Korean robot-exposure measure exists (disclosed wherever it surfaces):
+# the US measure is used because it is the only one, not because it is Korean. Consumed as
+# the `robot_share` column of the Korea exposure frame; acts only where a preset carries
+# physical_feasibility > 0 (the diffusion family keeps 0 — the AI-cognitive wave on the BOK
+# read; the ported presets carry the US presets' ramps). 13 SOC occupations (5.5% of US
+# employment) have no ISCO path and are dropped from the weights.
+ROBOT_SHARE = {1: 0.25, 2: 0.26, 3: 0.347, 4: 0.563, 5: 0.255, 6: 0.67, 7: 0.697,
+               8: 0.851, 9: 0.857}
+
+# The Yale Budget Lab cognitive share (percentile rank of the PCA score, the US model's own
+# transform) mapped the same way — REFERENCE / sensitivity only: the cognitive headline stays
+# on the BOK read (Korea's central bank for what Korea measures), and this is the disclosed
+# cross-check for where the two disagree (clerical 1.00 vs 0.84; professionals 0.22 vs 0.71;
+# sales 0.36 vs 0.52; service 0.11 vs 0.36; managers 0.00 vs 0.69).
+US_COGNITIVE_SHARE = {1: 0.691, 2: 0.713, 3: 0.839, 4: 0.36, 5: 0.519, 6: 0.202, 7: 0.271,
+                      8: 0.28, 9: 0.149}
+
 
 def exposure_variant(delta_pp: float) -> dict:
     """The figure-read error axis: shift each nonzero HELC bar by ±delta_pp of employment

@@ -113,9 +113,12 @@ def test_agi_preset_payload_matches_its_bundle_row(pools):
                                                sanitize_korea_config)
     p = build_korea_scenario_payload(sanitize_korea_config({"preset": "korea-agi-5y"}),
                                      **pools)
-    assert p["final"]["nhi_years_forward"] == pytest.approx(2.14, abs=0.02)
-    assert p["final"]["ei_shortfall_tn"] == pytest.approx(59.5, abs=0.5)
-    assert p["final"]["nps_given_back"] == pytest.approx(7.46, abs=0.05)
+    # with the physical channel wired (Webb robot share mapped onto KSCO majors), full
+    # automation of exposed work displaces the manual groups too: employment goes to zero
+    assert p["final"]["nhi_years_forward"] == pytest.approx(2.26, abs=0.02)
+    assert p["final"]["ei_shortfall_tn"] == pytest.approx(106.3, abs=0.5)
+    assert p["final"]["nps_given_back"] == pytest.approx(9.83, abs=0.05)
+    assert p["final"]["employment_drop_pct"] > 99.0
     assert p["config"]["display_periods"] == 10
 
 

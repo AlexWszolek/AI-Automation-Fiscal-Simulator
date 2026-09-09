@@ -16,10 +16,10 @@ inertness test), so demographic uncertainty is deliberately NOT in the band — 
 is "on the government's own population path", not "and maybe the population is different".
 
 Korea conventions and Korea-inert levers are PINNED back after sampling (KOREA_PINNED):
-cognitive/physical feasibility carry the BOK exposure convention (the read error is its own
-axis — jittering cf would double-count it, one-sided), robotics_lag has no Korean robot
-vector to act on, and the state-closure levers are unused (the gap is reported, never
-closed). Pinned fields never reach the tornado — they are constant across draws.
+cognitive/physical feasibility carry the preset's exposure convention (the BOK read error is
+its own axis — jittering cf would double-count it, one-sided; physical_feasibility and
+robotics_lag are the preset's ramp, not uncertainty), and the state-closure levers are unused
+(the gap is reported, never closed). Pinned fields never reach the tornado — they are constant across draws.
 """
 from __future__ import annotations
 

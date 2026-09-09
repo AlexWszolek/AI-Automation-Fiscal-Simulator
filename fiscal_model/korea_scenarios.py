@@ -188,6 +188,7 @@ from .presets import Preset, build_adoption_path  # noqa: E402
 # ui_weeks, the disposition triple and five more riding the US defaults unnamed). Values
 # equal to the shipped default are still listed: the point is that they are chosen.
 KOREA_DIFFUSION_LABOUR = dict(
+    physical_feasibility=0.0, robotics_lag=4.0,
     reabsorption_rate=0.25, reemployment_haircut=0.13, lfp_exit_rate=0.03,
     attrition_rate=0.025, ui_weeks=26,
     retained_profit_share=0.6, price_reduction_share=0.2,
@@ -195,6 +196,9 @@ KOREA_DIFFUSION_LABOUR = dict(
     price_passthrough=0.3, productivity_passthrough=0.3,
 )
 KOREA_DIFFUSION_LABOUR_PROVENANCE = {
+    "physical_feasibility": "0 — the diffusion family is the AI-cognitive wave on the BOK "
+                            "read; no robotics in the central case (explicit, 2026-09-09)",
+    "robotics_lag": "shipped 4y, inert at physical_feasibility 0",
     "reabsorption_rate": "MOEL 구직급여 수급 중 재취업률 30.6% (2024) as the upper anchor, "
                          "discounted for structural displacement → 0.25 (DvW slack 0.15–0.35)",
     "reemployment_haircut": "Farber 2015 central 0.13 (no Korean primary yet)",
@@ -274,12 +278,15 @@ KOREA_PRESETS = {
         key="korea-acemoglu", name="Acemoglu — Modest AI",
         blurb="Acemoglu's 10-year upper bounds, which are small exposed share, modest productivity, normal labor market, and no wage response.",
         adoption_start=0.02, adoption_end=0.23, n_periods=10, adoption_reach_year=9,
-        overrides=dict(reabsorption_rate=0.50, reemployment_haircut=0.13, lfp_exit_rate=0.03,
+        overrides=dict(physical_feasibility=0.05, robotics_lag=8.0,
+                       reabsorption_rate=0.50, reemployment_haircut=0.13, lfp_exit_rate=0.03,
                        retained_profit_share=0.60, price_reduction_share=0.35, auto_cost=0.05,
                        survivor_elasticity=0.0, productivity_passthrough=0.15,
                        price_passthrough=0.30, demand_multiplier=0.30,
                        baseline_growth_rate=0.04),
         provenance=dict(
+            physical_feasibility="his frame is cognitive-only; token robot share (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="Acemoglu/Svanberg: 23% of exposed tasks profitably automatable in 10y; "
                      "US canaries start (§1); applied to the BOK HELC base, which replaces "
                      "the US cf×exposure composite",
@@ -298,12 +305,15 @@ KOREA_PRESETS = {
         key="korea-brynjolfsson", name="Brynjolfsson — Augmentation",
         blurb="AI augments more than it automates, so slow realized adoption, gains shared with survivors, strong productivity, and mild impacts.",
         adoption_start=0.02, adoption_end=0.30, n_periods=10, adoption_reach_year=9,
-        overrides=dict(reabsorption_rate=0.60, reemployment_haircut=0.10, lfp_exit_rate=0.02,
+        overrides=dict(physical_feasibility=0.1, robotics_lag=6.0,
+                       reabsorption_rate=0.60, reemployment_haircut=0.10, lfp_exit_rate=0.02,
                        retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.10,
                        survivor_elasticity=0.10, productivity_passthrough=0.50,
                        price_passthrough=0.30, demand_multiplier=0.30,
                        baseline_growth_rate=0.045),
         provenance=dict(
+            physical_feasibility="low near-term robotics (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="Canaries realized pace, moderate end (§1); BOK HELC base",
             reabsorption_rate="Farber normal-market 0.60 (§1)",
             reemployment_haircut="mild scarring, DvW ~0.10 (§1)",
@@ -320,12 +330,15 @@ KOREA_PRESETS = {
         key="korea-karger", name="Karger et al. — Expert survey, rapid",
         blurb="The NBER expert survey's rapid scenario, which sits at a 14% probability. This means strong growth, modest displacement that exits the labor force, and a falling labor share.",
         adoption_start=0.03, adoption_end=0.16, n_periods=10, adoption_reach_year=9,
-        overrides=dict(reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
+        overrides=dict(physical_feasibility=0.15, robotics_lag=8.0,
+                       reabsorption_rate=0.35, reemployment_haircut=0.13, lfp_exit_rate=0.06,
                        retained_profit_share=0.55, price_reduction_share=0.25, auto_cost=0.15,
                        survivor_elasticity=0.0, productivity_passthrough=0.95,
                        price_passthrough=0.30, demand_multiplier=0.30,
                        baseline_growth_rate=0.05, reab_wage_baumol=0.30),
         provenance=dict(
+            physical_feasibility="rapid includes physical tasks late (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="NBER w35046 rapid: net employment −≈3.1% by 2030, US-calibrated, "
                      "carried parametrically (§5); BOK HELC base",
             reabsorption_rate="0.35 mid-slack, churn with stable unemployment (§5)",
@@ -345,13 +358,16 @@ KOREA_PRESETS = {
         key="korea-metaculus", name="Metaculus — Crowd median, 2035",
         blurb="The Labor Automation Hub's community medians, which are employment below the no-AI baseline, labor share down, and survivor wages up. The medians are US-calibrated and carried over parametrically.",
         adoption_start=0.02, adoption_end=0.20, n_periods=10, adoption_reach_year=9,
-        overrides=dict(reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
+        overrides=dict(physical_feasibility=0.2, robotics_lag=7.0,
+                       reabsorption_rate=0.45, reemployment_haircut=0.12, lfp_exit_rate=0.04,
                        retained_profit_share=0.45, price_reduction_share=0.20, auto_cost=0.10,
                        survivor_elasticity=0.0, productivity_passthrough=0.45,
                        price_passthrough=0.30, demand_multiplier=0.50,
                        baseline_growth_rate=0.04,
                        reab_wage_baumol=0.35, reab_wage_crowding=0.10),
         provenance=dict(
+            physical_feasibility="US preset value, carried",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="Labor Automation Hub crowd medians: ≈7.5% AI-attributed employment "
                      "gap by 2035, US-calibrated, carried parametrically (§6); BOK HELC base",
             reabsorption_rate="growth concentrated in care/licensed occupations (§6)",
@@ -372,12 +388,15 @@ KOREA_PRESETS = {
         key="korea-ai-2027", name="AI 2027 — Fast takeoff",
         blurb="Cognition automated almost immediately with heavy compute investment. The scenario's robot economy is not modeled here, since the model only covers cognitive work.",
         adoption_start=0.20, adoption_end=1.0, n_periods=8, adoption_reach_year=5,
-        overrides=dict(reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
+        overrides=dict(physical_feasibility=0.9, robotics_lag=3.0,
+                       reabsorption_rate=0.10, reemployment_haircut=0.40, lfp_exit_rate=0.05,
                        retained_profit_share=0.70, price_reduction_share=0.20, auto_cost=0.30,
                        survivor_elasticity=-0.50, productivity_passthrough=0.90,
                        price_passthrough=0.50, demand_multiplier=1.20,
                        baseline_growth_rate=0.08, interest_rate=0.04),
         provenance=dict(
+            physical_feasibility="robot economy: ~1M robots/mo by end-2028 (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             adoption="Davidson: capability 20%→100% ~3y + diffusion → ceiling at year 5, "
                      "flat after (§2⑦); BOK HELC base — COGNITIVE ONLY, so the scenario's "
                      "robot economy (~1M robots/mo by 2028) is ABSENT: a deep understatement "
@@ -412,7 +431,7 @@ KOREA_PRESETS = {
         key="korea-agi-20y", name="Korinek-Suh — AGI in 20 years",
         blurb="Full automation of exposed work over 20 years, with wages collapsing and capital keeping the gains.",
         adoption_start=0.05, adoption_end=1.0, n_periods=20, adoption_reach_year=19,
-        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
+        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_lag=10.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.05,
                        retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.15,
                        survivor_elasticity=-0.50, productivity_passthrough=0.90,
@@ -422,9 +441,8 @@ KOREA_PRESETS = {
             adoption="Korinek-Suh baseline AGI: linear to full automation of exposed work "
                      "over 20y (§1); Korea lag overridden — capability drives diffusion",
             cognitive_feasibility="all cognitive tasks automatable within 20y (§1)",
-            physical_feasibility="HELD AT ZERO for Korea: no published robot-exposure vector "
-                                 "— cognitive channel only; understates AGI displacement in "
-                                 "manual occupations (korea_exposure.py disclosure)",
+            physical_feasibility="AGI includes physical work, behind the capacity ramp (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             reabsorption_rate="no recovery in their AGI scenarios: wages stay collapsed (§1)",
             reemployment_haircut="wage-collapse mapped onto re-employment (§2⑤)",
             lfp_exit_rate="elevated permanent exit (§2⑤)",
@@ -443,7 +461,7 @@ KOREA_PRESETS = {
         key="korea-agi-5y", name="Korinek-Suh — AGI in 5 years",
         blurb="Full automation of exposed work at year 5, viewed over a 10-year fiscal window.",
         adoption_start=0.20, adoption_end=1.0, n_periods=10, adoption_reach_year=5,
-        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
+        overrides=dict(cognitive_feasibility=1.0, physical_feasibility=1.0, robotics_lag=2.0,
                        reabsorption_rate=0.05, reemployment_haircut=0.40, lfp_exit_rate=0.10,
                        retained_profit_share=0.80, price_reduction_share=0.15, auto_cost=0.20,
                        survivor_elasticity=-0.50, productivity_passthrough=0.90,
@@ -453,9 +471,8 @@ KOREA_PRESETS = {
             adoption="Korinek-Suh aggressive AGI: full automation of exposed work at year 5, "
                      "flat after (§1); Korea lag overridden — capability drives diffusion",
             cognitive_feasibility="5 years to full cognitive automation (§1)",
-            physical_feasibility="HELD AT ZERO for Korea: no published robot-exposure vector "
-                                 "— cognitive channel only; understates AGI displacement in "
-                                 "manual occupations (korea_exposure.py disclosure)",
+            physical_feasibility="compressed physical ramp (US preset, carried)",
+            robotics_lag="US preset lag, carried; Webb robot share mapped onto KSCO majors (korea_exposure.ROBOT_SHARE)",
             reabsorption_rate="no recovery (§1)",
             reemployment_haircut="wage collapse (§2⑥)",
             lfp_exit_rate="mass permanent exit (§2⑥)",

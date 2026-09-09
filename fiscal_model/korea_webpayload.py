@@ -435,7 +435,9 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
             "country": "kr", "preset": preset_key, "levers": levers,
             "start_year": 2026, "display_periods": display_n, "horizon": HORIZON,
             "modified_fields": modified,
-            "conventions": ("The model covers cognitive work only. Demography follows "
+            "conventions": ("AI-cognitive exposure is the Bank of Korea's displacement-prone "
+                            "read; robot exposure is Webb (2020) mapped from US occupations, "
+                            "since no Korean measure exists. Demography follows "
                             f"the published KOSIS {demo_variant} scenario"
                             + (", which varies the model's workforce path only, since the "
                                "published fund baselines embed NABO's own demographic "
