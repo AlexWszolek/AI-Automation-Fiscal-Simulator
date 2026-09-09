@@ -15,6 +15,7 @@ import {
   KOREA_GROUPS, KOREA_PRESETS, queryStringFor,
   type KoreaConfig,
 } from './config'
+import { KoreaAbout } from './KoreaAbout'
 import { LangToggle } from './LangToggle'
 import { useLocale } from './locale'
 import { KoreaTornadoSection } from './KoreaTornadoSection'
@@ -267,6 +268,11 @@ export default function KoreaScenarioApp() {
             </details>
           ))}
           <ShareBox queryString={qs} labels={pack.shared} />
+          <KoreaAbout copy={KO.about} disclosures={KO.disclosures}
+                      conventions={payload ? (payload.final.demo_variant === 'medium'
+                        ? T.conventions_medium
+                        : fmt(T.conventions_offmedium, { variant: variantLabel(payload.final.demo_variant) }))
+                        + ' ' + T.band_note : ''} />
         </div>
       </aside>
 
@@ -444,18 +450,6 @@ export default function KoreaScenarioApp() {
 
             <KoreaTornadoSection cfg={cfg} pack={pack} />
 
-            <div className="col-wide panel korea-sources">
-              <h2>{KO.sections.disclosures}</h2>
-              <ul className="caption">
-                {KO.disclosures.map((d: string, i: number) => <li key={i}>{d}</li>)}
-              </ul>
-              <p className="caption">
-                {payload.final.demo_variant === 'medium'
-                  ? T.conventions_medium
-                  : fmt(T.conventions_offmedium, { variant: variantLabel(payload.final.demo_variant) })}{' '}
-                {T.band_note}
-              </p>
-            </div>
           </>
         )}
 

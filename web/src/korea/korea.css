@@ -40,3 +40,9 @@
 .rail.api-down .group { opacity: 0.6; }
 /* revenue by source: fourteen rows and the net line must all be visible — no scroll cap */
 .revenue-table .table-scroll { max-height: none; }
+/* the About launcher sits under the share group at the rail's foot */
+.about-launch { margin-top: 1rem; }
+.about-launch .dl { width: 100%; }
+.dialog-body h4 { margin: 1.4rem 0 0.4rem; }
+.dialog-body table { border-collapse: collapse; font-size: 0.9rem; margin: 0.6rem 0 1rem; }
+.dialog-body th, .dialog-body td { text-align: left; vertical-align: top; padding: 0.3rem 0.8rem 0.3rem 0; border-bottom: 1px solid var(--line); }
