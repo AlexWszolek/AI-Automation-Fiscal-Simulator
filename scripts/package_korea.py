@@ -1,7 +1,11 @@
 """Assemble the Korea package — everything the diplomats' organisation needs to host the
 Korea site on their own infrastructure, and nothing of the US site.
 
-    .venv/bin/python scripts/package_korea.py            # -> build/korea-package/, build/korea-package-<sha>.zip
+    .venv/bin/python scripts/package_korea.py
+    # -> build/korea-package/                      the assembled tree
+    #    build/korea-package-<sha>.tar.gz          MAIL-SAFE: no web/dist (Gmail rejects any archive
+    #                                              holding .js files, whatever the format)
+    #    build/korea-package-<sha>.zip             the full tree incl. web/dist, for Drive/USB
 
 The package mirrors this repository's layout (api/, fiscal_model/, scripts/, tests/,
 data/raw/korea/, web/, deploy/, docs/) so every regeneration script runs unchanged, plus:
@@ -25,6 +29,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tarfile
 import zipfile
 from pathlib import Path
 
@@ -155,13 +160,24 @@ def main() -> None:
     build_site(OUT / "web" / "dist")
     print("built web/dist (Korea entries)")
 
+    for old in (ROOT / "build").glob("korea-package-*.*"):
+        old.unlink()
+    files = [f for f in sorted(OUT.rglob("*")) if f.is_file()]
+    # the mail-safe archive: Gmail blocks archives (zip, tgz, gz, ...) that contain .js
+    # files, and the built site is eight of them — so it ships the source and the README's
+    # one-command build instead. Nothing else in the tree is a blocked type.
+    tar_path = ROOT / "build" / f"korea-package-{sha}.tar.gz"
+    with tarfile.open(tar_path, "w:gz") as t:
+        for f in files:
+            rel = f.relative_to(OUT)
+            if rel.parts[:2] != ("web", "dist"):
+                t.add(f, arcname=str(Path("korea-package") / rel))
+    print(f"wrote {tar_path} ({tar_path.stat().st_size // 1024 // 1024} MB, mail-safe, no web/dist)")
     zip_path = ROOT / "build" / f"korea-package-{sha}.zip"
-    zip_path.unlink(missing_ok=True)
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-        for f in sorted(OUT.rglob("*")):
-            if f.is_file():
-                z.write(f, Path("korea-package") / f.relative_to(OUT))
-    print(f"wrote {zip_path} ({zip_path.stat().st_size // 1024 // 1024} MB)")
+        for f in files:
+            z.write(f, Path("korea-package") / f.relative_to(OUT))
+    print(f"wrote {zip_path} ({zip_path.stat().st_size // 1024 // 1024} MB, full tree incl. web/dist)")
 
 
 if __name__ == "__main__":

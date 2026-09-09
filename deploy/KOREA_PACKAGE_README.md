@@ -1,15 +1,15 @@
 # Fiscal Consequences of AI Automation — Korea site package
 
-This package contains everything needed to host the Korea site: the four pages prebuilt
-as static files, the compute service behind the interactive sliders, the model and data
-they run on, the source to rebuild the site, and the deck and methodology documents.
+This package contains everything needed to host the Korea site: the four pages as a
+static site, the compute service behind the interactive sliders, the model and data they
+run on, the source, and the deck and methodology documents.
 `VERSION` holds the source commit it was cut from.
 
 ## What is in it
 
 | Path | What |
 |---|---|
-| `web/dist/` | The site, prebuilt. Four pages: `korea.html` (presenter view), `korea-app.html` (interactive, with levers and the EN/KR toggle), `korea-dash.html` (the seminar screen), `korea-slides.html` (the deck). `index.html` links to the four. |
+| `web/dist/` | The site, built. Four pages: `korea.html` (presenter view), `korea-app.html` (interactive, with levers and the EN/KR toggle), `korea-dash.html` (the seminar screen), `korea-slides.html` (the deck). Present in the full package; the e-mailed archive omits it because mail systems reject archives holding JavaScript files — build it with the one command under "Building the site". |
 | `api/`, `fiscal_model/` | The compute service (FastAPI) and the model it runs. |
 | `data/raw/korea/` | The Korean source tables: raw exports as served (`*.xml.gz`, `*.xlsx`) and the parsed tables the service reads (`*.tidy.csv`). |
 | `web/` | The site's source (Vite + React). Rebuild with `npm ci && npm run build`. |
@@ -21,7 +21,8 @@ they run on, the source to rebuild the site, and the deck and methodology docume
 
 ## Two ways to host it
 
-**Static only.** Copy `web/dist/` to any static host. Every scenario preset, every policy
+**Static only.** Build the site (one command, below) and copy `web/dist/` to any static
+host. Every scenario preset, every policy
 lever combination shipped as a preset, and their sensitivity charts are committed files
 under `web/dist/data/korea/`. Custom slider values need the compute service; without it
 the interactive page shows a banner saying so and keeps serving the presets. Nothing on
@@ -47,17 +48,17 @@ curl localhost:8000/api/health        # {"status":"ok","mode":"korea","korea_dat
 request builds the Korea data pools (about a second); warm requests take tens of
 milliseconds. Memory is well under 1 GB.
 
-## Rebuilding the site
+## Building the site
 
 ```bash
-cd web && npm ci && npm run build      # -> web/dist
+cd web && npm ci && npm run build      # -> web/dist (about a minute; needs Node 20 or newer)
 ```
 
-Node 20 or newer. The Vite config builds only the Korea entries. A rebuild does not
-recreate `web/dist/index.html` (the packager writes that landing page); keep a copy or
-link the four pages directly. The `web/src` tree also
-contains the US app's modules, because the Korea pages import the chart, component and
-copy modules they share; those files are type-checked but not built into any page.
+The Vite config builds only the Korea entries. The four pages are the entry points; there
+is no `index.html`, so link to them directly or add a landing page of your own. The
+`web/src` tree also contains the US app's modules, because the Korea pages import the
+chart, component and copy modules they share; those files are type-checked but not built
+into any page.
 
 All user-facing text lives in `web/src/content/copy.json` (English) and
 `web/src/content/copy.ko.json` (Korean), under the `korea` key. Edit either and rebuild;
