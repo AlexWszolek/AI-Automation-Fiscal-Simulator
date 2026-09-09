@@ -393,12 +393,6 @@ export default function KoreaScenarioApp() {
               </div>
             )}
 
-            {/* a bundle cached from before this table shipped has no revenue_lines */}
-            {payload.revenue_lines && payload.revenue_lines.length > 0 && (
-              <RevenueTable lines={payload.revenue_lines} copy={KO.revenue_table}
-                            y0={payload.config.start_year} y={finalYear} />
-            )}
-
             <div className="col-wide chart-grid">
               <ChartPanel
                 title={KO.sections.nps}
@@ -458,6 +452,13 @@ export default function KoreaScenarioApp() {
                   <ChartPanel spec={mapSpec} />
                 </div>
               </div>
+            )}
+
+            {/* below the map, per Alex — the thesis as a table closes the page's content;
+                the tornado stays last as the diagnostic. A bundle cached from before this table shipped has no revenue_lines */}
+            {payload.revenue_lines && payload.revenue_lines.length > 0 && (
+              <RevenueTable lines={payload.revenue_lines} copy={KO.revenue_table}
+                            y0={payload.config.start_year} y={finalYear} />
             )}
 
             <KoreaTornadoSection cfg={cfg} pack={pack} />
