@@ -255,3 +255,37 @@ def test_korea_tornado_never_blocks_runs_and_superseded_requests_skip(monkeypatc
     # exactly one of the two queued requests computed — the newest — the other skipped
     assert results["b"] is korea_api.SUPERSEDED
     assert results["c"]["config"]["levers"] == {"ui_weeks": 33}
+
+
+def test_tornado_n_parse_survives_json_infinities():
+    from api.main import _tornado_n
+    for junk in (1e400, float("inf"), float("nan"), -1e400, "abc", None, [], {}):
+        assert _tornado_n({"n": junk}, 50, 400) == 150
+    assert _tornado_n({"n": 200}, 50, 400) == 200
+    assert _tornado_n({"n": 7}, 50, 400) == 150          # below the floor → default
+    assert _tornado_n({}, 4, 300) == 150
+
+
+def test_feedback_cooldown_ignores_client_supplied_forwarded_for(client, tmp_path, monkeypatch):
+    """The cooldown used to key on the FIRST X-Forwarded-For hop — a header any sender can
+    set — so a fresh header minted a fresh cooldown per request. Without a loopback proxy
+    in front, the header is ignored entirely; behind one, the proxy-appended last hop wins."""
+    import api.main as api_main
+    monkeypatch.setattr(api_main, "FEEDBACK_PATH", tmp_path / "feedback.jsonl")
+    # the module-scoped client shares the cooldown table with the earlier feedback tests;
+    # a short cooldown lets this test start clean and still catch the immediate repeat
+    monkeypatch.setattr(api_main, "FEEDBACK_COOLDOWN_S", 0.5)
+    import time as _t
+    _t.sleep(0.6)
+    first = client.post("/api/feedback", json={"message": "first"},
+                        headers={"x-forwarded-for": "1.1.1.1"})
+    assert first.status_code == 200
+    spoofed = client.post("/api/feedback", json={"message": "second"},
+                          headers={"x-forwarded-for": "2.2.2.2"})
+    assert spoofed.status_code == 429
+    assert len((tmp_path / "feedback.jsonl").read_text().splitlines()) == 1
+
+
+def test_health_reports_korea_data(client):
+    body = client.get("/api/health").json()
+    assert "korea_data" in body and isinstance(body["korea_data"], bool)

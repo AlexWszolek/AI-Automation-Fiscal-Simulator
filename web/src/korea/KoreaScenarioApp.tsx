@@ -74,7 +74,13 @@ export default function KoreaScenarioApp() {
       ({ low: '-1', medium: '0', high: '1' } as Record<string, string>)[v]] ?? v
   const { payload, loading, apiDown, failed } = useKoreaScenarioData(cfg)
   const values = effectiveKoreaLevers(cfg)
-  const qs = useMemo(() => queryStringFor(cfg), [cfg])
+  // the language rides the URL (locale.ts advertises ?lang= for shareable links), so the
+  // rewrite below and the share box carry it; English stays implicit
+  const qs = useMemo(() => {
+    const base = queryStringFor(cfg)
+    if (lang !== 'ko') return base
+    return base ? `${base}&lang=ko` : 'lang=ko'
+  }, [cfg, lang])
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   useEffect(() => {
@@ -363,7 +369,7 @@ export default function KoreaScenarioApp() {
               <p className="caption">
                 {payload.final.demo_variant === 'medium'
                   ? T.conventions_medium
-                  : fmt(T.conventions_offmedium, { variant: payload.final.demo_variant })}{' '}
+                  : fmt(T.conventions_offmedium, { variant: variantLabel(payload.final.demo_variant) })}{' '}
                 {T.band_note}
               </p>
             </div>

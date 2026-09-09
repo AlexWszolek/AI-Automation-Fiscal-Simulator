@@ -79,6 +79,13 @@ class TornadoJobs:
             job_id = uuid.uuid4().hex[:12]
             self.jobs[job_id] = {"status": "queued", "done": 0, "total": n, "cfg_repr": rep}
             self.by_repr[rep] = job_id
+            # bounded: finished jobs beyond the newest 64 are dropped (their results live in
+            # the results LRU); by_repr aliases follow
+            finished = [j for j, e in self.jobs.items() if e["status"] not in ("queued", "running")]
+            for j in finished[:max(0, len(finished) - 64)]:
+                e = self.jobs.pop(j)
+                if self.by_repr.get(e.get("cfg_repr")) == j:
+                    self.by_repr.pop(e["cfg_repr"], None)
         self.queue.put((job_id, cfg, rep, n))
         return {"job_id": job_id, "status": "queued", "done": 0, "total": n}
 

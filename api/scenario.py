@@ -58,8 +58,10 @@ class ScenarioService:
             self.payloads[rep] = payload
             while len(self.payloads) > 16:
                 self.payloads.popitem(last=False)
-            while len(self.pool) > 4:                   # template pool: one per structural shape
-                self.pool.popitem(last=False)
-            while len(self.ctx_cache) > 4:              # bound the readout contexts too
-                self.ctx_cache.pop(next(iter(self.ctx_cache)))
+            # the build above inserts into pool/ctx_cache OUTSIDE this lock; iterating a
+            # dict another thread is inserting into raises, so snapshot the keys first
+            for k in list(self.pool)[:max(0, len(self.pool) - 4)]:      # one per structural shape
+                self.pool.pop(k, None)
+            for k in list(self.ctx_cache)[:max(0, len(self.ctx_cache) - 4)]:   # readout contexts
+                self.ctx_cache.pop(k, None)
         return payload

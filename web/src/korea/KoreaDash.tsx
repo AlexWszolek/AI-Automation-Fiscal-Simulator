@@ -97,6 +97,12 @@ export default function KoreaDash() {
   }, [])
 
   const arc = DASH_PRESETS.filter((k) => KOREA_PRESETS.some((p) => p.key === k))
+  // a stable spec identity: the map does not depend on the preset, and ChartPanel's
+  // data-swap path must not fire on a topojson (see ChartPanel)
+  const mapSpec = useMemo(
+    () => (regions && topo ? koreaGeoMap(regions, topo, { size: 500, tips: KO.tooltips }) : null),
+    [regions, topo, KO],
+  )
   const finalYear = payload
     ? payload.config.start_year + payload.config.display_periods - 1 : 2035
 
@@ -118,15 +124,13 @@ export default function KoreaDash() {
       </header>
       <p className="dash-blurb caption">{preset.blurb}</p>
 
-      {failed && <p className="panel caption warning">{T.bundle_failed}</p>}
+      {failed && <p className="panel caption warning">{T.load_failed}</p>}
       {loading && !payload && <p className="caption">{T.loading}</p>}
 
       {payload && (
         <div className="dash-body">
           <section className="dash-map">
-            {regions && topo && (
-              <ChartPanel spec={koreaGeoMap(regions, topo, { size: 500, tips: KO.tooltips })} />
-            )}
+            {mapSpec && <ChartPanel spec={mapSpec} />}
             <h2>{KO.sections.map}</h2>
             <p className="caption">{KO.captions.map}</p>
           </section>

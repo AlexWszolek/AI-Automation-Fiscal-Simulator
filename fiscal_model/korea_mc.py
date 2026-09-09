@@ -130,6 +130,12 @@ def run_korea_mc(n: int = 400, spread: float = 0.15, seed: int = 0,
     rows = []
     for i, d in enumerate(lever_draws):
         v2p = replace(d, **pin)
+        # reabsorption and LFP-exit are jittered independently by sample_draws, so a legal
+        # base pair (the rail clamps it to sum ≤ 1) can be pushed past the engine's
+        # `reab + exit ≤ 1` assert — a 500 from an ordinary slider position. Same rule as
+        # the rail: reabsorption wins, exit yields; the realized value is what gets ranked.
+        if v2p.reabsorption_rate + v2p.lfp_exit_rate > 1.0:
+            v2p = replace(v2p, lfp_exit_rate=max(0.0, 1.0 - v2p.reabsorption_rate))
         ax = axes[i]
         try:
             model, res = contexts[ax["exposure_delta"]].run_model(v2p)

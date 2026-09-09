@@ -19,9 +19,12 @@ import threading
 from collections import OrderedDict
 
 from fiscal_model.korea_webpayload import (build_korea_scenario_payload,
-                                           korea_mc_tornado, sanitize_korea_config)
+                                           korea_mc_tornado, sanitize_korea_config,
+                                           tornado_levers)
 
 SUPERSEDED = {"superseded": True}
+BUSY = {"busy": True}
+MAX_MC_WAITERS = 3       # queued tornado requests beyond this are refused, not parked
 
 
 class KoreaScenarioService:
@@ -34,6 +37,7 @@ class KoreaScenarioService:
         self.mc_pools: dict | None = None
         self.payloads: OrderedDict[str, dict] = OrderedDict()
         self.mc_ticket = 0                      # the newest tornado request's number
+        self.mc_waiters = 0                     # requests parked on mc_lock right now
 
     def _deltas_table(self):
         # the deltas table is read-only once built; both pools share it. Built under the
@@ -67,22 +71,30 @@ class KoreaScenarioService:
 
     def tornado(self, body: dict, n: int) -> dict:
         cfg = sanitize_korea_config(body)
+        cfg = {"preset": cfg["preset"], "levers": tornado_levers(cfg["levers"])}
         rep = "tornado:" + str(n) + ":" + json.dumps(cfg, sort_keys=True)
         hit = self._cached(rep)
         if hit is not None:
             return hit
         with self.cache_lock:
+            if self.mc_waiters >= MAX_MC_WAITERS:
+                return BUSY                     # every waiter holds a server thread
+            self.mc_waiters += 1
             self.mc_ticket += 1
             mine = self.mc_ticket
-        with self.mc_lock:
-            if self.mc_ticket != mine:          # a newer request queued behind us
-                return SUPERSEDED
-            hit = self._cached(rep)
-            if hit is not None:
-                return hit
-            pools = self._pools("mc")
-            out = korea_mc_tornado(cfg, n=n, **pools)
-            self._prune(pools)
+        try:
+            with self.mc_lock:
+                if self.mc_ticket != mine:      # a newer request queued behind us
+                    return SUPERSEDED
+                hit = self._cached(rep)
+                if hit is not None:
+                    return hit
+                pools = self._pools("mc")
+                out = korea_mc_tornado(cfg, n=n, **pools)
+                self._prune(pools)
+        finally:
+            with self.cache_lock:
+                self.mc_waiters -= 1
         self._remember(rep, out)
         return out
 

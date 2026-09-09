@@ -117,6 +117,7 @@ export function useKoreaScenarioData(cfg: KoreaConfig): KoreaScenarioData {
           setPayload(p)
           setLoading(false)
           setFailed(false)
+          setApiDown(false)          // static bundles need no service: the alert is over
         })
         .catch(() => {
           if (cancelled()) return

@@ -31,6 +31,9 @@ export function ChartPanel({ spec, caption, title, lazy }: {
 
   useEffect(() => {
     if (!el.current) return
+    // measure before the first embed: starting at 0 meant every chart embedded once at
+    // width 0 and again at its real width (a full second vega pass on first paint)
+    setFitWidth(Math.round(el.current.getBoundingClientRect().width))
     let timer: ReturnType<typeof setTimeout> | undefined
     const ro = new ResizeObserver((entries) => {
       const w = Math.round(entries[0].contentRect.width)
@@ -53,9 +56,13 @@ export function ChartPanel({ spec, caption, title, lazy }: {
   const structKeyRef = useRef('')
 
   useEffect(() => {
-    if (!near) return
+    if (!near || fitWidth === 0) return       // unmeasured (or hidden): wait for a width
     let gone = false
-    const values = (spec as { data?: { values?: unknown[] } }).data?.values
+    const data = (spec as { data?: { values?: unknown; format?: unknown } }).data
+    // only inline ARRAY data can be swapped: a topojson map's `values` is an object whose
+    // `format` the structKey cannot see, and vega routes the resulting dataflow error to
+    // its logger rather than throwing — the catch below would never see it
+    const values = Array.isArray(data?.values) && !data?.format ? data.values : undefined
     const structKey = JSON.stringify({ ...(spec as object), data: null }) + `|${fitWidth}`
     void import('../charts/vega').then(async ({ mount }) => {
       if (gone || !el.current) return

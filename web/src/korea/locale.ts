@@ -55,7 +55,7 @@ function buildPack(lang: Lang): LocalePack {
   return {
     KO: koreaBlock,
     lever: (ref: string) => {
-      if (ref.startsWith('us:')) return usLevers[ref.slice(3)]
+      if (ref.startsWith('us:')) return usLevers[ref.slice(3)] ?? { label: ref, help: null }
       const kr = (koreaBlock.rail?.levers ?? {})[ref.slice(3)]
       return kr ?? { label: ref, help: null }
     },
@@ -76,7 +76,11 @@ const PACKS: Record<Lang, LocalePack> = { en: buildPack('en'), ko: buildPack('ko
 export function initialLang(): Lang {
   const q = new URLSearchParams(location.search).get('lang')
   if (q === 'ko' || q === 'en') return q
-  const stored = localStorage.getItem(STORAGE_KEY)
+  // storage access THROWS (not returns null) when a browser blocks site data — Safari
+  // "Block all cookies", sandboxed iframes — and this runs inside the first render of
+  // every Korea page, with no error boundary above it: guard, or the page is blank
+  let stored: string | null = null
+  try { stored = localStorage.getItem(STORAGE_KEY) } catch { /* no storage: English */ }
   return stored === 'ko' ? 'ko' : 'en'
 }
 
@@ -84,7 +88,7 @@ export function useLocale(): { lang: Lang; setLang: (l: Lang) => void; pack: Loc
   const [lang, setLangState] = useState<Lang>(initialLang)
   useEffect(() => {
     document.documentElement.lang = lang
-    localStorage.setItem(STORAGE_KEY, lang)
+    try { localStorage.setItem(STORAGE_KEY, lang) } catch { /* no storage: fine */ }
   }, [lang])
   return { lang, setLang: setLangState, pack: PACKS[lang] }
 }

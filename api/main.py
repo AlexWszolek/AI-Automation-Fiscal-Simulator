@@ -40,6 +40,31 @@ def _load_backend():
     return data, deltas
 
 
+def _tornado_n(body: dict, lo: int, hi: int, default: int = 150) -> int:
+    """Draw count from a request body, lo..hi else the default. json.loads accepts 1e400,
+    NaN and Infinity, and int() of those raises INSIDE a guard expression — a 500 from
+    valid JSON — so the conversion is fenced."""
+    try:
+        n = int(body.get("n"))
+    except (TypeError, ValueError, OverflowError):
+        return default
+    return n if lo <= n <= hi else default
+
+
+def _client_id(request: Request) -> str:
+    """The feedback cooldown's key. Behind the reverse proxy request.client is loopback and
+    the LAST X-Forwarded-For hop is the address the proxy itself appended; every earlier
+    hop — and the whole header when there is no proxy — is client-supplied, and keying on
+    it let a sender mint a fresh cooldown per request."""
+    host = request.client.host if request.client else "unknown"
+    if host in ("127.0.0.1", "::1", "localhost"):
+        hops = [h.strip() for h in request.headers.get("x-forwarded-for", "").split(",")
+                if h.strip()]
+        if hops:
+            return hops[-1]
+    return host
+
+
 def _git_sha() -> str:
     try:
         return subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
@@ -67,7 +92,11 @@ def create_app(backend=None) -> FastAPI:
     @app.get("/api/health")
     def health() -> dict:
         from fiscal_model.presets import PRESETS
+        from fiscal_model.korea_cells import PAYM39_CSV
+        # korea_data: the gitignored tidy tables bootstrap step 7 builds; without them
+        # every /api/korea/* request 500s while this endpoint used to say "ok"
         return {"status": "ok", "model_loaded": state["ready"],
+                "korea_data": PAYM39_CSV.exists(),
                 "presets": len(PRESETS) + 1, "version": state.get("sha", "unknown")}
 
     @app.post("/api/run")
@@ -80,20 +109,18 @@ def create_app(backend=None) -> FastAPI:
 
     @app.post("/api/korea/tornado")
     def korea_tornado(body: dict) -> dict:
-        n = body.get("n")
-        n = int(n) if isinstance(n, (int, float)) and 50 <= int(n) <= 400 else 150
-        out = state["korea"].tornado(body, n)
+        out = state["korea"].tornado(body, _tornado_n(body, 50, 400))
         if out.get("superseded"):
             # a newer tornado request arrived while this one waited; the page shows only
             # the latest, so this one is not worth the seconds of MC
             raise HTTPException(status_code=409, detail="superseded by a newer request")
+        if out.get("busy"):
+            raise HTTPException(status_code=429, detail="tornado queue is full; retry shortly")
         return out
 
     @app.post("/api/tornado")
     def tornado(body: dict) -> dict:
-        n = body.get("n")
-        n = int(n) if isinstance(n, (int, float)) and 4 <= int(n) <= 300 else 150
-        return state["jobs"].submit(sanitize(body), n=n)
+        return state["jobs"].submit(sanitize(body), n=_tornado_n(body, 4, 300))
 
     @app.get("/api/tornado/{job_id}")
     def tornado_status(job_id: str) -> dict:
@@ -111,10 +138,11 @@ def create_app(backend=None) -> FastAPI:
             raise HTTPException(422, "empty message")
         if len(msg) > 5000:
             raise HTTPException(413, "message too long (5,000 characters max)")
-        # behind the reverse proxy request.client is localhost; X-Forwarded-For carries the client
-        client = (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
-                  or (request.client.host if request.client else "unknown"))
+        client = _client_id(request)
         now = time.monotonic()
+        if len(feedback_last) > 1000:             # bounded: expired entries are dropped
+            for k in [k for k, t in feedback_last.items() if now - t > FEEDBACK_COOLDOWN_S]:
+                feedback_last.pop(k, None)
         if now - feedback_last.get(client, -FEEDBACK_COOLDOWN_S) < FEEDBACK_COOLDOWN_S:
             raise HTTPException(429, "please wait a moment before sending more feedback")
         feedback_last[client] = now

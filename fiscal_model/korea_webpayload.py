@@ -414,6 +414,16 @@ def build_korea_scenario_payload(cfg: dict, data_pool: dict | None = None,
     }
 
 
+_POLICY = ("vat_pp", "nps_mandate_share", "corp_to_funds")
+
+
+def tornado_levers(levers: dict) -> dict:
+    """The levers the tornado actually samples around: the tax mults are static ledger
+    scoring and the policy levers are choices, not uncertainty, so both are stripped. The
+    service keys its tornado cache on this, so a policy-lever tick never re-runs the MC."""
+    return {k: v for k, v in levers.items() if k not in _MULTS and k not in _POLICY}
+
+
 def korea_mc_tornado(cfg: dict, n: int = 150, seed: int = 0,
                      data_pool: dict | None = None, deltas=None,
                      ctx_pool: dict | None = None) -> dict:
@@ -428,8 +438,7 @@ def korea_mc_tornado(cfg: dict, n: int = 150, seed: int = 0,
     # policy levers (vat_pp / nps_mandate_share / corp_to_funds) are policy CHOICES, not
     # model uncertainty — the tornado deliberately samples the PRE-POLICY model, so all
     # are stripped from the sampling base (documented in the caption's framing)
-    _POLICY = ("vat_pp", "nps_mandate_share", "corp_to_funds")
-    levers = {k: v for k, v in levers.items() if k not in _MULTS and k not in _POLICY}
+    levers = tornado_levers(levers)
     variant = _DEMO_VARIANTS[levers.get("demography_variant", 0.0)]
     base_axes = {k: levers[k] for k in ("exposure_delta", "nhi_share", "nps_share")
                  if k in levers}

@@ -266,3 +266,14 @@ def test_demography_variants_and_tax_mults(pools):
     assert m["final"]["fed_deficit_B"] != base["final"]["fed_deficit_B"]
     assert m["final"]["nhi_years_forward"] == base["final"]["nhi_years_forward"]
     assert m["final"]["nps_given_back"] == base["final"]["nps_given_back"]
+
+
+def test_tornado_survives_rail_legal_exit_rates(pools):
+    """The rail clamps reabsorption + exit to ≤ 1, but the sampler jitters the two levers
+    independently, so a legal base at the edge (exit = 1 − reab) produced draws past the
+    engine's assert — a 500 from an ordinary slider position (review finding)."""
+    from fiscal_model.korea_webpayload import korea_mc_tornado, sanitize_korea_config
+    out = korea_mc_tornado(sanitize_korea_config({"levers": {"lfp_exit_rate": 0.9}}),
+                           n=30, **pools)
+    assert "ei_shortfall_tn" in out["targets"] and len(out["targets"]["ei_shortfall_tn"]) > 5
+    assert out["config"]["levers"]["lfp_exit_rate"] == 0.9

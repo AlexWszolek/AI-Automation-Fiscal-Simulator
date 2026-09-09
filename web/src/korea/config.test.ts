@@ -83,3 +83,10 @@ describe('pristine & deviations', () => {
     expect(isPristine(cfg)).toBe(false)
   })
 })
+
+describe('configFromLocation blank values', () => {
+  it('ignores an empty parameter instead of reading it as zero', () => {
+    const cfg = configFromLocation('?preset=korea-central&adoption_end=&ui_weeks=')
+    expect(cfg.levers).toEqual({})
+  })
+})

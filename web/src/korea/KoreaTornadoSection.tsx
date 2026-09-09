@@ -24,6 +24,7 @@ const staticCache = new Map<string, TornadoData>()
 // sliders before asking for one (runs no longer queue behind it, but every request
 // still costs the box)
 const DEBOUNCE_MS = 2000
+const RETRY_MS = 1500
 
 export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: LocalePack }) {
   const KO = pack.KO
@@ -60,19 +61,28 @@ export function KoreaTornadoSection({ cfg, pack }: { cfg: KoreaConfig; pack: Loc
       return
     }
 
-    const timer = setTimeout(() => {
+    const request = (attempt: number): Promise<TornadoData> =>
       fetch('/api/korea/tornado', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ preset: cfg.preset, levers: deviations(cfg) }),
       })
-        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+        .then((r): Promise<TornadoData> => {
+          if (r.ok) return r.json() as Promise<TornadoData>
+          // 409: another viewer's request superseded ours; 429: the queue was full.
+          // Neither means our configuration was computed — try once more, then give up.
+          if ((r.status === 409 || r.status === 429) && attempt === 0)
+            return new Promise((res) => setTimeout(res, RETRY_MS)).then(() => request(1))
+          return Promise.reject(new Error(String(r.status)))
+        })
+    const timer = setTimeout(() => {
+      request(0)
         .then((t: TornadoData) => {
           if (cancelled()) return
           setEntry(t)
           setStale(false)
         })
-        .catch(() => { if (!cancelled()) setStale(false) })   // keep last entry, un-stale
+        .catch(() => { /* keep the last entry, and keep it DIMMED: it is not this config */ })
     }, DEBOUNCE_MS)
     return () => clearTimeout(timer)
   }, [JSON.stringify(cfg)])

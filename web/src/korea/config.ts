@@ -81,6 +81,7 @@ export function configFromLocation(search: string): KoreaConfig {
   for (const [k, raw] of qp.entries()) {
     const spec = KOREA_GRID[k]
     if (!spec) continue
+    if (raw.trim() === '') continue          // Number('') is 0: a truncated link is not a scenario
     const x = Number(raw)
     if (!Number.isFinite(x)) continue
     let v = Math.min(Math.max(x, spec.lo), spec.hi)
