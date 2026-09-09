@@ -403,13 +403,14 @@ def korea_preset_params(key: str, n_periods: int | None = None,
     from dataclasses import replace
 
     from .korea_demography import korea_demography_path
-    from .korea_scenarios import KOREA_PRESETS
+    from .korea_scenarios import KOREA_CHANNEL_CONVENTIONS, KOREA_PRESETS
     from .levers_v2 import DEFAULTS_SHIPPED
     from .presets import build_adoption_path
 
     preset = KOREA_PRESETS[key]
     n = int(n_periods) if n_periods is not None else preset.n_periods
-    fields = dict(cognitive_feasibility=1.0, physical_feasibility=0.0)
+    fields = dict(cognitive_feasibility=1.0, physical_feasibility=0.0,
+                  **KOREA_CHANNEL_CONVENTIONS)       # US-only channels off, every preset
     fields.update(preset.overrides)
     fields.update(param_overrides)
     # survivor_gains_share is DERIVED, never set (presets.to_params has the same expression;

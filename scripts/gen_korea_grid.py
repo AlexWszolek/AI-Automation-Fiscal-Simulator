@@ -38,7 +38,6 @@ UI = [
     ("retained_profit_share", "us:retained",   "Firms",                 0.01,  "float"),
     ("price_reduction_share", "us:price",      "Firms",                 0.01,  "float"),
     ("auto_cost",             "us:auto_cost",  "Firms",                 0.01,  "float"),
-    ("compute_effective_rate", "us:compute_rate", "Firms",               0.01,  "float"),
     ("survivor_elasticity",   "us:elasticity", "Survivor wages",        0.05,  "float"),
     ("survivor_raise_ceiling", "us:ceiling",    "Survivor wages",        0.05,  "float"),
     # survivor_spillover_to_profit and interest_rate are delisted from the rail (see the

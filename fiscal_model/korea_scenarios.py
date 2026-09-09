@@ -183,12 +183,47 @@ from .presets import Preset, build_adoption_path  # noqa: E402
 # all-recipient rate is an UPPER anchor; Alex's judgment discounts it to 0.25 — mid-band of
 # the DvW slack-market evidence (0.15–0.35, docs/PRESET_EVIDENCE.md). The wage scar keeps
 # Farber's central 0.13: no Korean primary on re-employment wages yet (KLI ask outstanding).
-KOREA_DIFFUSION_LABOUR = dict(reabsorption_rate=0.25, reemployment_haircut=0.13)
+# Every field the diffusion family's run is sensitive to is set HERE, on purpose, with a
+# provenance line — never inherited from DEFAULTS_SHIPPED (the review of 2026-09-09 found
+# ui_weeks, the disposition triple and five more riding the US defaults unnamed). Values
+# equal to the shipped default are still listed: the point is that they are chosen.
+KOREA_DIFFUSION_LABOUR = dict(
+    reabsorption_rate=0.25, reemployment_haircut=0.13, lfp_exit_rate=0.03,
+    attrition_rate=0.025, ui_weeks=26,
+    retained_profit_share=0.6, price_reduction_share=0.2,
+    survivor_elasticity=-0.15, auto_cost=0.10, demand_multiplier=0.5,
+    price_passthrough=0.3, productivity_passthrough=0.3,
+)
 KOREA_DIFFUSION_LABOUR_PROVENANCE = {
     "reabsorption_rate": "MOEL 구직급여 수급 중 재취업률 30.6% (2024) as the upper anchor, "
                          "discounted for structural displacement → 0.25 (DvW slack 0.15–0.35)",
     "reemployment_haircut": "Farber 2015 central 0.13 (no Korean primary yet)",
+    "lfp_exit_rate": "US shipped convention 0.03/yr, carried (ported presets use 0.02–0.06)",
+    "attrition_rate": "US shipped convention 0.025/yr, carried",
+    "ui_weeks": "26 weeks = 182 days, mid-band of Korea's statutory 구직급여 소정급여일수 "
+                "120–270 days (by age and insured period); Alex's decision 2026-09-09",
+    "retained_profit_share": "US shipped disposition 0.6/0.2/0.2, carried (§ disposition)",
+    "price_reduction_share": "US shipped disposition 0.6/0.2/0.2, carried",
+    "survivor_elasticity": "US shipped convention −0.15, carried",
+    "auto_cost": "US shipped convention 0.10 of saved wages to compute, carried",
+    "demand_multiplier": "US shipped convention 0.5, carried",
+    "price_passthrough": "US shipped convention 0.3, carried",
+    "productivity_passthrough": "US shipped convention 0.3, carried",
 }
+
+# Channels the engine carries for the US that have no Korean counterpart, switched OFF for
+# every Korea preset (applied in korea_preset_params, beneath the presets' own overrides):
+#   compute_effective_rate — the US gross-receipts rate on compute-pool spend; Korea's
+#     compute spend flows overwhelmingly to foreign vendors and collects no Korean tax
+#     (it was inheriting 0.10 and adding ~7% to the corporate-recapture transfer);
+#   shareholder_eff_rate — the capital-gains TAX on the shareholder windfall, parameterised
+#     on US holder structure and realization rates; Korea taxes listed-share gains only for
+#     major shareholders (the broader tax was abolished), so the tax leg is 0. The
+#     undistributed-earnings level itself keeps accruing (equity_pe_multiple stays at the
+#     engine's convention) because the NPS mandate lever is a share of that level;
+#   ssdi_annual — a USD benefit the engine was spending as won (a ₩1bn no-op); off, disclosed.
+KOREA_CHANNEL_CONVENTIONS = dict(compute_effective_rate=0.0, shareholder_eff_rate=0.0,
+                                 ssdi_annual=0.0)
 
 KOREA_PRESETS = {
     "korea-slow": Preset(

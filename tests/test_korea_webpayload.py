@@ -46,7 +46,8 @@ def test_delisted_levers_are_dropped():
     from fiscal_model.korea_webpayload import sanitize_korea_config
     cfg = sanitize_korea_config({
         "preset": "korea-central",
-        "levers": {"interest_rate": 0.06, "survivor_spillover_to_profit": 0.9}})
+        "levers": {"interest_rate": 0.06, "survivor_spillover_to_profit": 0.9,
+                   "compute_effective_rate": 0.27}})     # a Korea channel convention, not a lever
     assert cfg["levers"] == {}
 
 

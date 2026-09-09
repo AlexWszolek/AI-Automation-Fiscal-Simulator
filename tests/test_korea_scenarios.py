@@ -120,9 +120,11 @@ def test_translated_presets_follow_the_porting_discipline():
     from fiscal_model.korea_scenarios import KOREA_BAND_KEYS, KOREA_PRESETS
     from fiscal_model.levers_v2 import V2Params
     fields = {f.name for f in dataclasses.fields(V2Params)}
-    ported = set(KOREA_PRESETS) - set(KOREA_BAND_KEYS)
+    # the diffusion trio is held to the same discipline since 2026-09-09: every field its
+    # run is sensitive to is an explicit, provenanced override (KOREA_DIFFUSION_LABOUR)
+    ported = set(KOREA_PRESETS)
     assert {"korea-agi-20y", "korea-agi-5y", "korea-ai-2027", "korea-metaculus",
-            "korea-karger", "korea-acemoglu", "korea-brynjolfsson"} <= ported
+            "korea-karger", "korea-acemoglu", "korea-brynjolfsson"} | set(KOREA_BAND_KEYS) <= ported
     for k in ported:
         p = KOREA_PRESETS[k]
         assert set(p.overrides) <= fields, f"{k}: unknown V2Params field"

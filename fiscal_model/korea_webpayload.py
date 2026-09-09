@@ -44,10 +44,12 @@ _MODEL_LEVERS = ("reabsorption_rate", "reemployment_haircut", "lfp_exit_rate",
                  "price_reduction_share", "productivity_passthrough", "price_passthrough",
                  "demand_multiplier", "mpc", "consumption_stickiness", "ui_weeks",
                  "auto_cost", "baseline_growth_rate",
-                 "reab_wage_baumol", "reab_wage_crowding", "compute_effective_rate",
+                 "reab_wage_baumol", "reab_wage_crowding",
                  "survivor_raise_ceiling",
                  "automation_tax_rate",
                  "income_tax_mult", "corp_tax_mult", "cons_tax_mult")
+# compute_effective_rate is a Korea channel convention (0 — see KOREA_CHANNEL_CONVENTIONS),
+# not a lever: the US gross-receipts rate has no Korean counterpart.
 # Delisted from the rail (diplomat review, 2026-08): interest_rate moves only the debt
 # columns, which no Korea chart plots, and survivor_spillover_to_profit acts only when
 # the survivor-raise ceiling binds, which no rail-reachable config makes it do. Both stay

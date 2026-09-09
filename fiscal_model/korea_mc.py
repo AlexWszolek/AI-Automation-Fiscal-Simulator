@@ -39,6 +39,8 @@ from .korea_scenarios import WAGE_LINKED_SHARE
 
 KOREA_PINNED = ("cognitive_feasibility", "physical_feasibility", "robotics_lag",
                 "state_cut_share", "state_rate_hike_cap",
+                # the US compute-pool tax rate is a Korea channel convention (0), not an axis
+                "compute_effective_rate",
                 # US transfer/shareholder levers: they reach only the US-ledger deficit
                 # lines, never the fund headlines this MC targets — sampling them adds
                 # pure-noise tornado rows (SSDI/UBI-recapture/equity bars at |ρ|≈n^-1/2)

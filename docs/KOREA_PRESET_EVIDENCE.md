@@ -99,3 +99,26 @@ EI ₩5.5 → 5.2tn short (outlays dominate, robust); NPS 1.14 → 0.19 of 8 bou
 0.91M → 0.40M; Δu +2.7 → +1.1pp. The recapture finding flips for the pension only: 100%
 corporate recapture (₩7.6tn/yr) now makes the pension whole, recovers 0.26 of NHI's 0.43
 years, and refunds under a fifth of the EI shortfall.
+
+## Addendum 2026-09-09 — the trio's remaining inherited defaults, and the channel conventions
+
+The 2026-09-09 review found the diffusion trio still inheriting US engine defaults it had
+never chosen (`ui_weeks`, the disposition triple, five more) and three US-only channels
+running in every Korea preset. Resolution (Alex's decisions):
+
+| Field | Value | Evidence / decision |
+|---|---|---|
+| `ui_weeks` | **26** (kept) | 26 weeks = 182 days, mid-band of Korea's statutory 구직급여 소정급여일수 120–270 days (by age and insured period). Kept at the engine value by decision; now an explicit, provenanced override. |
+| disposition (retained / price / survivor), `attrition_rate`, `survivor_elasticity`, `auto_cost`, `demand_multiplier`, `price_passthrough`, `productivity_passthrough`, `lfp_exit_rate` | shipped values, now explicit | Behavioural conventions shared with every preset on both sites — carried, listed in `KOREA_DIFFUSION_LABOUR` with provenance, and covered by the porting-discipline test. Numbers unchanged. |
+| `compute_effective_rate` | **0.0**, every Korea preset | The US gross-receipts rate on compute-pool spend has no Korean counterpart: compute spend flows overwhelmingly to foreign vendors. Was inheriting 0.10 (~7% of the corporate-recapture transfer) and sat on the rail; delisted and pinned. |
+| `shareholder_eff_rate` | **0.0**, every Korea preset | The capital-gains tax on the shareholder windfall is parameterised on US holder structure and realization rates; Korea taxes listed-share gains only for major shareholders, so the tax leg is off. The undistributed-earnings level keeps accruing at the engine's convention because the NPS mandate lever is a share of it. Disclosed. |
+| `ssdi_annual` | **0.0**, every Korea preset | A USD benefit the engine was spending as won (a ₩1bn no-op). Off, disclosed. |
+
+`KOREA_CHANNEL_CONVENTIONS` in `fiscal_model/korea_scenarios.py` applies the three channel
+switches beneath every preset's overrides (in `korea_preset_params`).
+
+Effect: fund headlines unchanged (NHI 0.43 / EI ₩5.2tn / NPS 0.19). The 2035 general-account
+result moves from ₩1.57tn better off to **₩0.47tn better off** — still no widening for VAT
+to cover, but no longer resting on US channels. The corporate-recapture transfer is
+**₩7.0tn/yr** (was 7.6); at 100% it still makes the pension whole, recovers 0.24 of NHI's
+0.43 years, and refunds ₩0.7tn of the ₩5.2tn EI shortfall.

@@ -23,9 +23,13 @@ def korea_run():
                  adoption_path=build_adoption_path(KOREA_PRESETS["korea-central"], 10),
                  cognitive_feasibility=1.0, physical_feasibility=0.0,
                  demography_path=list(korea_demography_path(10)),
-                 # the diffusion family's Korean-anchored labour convention (MOEL-anchored
-                 # re-employment 0.25, Farber haircut 0.13) — the hand-assembled central
+                 # the diffusion family's explicit conventions (MOEL-anchored re-employment,
+                 # Farber haircut, the carried disposition/macro values) — the hand-assembled
+                 # central; survivor is DERIVED from the disposition pair as korea_preset_params
+                 # derives it (the engine's simplex guard rejects a mismatched shipped value)
                  **KOREA_DIFFUSION_LABOUR)
+    korea["survivor_gains_share"] = round(
+        1.0 - korea["retained_profit_share"] - korea["price_reduction_share"], 6)
     return data, deltas, korea
 
 
@@ -37,9 +41,18 @@ def _run(korea_run, base):
 
 
 def test_reduction_config_invariants_green(korea_run):
+    """The v1 reduction is 'every behavioural lever off' — so it takes only the STRUCTURAL
+    Korea fields (adoption, channels, demography), never the diffusion family's carried
+    behavioural conventions, which would turn the reduction back into a shipped run."""
+    from fiscal_model.dynamics_v2 import DynamicModelV2
     from fiscal_model.invariants import assert_all_invariants
+    from fiscal_model.korea_scenarios import KOREA_DIFFUSION_LABOUR
     from fiscal_model.levers_v2 import DEFAULTS_V1REDUCTION
-    params, res = _run(korea_run, DEFAULTS_V1REDUCTION)
+    data, deltas, korea = korea_run
+    structural = {k: v for k, v in korea.items()
+                  if k not in KOREA_DIFFUSION_LABOUR and k != "survivor_gains_share"}
+    params = replace(DEFAULTS_V1REDUCTION, **structural)
+    res = DynamicModelV2(data, deltas, params).run()
     assert_all_invariants(res, params, float(res["population_M"].iloc[0]), country="kr")
     assert res["max_cell_resid_M"].max() < 1e-9
     assert res["employment_drop_pct"].iloc[-1] == pytest.approx(8.16, abs=0.1)
