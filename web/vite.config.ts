@@ -1,6 +1,11 @@
+import { existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+
+// The Korea package (scripts/package_korea.py) ships this project without the US entry:
+// when index.html is absent — or KOREA_ONLY=1 is set — only the Korea pages are built.
+const koreaOnly = process.env.KOREA_ONLY === '1' || !existsSync(resolve(__dirname, 'index.html'))
 
 // Dev-server proxy: the FastAPI service (api/) runs on :8000; production puts both behind
 // nginx/caddy with /api routed the same way, so the front end always calls relative /api paths.
@@ -9,7 +14,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
+        ...(koreaOnly ? {} : { main: resolve(__dirname, 'index.html') }),
         // the Korea pages: unlisted (noindex, no nav link) but first-class build entries.
         // korea.html = the stable presenter view; korea-app.html = the interactive parity
         // track (graduates to the default Korea entry when it lands).

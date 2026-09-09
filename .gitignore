@@ -46,3 +46,6 @@ data/raw/korea/*.tidy.csv
 
 # headless-Chrome profiles left by the slide/PDF exporters
 .chrome-profile/
+
+# the Korea package (scripts/package_korea.py) — regenerable, sent by hand
+build/

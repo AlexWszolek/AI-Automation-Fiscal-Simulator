@@ -23,7 +23,7 @@ from . import presets as presets_mod
 from . import summary as summary_mod
 from .app_params import (CUSTOM_DEFAULTS, build_v2_params, canon, cfg_key,
                          preset_widget_defaults, ui_from_defaults)
-from .charts import US_STATE_FIPS
+from .us_states import US_STATE_FIPS
 from .dynamics_v2 import DynamicModelV2
 from .government import RevenueLedger
 

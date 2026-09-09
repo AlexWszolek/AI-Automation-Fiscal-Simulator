@@ -8,6 +8,7 @@ Tests: create_app(backend=(data, deltas)) skips the ~5s data load.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -28,6 +29,10 @@ from api.scenario import ScenarioService, sanitize        # noqa: E402
 # info). Module-level so tests can monkeypatch the path.
 FEEDBACK_PATH = ROOT / "data" / "feedback" / "feedback.jsonl"
 FEEDBACK_COOLDOWN_S = 30.0        # per-client; in-memory, resets on restart — spam brake, not auth
+# FISCAL_KOREA_ONLY=1: the Korea package (scripts/package_korea.py) ships without the US
+# model's data, so the US backend is not loaded and the US routes answer 503. The Korea
+# routes are untouched — they build their own pools on first request either way.
+KOREA_ONLY = os.environ.get("FISCAL_KOREA_ONLY") == "1"
 
 
 def _load_backend():
@@ -66,6 +71,10 @@ def _client_id(request: Request) -> str:
 
 
 def _git_sha() -> str:
+    # a packaged checkout has no .git: the packager writes the source commit to VERSION
+    version = ROOT / "VERSION"
+    if version.exists():
+        return version.read_text(encoding="utf-8").strip() or "unknown"
     try:
         return subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT,
                               capture_output=True, text=True, timeout=5).stdout.strip() or "unknown"
@@ -78,9 +87,12 @@ def create_app(backend=None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
-        data, deltas = backend if backend is not None else _load_backend()
-        state["scenarios"] = ScenarioService(data, deltas)
-        state["jobs"] = TornadoJobs(data, deltas)
+        if backend is None and KOREA_ONLY:
+            state["scenarios"] = state["jobs"] = None
+        else:
+            data, deltas = backend if backend is not None else _load_backend()
+            state["scenarios"] = ScenarioService(data, deltas)
+            state["jobs"] = TornadoJobs(data, deltas)
         state["korea"] = KoreaScenarioService()           # lazy: builds on first request
         state["sha"] = _git_sha()
         state["ready"] = True
@@ -96,12 +108,19 @@ def create_app(backend=None) -> FastAPI:
         # korea_data: the gitignored tidy tables bootstrap step 7 builds; without them
         # every /api/korea/* request 500s while this endpoint used to say "ok"
         return {"status": "ok", "model_loaded": state["ready"],
+                "mode": "korea" if state.get("scenarios") is None and state["ready"] else "full",
                 "korea_data": PAYM39_CSV.exists(),
                 "presets": len(PRESETS) + 1, "version": state.get("sha", "unknown")}
 
+    def _us(key: str):
+        svc = state.get(key)
+        if svc is None:
+            raise HTTPException(503, "the US model is not loaded on this service")
+        return svc
+
     @app.post("/api/run")
     def run(body: dict) -> dict:
-        return state["scenarios"].run(body)
+        return _us("scenarios").run(body)
 
     @app.post("/api/korea/run")
     def korea_run(body: dict) -> dict:
@@ -120,11 +139,11 @@ def create_app(backend=None) -> FastAPI:
 
     @app.post("/api/tornado")
     def tornado(body: dict) -> dict:
-        return state["jobs"].submit(sanitize(body), n=_tornado_n(body, 4, 300))
+        return _us("jobs").submit(sanitize(body), n=_tornado_n(body, 4, 300))
 
     @app.get("/api/tornado/{job_id}")
     def tornado_status(job_id: str) -> dict:
-        j = state["jobs"].status(job_id)
+        j = _us("jobs").status(job_id)
         if j is None:
             raise HTTPException(404, "unknown job")
         return j
